@@ -143,7 +143,7 @@ export default {
     loadServiceList(){
       let scope = this
       let searchProvider = {
-        providerRole:'6',
+        providerRole:'5',
         verifyStatus:'30',
         pageSize:1000,
         pageNum:0
