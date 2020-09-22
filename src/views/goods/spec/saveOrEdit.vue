@@ -51,7 +51,7 @@
                                 <el-input v-model="scope.row.skuText"></el-input>
                             </template>
                         </el-table-column>
-<!--                        <el-table-column
+                        <el-table-column
                         prop="id"
                         label="操作">
                             <template slot-scope="scope">
@@ -62,7 +62,7 @@
                                     删除
                                 </el-button>
                             </template>
-                        </el-table-column>-->
+                        </el-table-column>
                 </el-table>
         </el-form-item>
 

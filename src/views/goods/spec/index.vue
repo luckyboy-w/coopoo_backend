@@ -14,7 +14,7 @@
 						</td>
 						<td></td>
 						<td>
-						
+
 						</td>
 						<td>
 							<el-button icon="el-icon-search" @click="search()">搜索</el-button>
@@ -48,11 +48,11 @@
 									type="text"
 									size="small"
 								>编辑</el-button>
-								<el-button
+<!--								<el-button
 									@click.native.prevent="deleteRow(scope.row, tableData)"
 									type="text"
 									size="small"
-								>删除</el-button>
+								>删除</el-button>-->
 							</template>
 						</el-table-column>
 					</el-table>
@@ -105,7 +105,7 @@ export default {
 	},
 	methods: {
 		deleteRow(rowData, data) {
-			
+
 			let param = {
 				id: rowData.id
 			};
