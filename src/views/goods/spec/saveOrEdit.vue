@@ -15,15 +15,15 @@
                         </el-option>
                     </el-option-group>
             </el-select>
-        </el-form-item>        
+        </el-form-item>
         <el-form-item label="规格名称">
             <el-input v-model="dataForm.specName" :disabled="disableName"></el-input>
             <span>请填写常用的商品规格的名称；例如：颜色或者尺寸等名称。</span>
-        </el-form-item>        
+        </el-form-item>
         <el-form-item label="备注名称">
             <el-input v-model="dataForm.specDescName"></el-input>
             <span>只有商家可见，用于商家更好的区别管理各个规格。</span>
-        </el-form-item>        
+        </el-form-item>
         <el-form-item label="规格序号">
             <el-input v-model="dataForm.specSort"></el-input>
             <span>请填写整数。</span>
@@ -51,7 +51,7 @@
                                 <el-input v-model="scope.row.skuText"></el-input>
                             </template>
                         </el-table-column>
-                        <el-table-column
+<!--                        <el-table-column
                         prop="id"
                         label="操作">
                             <template slot-scope="scope">
@@ -62,7 +62,7 @@
                                     删除
                                 </el-button>
                             </template>
-                        </el-table-column>
+                        </el-table-column>-->
                 </el-table>
         </el-form-item>
 
@@ -120,7 +120,7 @@ export default {
             let delParam = {
                 id: rowObj.id
             }
-            
+
             postMethod("/backend/goodSku/delete", delParam).then(res => { });
             scope.removeSku(rowIndex)
         }
@@ -144,7 +144,7 @@ export default {
         })
     },
     removeSku(rowIndex){
-        this.dataForm.skuList.splice(rowIndex,1);            
+        this.dataForm.skuList.splice(rowIndex,1);
         this.$message({
             message: '操作成功',
             type: 'success'
@@ -154,7 +154,7 @@ export default {
         if(this.dataForm.skuList == undefined){
             this.dataForm.skuList = []
         }
-        
+
         this.dataForm.skuList.push({
             sort:'',
             skuText:'',
@@ -169,7 +169,7 @@ export default {
                 message: '排序字段请输入数字',
                 type: 'warning'
             });
-            return 
+            return
         }
         for(let i = 0 ; i < this.dataForm.skuList.length ; i++){
             if(isNaN(this.dataForm.skuList[i].sort)){
@@ -177,20 +177,20 @@ export default {
                   message: '排序字段请输入数字',
                   type: 'warning'
                 });
-                return 
+                return
             }
             if(this.dataForm.skuList[i].skuText == ''){
                 this.$message({
                   message: '规格值不能为空',
                   type: 'warning'
                 });
-                return 
+                return
             }
         }
         if(this.validate()){
             delete this.dataForm.createTime
             delete this.dataForm.createBy
-            
+
             this.dataForm.typeDataStr = this.typeData.join(",")
             // this.dataForm.skuText = JSON.stringify(this.dataForm.skuList)
             let param = {
