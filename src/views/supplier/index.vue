@@ -53,14 +53,18 @@
 						<el-table-column prop="supplierNo" label="供应商代码" width="150px"></el-table-column>
 						<el-table-column prop="enable" label="状态" width="150px">
 							<template slot-scope="scope">
-								<el-switch 
-									v-model="scope.row.enable" 
-									inactive-value="0" 
+								<el-switch
+									v-model="scope.row.enable"
+									inactive-value="0"
 									active-value="1"
 									@change="enableSupply(scope.row)" >
 								</el-switch>
 							</template>
-
+						</el-table-column>
+            <el-table-column prop="enable" label="有无发布礼品" width="150px">
+							<template slot-scope="scope">
+                {{scope.row.publishGift == 1 ? '有' : '无'}}
+							</template>
 						</el-table-column>
 						<el-table-column prop="address" label="地址" width="150px"></el-table-column>
 						<el-table-column prop="bankCardNo" label="银行卡号" width="150px"></el-table-column>
@@ -172,7 +176,7 @@ export default {
 			this.showReset = true;
 		},
 		submitReset(){
-			
+
 			if(this.resetFrm.password != this.resetFrm.reppwd){
 				this.$message({
 					type: 'warging',
@@ -189,7 +193,7 @@ export default {
      		 })
 		},
 		enableSupply(row){
-			
+
 			const param = {
 				id: row.id,
 				enable: row.enable
