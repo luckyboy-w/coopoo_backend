@@ -1,10 +1,10 @@
 <template>
   <div class="update-form-panel">
-    <el-form ref="dataForm" :model="dataForm" label-width="130px">
-      <el-form-item label="服务商名称" required>
+    <el-form ref="dataForm" :model="dataForm" :rules="rules" label-width="130px">
+      <el-form-item label="服务商名称" prop="provinceName">
         <el-input v-model="dataForm.provinceName" :disabled="!viewSubmit" />
       </el-form-item>
-      <el-form-item label="服务商等级" required>
+      <el-form-item label="服务商等级" prop="provinceRole">
         <el-select v-model="dataForm.provinceRole" @change="switchLevel" :disabled="!viewSubmit">
           <el-option
             v-for="item in provinceRoleList"
@@ -15,20 +15,20 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="服务商编号" required>
+      <el-form-item label="服务商编号" prop="provinceNo">
         <el-input v-model="dataForm.provinceNo" :disabled="!viewSubmit" />
       </el-form-item>
 
-      <el-form-item :label="mobileTitle" required>
+      <el-form-item :label="mobileTitle" prop="mobileNo">
         <el-input v-model="dataForm.mobileNo" :disabled="!viewSubmit" />
       </el-form-item>
-      <el-form-item v-show="false" label="店主电话" required>
+      <el-form-item v-show="false" label="店主电话" prop="mobileNo">
         <el-input v-model="dataForm.mobileNo"  :disabled="!viewSubmit" />
       </el-form-item>
-      <el-form-item v-show="!isPersonProvince" label="店主姓名" required>
+      <el-form-item v-show="!isPersonProvince" label="店主姓名" prop="owerName">
         <el-input v-model="dataForm.owerName" :disabled="!viewSubmit" />
       </el-form-item>
-      <el-form-item label="推荐人电话">
+      <el-form-item label="推荐人电话" prop="referenceNo">
         <el-input v-model="dataForm.referenceNo" :disabled="!viewSubmit" />
       </el-form-item>
       <el-form-item v-show="!isPersonProvince" label="门店状态">
@@ -40,7 +40,7 @@
       <el-form-item v-show="!isPersonProvince" label="店铺优势">
         <el-input v-model="dataForm.forte" :disabled="!viewSubmit" />
       </el-form-item>
-      <el-form-item label="身份证正面照片" required>
+      <el-form-item label="身份证正面照片" prop="personFrontImg">
         <el-input v-show="false" v-model="dataForm.personFrontImg" />
         <el-upload
           :disabled="!viewSubmit"
@@ -59,7 +59,7 @@
           <img width="100%" :src="imageUrl" alt>
         </el-dialog>
       </el-form-item>
-      <el-form-item label="身份证反面照片" required>
+      <el-form-item label="身份证反面照片" prop="personSideImg">
         <el-input v-show="false" v-model="dataForm.personSideImg" />
         <el-upload
           :disabled="!viewSubmit"
@@ -77,7 +77,7 @@
           <img width="100%" :src="imageUrl" alt>
         </el-dialog>
       </el-form-item>
-      <el-form-item label="营业执照照片" required>
+      <el-form-item v-show="!isPersonProvince" label="营业执照照片" prop="licenseImg">
         <el-input v-show="false" v-model="dataForm.licenseImg" />
         <el-upload
           :disabled="!viewSubmit"
@@ -96,7 +96,7 @@
           <img width="100%" :src="imageUrl" alt>
         </el-dialog>
       </el-form-item>
-      <el-form-item label="文件协议" required>
+      <el-form-item label="文件协议" prop="protocalFile">
         <el-input v-show="false" v-model="dataForm.protocalFile" />
         <el-upload
           :disabled="!viewSubmit"
@@ -119,13 +119,13 @@
         </ul>
 
       </el-form-item>
-      <el-form-item label="银行名称" required>
+      <el-form-item label="银行名称" prop="bankName">
         <el-input v-model="dataForm.bankName" :disabled="!viewSubmit" />
       </el-form-item>
-      <el-form-item label="银行卡号" required>
+      <el-form-item label="银行卡号" prop="cardNo">
         <el-input v-model="dataForm.cardNo"  :disabled="!viewSubmit" />
       </el-form-item>
-      <el-form-item label="地区">
+      <el-form-item label="地区" prop="area">
         <el-select v-model="dataForm.province" @change="loadcityList(true)">
           <el-option
             v-for="item in provinceList"
@@ -145,7 +145,9 @@
           />
         </el-select>
         <div style="line-height:10px">&nbsp;</div>
-        <el-input v-model="dataForm.address" placeholder="请输入详细地址"/>
+      </el-form-item>
+      <el-form-item label="详细地址" prop="address">
+        <el-input v-model="dataForm.address"/>
       </el-form-item>
       <el-form-item>
         <el-button v-show="viewSubmit" type="primary" @click="submitUpdate">添加</el-button>
@@ -162,7 +164,7 @@
 
 <script>
 import { getMethod, postMethod, getUploadUrl } from '@/api/request'
-import { isInteger } from '@/utils/validate'
+import { luhnCheck } from '@/utils/validate'
 
 export default {
   props: {
@@ -176,6 +178,91 @@ export default {
     }
   },
   data() {
+    const isMobileNumber = (rule, value, callback) => {
+      const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
+      const isPhone = reg.test(value);
+      value = Number(value); //转换为数字
+      if (typeof value === "number" && !isNaN(value)) {//判断是否为数字
+        value = value.toString(); //转换成字符串
+        if (value.length < 0 || value.length > 12 || !isPhone) { //判断是否为11位手机号
+          callback(new Error("电话号码格式如:138xxxx8754"));
+        } else {
+          callback();
+        }
+      } else {
+        callback(new Error("电话号码输入错误"));
+      }
+    }
+
+    const validateReferenceNo = (rule, value, callback) => {
+      if (this.dataForm.referenceNo == '' || this.dataForm.referenceNo == undefined) {
+        return
+      }
+      isMobileNumber(rule, value, callback)
+    }
+
+    const isUploadLicenseImg = (rule, value, callback) => {
+      if (!this.isPersonProvince && this.uploadLicenseList <= 0) {
+        callback(new Error("请上传营业执照照片"));
+      } else {
+        callback();
+      }
+    }
+
+    const isUploadPersonNoFrontImg = (rule, value, callback) => {
+      if (this.uploadFrontList.length <= 0) {
+        callback(new Error("请上传法人身份证正面照片"));
+      } else {
+        callback();
+      }
+    }
+
+    const isUploadPersonNoSideImg = (rule, value, callback) => {
+      if (this.uploadSideList.length <= 0) {
+        callback(new Error("请上传法人身份证背面照片"));
+      } else {
+        callback();
+      }
+    }
+
+    const isUploadProtocalFile = (rule, value, callback) => {
+      if (this.protocalFileList.length <= 0) {
+        callback(new Error("请上传协议文件"));
+      } else {
+        callback();
+      }
+    }
+
+    const validateBankNo = (rule, value, callback) => {
+      if (!luhnCheck(this.dataForm.cardNo)) {
+        callback(new Error("银行卡号输入错误"));
+      } else {
+        callback();
+      }
+    }
+
+    const validateOwnerName = (rule, value, callback) => {
+      if (!this.isPersonProvince && (this.dataForm.owerName == '' || this.dataForm.owerName == undefined)) {
+        callback(new Error("请输入店主姓名"));
+      } else {
+        callback();
+      }
+    }
+
+    const validateArea = (rule, value, callback) => {
+      if (this.dataForm.province == "" || this.dataForm.province == undefined) {
+        callback(new Error("请选择省"));
+        return
+      }
+
+      if (this.dataForm.city == "" || this.dataForm.city == undefined) {
+        callback(new Error("请选择市"));
+        return;
+      }
+
+      callback()
+    }
+
     return {
       dialogVisible:false,
 			dialogImageUrl:'',
@@ -222,6 +309,51 @@ export default {
         getFileJsonStr: {},
         files: [],
         id: ''
+      },
+      rules: {
+        provinceName: [
+          { required: true, message: '请输入服务商名称', trigger: 'blur' },
+        ],
+        provinceRole: [
+          { required: true, message: '请选择服务商等级', trigger: 'change' },
+        ],
+        provinceNo: [
+          { required: true, message: '请输入服务商编号', trigger: 'blur' },
+        ],
+        mobileNo: [
+          { required: true, message: "请输入手机号码", trigger: "blur"},
+          { validator: isMobileNumber, trigger: "blur" }
+        ],
+        referenceNo: [
+          { validator: validateReferenceNo, trigger: "blur" }
+        ],
+        owerName: [
+          { required: true, validator: validateOwnerName, message: '请输入店主姓名', trigger: 'blur' },
+        ],
+        licenseImg: [
+          { required: true, validator: isUploadLicenseImg, trigger: "blur" }
+        ],
+        personFrontImg: [
+          { required: true, validator: isUploadPersonNoFrontImg, trigger: "blur" }
+        ],
+        personSideImg: [
+          { required: true, validator: isUploadPersonNoSideImg, trigger: "blur" }
+        ],
+        protocalFile: [
+          { required: true, validator: isUploadProtocalFile, trigger: "blur" }
+        ],
+        bankName: [
+          { required: true, message: '请输入银行名称', trigger: 'blur' },
+        ],
+        cardNo: [
+          { required: true, validator: validateBankNo, message: '请输入银行卡号', trigger: 'blur'},
+        ],
+        area: [
+          { required: true, validator: validateArea, trigger: "change" }
+        ],
+        address: [
+          { required: true, message: '请输入详细地址', trigger: 'blur' },
+        ],
       }
     }
   },
@@ -383,6 +515,8 @@ export default {
       if (imageCnt >= 1) {
         this.hideFrontUpload = true
       }
+      this.clearValidate('personFrontImg')
+      this.dataForm.personFrontImg = res.data.groupId
     },
     beforeFrontUpload(file) {
       const fileTypeVerify =
@@ -433,6 +567,8 @@ export default {
       if (imageCnt >= 1) {
         this.hideSideUpload = true
       }
+      this.clearValidate('personSideImg')
+      this.dataForm.personSideImg = res.data.groupId
     },
     beforeSideUpload(file) {
       const fileTypeVerify =
@@ -488,6 +624,8 @@ export default {
       if (imageCnt >= 1) {
         this.hideLicenseUpload = true
       }
+      this.clearValidate('licenseImg')
+      this.dataForm.licenseImg = res.data.groupId
     },
     beforeLicenseUpload(file) {
       const fileTypeVerify =
@@ -516,7 +654,7 @@ export default {
     },
     handleProtocalPreview() {},
     handleProtocalRemove(res) {
-      
+
       for (let i = 0; i < this.protocalFileList.length; i++) {
         if (this.protocalFileList[i].url == (res.url || res.response.data.url)) {
           this.protocalFileList.splice(i, 1)
@@ -541,6 +679,8 @@ export default {
       if (imageCnt >= 1) {
         this.hideProtocalUpload = false
       }
+      this.clearValidate('protocalFile')
+      this.dataForm.protocalFile = res.data.groupId
     },
     beforeProtocalUpload(file) {
       const fileTypeVerify =
@@ -558,134 +698,54 @@ export default {
       return fileTypeVerify && isLt2M
     },
     saveObject() {
-      const scope = this
-      
-      let validateArr = 
-      [{key:"provinceName",label:"服务商名称"},
-      {key:"provinceRole",label:"服务商等级"},
-      {key:"provinceNo",label:"服务商编号"},
-      {key:"bankName",label:"银行名称"},
-      {key:"cardNo",label:"银行卡号"}];
-
-      if(this.dataForm.provinceRole == '5'){
-        validateArr.concat([{key:"owerName",label:"店主姓名"},{key:"mobileNo",label:"店主电话"}])
-      }else{
-        validateArr.concat([{key:"mobileNo",label:"手机号码"}])
-      }
-
-      for(let i = 0 ; i < validateArr.length; i++){
-        let rowObj = validateArr[i];
-        let key = rowObj.key;
-        let label = rowObj.provinceRole;
-        if(this.dataForm[key] == ''){
-          this.$message({
-            message: rowObj.label+'不能为空',
-            type: 'warning'
-          })
-          return;
-        }
-      }
-
-      if(this.uploadFrontList.length == 0
-          || this.uploadSideList.length == 0){
-          this.$message({
-            message: '身份证照片不能为空',
-            type: 'warning'
-          })
-          return ;
-      }
-
-      if(this.protocalFileList.length == 0){
-          this.$message({
-            message: '文件协议不能为空',
-            type: 'warning'
-          })
-          return ;
-      }
-
-      if(this.protocalFileList.length == 0){
-          this.$message({
-            message: '文件协议不能为空',
-            type: 'warning'
-          })
-          return ;
-      }
-
-
-      if(this.dataForm.provinceRole == '5'){
-        if(this.uploadLicenseList.length == 0){
-            this.$message({
-              message: '营业执照不能为空',
-              type: 'warning'
-            })
-            return ;
-        }
-      }
-
-      if (this.validate()) {
-        delete this.dataForm.createTime
-        delete this.dataForm.createBy
-        let fileList = []
-        fileList = fileList.concat(this.uploadFrontList)
-        fileList = fileList.concat(this.uploadSideList)
-        fileList = fileList.concat(this.uploadLicenseList)
-        fileList = fileList.concat(this.protocalFileList)
-        this.dataForm.fileJsonStr = JSON.stringify(fileList)
-        this.dataForm.files = []
-        postMethod('/backend/lyProvider/update', this.dataForm).then(
-          res => {
-            if(res.data == "-1"){
+      let scope = this;
+      this.$refs["dataForm"].validate((valid) => {
+        if (valid) {
+          delete this.dataForm.createTime
+          delete this.dataForm.createBy
+          let fileList = []
+          fileList = fileList.concat(this.uploadFrontList)
+          fileList = fileList.concat(this.uploadSideList)
+          fileList = fileList.concat(this.uploadLicenseList)
+          fileList = fileList.concat(this.protocalFileList)
+          this.dataForm.fileJsonStr = JSON.stringify(fileList)
+          this.dataForm.files = []
+          postMethod('/backend/lyProvider/update', this.dataForm).then(
+            res => {
+              if(res.data == "-1"){
+                this.$message({
+                  message: '服务商手机号重复，请重新输入',
+                  type: 'warning'
+                })
+                return;
+              }
+              scope.typeList = res.data
               this.$message({
-                message: '服务商手机号重复，请重新输入',
-                type: 'warning'
+                message: '操作成功',
+                type: 'success'
               })
-              return;
+              this.$emit('showListPanel', true)
             }
-            scope.typeList = res.data
-            this.$message({
-              message: '操作成功',
-              type: 'success'
-            })
-            this.$emit('showListPanel', true)
-          }
-        )
-      }
-    },
-    validate() {
-      const notNvl = [
-        'provinceName',
-        'provinceNo',
-        'bankName',
-        'cardNo'
-      ]
-      for (let i = 0; i < notNvl.length; i++) {
-        if (this.dataForm[notNvl[i]] == '') {
-          this.$message({
-            message: '字段不能为空',
-            type: 'warning'
-          })
-          return false
+          )
+        } else {
+          return false;
         }
-      }
-
-      const needInt = []
-      for (let i = 0; i < needInt.length; i++) {
-        if (!isInteger(this.dataForm[needInt[i]])) {
-          this.$message({
-            message: '请输入正整数',
-            type: 'warning'
-          })
-          return false
-        }
-      }
-
-      return true
+      });
     },
     cancelUpdate() {
       this.$emit('showListPanel', true)
     },
     submitUpdate() {
       this.saveObject()
+    },
+    clearValidate(field) {
+      let _field = this.$refs['dataForm'].fields /*当然，你可以打印一下fields*/
+      _field.map(i => {
+        if(i.prop === field){  //通过prop属性值相同来判断是哪个输入框，比如：要移除prop为'user'
+          i.resetField()
+          return false
+        }
+      })
     }
   }
 }

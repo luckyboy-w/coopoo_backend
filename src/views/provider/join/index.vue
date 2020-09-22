@@ -279,8 +279,6 @@ export default {
     },
     formatterCol(rowData) {
       rowData.verifyStatusText = this.GLOBAL.verifyProvinceMap[rowData.verifyStatus]
-      console.log("-----------------------")
-      console.log(this.providerMap)
       rowData.provinceRoleText = this.providerMap[rowData.provinceRole]
     }
   }

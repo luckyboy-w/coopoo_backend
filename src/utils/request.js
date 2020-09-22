@@ -119,6 +119,15 @@ service.interceptors.response.use(
         })
       }
 
+      console.info(res)
+      if (res.errorInfo == 'update.fail') {
+        Message({
+          message: res.code,
+          type: 'error',
+          duration: 3000
+        })
+      }
+
 
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;

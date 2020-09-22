@@ -93,7 +93,6 @@ export function isInteger(arg) {
 }
 
 export function luhnCheck(bankno){
-  console.info(bankno)
   const lastNum=bankno.substr(bankno.length-1,1);//取出最后一位（与luhn进行比较）
 
   const first15Num=bankno.substr(0,bankno.length-1);//前15或18位
