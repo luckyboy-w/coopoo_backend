@@ -623,11 +623,7 @@ export default {
 					this.uploadGoodFrontImageList.push(imageObj);
 				}
 			}
-
-			if (this.uploadGoodImageList.length >= 5) {
-				// this.hideGoodImageUpload = true;
-			}
-
+      this.uploadGoodImageList = this.uploadGoodImageList.reverse()
 			if (this.uploadGoodFrontImageList.length >= 1) {
 				document.getElementById('front-img').getElementsByClassName('el-upload--picture-card')[0].style.display = 'none'
 			}

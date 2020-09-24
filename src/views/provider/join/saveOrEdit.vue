@@ -196,6 +196,7 @@ export default {
 
     const validateReferenceNo = (rule, value, callback) => {
       if (this.dataForm.referenceNo == '' || this.dataForm.referenceNo == undefined) {
+        callback();
         return
       }
       isMobileNumber(rule, value, callback)
