@@ -22,7 +22,7 @@
             </td>
             <td>门店状态:</td>
             <td>
-              <el-select v-model="searchParam.province" placeholder="请选择">
+              <el-select v-model="searchParam.status" placeholder="请选择">
                 <el-option
                   v-for="item in shopStatusList "
                   :key="item.id"
@@ -158,12 +158,10 @@ export default {
     this.initLoad()
 
     this.shopStatusList.push({
-      id: '0',
       label: '全部'
     })
 
     this.enableList.push({
-      id: '0',
       label: '全部'
     })
 
