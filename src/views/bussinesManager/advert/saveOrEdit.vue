@@ -26,7 +26,7 @@
 					:class="{hide:hideAdvertUpload}"
 					:file-list="uploadAdvertList"
 					:on-remove="handleAdvertRemove">
-					
+
 					<i class="el-icon-plus"></i>
 				</el-upload>
 				<el-dialog>
@@ -37,7 +37,7 @@
 				<el-select v-model="dataForm.dataType" filterable placeholder="请选择">
 					<el-option label="商品" value="1" />
 					<el-option label="链接" value="2" />
-				</el-select> 
+				</el-select>
 			</el-form-item>
 			<el-form-item :label="choiceTitle[dataForm.dataType]">
 				<el-select  v-if="dataForm.dataType == 1" v-model="dataForm.advertUrl" filterable placeholder="请选择">
@@ -47,14 +47,14 @@
 						:value-key="item.goodName"
 						:label="item.goodName"
 						:value="item.id" />
-				</el-select> 
+				</el-select>
 				<el-input v-if="dataForm.dataType == 2" v-model="dataForm.advertUrl"></el-input>
 			</el-form-item>
 			<el-form-item label="排序">
 				<el-input v-model="dataForm.sort"></el-input>
 			</el-form-item>
 			<el-form-item label="是否启用">
-				<el-switch 
+				<el-switch
 				inactive-value=0
 				active-value=1
 				v-model="dataForm.enable"></el-switch>
@@ -87,7 +87,7 @@ export default {
 				this.dataForm.enable = this.editData.enable + ''
 				this.initDefaultImage();
 			}
-			
+
 		});
 	},
 	created() {},
@@ -138,7 +138,7 @@ export default {
 		},
 		handleAdvertRemove(res) {
 			for (let i = 0; i < this.uploadAdvertList.length; i++) {
-				if (this.uploadAdvertList[i].id == (res.id || res.response.data.id)) {
+				if (this.uploadAdvertList[i].filePath == (res.filePath || res.response.data.filePath)) {
 					this.uploadAdvertList.splice(i, 1);
 					break;
 				}
@@ -239,7 +239,7 @@ export default {
 					message: "落地页链接不合法，请以http://或者https://开头",
 					type: "warning"
 				});
-				return 
+				return
 			}
 
 			let needInt = [];

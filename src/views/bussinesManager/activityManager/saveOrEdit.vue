@@ -101,7 +101,7 @@ export default {
 		handleActivityImagePreview() {},
 		handleActivityImageRemove(res) {
 			for (let i = 0; i < this.uploadActivityImageList.length; i++) {
-				if (this.uploadActivityImageList[i].id == (res.id || res.response.data.id)) {
+				if (this.uploadActivityImageList[i].filePath == (res.filePath || res.response.data.filePath)) {
 					this.uploadActivityImageList.splice(i, 1);
 					break;
 				}
