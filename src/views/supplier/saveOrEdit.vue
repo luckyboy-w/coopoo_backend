@@ -174,6 +174,16 @@
 			<el-form-item label="发布礼品">
 				<el-switch v-model="dataForm.publishGift" inactive-value="0" active-value="1"></el-switch>
 			</el-form-item>
+      <el-form-item label="平台服务比率" prop="serviceRatio">
+        <el-select v-model="dataForm.serviceRatio">
+          <el-option
+            v-for="item in serviceRatioList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+			</el-form-item>
 			<el-form-item label="银行名称" prop="bankName">
 				<el-input v-model="dataForm.bankName"></el-input>
 			</el-form-item>
@@ -274,6 +284,22 @@ export default {
       }
     }
 		return {
+      serviceRatioList: [{
+        value: '0.05',
+        label: '5%'
+      }, {
+        value: '0.1',
+        label: '10%'
+      }, {
+        value: '0.2',
+        label: '20%'
+      }, {
+        value: '0.3',
+        label: '30%'
+      }, {
+        value: '0.4',
+        label: '40%'
+      }],
 			disabledLoginNo:false,
 			goodTypeList: [],
 			goodBrandList: [],
@@ -346,6 +372,9 @@ export default {
         ],
         province: [
           { required: true, message: '请选择省份', trigger: 'change' },
+        ],
+        serviceRatio: [
+          { required: true, message: '请选择平台服务比率', trigger: 'change' },
         ],
         licenseImg: [
           { required: true, validator: isUploadLicenseImg, trigger: "blur" }
