@@ -4,7 +4,7 @@
       <el-form-item label="月结算次数">
         <el-input-number v-model="dataForm.billCount" :min="1" :max="50" disabled="" label="月结算次数"></el-input-number>
       </el-form-item>
-      <el-form-item label="结算日期">
+      <el-form-item label="结算日">
          <el-date-picker
             type="dates"
             v-model="dataForm.billDate"
@@ -13,6 +13,7 @@
             textarea
             style="width:600px"
             size="large"
+            format="dd"
             placeholder="选择一个或多个日期">
         </el-date-picker>
       </el-form-item>
@@ -63,7 +64,7 @@ export default {
         //     this.dataForm.billDate = this.dataForm.billDate.slice(0,4)
         //     return ;
         // }
-        
+
     },
     changeContent(val){
       this.dataForm.content = val
@@ -83,7 +84,7 @@ export default {
               }else{
                   scope.dataForm[rowObj.title] = rowObj.value
               }
-              
+
           }
         }
       );

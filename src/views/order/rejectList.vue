@@ -168,7 +168,6 @@
         border>
         <el-table-column prop="skuText" label="SKU属性" width="260px" />
         <el-table-column prop="stock" label="库存" width="150px" />
-        <el-table-column prop="supplyPrice" label="供货价" width="150px" />
         <el-table-column prop="salePrice" label="零售价" width="150px" />
         <el-table-column prop="saleMemPrice" label="会员价" width="150px" />
       </el-table>
@@ -188,7 +187,7 @@
       <el-row :gutter="20" style="line-height:40px;font-size:12px">
           <el-col :span="8">
              <el-button type="success" @click="showOrdDtl=false">返回列表</el-button>
-          </el-col>    
+          </el-col>
       </el-row>
       <el-row :gutter="20" style="line-height:60px">
         <el-col :span="8"><div>订单编号:{{ordDtl.orderNo}}</div></el-col>
@@ -217,40 +216,40 @@
         </el-table>
       </el-row>
       <el-row :gutter="20" style="line-height:40px">
-          <el-col :span="24">付款信息</el-col>    
+          <el-col :span="24">付款信息</el-col>
       </el-row>
       <el-row :gutter="20" style="line-height:40px;font-size:12px">
-          <el-col :span="8">付款方式：{{ordDtl.payType | pay2Text}}</el-col>    
-          <el-col :span="8">订单金额：{{ordDtl.ordPrice}}</el-col>    
-          <el-col :span="8">支付金额：{{ordDtl.ordPayPrice }}</el-col>     
+          <el-col :span="8">付款方式：{{ordDtl.payType | pay2Text}}</el-col>
+          <el-col :span="8">订单金额：{{ordDtl.ordPrice}}</el-col>
+          <el-col :span="8">支付金额：{{ordDtl.ordPayPrice }}</el-col>
       </el-row>
       <el-row :gutter="20" style="line-height:40px;font-size:12px">
-          <el-col :span="8">运费：{{ordDtl.expressPrice }}</el-col>    
-          <el-col :span="8">优惠金额：{{ordDtl.ord_sub_price }}</el-col>    
-          <el-col :span="8"></el-col>     
+          <el-col :span="8">运费：{{ordDtl.expressPrice }}</el-col>
+          <el-col :span="8">优惠金额：{{ordDtl.ord_sub_price }}</el-col>
+          <el-col :span="8"></el-col>
       </el-row>
       <el-row :gutter="20" style="line-height:40px">
-          <el-col :span="24">收货人信息</el-col>    
+          <el-col :span="24">收货人信息</el-col>
       </el-row>
       <el-row :gutter="20" style="line-height:40px;font-size:12px">
-          <el-col :span="8">收货人：{{ordDtl.recUname }}</el-col>    
-          <el-col :span="8">收货地址：{{ordDtl.recArea}}</el-col>    
-          <el-col :span="8">收货人电话：{{ordDtl.recPhone }}</el-col>     
+          <el-col :span="8">收货人：{{ordDtl.recUname }}</el-col>
+          <el-col :span="8">收货地址：{{ordDtl.recArea}}</el-col>
+          <el-col :span="8">收货人电话：{{ordDtl.recPhone }}</el-col>
       </el-row>
       <el-row :gutter="20" style="line-height:40px">
-          <el-col :span="24">支付及配送信息</el-col>    
+          <el-col :span="24">支付及配送信息</el-col>
       </el-row>
       <el-row :gutter="20" style="line-height:40px;font-size:12px">
-          <el-col :span="8">付款方式：{{ordDtl.payType | pay2Text}}</el-col>    
+          <el-col :span="8">付款方式：{{ordDtl.payType | pay2Text}}</el-col>
           <el-col :span="8">支付时间：{{ordDtl.payTime | _formatDate}}</el-col>
-          <el-col :span="8">运费：{{ordDtl.expressPrice }}</el-col>    
+          <el-col :span="8">运费：{{ordDtl.expressPrice }}</el-col>
       </el-row>
       <el-row :gutter="20" style="line-height:40px">
-          <el-col :span="24">发票信息</el-col>    
+          <el-col :span="24">发票信息</el-col>
       </el-row>
       <el-row :gutter="20" style="line-height:40px;font-size:12px">
-          <el-col :span="8">发票类型：普通发票 </el-col>    
-          <el-col :span="8">发票抬头：{{ordDtl.tax.taxTitle}}</el-col>  
+          <el-col :span="8">发票类型：普通发票 </el-col>
+          <el-col :span="8">发票抬头：{{ordDtl.tax.taxTitle}}</el-col>
       </el-row>
     </div>
   </div>
@@ -264,7 +263,7 @@ export default {
   components: { },
   filters: {
     taxType2Text(type){
-     
+
     },
     _formatDate(time) {
       if(time == undefined){
@@ -278,7 +277,7 @@ export default {
         return '阿里支付'
       } else {
         return '微信支付'
-      } 
+      }
       return '未支付'
     },
     statuts2Text(status) {
@@ -306,7 +305,7 @@ export default {
         return '普通订单'
       } else {
         return '礼品订单'
-      } 
+      }
     }
   },
   data() {

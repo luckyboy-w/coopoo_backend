@@ -28,11 +28,6 @@
 									<el-input v-model="scope.row.stock" disabled="true"></el-input>
 								</template>
 							</el-table-column>
-							<el-table-column prop="menPrice" label="供货价" width="150px">
-								<template slot-scope="scope">
-									<el-input v-model="scope.row.supplyPrice" ></el-input>
-								</template>
-							</el-table-column>
 							<el-table-column prop="salePrice" label="建议零售价" width="150px">
 								<template slot-scope="scope">
 									<el-input v-model="scope.row.salePrice"></el-input>
@@ -824,7 +819,6 @@ export default {
 
 				feeMsg =  this.isMoney(rowObj.salePrice,'零售价','')
 				feeMsg =  this.isMoney(rowObj.saleMemPrice,'会员价',feeMsg)
-				feeMsg =  this.isMoney(rowObj.supplyPrice,'供货价',feeMsg)
 
 				if(feeMsg != ''){
 					this.$message({
@@ -846,16 +840,8 @@ export default {
 					errorMsg = '会员价不能为空'
 				}
 
-				if(rowObj.supplyPrice == '' ){
-					errorMsg = '供货价不能为空'
-				}
-
 				if(rowObj.saleMemPrice - rowObj.salePrice > 0){
 					errorMsg = '会员价不能大于等于零售价'
-				}
-
-				if( rowObj.supplyPrice - rowObj.saleMemPrice > 0){
-					errorMsg = '供货价不能大于会员价'
 				}
 
 			}
