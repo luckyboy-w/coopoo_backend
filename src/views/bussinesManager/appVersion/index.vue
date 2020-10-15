@@ -5,7 +5,7 @@
 				<table>
 					<tr>
 						<td>
-							<el-button icon="el-icon-search" @click="search()">搜索</el-button>
+							<!--<el-button icon="el-icon-search" @click="search()">搜索</el-button>-->
 							<el-button plain type="primary" @click="addOrEdit('add')" icon="el-icon-document-add">新建</el-button>
 						</td>
 					</tr>
@@ -25,8 +25,12 @@
 						<el-table-column type="selection" width="55"></el-table-column>
 						<el-table-column prop="versionNo" label="版本号" width="150px"></el-table-column>
 						<el-table-column prop="title" label="标题" width="250px"></el-table-column>
-						 <el-table-column prop="content" label="更新内容" width="600px"></el-table-column>
-						 <el-table-column prop="isForceUpdate" label="是否强制更新" width="600px"></el-table-column>
+						 <el-table-column prop="content" label="更新内容"></el-table-column>
+						 <el-table-column prop="isForceUpdate" label="是否强制更新">
+               <template slot-scope="scope">
+                 {{scope.row.isForceUpdate == '1' ? "是" : "否"}}
+               </template>
+             </el-table-column>
 						<el-table-column prop="createTime" label="更新时间" width="150px">
 							<template slot-scope="scope">
 									{{scope.row.createTime | fmtDateStr}}
@@ -83,7 +87,7 @@ export default {
 	filters: {
 		fmtDateStr(val){
 			let dt = new Date(val);
-			return formatDate(dt, 'yyyy-MM-dd hh:mm');
+			return formatDate(dt, 'yyyy-MM-dd');
 		}
 	},
 	data() {
