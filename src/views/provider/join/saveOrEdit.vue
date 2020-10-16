@@ -15,10 +15,6 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="服务商编号" prop="provinceNo">
-        <el-input v-model="dataForm.provinceNo" :disabled="!viewSubmit" />
-      </el-form-item>
-
       <el-form-item :label="mobileTitle" prop="mobileNo">
         <el-input v-model="dataForm.mobileNo" :disabled="!viewSubmit" />
       </el-form-item>
@@ -317,9 +313,6 @@ export default {
         ],
         provinceRole: [
           { required: true, message: '请选择服务商等级', trigger: 'change' },
-        ],
-        provinceNo: [
-          { required: true, message: '请输入服务商编号', trigger: 'blur' },
         ],
         mobileNo: [
           { required: true, message: "请输入手机号码", trigger: "blur"},
