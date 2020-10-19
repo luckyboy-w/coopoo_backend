@@ -285,19 +285,19 @@ export default {
     }
 		return {
       serviceRatioList: [{
-        value: '0.05',
+        value: 0.05,
         label: '5%'
       }, {
-        value: '0.1',
+        value: 0.1,
         label: '10%'
       }, {
-        value: '0.2',
+        value: 0.2,
         label: '20%'
       }, {
-        value: '0.3',
+        value: 0.3,
         label: '30%'
       }, {
-        value: '0.4',
+        value: 0.4,
         label: '40%'
       }],
 			disabledLoginNo:false,

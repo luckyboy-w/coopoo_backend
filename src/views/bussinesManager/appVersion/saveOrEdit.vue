@@ -9,8 +9,8 @@
 			</el-form-item>
       <el-form-item label="是否强制更新" prop="isForceUpdate">
         <el-select v-model="dataForm.isForceUpdate">
-          <el-option label="否" value="0"></el-option>
-          <el-option label="是" value="1"></el-option>
+          <el-option label="否" :value="0"></el-option>
+          <el-option label="是" :value="1"></el-option>
         </el-select>
       </el-form-item>
 			<el-form-item label="更新内容">
