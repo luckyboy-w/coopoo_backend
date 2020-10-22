@@ -99,13 +99,9 @@
     mounted() {
         this.initSuggestData()
     },
-    currentPage(pageNum) {
-			this.searchParam.pageNum = pageNum;
-			this.loadList();
-		},
     methods: {
       exportPlat(){
-       
+
       },
       exportOther(){
       },
@@ -126,6 +122,10 @@
       },
       searchPlat(){
         this.initSuggestData()
+      },
+      currentPage(pageNum) {
+        this.searchParam.pageNum = pageNum;
+        this.initSuggestData();
       },
       initSuggestData(){
         let scope = this;
