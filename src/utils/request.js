@@ -100,7 +100,7 @@ service.interceptors.response.use(
           type: 'error',
           duration: 5 * 1000
         })
-        location.href = '/backend'
+        location.href = '/'
       }
 
       if(res.message == 'pwd.err'){

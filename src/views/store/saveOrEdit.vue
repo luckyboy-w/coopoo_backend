@@ -23,38 +23,40 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="店铺图片">
-        <el-input v-show="false"  v-model="dataForm.storeImg"></el-input>
-          <el-upload
-            class="avatar-uploader"
-            :action="uploadUrl"
-            :show-file-list="false"
-            :on-success="callBackUploadSuc">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" width="600px" height="280px">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
+      <el-form-item label="店铺图片-列表" prop="storeImg">
+        <el-input v-show="false" v-model="dataForm.storeImg" />
+        <el-upload
+          :disabled="!viewSubmit"
+          :action="uploadStoreImgUrl"
+          list-type="picture-card"
+          :on-preview="handleStoreImgPreview"
+          :before-upload="beforeStoreImgUpload"
+          :on-success="handleStoreImgSuccess"
+          :class="{hide:hideStoreImgUpload}"
+          :file-list="uploadStoreImgList"
+          :on-remove="handleStoreImgRemove"
+        >
+          <i class="el-icon-plus" />
+        </el-upload>
       </el-form-item>
 
-      <el-form-item v-if="false" label="所在城市">
-        <el-select v-model="dataForm.province" @change="changeProvince()">
-          <el-option
-            v-for="item in provinceList"
-            :key="item.provinceid"
-            :value-key="item.province"
-            :label="item.province"
-            :value="item.provinceid"
-          />
-        </el-select>
-        <el-select v-model="dataForm.city">
-          <el-option
-            v-for="item in cityList"
-            :key="item.cityid"
-            :value-key="item.city"
-            :label="item.city"
-            :value="item.cityid"
-          />
-        </el-select>
+      <el-form-item label="店铺图片-详情" prop="storeImgDtl" style="width:1060px">
+        <el-input v-show="false" v-model="dataForm.storeImgDtl" />
+        <el-upload
+          :disabled="!viewSubmit"
+          :action="uploadStoreImgDtlUrl"
+          list-type="picture-card"
+          :on-preview="handleStoreImgDtlPreview"
+          :before-upload="beforeStoreImgDtlUpload"
+          :on-success="handleStoreImgDtlSuccess"
+          :class="{hide:hideStoreImgDtlUpload}"
+          :file-list="uploadStoreImgDtlList"
+          :on-remove="handleStoreImgDtlRemove"
+        >
+          <i class="el-icon-plus" />
+        </el-upload>
       </el-form-item>
+
       <el-form-item label="详细地址">
         <el-input v-model="dataForm.address" disabled />
       </el-form-item>
@@ -79,6 +81,9 @@
         <el-button @click="cancelUpdate">取消</el-button>
       </el-form-item>
     </el-form>
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="dialogImageUrl" alt="">
+    </el-dialog>
   </div>
 </template>
 
@@ -97,8 +102,16 @@ export default {
   },
   data() {
     return {
-      uploadUrl: getUploadUrl()+"?groupId=-1",
+      uploadStoreImgUrl: "",
+      uploadStoreImgDtlUrl: "",
+      dialogVisible:false,
+      dialogImageUrl:'',
+      viewSubmit: true,
+      hideStoreImgUpload: true,
+      hideStoreImgDtlUpload: true,
       serviceList: [],
+      uploadStoreImgList: [],
+      uploadStoreImgDtlList: [],
       shopStatusList: [],
       provinceList: [],
       cityList: [],
@@ -107,6 +120,7 @@ export default {
       fileList: [],
       dataForm: {
         storeName: '',
+        storeImg: '',
         owerUserName: '',
         mobilePhone: '',
         lat: '',
@@ -132,8 +146,14 @@ export default {
         this.dataForm = this.editData
         this.imageUrl = this.dataForm.storeImg
         this.loadCityList()
+        this.buildStoreImgGroupId()
+        this.buildStoreImgDtlGroupId()
+        this.initDefaultImage()
       }
     })
+    if (this.oper == 'view') {
+      this.viewSubmit = false
+    }
   },
   created() {},
   methods: {
@@ -204,7 +224,19 @@ export default {
       this.fileList = this.dataForm.files
       for (let i = 0; i < this.dataForm.files.length; i++) {
         const imageObj = this.dataForm.files[i]
+        if (imageObj.groupId == this.dataForm.storeImg) {
+          this.uploadStoreImgList.push(imageObj)
+        }
+
+        if (imageObj.groupId == this.dataForm.storeImgDtl) {
+          this.uploadStoreImgDtlList.push(imageObj)
+        }
       }
+
+      if (this.uploadStoreImgDtlList.length >= 1) {
+        this.hideStoreImgDtlUpload = false
+      }
+
     },
     saveObject() {
       const scope = this
@@ -212,8 +244,9 @@ export default {
         delete this.dataForm.createTime
         delete this.dataForm.createBy
 
-        const fileList = []
-
+        let fileList = []
+        fileList = fileList.concat(this.uploadStoreImgList)
+        fileList = fileList.concat(this.uploadStoreImgDtlList)
         this.dataForm.fileJsonStr = JSON.stringify(fileList)
         this.dataForm.files = []
 
@@ -269,6 +302,118 @@ export default {
     },
     cancelUpdate() {
       this.$emit('showListPanel', true)
+    },
+    buildStoreImgGroupId() {
+      if (this.dataForm.storeImg == ''
+        || this.dataForm.storeImg == undefined) {
+        getMethod('/backend/oss/groupId', null).then(res => {
+          this.uploadStoreImgUrl = getUploadUrl() + '?groupId=' + res.data
+          this.dataForm.storeImg = res.data
+        })
+      } else {
+        this.uploadStoreImgUrl = getUploadUrl() + '?groupId=' + this.dataForm.storeImg
+      }
+    },
+    handleStoreImgPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    handleStoreImgRemove(res) {
+      for (let i = 0; i < this.uploadStoreImgList.length; i++) {
+        if (this.uploadStoreImgList[i].url == (res.url || res.response.data.url)) {
+          this.uploadStoreImgList.splice(i, 1)
+          break
+        }
+      }
+      this.hideStoreImgUpload = false
+    },
+    handleStoreImgSuccess(res, file) {
+      res.data.sort = this.fileSortImage++
+      res.data.fileType = file.raw.type
+      this.uploadStoreImgList.push(res.data)
+      const groupId = res.data.groupId
+      let imageCnt = 0
+      for (let i = 0; i < this.uploadStoreImgList.length; i++) {
+        if (this.uploadStoreImgList[i].groupId == groupId) {
+          imageCnt++
+        }
+      }
+      if (imageCnt >= 1) {
+        this.hideStoreImgUpload = true
+      }
+      /*this.clearValidate('storeImg')*/
+      this.dataForm.storeImg = res.data.groupId
+    },
+    beforeStoreImgUpload(file) {
+      const fileTypeVerify =
+        file.type === 'image/jpeg' ||
+        file.type === 'image/png' ||
+        file.type === 'application/pdf'
+      const isLt2M = file.size / 1024 / 1024 < 5
+
+      if (!fileTypeVerify) {
+        this.$message.error('上传文件格式错误!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传文件大小不能超过 5MB!')
+      }
+      return fileTypeVerify && isLt2M
+    },
+    buildStoreImgDtlGroupId() {
+      if (this.dataForm.storeImgDtl == ''
+        || this.dataForm.storeImgDtl == undefined) {
+        getMethod('/backend/oss/groupId', null).then(res => {
+          this.uploadStoreImgDtlUrl = getUploadUrl() + '?groupId=' + res.data
+          this.dataForm.storeImgDtl = res.data
+        })
+      } else {
+        this.uploadStoreImgDtlUrl = getUploadUrl() + '?groupId=' + this.dataForm.storeImgDtl
+      }
+    },
+    handleStoreImgDtlPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    handleStoreImgDtlRemove(res) {
+      for (let i = 0; i < this.uploadStoreImgDtlList.length; i++) {
+        if (this.uploadStoreImgDtlList[i].url == (res.url || res.response.data.url)) {
+          this.uploadStoreImgDtlList.splice(i, 1)
+          break
+        }
+      }
+      this.hideStoreImgDtlUpload = false
+    },
+    handleStoreImgDtlSuccess(res, file) {
+      res.data.sort = this.fileSortImage++
+      res.data.fileType = file.raw.type
+      this.uploadStoreImgDtlList.push(res.data)
+      const groupId = res.data.groupId
+      let imageCnt = 0
+      for (let i = 0; i < this.uploadStoreImgDtlList.length; i++) {
+        if (this.uploadStoreImgDtlList[i].groupId == groupId) {
+          imageCnt++
+        }
+      }
+      if (imageCnt >= 1) {
+        this.hideStoreImgDtlUpload = false
+      }
+      /*this.clearValidate('storeImg')*/
+      this.dataForm.storeImgDtl = res.data.groupId
+    },
+    beforeStoreImgDtlUpload(file) {
+      const fileTypeVerify =
+        file.type === 'image/jpeg' ||
+        file.type === 'image/png' ||
+        file.type === 'application/pdf'
+      const isLt2M = file.size / 1024 / 1024 < 5
+
+      if (!fileTypeVerify) {
+        this.$message.error('上传文件格式错误!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传文件大小不能超过 5MB!')
+      }
+      return fileTypeVerify && isLt2M
     },
     submitUpdate() {
       this.saveObject()
