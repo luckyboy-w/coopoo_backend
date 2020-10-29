@@ -1,6 +1,6 @@
 <template>
   <div class="update-form-panel">
-    <el-form ref="dataForm" :model="dataForm" label-width="120px" width="500px">
+    <el-form ref="dataForm" :model="dataForm" label-width="140px" width="500px">
       <el-form-item label="门店名称">
         <el-input v-model="dataForm.storeName" />
       </el-form-item>
@@ -23,7 +23,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="店铺图片-列表" prop="storeImg">
+      <el-form-item label="店铺图片-列表页面" prop="storeImg">
         <el-input v-show="false" v-model="dataForm.storeImg" />
         <el-upload
           :disabled="!viewSubmit"
@@ -40,7 +40,7 @@
         </el-upload>
       </el-form-item>
 
-      <el-form-item label="店铺图片-详情" prop="storeImgDtl" style="width:1060px">
+      <el-form-item label="店铺图片-详情页面" prop="storeImgDtl" style="width:1060px">
         <el-input v-show="false" v-model="dataForm.storeImgDtl" />
         <el-upload
           :disabled="!viewSubmit"
@@ -107,8 +107,8 @@ export default {
       dialogVisible:false,
       dialogImageUrl:'',
       viewSubmit: true,
-      hideStoreImgUpload: true,
-      hideStoreImgDtlUpload: true,
+      hideStoreImgUpload: false,
+      hideStoreImgDtlUpload: false,
       serviceList: [],
       uploadStoreImgList: [],
       uploadStoreImgDtlList: [],
@@ -233,8 +233,8 @@ export default {
         }
       }
 
-      if (this.uploadStoreImgDtlList.length >= 1) {
-        this.hideStoreImgDtlUpload = false
+      if (this.uploadStoreImgList.length >= 1) {
+        this.hideStoreImgUpload = true
       }
 
     },
