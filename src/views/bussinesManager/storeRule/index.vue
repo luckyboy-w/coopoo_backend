@@ -90,7 +90,6 @@ export default {
   computed: {},
   mounted() {
     this.initLoad();
-    this.buildServiceIconGroupId();
   },
   components: { saveOrEdit },
   created() {},
