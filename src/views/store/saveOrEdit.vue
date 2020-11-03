@@ -146,10 +146,10 @@ export default {
         this.dataForm = this.editData
         this.imageUrl = this.dataForm.storeImg
         this.loadCityList()
-        this.buildStoreImgGroupId()
-        this.buildStoreImgDtlGroupId()
         this.initDefaultImage()
       }
+      this.buildStoreImgGroupId()
+      this.buildStoreImgDtlGroupId()
     })
     if (this.oper == 'view') {
       this.viewSubmit = false
