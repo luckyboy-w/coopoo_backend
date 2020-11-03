@@ -431,6 +431,7 @@ export default {
     this.$nextTick(function() {
       if (this.editData.id) {
         this.dataForm = this.editData
+        this.switchLevel(this.editData.provinceRole)
       }
       this.loadprovinceList()
 
@@ -497,7 +498,6 @@ export default {
       if (obj == undefined) {
         return
       }
-      console.info(obj)
       const getName = obj.providerLevel
       if (getName == 'E类') {
         this.isPersonProvince = false
