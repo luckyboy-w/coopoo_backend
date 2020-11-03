@@ -68,9 +68,7 @@ export default {
 	mounted() {
 
 		if(this.$route.query.dt != undefined){
-			console.log("------------------");
 			if(this.$route.query.dt == '105'){
-				debugger
 				//昨日访问
 				let dt = new Date()
 				let yesterday = new Date(dt.getTime() - ((86400*1000)+28800));

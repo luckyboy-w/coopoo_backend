@@ -335,7 +335,6 @@ export default {
 				};
 				getMethod("/backend/supplier/findObject", param).then(res => {
 					scope.editData = res.data[0];
-					debugger
 					this.showList = false;
 					this.showAddOrEdit = true;
 				});

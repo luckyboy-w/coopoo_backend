@@ -1,6 +1,6 @@
 <template>
   <div class="update-form-panel">
-    <el-form ref="dataForm" :model="dataForm" :rules="rules" label-width="130px">
+    <el-form ref="dataForm" :model="dataForm" :rules="rules" label-width="150px">
       <el-form-item label="服务商名称" prop="provinceName">
         <el-input v-model="dataForm.provinceName" :disabled="!viewSubmit" />
       </el-form-item>
@@ -23,6 +23,12 @@
       </el-form-item>
       <el-form-item v-show="!isPersonProvince" label="店主姓名" prop="owerName">
         <el-input v-model="dataForm.owerName" :disabled="!viewSubmit" />
+      </el-form-item>
+      <el-form-item v-show="!isPersonProvince" label="公司名称" prop="companyName">
+        <el-input v-model="dataForm.companyName" :disabled="!viewSubmit" />
+      </el-form-item>
+      <el-form-item v-show="!isPersonProvince" label="税务代码" prop="taxNo">
+        <el-input v-model="dataForm.taxNo" :disabled="!viewSubmit" />
       </el-form-item>
       <el-form-item label="推荐人电话" prop="referenceNo">
         <el-input v-model="dataForm.referenceNo" :disabled="!viewSubmit" />
@@ -92,6 +98,25 @@
           <img width="100%" :src="imageUrl" alt>
         </el-dialog>
       </el-form-item>
+      <el-form-item v-show="!isPersonProvince" label="银行开户许可照片" prop="bankLicenseImg">
+        <el-input v-show="false" v-model="dataForm.bankLicenseImg" />
+        <el-upload
+          :disabled="!viewSubmit"
+          :action="uploadBankLicenseUrl"
+          list-type="picture-card"
+          :on-preview="handleBankLicensePreview"
+          :before-upload="beforeLicenseUpload"
+          :on-success="handleBankLicenseSuccess"
+          :class="{hide:hideBankLicenseUpload}"
+          :file-list="uploadBankLicenseList"
+          :on-remove="handleBankLicenseRemove"
+        >
+          <i class="el-icon-plus" />
+        </el-upload>
+        <el-dialog>
+          <img width="100%" :src="imageUrl" alt>
+        </el-dialog>
+      </el-form-item>
       <el-form-item label="文件协议" prop="protocalFile">
         <el-input v-show="false" v-model="dataForm.protocalFile" />
         <el-upload
@@ -115,10 +140,10 @@
         </ul>
 
       </el-form-item>
-      <el-form-item label="银行名称" prop="bankName">
+      <el-form-item label="开户银行" prop="bankName">
         <el-input v-model="dataForm.bankName" :disabled="!viewSubmit" />
       </el-form-item>
-      <el-form-item label="银行卡号" prop="cardNo">
+      <el-form-item label="银行账号" prop="cardNo">
         <el-input v-model="dataForm.cardNo"  :disabled="!viewSubmit" />
       </el-form-item>
       <el-form-item label="地区" prop="area">
@@ -142,7 +167,7 @@
         </el-select>
         <div style="line-height:10px">&nbsp;</div>
       </el-form-item>
-      <el-form-item label="详细地址" prop="address">
+      <el-form-item label="公司详细地址" prop="address">
         <el-input v-model="dataForm.address"/>
       </el-form-item>
       <el-form-item>
@@ -222,6 +247,14 @@ export default {
       }
     }
 
+    const isUploadBankLicenseImg = (rule, value, callback) => {
+      if (this.uploadBankLicenseList.length <= 0) {
+        callback(new Error("请上传银行开户许可照片"));
+      } else {
+        callback();
+      }
+    }
+
     const isUploadProtocalFile = (rule, value, callback) => {
       if (this.protocalFileList.length <= 0) {
         callback(new Error("请上传协议文件"));
@@ -232,7 +265,7 @@ export default {
 
     const validateBankNo = (rule, value, callback) => {
       if (!luhnCheck(this.dataForm.cardNo)) {
-        callback(new Error("银行卡号输入错误"));
+        callback(new Error("银行账号输入错误"));
       } else {
         callback();
       }
@@ -241,6 +274,16 @@ export default {
     const validateOwnerName = (rule, value, callback) => {
       if (!this.isPersonProvince && (this.dataForm.owerName == '' || this.dataForm.owerName == undefined)) {
         callback(new Error("请输入店主姓名"));
+      } else {
+        callback();
+      }
+    }
+
+    const validateTaxNo = (rule, value, callback) => {
+      const reg = /^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/g;
+      const isCorrect = reg.test(value);
+      if (!isCorrect) {
+        callback(new Error("税务代码输入错误！"));
       } else {
         callback();
       }
@@ -276,13 +319,16 @@ export default {
       hideSideUpload: false,
       uploadSideUrl: '',
       hideLicenseUpload: false,
+      hideBankLicenseUpload: false,
       uploadLicenseUrl: '',
+      uploadBankLicenseUrl: '',
       hideProtocalUpload: true,
       uploadProtocalUrl: '',
       protocalFileList: [],
       uploadFrontList: [],
       uploadSideList: [],
       uploadLicenseList: [],
+      uploadBankLicenseList: [],
       imageUrl: '',
       fileList: [],
       dataForm: {
@@ -297,6 +343,7 @@ export default {
         personFrontImg: '',
         personSideImg: '',
         licenseImg: '',
+        bankLicenseImg: '',
         referenceNo: '',
         bankName: '',
         cardNo: '',
@@ -324,6 +371,13 @@ export default {
         owerName: [
           { required: true, validator: validateOwnerName, message: '请输入店主姓名', trigger: 'blur' },
         ],
+        companyName: [
+          { required: true, message: '请输入公司名称', trigger: 'blur' },
+        ],
+        taxNo: [
+          { required: true, message: "请输入税务代码", trigger: "blur"},
+          { required: true, validator: validateTaxNo, trigger: 'blur' },
+        ],
         licenseImg: [
           { required: true, validator: isUploadLicenseImg, trigger: "blur" }
         ],
@@ -336,17 +390,20 @@ export default {
         protocalFile: [
           { required: true, validator: isUploadProtocalFile, trigger: "blur" }
         ],
+        bankLicenseImg: [
+          { required: true, validator: isUploadBankLicenseImg, trigger: "blur" }
+        ],
         bankName: [
-          { required: true, message: '请输入银行名称', trigger: 'blur' },
+          { required: true, message: '请输入开户银行', trigger: 'blur' },
         ],
         cardNo: [
-          { required: true, validator: validateBankNo, message: '请输入银行卡号', trigger: 'blur'},
+          { required: true, validator: validateBankNo, message: '请输入银行账号', trigger: 'blur'},
         ],
         area: [
           { required: true, validator: validateArea, trigger: "change" }
         ],
         address: [
-          { required: true, message: '请输入详细地址', trigger: 'blur' },
+          { required: true, message: '请输入公司详细地址', trigger: 'blur' },
         ],
       }
     }
@@ -381,6 +438,7 @@ export default {
       this.buildSideGroupId()
       this.buildLicenseGroupId()
       this.buildProtocalGroupId()
+      this.buildBankLicenseImgGroupId()
     })
     if (this.oper == 'view') {
       this.viewSubmit = false
@@ -407,6 +465,9 @@ export default {
         if (imageObj.groupId == this.dataForm.licenseImg) {
           this.uploadLicenseList.push(imageObj)
         }
+        if (imageObj.groupId == this.dataForm.bankLicenseImg) {
+          this.uploadBankLicenseList.push(imageObj)
+        }
       }
       if (this.protocalFileList.length >= 1) {
         this.hideProtocalUpload = false
@@ -423,6 +484,10 @@ export default {
       if (this.uploadLicenseList.length >= 1) {
         this.hideLicenseUpload = true
       }
+
+      if (this.uploadBankLicenseList.length >= 1) {
+        this.hideBankLicenseUpload = true
+      }
     },
     switchLevel(val) {
       let obj = {}
@@ -432,6 +497,7 @@ export default {
       if (obj == undefined) {
         return
       }
+      console.info(obj)
       const getName = obj.providerLevel
       if (getName == 'E类') {
         this.isPersonProvince = false
@@ -580,7 +646,6 @@ export default {
       return fileTypeVerify && isLt2M
     },
     buildLicenseGroupId() {
-      debugger
       if (this.dataForm.licenseImg == ''
           || this.dataForm.licenseImg == undefined) {
         getMethod('/backend/oss/groupId', null).then(res => {
@@ -636,6 +701,51 @@ export default {
       }
       return fileTypeVerify && isLt2M
     },
+    handleBankLicensePreview(file) {
+			this.dialogImageUrl = file.url;
+			this.dialogVisible = true;
+		},
+    handleBankLicenseRemove(res) {
+      for (let i = 0; i < this.uploadBankLicenseList.length; i++) {
+        if (this.uploadBankLicenseList[i].url == (res.url || res.response.data.url)) {
+          this.uploadBankLicenseList.splice(i, 1)
+          break
+        }
+      }
+      this.hideBankLicenseUpload = false
+    },
+    handleBankLicenseSuccess(res, file) {
+      res.data.sort = this.fileSortImage++
+      res.data.fileType = file.raw.type
+      this.uploadBankLicenseList.push(res.data)
+      const groupId = res.data.groupId
+      let imageCnt = 0
+      for (let i = 0; i < this.uploadBankLicenseList.length; i++) {
+        if (this.uploadBankLicenseList[i].groupId == groupId) {
+          imageCnt++
+        }
+      }
+      if (imageCnt >= 1) {
+        this.hideBankLicenseUpload = true
+      }
+      this.clearValidate('bankLicenseImg')
+      this.dataForm.bankLicenseImg = res.data.groupId
+    },
+    beforeLicenseUpload(file) {
+      const fileTypeVerify =
+				file.type === 'image/jpeg' ||
+				file.type === 'image/png' ||
+				file.type === 'application/pdf'
+      const isLt2M = file.size / 1024 / 1024 < 5
+
+      if (!fileTypeVerify) {
+        this.$message.error('上传文件格式错误!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传文件大小不能超过 5MB!')
+      }
+      return fileTypeVerify && isLt2M
+    },
     buildProtocalGroupId() {
       if (this.dataForm.protocalFile == '') {
         getMethod('/backend/oss/groupId', null).then(res => {
@@ -644,6 +754,16 @@ export default {
         })
       } else {
         this.uploadProtocalUrl = getUploadUrl() + '?groupId=' + this.dataForm.protocalFile
+      }
+    },
+    buildBankLicenseImgGroupId() {
+      if (this.dataForm.bankLicenseImg == '') {
+        getMethod('/backend/oss/groupId', null).then(res => {
+          this.uploadBankLicenseUrl = getUploadUrl() + '?groupId=' + res.data
+          this.dataForm.bankLicenseImg = res.data
+        })
+      } else {
+        this.uploadBankLicenseUrl = getUploadUrl() + '?groupId=' + this.dataForm.bankLicenseImg
       }
     },
     handleProtocalPreview() {},
@@ -702,6 +822,7 @@ export default {
           fileList = fileList.concat(this.uploadSideList)
           fileList = fileList.concat(this.uploadLicenseList)
           fileList = fileList.concat(this.protocalFileList)
+          fileList = fileList.concat(this.uploadBankLicenseList)
           this.dataForm.fileJsonStr = JSON.stringify(fileList)
           this.dataForm.files = []
           postMethod('/backend/lyProvider/update', this.dataForm).then(
@@ -747,7 +868,7 @@ export default {
 <style lang="scss" scoped>
 .update-form-panel {
 	padding: 30px 20px;
-	width: 600px;
+	width: 650px;
 }
 </style>
 <style lang="scss">

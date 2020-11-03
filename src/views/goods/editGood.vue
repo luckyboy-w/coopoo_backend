@@ -507,7 +507,6 @@ export default {
 			this.dialogVisible = true;
 		},
 		handleGoodImageRemove(res) {
-			debugger
 			for (let i = 0; i < this.uploadGoodImageList.length; i++) {
 				if (
 					this.uploadGoodImageList[i].filePath ==
