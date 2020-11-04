@@ -42,7 +42,7 @@
                         style="width:140px"
                         placeholder="结束日期">
                     </el-date-picker>
-                </el-col>                
+                </el-col>
                 <el-col :span="2" style="padding-left:10px">
                       <el-button @click="search()" type="primary">搜索</el-button>
                 </el-col>
@@ -99,7 +99,7 @@ import { formatDate } from "@/api/tools.js"
         },
         noBillData:{
           list:[],
-          total:0  
+          total:0
         },
         activeName: 'noBill'
       };
@@ -117,9 +117,7 @@ import { formatDate } from "@/api/tools.js"
         }
     },
     mounted() {
-        console.log('---------------------------------');
         if(this.$route.query.dt != undefined){
-            console.log(this.$route.query.dt);
             this.searchParam.dataType = this.$route.query.dt
         }
         this.loadList();
@@ -182,7 +180,7 @@ import { formatDate } from "@/api/tools.js"
         getMethod("/backend/siteData/findRecTypeList", param).then(res => {
             scope.titleList = res.data
         });
-        
+
         getMethod("/backend/storeManage/findList", param).then(res => {
             scope.storeList = res.data
         });
