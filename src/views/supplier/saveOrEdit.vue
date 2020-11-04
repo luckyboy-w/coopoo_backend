@@ -171,9 +171,9 @@
 			<el-form-item label="是否启用">
 				<el-switch v-model="dataForm.enable" inactive-value="0" active-value="1"></el-switch>
 			</el-form-item>
-			<el-form-item label="发布礼品">
+<!--			<el-form-item label="发布礼品">
 				<el-switch v-model="dataForm.publishGift" inactive-value="0" active-value="1"></el-switch>
-			</el-form-item>
+			</el-form-item>-->
       <el-form-item label="平台服务比率" prop="serviceRatio">
         <el-select v-model="dataForm.serviceRatio">
           <el-option
