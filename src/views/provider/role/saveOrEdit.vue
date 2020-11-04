@@ -63,7 +63,7 @@ export default {
         delete this.dataForm.createBy
         postMethod('/backend/providerRole/update', this.dataForm).then(
           res => {
-            if(res.data == '-1'){
+            if(res.code != 200){
               this.$message({
                 message: res.message,
                 type: 'warning'

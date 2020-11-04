@@ -121,14 +121,9 @@ export default {
         return
       }
       postMethod("/backend/web/resetPwd", this.resetFrm).then((res) => {
-        if(res.data == 1){
+        if(res.code != 200){
           this.$message({
-              message: '旧密码不匹配，请重新输入',
-              type: "warning",
-          });
-        }else if(res.data == 2){
-          this.$message({
-              message: '密码重置失败，请稍后再试',
+              message: res.message,
               type: "warning",
           });
         }else {
@@ -138,7 +133,7 @@ export default {
           });
            this.showReset = false;
         }
-        
+
       });
     },
     showResetPwd() {

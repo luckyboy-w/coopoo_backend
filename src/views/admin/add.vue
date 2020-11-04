@@ -114,11 +114,11 @@ export default {
         this.loading = false
         scope.roleData = res.data
 
-        if(res.data == -1){
+        if(res.code != 200){
           this.$message({
             message: res.message,
             type: "warning"
-          });  
+          });
           return
         }
         this.$emit('showListPanel', true)
@@ -126,9 +126,9 @@ export default {
 					message: "保存成功",
 					type: "success"
         });
-        
+
       })
-      
+
     }
   }
 }

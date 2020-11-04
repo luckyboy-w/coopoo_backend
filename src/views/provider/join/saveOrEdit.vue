@@ -827,9 +827,9 @@ export default {
           this.dataForm.files = []
           postMethod('/backend/lyProvider/update', this.dataForm).then(
             res => {
-              if(res.data == "-1"){
+              if(res.code != 200){
                 this.$message({
-                  message: '服务商手机号重复，请重新输入',
+                  message: res.message,
                   type: 'warning'
                 })
                 return;

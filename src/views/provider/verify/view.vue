@@ -511,7 +511,7 @@ export default {
     },
     handleProtocalPreview() {},
     handleProtocalRemove(res) {
-      
+
       for (let i = 0; i < this.protocalFileList.length; i++) {
         if (this.protocalFileList[i].url == (res.url || res.response.data.url)) {
           this.protocalFileList.splice(i, 1)
@@ -566,9 +566,9 @@ export default {
         this.dataForm.files = []
         postMethod('/backend/lyProvider/update', this.dataForm).then(
           res => {
-            if(res.data == "-1"){
+            if(res.code != 200){
               this.$message({
-                message: '服务商手机号重复，请重新输入',
+                message: res.message,
                 type: 'warning'
               })
               return;
