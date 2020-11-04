@@ -2,10 +2,10 @@
   <div  v-loading="loading">
     <table>
       <tr>
-        <td>  
-          <el-button @click="addRole()" type="primary" v-if="!isEdit">新增角色</el-button> 
-          <el-button @click="saveMenuRole()" type="primary" v-if="isEdit">{{saveOrEdit}}</el-button> 
-          <el-button @click="backToList()" plain icon="el-icon-back" v-if="isEdit">返回列表</el-button> 
+        <td>
+          <el-button @click="addRole()" type="primary" v-if="!isEdit">新增角色</el-button>
+          <el-button @click="saveMenuRole()" type="primary" v-if="isEdit">{{saveOrEdit}}</el-button>
+          <el-button @click="backToList()" plain icon="el-icon-back" v-if="isEdit">返回列表</el-button>
         </td>
         <td>
         </td>
@@ -28,7 +28,7 @@
               prop="roleName"
               label="角色名称"
               width="230"
-            /> 
+            />
             <el-table-column
               prop="roleDesc"
               label="备注信息"
@@ -53,9 +53,9 @@
               </el-input>
             </el-form-item>
             <el-form-item label="备注信息">
-                <el-input 
+                <el-input
                   type="textarea"
-                  :rows="2" 
+                  :rows="2"
                   v-model="roleDesc">
                 </el-input>
             </el-form-item>
@@ -194,7 +194,6 @@ export default {
             }
           }
           parentNode.isSelect = unSelectCount? '1':'0';
-          console.log('parentNode.isSelect:'+parentNode.isSelect)
         }
 
       }else{
@@ -257,7 +256,7 @@ export default {
             type: 'success',
             message: '保存成功!'
           })
-          
+
       })
     },
     addRole() {

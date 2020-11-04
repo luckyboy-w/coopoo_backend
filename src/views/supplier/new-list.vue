@@ -53,9 +53,9 @@
 						<el-table-column prop="supplierNo" label="供应商代码" width="150px"></el-table-column>
 						<el-table-column prop="enable" label="状态" width="150px">
 							<template slot-scope="scope">
-								<el-switch 
-									v-model="scope.row.enable" 
-									inactive-value="0" 
+								<el-switch
+									v-model="scope.row.enable"
+									inactive-value="0"
 									active-value="1"
 									@change="enableSupply(scope.row)" >
 								</el-switch>
@@ -92,9 +92,7 @@ import { getMethod, postMethod } from "@/api/request";
 export default {
 	computed: {},
 	mounted() {
-        console.log('---------------------------------');
         if(this.$route.query.dt != undefined){
-            console.log(this.$route.query.dt);
             this.searchParam.dataType = this.$route.query.dt
         }
 		this.initLoad();
@@ -141,7 +139,7 @@ export default {
 			this.showReset = true;
 		},
 		submitReset(){
-			
+
 			if(this.resetFrm.password != this.resetFrm.reppwd){
 				this.$message({
 					type: 'warging',
@@ -158,7 +156,7 @@ export default {
      		 })
 		},
 		enableSupply(row){
-			
+
 			const param = {
 				id: row.id,
 				enable: row.enable

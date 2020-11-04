@@ -160,7 +160,6 @@ import { getMethod, postMethod, formatDate} from "@/api/request";
 export default {
 	computed: {},
 	mounted() {
-		console.log('---------------------------------');
 		if(this.$route.query.dt != undefined){
 			console.log(this.$route.query.dt);
 			this.searchParam.dataType = this.$route.query.dt
