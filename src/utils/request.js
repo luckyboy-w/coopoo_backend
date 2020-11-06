@@ -102,7 +102,7 @@ service.interceptors.response.use(
         location.href = '/'
       }
 
-      if(res.message == 'pwd.err'){
+      if(res.message == 'pwd.fail'){
         Message({
           message: '密码错误，请重新输入',
           type: 'error',
