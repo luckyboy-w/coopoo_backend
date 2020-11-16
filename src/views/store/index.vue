@@ -83,6 +83,11 @@
                 <el-button
                   type="text"
                   size="small"
+                  @click.native.prevent="editEmp(scope.row, tableData)"
+                >编辑店员</el-button>
+                <el-button
+                  type="text"
+                  size="small"
                   @click.native.prevent="editStoreService(scope.row, tableData)"
                 >编辑门店服务</el-button>
                 <el-button
