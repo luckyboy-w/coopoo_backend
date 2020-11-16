@@ -266,22 +266,6 @@ export default {
 				this.showAddOrEdit = true
 			});
 		},
-		submitVerify(){
-			if(this.verifyForm.verifyResult == '0'){
-				this.verifyForm.recContent = ''
-				this.verifyForm.modityStatus = "20";
-			}else{
-				this.verifyForm.modityStatus = "30";
-			}
-			postMethod("/backend/verifyRec/save", this.verifyForm).then(res => {
-				this.loadList()
-				this.$message({
-					message: "提交成功",
-					type: "success"
-				});
-			});
-			this.dialogVerify = false
-		},
 		offLine(row,isSale){
 			let verifyStatus = '20'
 			if(isSale == '3'){
