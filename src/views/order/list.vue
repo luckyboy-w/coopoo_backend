@@ -35,7 +35,6 @@
                <el-select v-model="searchParam.orderType" placeholder="请选择">
                 <el-option value="" label="全部"></el-option>
                 <el-option value="1" label="普通订单"></el-option>
-                <el-option value="2" label="礼品订单"></el-option>
                 <el-option value="4" label="定制订单"></el-option>
               </el-select>
             </td>
@@ -48,14 +47,6 @@
                 <el-option value="30" label="待支付"></el-option>
                 <el-option value="50" label="已完成"></el-option>
                 <el-option value="60" label="定制信息确认中"></el-option>
-              </el-select>
-            </td>
-            <td>风险订单:</td>
-            <td>
-              <el-select v-model="searchParam.riskOrder" placeholder="请选择">
-                <el-option value="" label="全部"></el-option>
-                <el-option value="moy" label="单个订单高金额"></el-option>
-                <el-option value="num" label="单个订单商品高数量"></el-option>
               </el-select>
             </td>
           </tr>
@@ -84,19 +75,21 @@
               </template>
             </el-table-column>
             <el-table-column prop="orderNo" label="订单编号" width="220px" />
+            <el-table-column prop="ordPayPrice" label="订单总价" width="150px">
+              <template slot-scope="scope">
+                {{ scope.row | fmtPrice}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="totalAmount" label="实付金额" width="150px">
+              <template slot-scope="scope">
+                {{ scope.row | fmtPayPrice}}
+              </template>
+            </el-table-column>
             <el-table-column prop="recUname" label="买家姓名" width="120px" />
             <el-table-column prop="recPhone" label="买家手机号码" width="150px" />
-            <el-table-column prop="recPhone" label="风险订单" width="150px">
-                否
-            </el-table-column>、
-            <el-table-column prop="ordSubPrice" label="是否使用优惠券" width="150px">
+            <el-table-column prop="orderNo" label="供应商名称" width="220px" >
                 <template slot-scope="scope">
-                  {{scope.row.ordSubPrice == 0 ? '否':'是'}}
-                </template>
-            </el-table-column>
-            <el-table-column prop="orderNo" label="商家名称" width="220px" >
-                <template slot-scope="scope">
-                  {{scope.row.supplierList[0].supplierName}}
+                  {{scope.row.tenantName}}
                 </template>
             </el-table-column>
             <el-table-column prop="createTime" label="下单时间" width="150px">
@@ -112,17 +105,6 @@
             <el-table-column prop="orderType" label="订单类型" width="150px">
               <template slot-scope="scope">
                 {{ scope.row.orderType | type2Text}}
-              </template>
-            </el-table-column>
-
-            <el-table-column prop="ordPayPrice" label="订单总价" width="150px">
-              <template slot-scope="scope">
-                {{ scope.row | fmtPrice}}
-              </template>
-            </el-table-column>
-            <el-table-column prop="totalAmount" label="实付金额" width="150px">
-              <template slot-scope="scope">
-                {{ scope.row | fmtPayPrice}}
               </template>
             </el-table-column>
             <!-- 订单状态;0:订单被取消;10:已提交,待发货20;已发货,待收货;30:已收货;待支付;40:退货/售后;50:交易完成/未评价;51:交易完成/已评价; -->
