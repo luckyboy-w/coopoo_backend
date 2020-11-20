@@ -4,38 +4,43 @@
 			<div class="ly-tool-panel">
 				<table>
 					<tr>
-						<td>环信ID:</td>
-						<td>
-							<el-input v-model="searchParam.pkMemberId" width="180px"></el-input>
-						</td>
-						<td>会员昵称:</td>
-						<td>
-							<el-input v-model="searchParam.nickName" width="180px"></el-input>
-						</td>
 						<td>手机号:</td>
 						<td>
 							<el-input v-model="searchParam.phoneNo" width="180px"></el-input>
 						</td>
 						<td>会员类型:</td>
 						<td>
-                            <el-select v-model="searchParam.provStatus" placeholder="请选择">
-                                <el-option label="全部" value=""></el-option>
-								<el-option label="普通会员" value="0"></el-option>
-								<el-option label="服务商" value="1"></el-option>
-                            </el-select>
+                <el-select v-model="searchParam.memberType" placeholder="请选择">
+                  <el-option label="全部" value=""></el-option>
+                  <el-option label="普通会员" value="10"></el-option>
+                  <el-option label="用户" value="30"></el-option>
+                  <el-option label="A类服务商" value="1"></el-option>
+                  <el-option label="B类服务商" value="2"></el-option>
+                  <el-option label="C类服务商" value="3"></el-option>
+                  <el-option label="D类服务商" value="4"></el-option>
+                  <el-option label="E类服务商" value="5"></el-option>
+                  <el-option label="EF类服务商" value="6"></el-option>
+                </el-select>
 						</td>
-						<td>所属服务商:</td>
+            <td>状态:</td>
 						<td>
-                            <el-select v-model="searchParam.owerProvider" placeholder="请选择">
-								<el-option value="" label="全部"></el-option>
-                                <el-option
-                                    v-for="item in providerList "
-                                    :key="item.id"
-                                    :value-key="item.id"
-                                    :label="item.provinceName"
-                                    :value="item.mobileNo">
-                                </el-option>
-                            </el-select>
+                <el-select v-model="searchParam.enable" placeholder="请选择">
+                  <el-option label="全部" value=""></el-option>
+                  <el-option label="启用" value="1"></el-option>
+                  <el-option label="禁用" value="2"></el-option>
+                </el-select>
+						</td>
+            <td>赠品:</td>
+						<td>
+                <el-select v-model="searchParam.isSendGift" placeholder="请选择">
+                  <el-option label="全部" value=""></el-option>
+                  <el-option label="未发放" value="0"></el-option>
+                  <el-option label="已发放" value="1"></el-option>
+                </el-select>
+						</td>
+						<td>邀请人手机号:</td>
+						<td>
+              <el-input v-model="searchParam.owerProvider" width="180px"></el-input>
 						</td>
 
 						<td>
@@ -53,35 +58,49 @@
 						style="width: 100%; margin-bottom: 20px;"
 						row-key="id"
 						border>
-						<el-table-column prop="memProvId" label="会员ID" width="150px"></el-table-column>
-						<el-table-column prop="nickName" label="会员昵称" width="150px"></el-table-column>
+						<el-table-column prop="nickName" label="会员名称" width="150px"></el-table-column>
 						<el-table-column prop="phoneNo" label="手机号" width="150px"></el-table-column>
-						<el-table-column prop="owerProviderName" label="所属服务商" width="150px"></el-table-column>
+						<el-table-column prop="owerProviderName" label="邀请人" width="150px"></el-table-column>
 						<el-table-column prop="regTime" label="注册时间" width="150px">
-                            <template slot-scope="scope">
-                                {{scope.row.regTime | formatDate}}
-                            </template>
-                        </el-table-column>
+                <template slot-scope="scope">
+                    {{scope.row.regTime | formatDate}}
+                </template>
+            </el-table-column>
 						<el-table-column prop="costPrice" label="消费总额" width="150px"></el-table-column>
-                        <el-table-column prop="beans" label="靠谱豆数量" width="150px"></el-table-column>
-						<el-table-column prop="provStatus" label="是否服务商" width="150px"></el-table-column>
-						<el-table-column prop="activateFlag" label="是否缴纳会员费" width="150px">
-							<template slot-scope="scope">
-								{{scope.row.activateFlag=='1'?"未缴纳":"已缴纳"}}
-							</template>
-						</el-table-column>
-                        <el-table-column prop="enable" label="会员状态" width="150px"></el-table-column>
-						<el-table-column prop="owerCity" label="所处城市" width="150px"></el-table-column>
-                        <el-table-column prop="pkMemberId" label="操作" width="150px">
-                            <template slot-scope="scope">
-								<div style="font-size:12px;">
-									<el-link type="primary"  @click="opUserState(scope.row,2)" v-if="scope.row.enable == '启用'" >禁用</el-link>
-									<el-link type="primary"  @click="opUserState(scope.row,1)"  v-if="scope.row.enable =='禁用'">启用</el-link>
-									&nbsp;&nbsp;
-									<el-link type="primary"  @click="viewMember(scope.row)" >查看</el-link>
-								</div>
-                            </template>
-                        </el-table-column>
+            <el-table-column prop="beans" label="靠谱豆数量" width="150px"></el-table-column>
+            <el-table-column prop="address" label="家庭住址" width="150px"></el-table-column>
+            <el-table-column prop="memberType" label="会员类型" width="150px">
+              <template slot-scope="scope">
+                <span v-if="scope.row.memberType == '10' && scope.row.isProvider == undefined">会员</span>
+                <span v-if="scope.row.memberType == '30' && scope.row.isProvider == undefined">用户</span>
+                <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '1' ">A类服务商</span>
+                <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '2' ">B类服务商</span>
+                <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '3' ">C类服务商</span>
+                <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '4' ">D类服务商</span>
+                <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '5' ">E类服务商</span>
+                <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '6' ">EF类服务商</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="isSendGift" label="赠品" width="150px">
+              <template slot-scope="scope">
+                {{scope.row.isSendGift == "1" ? "已发放" : "未发放"}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="enable" label="状态" width="150px">
+              <template slot-scope="scope">
+                {{scope.row.enable == "1" ? "启用" : "禁用"}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="pkMemberId" label="操作" width="150px">
+                <template slot-scope="scope">
+                  <div style="font-size:12px;">
+                    <el-link type="primary"  @click="opUserState(scope.row,2)" v-if="scope.row.enable == '1'" >禁用</el-link>
+                    <el-link type="primary"  @click="opUserState(scope.row,1)"  v-if="scope.row.enable =='2'">启用</el-link>
+                    <el-link type="primary"  @click="sendGift(scope.row)" v-if="scope.row.isSendGift =='0'">发放赠品</el-link>
+                    <!--<el-link type="primary"  @click="viewMember(scope.row)" >查看</el-link>-->
+                  </div>
+                </template>
+            </el-table-column>
 					</el-table>
 				</div>
 				<div class="ly-data-pagination">
@@ -161,11 +180,9 @@ export default {
 	computed: {},
 	mounted() {
 		if(this.$route.query.dt != undefined){
-			console.log(this.$route.query.dt);
 			this.searchParam.dataType = this.$route.query.dt
 		}
 		this.initLoad()
-		this.loadProviderList()
 	},
 	components: {},
 	created() {},
@@ -233,8 +250,29 @@ export default {
 			let date = new Date(time)
 			return formatDate(date,'yyyy-MM-dd hh:mm')
 		},
-        opUserState(row,enableVal){
-
+    sendGift(row){
+      let scope = this;
+      let param = {
+        pkMemberId: row.pkMemberId,
+        isSendGift: "1"
+      }
+      this.$confirm("确认是否发放赠品?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        postMethod("/backend/member/gift", param).then(
+          res => {
+            scope.initLoad()
+            this.$message({
+              message: "操作成功",
+              type: "success"
+            });
+          }
+        );
+      });
+    },
+    opUserState(row,enableVal){
 			let scope = this;
 			let param = {
 				pkMemberId:row.pkMemberId,
@@ -274,13 +312,6 @@ export default {
 			let scope = this;
 			getMethod("/backend/areas/findProvince", null).then(res => {
 				scope.provinceList = res.data.list;
-			});
-		},
-		loadProviderList(){
-			let scope = this;
-			let param = {};
-			getMethod("/backend/lyProvider/findList", null).then(res => {
-				scope.providerList = res.data
 			});
 		},
 		deleteRow(rowIndex, data) {
