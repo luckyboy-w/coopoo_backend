@@ -26,7 +26,13 @@
 						<el-table-column prop="versionNo" label="版本号" width="150px"></el-table-column>
 						<el-table-column prop="title" label="标题" width="250px"></el-table-column>
 						 <el-table-column prop="content" label="更新内容"></el-table-column>
-						 <el-table-column prop="isForceUpdate" label="是否强制更新">
+						 <el-table-column prop="type" label="APP类型">
+               <template slot-scope="scope">
+                 {{scope.row.type == '1' ? "Android" : "IOS"}}
+               </template>
+             </el-table-column>
+            <el-table-column prop="downloadUrl" label="下载地址"></el-table-column>
+            <el-table-column prop="isForceUpdate" label="是否强制更新">
                <template slot-scope="scope">
                  {{scope.row.isForceUpdate == '1' ? "是" : "否"}}
                </template>

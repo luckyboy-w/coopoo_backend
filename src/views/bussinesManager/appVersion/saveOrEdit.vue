@@ -7,6 +7,15 @@
       <el-form-item label="标题" prop="title">
 				<el-input v-model="dataForm.title"></el-input>
 			</el-form-item>
+      <el-form-item label="下载地址" prop="downloadUrl">
+				<el-input v-model="dataForm.downloadUrl"></el-input>
+			</el-form-item>
+      <el-form-item label="APP类型" prop="type">
+        <el-select v-model="dataForm.type">
+          <el-option label="Android" :value="1"></el-option>
+          <el-option label="IOS" :value="2"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="是否强制更新" prop="isForceUpdate">
         <el-select v-model="dataForm.isForceUpdate">
           <el-option label="否" :value="0"></el-option>
