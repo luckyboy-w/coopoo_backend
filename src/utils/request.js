@@ -102,7 +102,7 @@ service.interceptors.response.use(
         })
       }
 
-      if(res.code == 1000 || response.code == 1100){
+      if(res.code == 1000 || res.code == 1100){
         Message({
           message: '登录超时，请重新登录',
           type: 'error',
