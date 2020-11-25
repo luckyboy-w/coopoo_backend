@@ -108,7 +108,7 @@ service.interceptors.response.use(
           type: 'error',
           duration: 5 * 1000
         });
-        location.href = '/';
+        location.href = process.env.NODE_ENV === 'production' ? '/' : '/backend';
       }
 
       if(res.message == 'pwd.fail'){
