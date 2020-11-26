@@ -24,20 +24,8 @@
                 </el-option>
               </el-select>
             </td>
-            <td>订单状态:</td>
-            <td>
-              <el-select v-model="searchParam.status" placeholder="请选择">
-                <el-option value="" label="全部"></el-option>
-                <el-option value="10" label="待发货"></el-option>
-                <el-option value="20" label="待收货"></el-option>
-                <el-option value="30" label="待支付"></el-option>
-                <el-option value="50" label="已完成"></el-option>
-                <el-option value="60" label="定制信息确认中"></el-option>
-              </el-select>
-            </td>
             <td colspan="2">
               <el-button icon="el-icon-search" @click="search()">搜索</el-button>
-              <el-button icon="el-icon-download" @click="exportData()">导出</el-button>
             </td>
           </tr>
         </table>
@@ -87,40 +75,19 @@
                 {{ scope.row.createTime | _formatDate }}
               </template>
             </el-table-column>
-            <el-table-column prop="status" label="订单状态" width="150px">
-              <template slot-scope="scope">
-                {{ scope.row.status | statuts2Text }}
-              </template>
-            </el-table-column>
             <el-table-column prop="orderType" label="订单类型" width="150px">
               <template slot-scope="scope">
                 {{ scope.row.orderType | type2Text}}
               </template>
             </el-table-column>
-            <!-- 订单状态;0:订单被取消;10:已提交,待发货20;已发货,待收货;30:已收货;待支付;40:退货/售后;50:交易完成/未评价;51:交易完成/已评价; -->
             <el-table-column prop="id" label="操作" width="250px">
                 <template slot-scope="scope">
-                    <el-link type="primary" v-if="false && scope.row.status == 60" @click="collectCus(scope.row)" >发起定价收款</el-link>
-                    <el-link type="primary" v-if="scope.row.orderType != 3" @click="getOrdDtl(scope.row)">查看订单</el-link>
+                    <el-link type="primary" @click="getOrdDtl(scope.row)">查看订单</el-link>
+                    <el-link type="primary" @click="audit(scope.row)">提交至供应商</el-link>
                 </template>
             </el-table-column>
           </el-table>
         </div>
-
-        <el-dialog title="商品定价" visible="dealPrice" v-if="dealPrice">
-          <el-form ref="form" :model="dealPriceFrm" label-width="80px">
-            <el-form-item label="订单编号">
-              <el-input v-model="dealPriceFrm.orderNo" :disabled="true"></el-input>
-            </el-form-item>
-            <el-form-item label="商品价格">
-              <el-input v-model="dealPriceFrm.ordPrice"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="submitDealPrice()">提价定价</el-button>
-              <el-button @click="dealPrice=false">取消</el-button>
-            </el-form-item>
-          </el-form>
-        </el-dialog>
 
         <div class="ly-data-pagination">
           <el-pagination
@@ -420,8 +387,8 @@ export default {
         stockNum: ''
       },
       searchParam: {
-        isRisk: 0,
         orderNo:'',
+        isRisk: 1,
         recUname:'',
         recMobile:'',
         orderType:'',
@@ -560,6 +527,9 @@ export default {
         }
 
       })
+    },
+    audit(row) {
+
     },
     cancelOrd(row){
       const param = {
