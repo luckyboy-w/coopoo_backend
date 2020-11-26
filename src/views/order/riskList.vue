@@ -529,7 +529,23 @@ export default {
       })
     },
     audit(row) {
+      const param = {
+        orderId: row.orderId
+      }
 
+      this.$confirm('确认提交至供应商?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        getMethod('/backend/order/auditRiskOrder', param).then(res => {
+          this.loadList()
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
+        });
+      })
     },
     cancelOrd(row){
       const param = {
