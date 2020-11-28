@@ -27,7 +27,8 @@ requestBodyUrl.push("/backend/member/gift")
 requestBodyUrl.push("/backend/good/save")
 requestBodyUrl.push("/backend/siteData/findUserInviteList")
 requestBodyUrl.push("/backend/user/enable")
-
+requestBodyUrl.push("/backend/siteData/selectCashDone")
+requestBodyUrl.push("/backend/siteData/selectCashDoneDtl")
 
 
 // create an axios instance
@@ -179,5 +180,3 @@ service.interceptors.response.use(
 )
 
 export default service
-
-

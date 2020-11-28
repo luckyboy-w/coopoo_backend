@@ -48,41 +48,56 @@
         name="allFee"
         style="height:600px"
       >
-        <div class="ly-tool-panel">
-          <table>
-            <tr>
-              <td>服务商:</td>
-              <td>
-                <el-input
-                  v-model="searchParam.provinceName"
-                  width="180px"
-                />
-              </td>
-              <td>手机号码:</td>
-              <td>
-                <el-input
-                  v-model="searchParam.provPhone"
-                  width="180px"
-                />
-              </td>
-              <td>
-                <el-button
-                  icon="el-icon-search"
-                  @click="search()"
-                >
-                  查询
-                </el-button>
-              </td>
-            </tr>
-          </table>
-        </div>
-
+        <el-row style="line-height:40px;padding:10px 0px ">
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
+            服务商
+          </el-col>
+          <el-col :span="3">
+            <el-input
+              v-model="searchParams.providerName"
+              style="width:80px"
+              placeholder=""
+            />
+          </el-col>
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
+            手机号码
+          </el-col>
+          <el-col :span="3">
+            <el-input
+              v-model="searchParams.provPhone"
+              style="width:80px"
+              placeholder=""
+            />
+          </el-col>
+          <el-col
+            :span="9"
+            style="padding-left:10px"
+          >
+            <el-button
+              type="primary"
+              @click="Tosearch()"
+            >
+              搜索
+            </el-button>
+          </el-col>
+        </el-row>
         <el-table
           ref="allFeeData"
           :data="allFeeData.list"
           style="width: 100%; margin-bottom: 20px;"
           row-key="id"
         >
+          <el-table-column
+            type="index"
+            width="50"
+            label="序号"
+          />
           <el-table-column
             prop="provinceName"
             label="服务商"
@@ -138,12 +153,32 @@
           @next-click="currentAllFeePage"
         />
       </el-tab-pane>
+
+
       <el-tab-pane
         label="提现中"
         name="feeProcess"
         style="height:600px"
       >
         <el-row style="line-height:40px;padding:10px 0px ">
+          <el-col
+            :span="24"
+            style="padding-left:10px"
+          >
+            <el-button
+              v-if="!back"
+              type="primary"
+              icon="el-icon-back"
+              @click="backToAllFeeOne()"
+            >
+              返回列表
+            </el-button>
+          </el-col>
+        </el-row>
+        <el-row
+          v-show="det"
+          style="line-height:40px;padding:10px 0px "
+        >
           <el-col
             :span="1"
             style="font-size:14px;"
@@ -219,11 +254,17 @@
           </el-col>
         </el-row>
         <el-table
+          v-if="det"
           ref="feeProcessData"
           :data="feeProcessData.list"
           style="width: 100%; margin-bottom: 20px;"
           row-key="id"
         >
+          <el-table-column
+            type="index"
+            width="50"
+            label="序号"
+          />
           <el-table-column
             prop="cashNo"
             label="申请单号"
@@ -235,21 +276,31 @@
             min-width="24%"
           />
           <el-table-column
+            prop="mobileNo"
+            label="手机号"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="provinceRole"
+            label="服务商类型"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="cashNum"
+            label="提现金额"
+            min-width="24%"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.cashNum | fmtFee }}
+            </template>
+          </el-table-column>
+          <el-table-column
             prop="createTime"
             label="申请时间"
             min-width="24%"
           >
             <template slot-scope="scope">
               {{ scope.row.createTime | _formateDate }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="cashNum"
-            label="结算金额（元）"
-            min-width="24%"
-          >
-            <template slot-scope="scope">
-              {{ scope.row.cashNum | fmtFee }}
             </template>
           </el-table-column>
           <el-table-column
@@ -264,7 +315,108 @@
               >
                 完成提现
               </el-link>
-              <!-- <el-link type="primary" @click="chkFeeProcessDtl(scope.row)" >查看明细</el-link> -->
+              <el-link
+                type="primary"
+                @click="chkFeeProcessDtl(scope.row)"
+              >
+                查看明细
+              </el-link>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-row
+          v-show="def"
+          style="line-height:40px;padding:10px 0px "
+        >
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
+            会员名称
+          </el-col>
+          <el-col :span="3">
+            <el-input
+              v-model="searchParamsOne.memName"
+              style="width:80px"
+              placeholder=""
+            />
+          </el-col>
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
+            手机号码
+          </el-col>
+          <el-col :span="3">
+            <el-input
+              v-model="searchParamsOne.phoneNo"
+              style="width:80px"
+              placeholder=""
+            />
+          </el-col>
+          <el-col
+            :span="9"
+            style="padding-left:10px"
+          >
+            <el-button
+              type="primary"
+              @click="TosearchOne()"
+            >
+              搜索
+            </el-button>
+          </el-col>
+        </el-row>
+        <el-table
+          v-show="def"
+          :data="detList"
+          style="width: 100%; margin-bottom: 20px;"
+          row-key="id"
+        >
+          <el-table-column
+            type="index"
+            width="50"
+            label="序号"
+          />
+          <el-table-column
+            prop="memName"
+            label="会员姓名"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="phoneNo"
+            label="手机号"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="orderNo"
+            label="订单编号"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="ordPayPrice"
+            label="订单金额(元)"
+            min-width="24%"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.ordPayPrice | fmtFee }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="perPrice"
+            label="返佣金额(元)"
+            min-width="24%"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.perPrice | fmtFee }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="createTime"
+            label="付费时间"
+            min-width="24%"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.createTime | _formateDate }}
             </template>
           </el-table-column>
         </el-table>
@@ -278,17 +430,121 @@
           @next-click="currentProcessPage"
         />
       </el-tab-pane>
+
+
+
+
       <el-tab-pane
         label="已提现"
         name="feeEnd"
         style="height:600px"
       >
+        <el-row style="line-height:40px;padding:10px 0px ">
+          <el-col
+            :span="24"
+            style="padding-left:10px"
+          >
+            <el-button
+              v-if="!back_"
+              type="primary"
+              icon="el-icon-back"
+              @click="backToAllFeeTwo()"
+            >
+              返回列表
+            </el-button>
+          </el-col>
+        </el-row>
+        <el-row
+          v-if="def_"
+          style="line-height:40px;padding:10px 0px "
+        >
+          <el-col
+            :span="1"
+            style="font-size:14px;"
+          >
+            申请单号
+          </el-col>
+          <el-col :span="3">
+            <el-input
+              v-model="exportApplyFrm.cashNo"
+              style="width:80px"
+              placeholder=""
+            />
+          </el-col>
+          <el-col
+            :span="1"
+            style="font-size:14px;"
+          >
+            服务商
+          </el-col>
+          <el-col :span="3">
+            <el-select
+              v-model="exportApplyFrm.provId"
+              placeholder="请选择服务商"
+            >
+              <el-option
+                v-for="item in providerList"
+                :key="item.id"
+                value-key="id"
+                :label="item.provinceName"
+                :value="item.id"
+              />
+            </el-select>
+          </el-col>
+          <el-col
+            :span="1"
+            style="font-size:14px;"
+          >
+            服务商
+          </el-col>
+          <el-col :span="6">
+            <el-date-picker
+              v-model="exportApplyFrm.applyStartTime"
+              type="date"
+              width="120px"
+              placeholder="选择开始日期"
+            />
+            -
+            <el-date-picker
+              v-model="exportApplyFrm.applyEndTime"
+              type="date"
+              width="120px"
+              placeholder="选择结束日期"
+            />
+          </el-col>
+          <el-col
+            :span="9"
+            style="padding-left:10px"
+          >
+            <el-button
+              type="primary"
+              @click="batchBill()"
+            >
+              搜索
+            </el-button>
+            <el-button
+              type="primary"
+              plain
+              icon="el-icon-download"
+              @click="exportApplyCash()"
+            >
+              导出
+            </el-button>
+          </el-col>
+        </el-row>
+
         <el-table
+          v-if="def_"
           ref="feeEnd"
           :data="feeEndData.list"
           style="width: 100%; margin-bottom: 20px;"
           row-key="id"
         >
+          <el-table-column
+            type="index"
+            width="50"
+            label="序号"
+          />
           <el-table-column
             prop="cashNo"
             label="申请单号"
@@ -296,28 +552,149 @@
           />
           <el-table-column
             prop="provinceName"
-            label="申请服务商"
+            label="提现服务商"
             min-width="24%"
           />
           <el-table-column
-            prop="createTime"
-            label="申请时间"
+            prop="mobileNo"
+            label="手机号"
             min-width="24%"
-          >
-            <template slot-scope="scope">
-              {{ scope.row.createTime | _formateDate }}
-            </template>
-          </el-table-column>
+          />
+          <el-table-column
+            prop="provinceRole"
+            label="服务商类型"
+            min-width="24%"
+          />
           <el-table-column
             prop="cashNum"
-            label="结算金额（元）"
+            label="提现金额"
             min-width="24%"
           >
             <template slot-scope="scope">
               {{ scope.row.cashNum | fmtFee }}
             </template>
           </el-table-column>
+          <el-table-column
+            prop="accountTime"
+            label="提现时间"
+            min-width="24%"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.accountTime | _formateDate }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            min-width="24%"
+          >
+            <template slot-scope="scope">
+              <el-link
+                type="primary"
+                @click="detail_(scope.row)"
+              >
+                查看明细
+              </el-link>
+            </template>
+          </el-table-column>
         </el-table>
+
+        <el-row
+          v-if="det_"
+          style="line-height:40px;padding:10px 0px "
+        >
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
+            会员名
+          </el-col>
+          <el-col :span="3">
+            <el-input
+              v-model="searchParamsTwo.memName"
+              style="width:80px"
+              placeholder=""
+            />
+          </el-col>
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
+            手机号码
+          </el-col>
+          <el-col :span="3">
+            <el-input
+              v-model="searchParamsTwo.phoneNo"
+              style="width:80px"
+              placeholder=""
+            />
+          </el-col>
+          <el-col
+            :span="9"
+            style="padding-left:10px"
+          >
+            <el-button
+              type="primary"
+              @click="TosearchTwo()"
+            >
+              搜索
+            </el-button>
+          </el-col>
+        </el-row>
+        <el-table
+          v-if="det_"
+          :data="det_List"
+          style="width: 100%; margin-bottom: 20px;"
+          row-key="id"
+        >
+          <el-table-column
+            type="index"
+            width="50"
+            label="序号"
+          />
+          <el-table-column
+            prop="memName"
+            label="会员姓名"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="phoneNo"
+            label="手机号"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="orderNo"
+            label="订单编号"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="ordPayPrice"
+            label="订单金额(元)"
+            min-width="24%"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.ordPayPrice | fmtFee }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="perPrice"
+            label="返佣金额(元)"
+            min-width="24%"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.perPrice | fmtFee }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="createTime"
+            label="付费时间"
+            min-width="24%"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.createTime | _formateDate }}
+            </template>
+          </el-table-column>
+        </el-table>
+
         <el-pagination
           :total="feeEndData.total"
           background
@@ -327,6 +704,8 @@
           @next-click="currentEndPage"
         />
       </el-tab-pane>
+
+
       <el-tab-pane
         v-if="feeDtl_"
         label="待返佣明细"
@@ -345,6 +724,46 @@
               @click="backToAllFee()"
             >
               返回列表
+            </el-button>
+          </el-col>
+        </el-row>
+
+        <el-row style="line-height:40px;padding:10px 0px ">
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
+            会员名称
+          </el-col>
+          <el-col :span="3">
+            <el-input
+              v-model="searchParams_.memName"
+              style="width:80px"
+              placeholder=""
+            />
+          </el-col>
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
+            手机号码
+          </el-col>
+          <el-col :span="3">
+            <el-input
+              v-model="searchParams_.phoneNo"
+              style="width:80px"
+              placeholder=""
+            />
+          </el-col>
+          <el-col
+            :span="9"
+            style="padding-left:10px"
+          >
+            <el-button
+              type="primary"
+              @click="Tosearch_()"
+            >
+              搜索
             </el-button>
           </el-col>
         </el-row>
@@ -372,13 +791,18 @@
             min-width="24%"
           />
           <el-table-column
+            prop="orderNo"
+            label="订单编号"
+            min-width="24%"
+          />
+          <el-table-column
             prop="ordPayPrice"
-            label="订单金额"
+            label="订单金额(元)"
             min-width="20%"
           />
           <el-table-column
             prop="perPrice"
-            label="返佣金额"
+            label="返佣金额(元)"
             min-width="20%"
           />
           <el-table-column
@@ -541,7 +965,13 @@
       return {
         feeDtl_: false,
         friDtl_: false,
+        def: false,
+        det: true,
+        det_: false,
+        def_: true,
         allFeeDataShow: true,
+        back: true,
+        back_: true,
         allFeeDtlFee: false,
         allFriDtlFee: false,
         types: [{
@@ -571,10 +1001,15 @@
         ],
         dtlFeeList: [],
         dtlFriList: [],
+        detList: [],
+        det_List: [],
         billFeeText: '',
         allApplyFee: '',
         allPerFee: '',
         tabIndex: 0,
+        provIds: '',
+        cashNo:'',
+        cashNos:'',
         providerList: [],
         exportApplyFrm: {
           applyStartTime: null,
@@ -593,6 +1028,22 @@
           billFee: '',
           allApplyFee: '',
           allPerFee: '',
+        },
+        searchParams: {
+          providerName: '',
+          provPhone: '',
+        },
+        searchParams_: {
+          memName: '',
+          phoneNo: '',
+        },
+        searchParamsOne: {
+          memName: '',
+          phoneNo: '',
+        },
+        searchParamsTwo: {
+          memName: '',
+          phoneNo: '',
         },
         activeName: 'allFee',
         allFeeData: {
@@ -619,7 +1070,7 @@
     },
     mounted() {
       this.loadList();
-      this.loadFeeProcess();
+      // this.loadFeeProcess();
       this.loadProviderList();
       this.loadPlatFee()
     },
@@ -663,6 +1114,58 @@
           scope.providerList = res.data
         })
       },
+      /**
+       * 搜索 2020 11 27 wyw
+       */
+      Tosearch() {
+        let that = this
+        let param = {
+          providerName: that.searchParams.providerName,
+          provPhone: that.searchParams.provPhone
+        }
+        getMethod("/backend/siteData/selectAllCash", param).then(res => {
+          console.log(res)
+          that.allFeeData = res.data // 返回的数据
+
+        })
+      },
+      Tosearch_() {
+        let that = this
+        postMethod("/backend/siteData/selectCashDtl", {
+          memName: that.searchParams_.memName,
+          phoneNo: that.searchParams_.phoneNo,
+          provId: this.provIds,
+        }).then(res => {
+          console.log(res)
+          that.dtlFeeList = res.data.list // 返回的数据
+
+        })
+      },
+      TosearchOne() {
+        let that = this
+        console.log(this.cashNo)
+        postMethod("/backend/siteData/selectCashDtl", {
+          memName: that.searchParamsOne.memName,
+          phoneNo: that.searchParamsOne.phoneNo,
+          cashNo: this.cashNo,
+        }).then(res => {
+          console.log(res)
+          that.detList = res.data.list // 返回的数据
+
+        })
+      },
+      TosearchTwo() {
+        let that = this
+        postMethod("/backend/siteData/selectCashDtl", {
+          memName: that.searchParamsTwo.memName,
+          phoneNo: that.searchParamsTwo.phoneNo,
+          cashNo: this.cashNos,
+        }).then(res => {
+          console.log(res)
+          that.det_List = res.data.list // 返回的数据
+
+        })
+      },
       backToAllFee() {
         this.allFeeDataShow = true
         this.allFeeDtlFee = false
@@ -672,6 +1175,30 @@
         this.feeDtl_ = false
         this.friDtl_ = false
       },
+      backToAllFeeOne() {
+        this.back=true
+        this.def = false
+        this.det = true
+      },
+      backToAllFeeTwo() {
+        this.back_=true
+        this.det_ = false
+        this.def_ = true
+      },
+      detail_(row){
+        this.back_ = false
+        this.det_ = true
+        this.def_ = false
+         this.loadFeedet_List(row)
+      },
+      chkFeeProcessDtl(row) {
+        this.back = false
+        this.def = true
+        this.det = false
+        this.loadFeedetList(row)
+      },
+
+
       chkFeeDtl(row) {
         this.allFeeDataShow = false
         this.allFriDtlFee = false
@@ -766,15 +1293,20 @@
       },
       loadList() {
         let scope = this
-        let param = this.searchParam
-        getMethod("/backend/siteData/selectAllCash", param).then(res => {
+        let param1 = this.searchParam
+        console.log(param1)
+        getMethod("/backend/siteData/selectAllCash", param1).then(res => {
           console.log(res)
-          // let re = "";
-          // this.types.forEach(e => {
-          //   if (e.title ==res.data.provLevel) {
-          //     re = e.value;
-          //   }
-          // });
+          let obj = res.data.list
+          for (let i = 0; i < obj.length; i++) {
+            console.log(obj[i]);
+            this.types.forEach(e => {
+              if (e.title == obj[i].provLevel) {
+                obj[i].provLevel = e.value;
+              }
+            });
+          }
+          console.log(res.data.list)
           scope.allFeeData = res.data
         });
       },
@@ -786,7 +1318,8 @@
         let scope = this
         let param = this.searchParam
         param.cashStatus = 1
-        postMethod("/backend/siteData/selectCashProcess", param).then(res => {
+        postMethod("/backend/siteData/selectCashDone", param).then(res => {
+          console.log(res)
           scope.feeProcessData = res.data
         });
       },
@@ -798,7 +1331,8 @@
         let scope = this
         let param = this.searchParam
         param.cashStatus = 2
-        postMethod("/backend/siteData/selectCashProcess", param).then(res => {
+        postMethod("/backend/siteData/selectCashDone", param).then(res => {
+          console.log(res)
           scope.feeEndData = res.data
         });
       },
@@ -807,12 +1341,33 @@
         this.loadFeeEnd()
       },
       loadFeeDtlList(row) {
+        this.provIds = row.provId
         let scope = this
         let param = {
           provId: row.provId
         }
         postMethod("/backend/siteData/selectCashDtl", param).then(res => {
           scope.dtlFeeList = res.data.list
+        });
+      },
+      loadFeedetList(row){
+        this.cashNo=row.cashNo
+        let scope = this
+        let param = {
+          cashNo: row.cashNo
+        }
+        postMethod("/backend/siteData/selectCashDoneDtl", param).then(res => {
+          scope.detList = res.data.list
+        });
+      },
+      loadFeedet_List(row){
+        this.cashNos=row.cashNo
+        let scope = this
+        let param = {
+          cashNo: row.cashNo
+        }
+        postMethod("/backend/siteData/selectCashDoneDtl", param).then(res => {
+          scope.det_List = res.data.list
         });
       },
       loadFriDtlList(row) {
