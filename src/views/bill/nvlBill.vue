@@ -33,14 +33,25 @@
                 :data="noBillData.list"
                 style="width: 100%; margin-bottom: 20px;"
                 row-key="id">
+                <el-table-column type="index" width="50" label="序号" />
                 <el-table-column prop="tenantName" label="供应商名称" min-width="20%"></el-table-column>
-                <el-table-column prop="orderPrice" label="销售金额"   min-width="10%"></el-table-column>
-                <el-table-column prop="billMoney" label="结算金额"   min-width="10%"></el-table-column>
-                <el-table-column prop="createTime" label="最近入账时间"   min-width="20%">
+                <el-table-column prop="createTime" label="入账时间"   min-width="20%">
                     <template slot-scope="scope">
                         {{scope.row.createTime | _formateDate}}
                     </template>
                 </el-table-column>
+                <el-table-column prop="orderPrice" label="销售金额(元)" min-width="24%">
+                  <template slot-scope="scope">
+                    {{ scope.row.orderPrice | fmtFee }}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="billMoney" label="结算金额(元)" min-width="24%">
+                  <template slot-scope="scope">
+                    {{ scope.row.billMoney | fmtFee }}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="tenantName" label="结算财务" min-width="20%"></el-table-column>
+                <el-table-column prop="tenantName" label="操作管理员" min-width="20%"></el-table-column>
                 <el-table-column prop="pkBillId" label="操作" min-width="24%">
                     <template slot-scope="scope">
                         <el-link type="primary" @click="findBillDtl(scope.row)">查看明细</el-link>
@@ -95,6 +106,16 @@ import billDetail from './billDtl'
             }
             let date = new Date(time);
             return formatDate(date,'yyyy-MM-dd hh:mm:ss')
+        },
+        fmtFee(fee) {
+          if (fee == undefined) {
+            return '';
+          }
+          fee = fee + ''
+          if (fee.indexOf(".") == -1) {
+            return fee + ".00";
+          }
+          return fee;
         }
     },
     mounted() {

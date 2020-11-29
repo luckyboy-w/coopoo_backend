@@ -1,161 +1,423 @@
 <template>
-    <div style="padding:20px 10px">
+  <div style="padding:20px 10px">
+    <el-row style="line-height:40px;padding:0px 25px 5px 25px">
+      <el-col :span="3" style="font-size:14px;">
+        平台运营至今
+      </el-col>
+      <el-col :span="2" style="font-size:14px;" />
+      <el-col :span="5" style="font-size:14px;backgroud-color:#F0F0F0;">
+        平台发放总靠谱豆：{{allBean}}
+      </el-col>
+      <el-col :span="2" style="font-size:14px;" />
+      <el-col :span="5" style="font-size:14px;">
+        累计平台回收靠谱豆：{{returnBean}}
+      </el-col>
+      <el-col :span="2" style="font-size:14px;" />
+      <el-col :span="5" style="font-size:14px;">
+        会员所得总靠谱豆：{{memberBean}}
+      </el-col>
+      <el-col :span="2" style="font-size:14px;" />
+      <el-col :span="5" style="font-size:14px;">
+        门店所得总靠谱豆：{{storeBean}}
+      </el-col>
+    </el-row>
+    <el-tabs type="border-card">
+      <el-tab-pane label="靠谱豆交易">
         <div v-if="showList">
-            <el-row style="line-height:40px;padding:10px 0px ">
-                <el-col :span="1" style="padding-left:10px;font-size:14px;">使用者</el-col>
-                <el-col :span="3">
-                    <el-input  v-model="searchParam.nickName" style="width:80px" placeholder=""></el-input>
-                </el-col>
-                <el-col :span="1" style="padding-left:10px;font-size:14px;">渠道</el-col>
-                <el-col :span="3">
-                    <el-select v-model="searchParam.recTitle" placeholder="请选择渠道">
-                        <el-option value="" label="全部"></el-option>
-                        <el-option
-                            v-for="item in titleList"
-                            :key="item.recTitle"
-                            :label="item.recTitle"
-                            :value="item.recTitle" />
-                    </el-select>
-                </el-col>
-                <el-col :span="1" style="padding-left:10px;font-size:14px;">门店</el-col>
-                <el-col :span="3">
-                    <el-select v-model="searchParam.storeName" placeholder="请选择门店">
-                        <el-option
-                            v-for="item in storeList"
-                            :key="item.storeName"
-                            :label="item.storeName"
-                            :value="item.storeName" />
-                    </el-select>
-                </el-col>
-                <el-col :span="2" style="padding-left:10px;font-size:14px;">入账时间</el-col>
-                <el-col :span="6">
-                    <el-date-picker
-                        v-model="searchParam.minBillTime"
-                        type="date"
-                        style="width:140px"
-                        placeholder="开始日期">
-                    </el-date-picker>
-                    至
-                    <el-date-picker
-                        v-model="searchParam.maxBillTime"
-                        type="date"
-                        style="width:140px"
-                        placeholder="结束日期">
-                    </el-date-picker>
-                </el-col>
-                <el-col :span="2" style="padding-left:10px">
-                      <el-button @click="search()" type="primary">搜索</el-button>
-                </el-col>
-            </el-row>
-            <el-table
-                ref="noBillData"
-                stripe
-                :data="noBillData.list"
-                style="width: 100%; margin-bottom: 20px;"
-                row-key="id">
-                <el-table-column prop="nickName" label="使用者" min-width="15%"></el-table-column>
-                <el-table-column prop="recTitle" label="渠道" min-width="20%"></el-table-column>
-                <el-table-column prop="opText" label="收入/支出" min-width="10%"></el-table-column>
-                <el-table-column prop="beanDesc" label="具体事项" min-width="20%"></el-table-column>
-                <el-table-column prop="storeName" label="兑换门店" min-width="15%"></el-table-column>
-                <el-table-column prop="beanNum" label="靠谱豆数量" min-width="15%"></el-table-column>
-                <el-table-column prop="createTime" label="使用时间"   min-width="20%">
-                    <template slot-scope="scope">
-                        {{scope.row.createTime | _formateDate}}
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-pagination
-                :total="noBillData.total"
-                background
-                layout="prev, pager, next"
-                @current-change="currentPage"
-                @prev-click="currentPage"
-                @next-click="currentPage" />
+          <el-row v-if="def" style="line-height:40px;padding:10px 0px ">
+            <el-col :span="1.5" style="font-size:14px;">
+              会员名
+            </el-col>
+            <el-col :span="3">
+              <el-input v-model="searchParams.memName" style="width:80px" placeholder="" />
+            </el-col>
+            <el-col :span="1.5" style="font-size:14px;">
+              手机号码
+            </el-col>
+            <el-col :span="3">
+              <el-input v-model="searchParams.phoneNo" style="width:80px" placeholder="" />
+            </el-col>
+            <el-col :span="1" style="font-size:14px;">
+              类型
+            </el-col>
+            <el-col :span="3">
+              <el-select v-model="searchParams.memberType" placeholder="请选择服务商">
+                <el-option v-for="item in providerList" :label="item.provinceName" :value="item.id" />
+              </el-select>
+            </el-col>
+            <el-col :span="9" style="padding-left:10px">
+              <el-button type="primary" @click="search()">
+                搜索
+              </el-button>
+            </el-col>
+          </el-row>
+          <el-table v-if="def" ref="noBillData" stripe :data="noBillData.list" style="width: 100%; margin-bottom: 20px;"
+            row-key="id">
+            <el-table-column type="index" width="50" label="序号" />
+            <el-table-column prop="nickname" label="会员名称" min-width="15%">
+              <template slot-scope="scope">
+                {{scope.row.nickname}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="phoneNo" label="手机号" min-width="20%">
+              <template slot-scope="scope">
+                {{scope.row.phoneNo}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="provinceRole" label="服务商类型" min-width="10%">
+              <template slot-scope="scope">
+                <span v-if="scope.row.memberType == '10' && scope.row.provinceRole ==undefined ">会员</span>
+                <span v-if="scope.row.memberType == '30' && scope.row.provinceRole =='1' ">A类服务商</span>
+                <span v-if="scope.row.memberType == '20' && scope.row.provinceRole =='2' ">B类服务商</span>
+                <span v-if="scope.row.memberType == '20' && scope.row.provinceRole =='3' ">C类服务商</span>
+                <span v-if="scope.row.memberType == '20' && scope.row.provinceRole =='4' ">D类服务商</span>
+                <span v-if="scope.row.memberType == '20' && scope.row.provinceRole =='5' ">E类服务商</span>
+                <span v-if="scope.row.memberType == '20' && scope.row.provinceRole =='6' ">EA类服务商</span>
+              </template>
+
+
+            </el-table-column>
+            <el-table-column prop="beanNum" label="靠谱豆数量" min-width="20%">
+              <template slot-scope="scope">
+                {{scope.row.beanNum}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="pkBillId" label="操作" min-width="24%">
+              <template slot-scope="scope">
+                <el-link type="primary" @click="transdetails(scope.row)">
+                  交易明细
+                </el-link>
+              </template>
+            </el-table-column>
+          </el-table>
+
+
+          <el-row style="line-height:40px;padding:10px 0px ">
+            <el-col :span="24" style="padding-left:10px">
+              <el-button v-if="!allFeeDataShow" type="primary" icon="el-icon-back" @click="backToAllFee()">
+                返回列表
+              </el-button>
+            </el-col>
+          </el-row>
+          <el-row v-if="det" style="line-height:40px;padding:10px 0px ">
+            <el-col :span="1.5" style="font-size:14px;">
+              交易路径
+            </el-col>
+            <el-col :span="3">
+              <el-select v-model="searchParams_.type" placeholder="请选择">
+                <el-option v-for="item in typeList" :label="item.typeName" :value="item.id" />
+              </el-select>
+            </el-col>
+            <el-col :span="1.5" style="font-size:14px;">
+              交易方式
+            </el-col>
+            <el-col :span="3">
+              <el-select v-model="searchParams_.opType" placeholder="请选择">
+                <el-option v-for="item in opTypeList" :label="item.opTypeName" :value="item.id" />
+              </el-select>
+            </el-col>
+            <el-col :span="1" style="font-size:14px;">
+              入账时间
+            </el-col>
+            <el-col :span="5">
+              <el-date-picker v-model="searchParams_.startCreateTime" type="date" width="120px" placeholder="选择开始日期" />
+              -
+              <el-date-picker v-model="searchParams_.endCreateTime" type="date" width="120px" placeholder="选择结束日期" />
+            </el-col>
+            <el-col :span="9" style="padding-left:10px">
+              <el-button type="primary" @click="search_()">
+                搜索
+              </el-button>
+            </el-col>
+          </el-row>
+          <el-row v-if="det" style="line-height:40px;padding:0px 25px 5px 25px">
+            <el-col :span="2" style="font-size:14px;" />
+            <el-col :span="5" style="font-size:14px;backgroud-color:#F0F0F0;">
+              会员名称：{{memName}}
+            </el-col>
+            <el-col :span="2" style="font-size:14px;" />
+            <el-col :span="5" style="font-size:14px;">
+              剩余靠谱豆：{{availableBean}}
+            </el-col>
+            <el-col :span="2" style="font-size:14px;" />
+            <el-col :span="5" style="font-size:14px;">
+              收入靠谱豆：{{incomeBean}}
+            </el-col>
+            <el-col :span="2" style="font-size:14px;" />
+            <el-col :span="5" style="font-size:14px;">
+              支出靠谱豆：{{consumeBean}}
+            </el-col>
+          </el-row>
+          <el-table v-if="det" stripe :data="detailsListData.list" style="width: 100%; margin-bottom: 20px;" row-key="id">
+            <el-table-column type="index" width="50" label="序号" />
+            <el-table-column prop="type" label="交易路径" min-width="15%">
+              <template slot-scope="scope">
+                <span v-if="scope.row.type == '1'">购买会员</span>
+                <span v-if="scope.row.type == '2'">邀请好友购买</span>
+                <span v-if="scope.row.type == '3'">购买门店服务</span>
+                <span v-if="scope.row.type == '4'">退门店服务</span>
+                <span v-if="scope.row.type == '5'">服务商门店所得</span>
+                <span v-if="scope.row.type == '6'">赠送好友</span>
+                <span v-if="scope.row.type == '7'">好友赠予</span>
+                <span v-if="scope.row.type == '8'">参加活动</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="opType" label="交易方式" min-width="20%">
+              <template slot-scope="scope">
+                <span v-if="scope.row.opType =='1'">收入</span>
+                <span v-if="scope.row.opType == '2'">支出</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="beanNum" label="靠谱豆数量" min-width="20%">
+              <template slot-scope="scope">
+                {{scope.row.beanNum}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="createTime" label="交易时间" min-width="24%">
+              <template slot-scope="scope">
+                {{ scope.row.createTime | _formateDate }}
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <el-pagination v-if="def" :total="noBillData.total" background layout="prev, pager, next" @current-change="currentPage"
+            @prev-click="currentPage" @next-click="currentPage" />
+          <el-pagination v-if="det" :total="detailsListData.total" background layout="prev, pager, next"
+            @current-change="currentPage_" @prev-click="currentPage_" @next-click="currentPage_" />
         </div>
-    </div>
+      </el-tab-pane>
+    </el-tabs>
+  </div>
 </template>
 <script>
-import { getMethod, postMethod } from "@/api/request";
-import { formatDate } from "@/api/tools.js"
+  import {
+    getMethod,
+    postMethod
+  } from "@/api/request";
+  import {
+    formatDate
+  } from "@/api/tools.js"
 
   export default {
     components: {},
     data() {
       return {
-        tabIndex:0,
+        tabIndex: 0,
         showList: true,
-        detailList:[],
-        titleList:[],
-        storeList:[],
-        //10:未结算;20:结算中;30:已结算
-        searchParam:{
-            billType:'10',
-            billNo:"",
-            dataType:'',
-            orderNo:"",
-            pageSize:10,
-            pageNum:1
+        allFeeDataShow: true,
+        def: true,
+        det: false,
+        memId: '',
+        detailList: [],
+        titleList: [],
+        storeList: [],
+        providerList: [{
+            id: 1,
+            provinceName: 'A类'
+          },
+          {
+            id: 2,
+            provinceName: 'B类'
+          },
+          {
+            id: 3,
+            provinceName: 'C类'
+          },
+          {
+            id: 4,
+            provinceName: 'D类'
+          },
+          {
+            id: 5,
+            provinceName: 'E类'
+          },
+          {
+            id: 6,
+            provinceName: 'EA类'
+          },
+        ],
+        typeList: [{
+            id: 1,
+            typeName: '购买会员'
+          },
+          {
+            id: 2,
+            typeName: '邀请好友购买'
+          },
+          {
+            id: 3,
+            typeName: '购买门店服务'
+          },
+          {
+            id: 4,
+            typeName: '退门店服务'
+          },
+          {
+            id: 5,
+            typeName: '服务商门店所得'
+          },
+          {
+            id: 6,
+            typeName: '赠送好友'
+          },
+          {
+            id: 7,
+            typeName: '好友赠予'
+          },
+          {
+            id: 8,
+            typeName: '参加活动'
+          }
+        ],
+        opTypeList: [{
+          id: 1,
+          opTypeName: '新增'
+        }, {
+          id: 2,
+          opTypeName: '减少'
+        }],
+        searchParams: {
+          memName: '',
+          phoneNo: '',
+          memberType: '',
         },
-        noBillData:{
-          list:[],
-          total:0
+        searchParams_: {
+          type: '',
+          opType: '',
+          startCreateTime: '',
+          endCreateTime: '',
+        },
+        allBean: '',
+        returnBean: '',
+        memberBean: '',
+        storeBean: '',
+        memName: '',
+        availableBean: '',
+        incomeBean: '',
+        consumeBean: '',
+        //10:未结算;20:结算中;30:已结算
+        searchParam: {
+          billType: '10',
+          billNo: "",
+          dataType: '',
+          orderNo: "",
+          pageSize: 10,
+          pageNum: 1
+        },
+        noBillData: {
+          list: [],
+          total: 0
+        },
+        detailsListData: {
+          list: [],
+          total: 0
         },
         activeName: 'noBill'
       };
     },
-    props:{
+    props: {
 
     },
-    filters:{
-        _formateDate(time){
-            if(time == undefined){
-                return '';
-            }
-            let date = new Date(time);
-            return formatDate(date,'yyyy-MM-dd hh:mm:ss')
+    filters: {
+      _formateDate(time) {
+        if (time == undefined) {
+          return '';
         }
+        let date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
+      }
     },
     mounted() {
-        if(this.$route.query.dt != undefined){
-            this.searchParam.dataType = this.$route.query.dt
-        }
-        this.loadList();
-        this.loadRecTitle()
+      if (this.$route.query.dt != undefined) {
+        this.searchParam.dataType = this.$route.query.dt
+      }
+      this.loadList();
+      // this.loadRecTitle();
+      this.loadPlatFee()
     },
+
     methods: {
-    backToList(){
+      backToList() {
         this.showList = true
-    },
-    batchBill(){
-        let selData = this.$refs.noBillData.selection
-        let id = [];
-        selData.forEach(data=>{
-            id.push(data.pkBillId)
-        });
-        this.billOrd(id.join(","))
       },
-      singleBill(row){
-        this.billOrd(row.pkBillId)
+      backToAllFee() {
+        this.allFeeDataShow = true
+        this.def = true,
+          this.det = false,
+          this.loadList();
       },
-      findBillDtl(row){
+      transdetails(row) {
+        console.log(row)
+        this.memId = row.memId
+        this.memName = row.nickname
+        this.allFeeDataShow = false
+        this.def = false,
+          this.det = true
+        this.loadDetailsList(row)
+        this.loadPlatFee_()
+      },
+      loadDetailsList(row) {
         let scope = this
         let param = {
-            billIds:row.pkBillIds
+          memId: this.memId,
+          pageSize: this.searchParam.pageSize,
+          pageNum: this.searchParam.pageNum
         }
-        getMethod("/backend/orderBill/findBillDtl", param).then(res => {
-            scope.showList = false
-            scope.detailList = res.data
+        getMethod("/backend/siteData/memberBeanDetailList", param).then(res => {
+          console.log(res)
+          scope.detailsListData = res.data
         });
       },
+      loadPlatFee() {
+        let scope = this
+        getMethod('/backend/siteData/beanStatistics', {}).then(res => {
+          let platData = res.data
+          scope.allBean = platData.allBean
+          scope.returnBean = platData.returnBean
+          scope.memberBean = platData.memberBean
+          scope.storeBean = platData.storeBean
+        })
+      },
+      loadPlatFee_() {
+        let scope = this
+        getMethod('/backend/siteData/memberBeanStatistics', {
+          memId: this.memId
+        }).then(res => {
+          let platData = res.data
+          scope.availableBean = platData.availableBean
+          scope.incomeBean = platData.incomeBean
+          scope.consumeBean = platData.consumeBean
+        })
+      },
+      // batchBill(){
+      //     let selData = this.$refs.noBillData.selection
+      //     let id = [];
+      //     selData.forEach(data=>{
+      //         id.push(data.pkBillId)
+      //     });
+      //     this.billOrd(id.join(","))
+      //   },
+      //   singleBill(row){
+      //     this.billOrd(row.pkBillId)
+      //   },
+      // findBillDtl(row){
+      //   let scope = this
+      //   let param = {
+      //       billIds:row.pkBillIds
+      //   }
+      //   getMethod("/backend/orderBill/findBillDtl", param).then(res => {
+      //       scope.showList = false
+      //       scope.detailList = res.data
+      //   });
+      // },
       handleClick(tab, event) {
         this.tabIndex = tab.index
-        if(tab.index == 0 ){
-            this.searchParam.billType = "10"
-        }else if(tab.index == 1 ){
-            this.searchParam.billType = "20"
-        }else {
-            this.searchParam.billType = "30"
+        if (tab.index == 0) {
+          this.searchParam.billType = "10"
+        } else if (tab.index == 1) {
+          this.searchParam.billType = "20"
+        } else {
+          this.searchParam.billType = "30"
         }
         this.loadList();
       },
@@ -163,26 +425,54 @@ import { formatDate } from "@/api/tools.js"
         this.searchParam.pageNum = pageNum;
         this.loadList();
       },
-      search(){
-          this.loadList()
+      currentPage_(pageNum) {
+        this.searchParam.pageNum = pageNum;
+        this.loadDetailsList();
       },
-      loadList(){
+      search() {
+        let that = this
+        let param = {
+          memName: that.searchParams.memName,
+          phoneNo: that.searchParams.phoneNo,
+          memberType: that.searchParams.memberType
+        }
+        getMethod("/backend/siteData/memberBeanList", param).then(res => {
+          console.log(res)
+          that.noBillData = res.data // 返回的数据
+
+        })
+      },
+      search_() {
+        let that = this
+        let param = {
+          type: that.searchParams_.type,
+          opType: that.searchParams_.opType,
+          startCreateTime: that.searchParams_.startCreateTime,
+          endCreateTime: that.searchParams_.endCreateTime,
+          memId: this.memId
+        }
+        getMethod("/backend/siteData/memberBeanDetailList", param).then(res => {
+          console.log(res)
+          that.detailsListData = res.data // 返回的数据
+        })
+      },
+      loadList() {
         let scope = this
         let param = this.searchParam
         param.billType = 10
-        postMethod("/backend/siteData/findPlatBeanRec", param).then(res => {
-            scope.noBillData = res.data
+        getMethod("/backend/siteData/memberBeanList", param).then(res => {
+          scope.noBillData = res.data
         });
       },
-      loadRecTitle(){
+      loadRecTitle() {
         let scope = this
         let param = this.searchParam
         getMethod("/backend/siteData/findRecTypeList", param).then(res => {
-            scope.titleList = res.data
+          scope.titleList = res.data
         });
 
         getMethod("/backend/storeManage/findList", param).then(res => {
-            scope.storeList = res.data
+          scope.storeList = res.data
         });
       }
     }
