@@ -1,11 +1,29 @@
 <template>
   <div class="update-form-panel">
-    <el-form ref="dataForm" :model="dataForm" :rules="rules" label-width="150px">
-      <el-form-item label="服务商名称" prop="provinceName">
-        <el-input v-model="dataForm.provinceName" :disabled="!viewSubmit" />
+    <el-form
+      ref="dataForm"
+      :model="dataForm"
+      :rules="rules"
+      label-width="150px"
+    >
+      <el-form-item
+        label="服务商名称"
+        prop="provinceName"
+      >
+        <el-input
+          v-model="dataForm.provinceName"
+          :disabled="!viewSubmit"
+        />
       </el-form-item>
-      <el-form-item label="服务商等级" prop="provinceRole">
-        <el-select v-model="dataForm.provinceRole" @change="switchLevel" :disabled="!viewSubmit">
+      <el-form-item
+        label="服务商等级"
+        prop="provinceRole"
+      >
+        <el-select
+          v-model="dataForm.provinceRole"
+          :disabled="!viewSubmit"
+          @change="switchLevel"
+        >
           <el-option
             v-for="item in provinceRoleList"
             :key="item.id"
@@ -15,35 +33,106 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item :label="mobileTitle" prop="mobileNo">
-        <el-input v-model="dataForm.mobileNo" :disabled="!viewSubmit" />
+      <el-form-item
+        :label="mobileTitle"
+        prop="mobileNo"
+      >
+        <el-input
+          v-model="dataForm.mobileNo"
+          :disabled="!viewSubmit"
+        />
       </el-form-item>
-      <el-form-item v-show="false" label="店主电话" prop="mobileNo">
-        <el-input v-model="dataForm.mobileNo"  :disabled="!viewSubmit" />
+      <el-form-item
+        v-show="false"
+        label="店主电话"
+        prop="mobileNo"
+      >
+        <el-input
+          v-model="dataForm.mobileNo"
+          :disabled="!viewSubmit"
+        />
       </el-form-item>
-      <el-form-item v-show="!isPersonProvince" label="店主姓名" prop="owerName">
-        <el-input v-model="dataForm.owerName" :disabled="!viewSubmit" />
+      <el-form-item
+        v-show="!isPersonProvince"
+        label="店主姓名"
+        prop="owerName"
+      >
+        <el-input
+          v-model="dataForm.owerName"
+          :disabled="!viewSubmit"
+        />
       </el-form-item>
-      <el-form-item v-show="!isPersonProvince" label="公司名称" prop="companyName">
-        <el-input v-model="dataForm.companyName" :disabled="!viewSubmit" />
+      <el-form-item
+        v-show="!isPersonProvince"
+        label="公司名称"
+        prop="companyName"
+      >
+        <el-input
+          v-model="dataForm.companyName"
+          :disabled="!viewSubmit"
+        />
       </el-form-item>
-      <el-form-item v-show="!isPersonProvince" label="税务代码" prop="taxNo">
-        <el-input v-model="dataForm.taxNo" :disabled="!viewSubmit" />
+      <el-form-item
+        v-show="!isPersonProvince"
+        label="税务代码"
+        prop="taxNo"
+      >
+        <el-input
+          v-model="dataForm.taxNo"
+          :disabled="!viewSubmit"
+        />
       </el-form-item>
-      <el-form-item label="推荐人电话" prop="referenceNo">
-        <el-input v-model="dataForm.referenceNo" :disabled="!viewSubmit" />
+      <el-form-item
+        label="推荐人电话"
+        prop="referenceNo"
+      >
+        <el-input
+          v-model="dataForm.referenceNo"
+          :disabled="!viewSubmit"
+        />
       </el-form-item>
-      <el-form-item v-show="!isPersonProvince" label="门店状态">
-        <el-input v-show="false" v-model="dataForm.shopStatus" :disabled="!viewSubmit" />
+      <el-form-item
+        v-show="!isPersonProvince"
+        label="门店状态"
+      >
+        <el-input
+          v-show="false"
+          v-model="dataForm.shopStatus"
+          :disabled="!viewSubmit"
+        />
         <el-radio-group v-model="dataForm.shopStatus">
-          <el-radio-button v-for="item in shopStatusList" :key="item.label" :label="item.label" />
+          <el-radio-button
+            v-for="item in shopStatusList"
+            :key="item.label"
+            :label="item.label"
+          />
         </el-radio-group>
       </el-form-item>
-      <el-form-item v-show="!isPersonProvince" label="店铺优势">
-        <el-input v-model="dataForm.forte" :disabled="!viewSubmit" />
+      <el-form-item
+        v-show="!isPersonProvince"
+        label="店铺优势"
+      >
+        <el-input
+          v-model="dataForm.forte"
+          :disabled="!viewSubmit"
+        />
       </el-form-item>
-      <el-form-item label="身份证正面照片" prop="personFrontImg">
-        <el-input v-show="false" v-model="dataForm.personFrontImg" />
+      <!-- <el-form-item label="">
+        <el-radio-group>
+         <el-radio  @change="a" value="1">自然人</el-radio>
+        <el-radio  @change="a" value="2">公司</el-radio>
+        </el-radio-group>
+
+      </el-form-item> -->
+
+      <el-form-item
+        label="身份证正面照片"
+        prop="personFrontImg"
+      >
+        <el-input
+          v-show="false"
+          v-model="dataForm.personFrontImg"
+        />
         <el-upload
           :disabled="!viewSubmit"
           :action="uploadFrontUrl"
@@ -58,11 +147,21 @@
           <i class="el-icon-plus" />
         </el-upload>
         <el-dialog>
-          <img width="100%" :src="imageUrl" alt>
+          <img
+            width="100%"
+            :src="imageUrl"
+            alt
+          >
         </el-dialog>
       </el-form-item>
-      <el-form-item label="身份证反面照片" prop="personSideImg">
-        <el-input v-show="false" v-model="dataForm.personSideImg" />
+      <el-form-item
+        label="身份证反面照片"
+        prop="personSideImg"
+      >
+        <el-input
+          v-show="false"
+          v-model="dataForm.personSideImg"
+        />
         <el-upload
           :disabled="!viewSubmit"
           :action="uploadSideUrl"
@@ -72,15 +171,27 @@
           :on-success="handleSideSuccess"
           :class="{hide:hideSideUpload}"
           :file-list="uploadSideList"
-          :on-remove="handleSideRemove">
+          :on-remove="handleSideRemove"
+        >
           <i class="el-icon-plus" />
         </el-upload>
         <el-dialog>
-          <img width="100%" :src="imageUrl" alt>
+          <img
+            width="100%"
+            :src="imageUrl"
+            alt
+          >
         </el-dialog>
       </el-form-item>
-      <el-form-item v-show="!isPersonProvince" label="营业执照照片" prop="licenseImg">
-        <el-input v-show="false" v-model="dataForm.licenseImg" />
+      <el-form-item
+        v-show="!isPersonProvince"
+        label="营业执照照片"
+        prop="licenseImg"
+      >
+        <el-input
+          v-show="false"
+          v-model="dataForm.licenseImg"
+        />
         <el-upload
           :disabled="!viewSubmit"
           :action="uploadLicenseUrl"
@@ -95,11 +206,22 @@
           <i class="el-icon-plus" />
         </el-upload>
         <el-dialog>
-          <img width="100%" :src="imageUrl" alt>
+          <img
+            width="100%"
+            :src="imageUrl"
+            alt
+          >
         </el-dialog>
       </el-form-item>
-      <el-form-item v-show="!isPersonProvince" label="银行开户许可照片" prop="bankLicenseImg">
-        <el-input v-show="false" v-model="dataForm.bankLicenseImg" />
+      <el-form-item
+        v-show="!isPersonProvince"
+        label="银行开户许可照片"
+        prop="bankLicenseImg"
+      >
+        <el-input
+          v-show="false"
+          v-model="dataForm.bankLicenseImg"
+        />
         <el-upload
           :disabled="!viewSubmit"
           :action="uploadBankLicenseUrl"
@@ -114,11 +236,21 @@
           <i class="el-icon-plus" />
         </el-upload>
         <el-dialog>
-          <img width="100%" :src="imageUrl" alt>
+          <img
+            width="100%"
+            :src="imageUrl"
+            alt
+          >
         </el-dialog>
       </el-form-item>
-      <el-form-item label="文件协议" prop="protocalFile">
-        <el-input v-show="false" v-model="dataForm.protocalFile" />
+      <el-form-item
+        label="文件协议"
+        prop="protocalFile"
+      >
+        <el-input
+          v-show="false"
+          v-model="dataForm.protocalFile"
+        />
         <el-upload
           :disabled="!viewSubmit"
           :action="uploadProtocalUrl"
@@ -129,25 +261,70 @@
           :show-file-list="false"
           :file-list="protocalFileList"
         >
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png/pdf文件，且不超过5mb</div>
-          <el-button size="small" :disabled="!hideProtocalUpload" type="primary">点击上传</el-button>
+          <div
+            slot="tip"
+            class="el-upload__tip"
+          >
+            只能上传jpg/png/pdf文件，且不超过5mb
+          </div>
+          <el-button
+            size="small"
+            :disabled="!hideProtocalUpload"
+            type="primary"
+          >
+            点击上传
+          </el-button>
         </el-upload>
         <ul class="el-upload-list el-upload-list--text">
-          <li v-for="(item,index) in protocalFileList" :key="index" tabindex="0" class="el-upload-list__item is-success el-list-enter-to"><!---->
-            <a class="el-upload-list__item-name " @click="downlandFile(item)"><i class="el-icon-document" />{{item.name}}</a>
-            <label  class="el-upload-list__item-status-label"><i class="el-icon-upload-success el-icon-circle-check" @click="handleProtocalRemove(item)" :disabled="!viewSubmit" /></label><i class="el-icon-close" v-show="viewSubmit" @click="handleProtocalRemove(item)" />
+          <li
+            v-for="(item,index) in protocalFileList"
+            :key="index"
+            tabindex="0"
+            class="el-upload-list__item is-success el-list-enter-to"
+          >
+            <!---->
+            <a
+              class="el-upload-list__item-name "
+              @click="downlandFile(item)"
+            ><i class="el-icon-document" />{{ item.name }}</a>
+            <label class="el-upload-list__item-status-label"><i
+              class="el-icon-upload-success el-icon-circle-check"
+              :disabled="!viewSubmit"
+              @click="handleProtocalRemove(item)"
+            /></label><i
+              v-show="viewSubmit"
+              class="el-icon-close"
+              @click="handleProtocalRemove(item)"
+            />
           </li>
         </ul>
-
       </el-form-item>
-      <el-form-item label="开户银行" prop="bankName">
-        <el-input v-model="dataForm.bankName" :disabled="!viewSubmit" />
+      <el-form-item
+        label="开户银行"
+        prop="bankName"
+      >
+        <el-input
+          v-model="dataForm.bankName"
+          :disabled="!viewSubmit"
+        />
       </el-form-item>
-      <el-form-item label="银行账号" prop="cardNo">
-        <el-input v-model="dataForm.cardNo"  :disabled="!viewSubmit" />
+      <el-form-item
+        label="银行账号"
+        prop="cardNo"
+      >
+        <el-input
+          v-model="dataForm.cardNo"
+          :disabled="!viewSubmit"
+        />
       </el-form-item>
-      <el-form-item label="地区" prop="area">
-        <el-select v-model="dataForm.province" @change="loadcityList(true)">
+      <el-form-item
+        label="地区"
+        prop="area"
+      >
+        <el-select
+          v-model="dataForm.province"
+          @change="loadcityList(true)"
+        >
           <el-option
             v-for="item in provinceList"
             :key="item.provinceid"
@@ -165,21 +342,46 @@
             :value="item.cityid"
           />
         </el-select>
-        <div style="line-height:10px">&nbsp;</div>
+        <div style="line-height:10px">
+&nbsp;
+        </div>
       </el-form-item>
-      <el-form-item label="公司详细地址" prop="address">
-        <el-input v-model="dataForm.address"/>
+      <el-form-item
+        label="公司详细地址"
+        prop="address"
+      >
+        <el-input v-model="dataForm.address" />
       </el-form-item>
       <el-form-item>
-        <el-button v-show="viewSubmit" type="primary" @click="submitUpdate">添加</el-button>
-        <el-button v-show="viewSubmit"  @click="cancelUpdate">取消</el-button>
-        <el-button v-show="!viewSubmit"  @click="cancelUpdate">返回列表</el-button>
+        <el-button
+          v-show="viewSubmit"
+          type="primary"
+          @click="submitUpdate"
+        >
+          添加
+        </el-button>
+        <el-button
+          v-show="viewSubmit"
+          @click="cancelUpdate"
+        >
+          取消
+        </el-button>
+        <el-button
+          v-show="!viewSubmit"
+          @click="cancelUpdate"
+        >
+          返回列表
+        </el-button>
       </el-form-item>
     </el-form>
 
     <el-dialog :visible.sync="dialogVisible">
-			<img width="100%" :src="dialogImageUrl" alt="">
-		</el-dialog>
+      <img
+        width="100%"
+        :src="dialogImageUrl"
+        alt=""
+      >
+    </el-dialog>
   </div>
 </template>
 

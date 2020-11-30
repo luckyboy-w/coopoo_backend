@@ -1,16 +1,25 @@
 <template>
   <div>
-    <div v-if="showList" class="ly-container">
+    <div
+      v-if="showList"
+      class="ly-container"
+    >
       <div class="ly-tool-panel">
         <table>
           <tr>
             <td>门店名称:</td>
             <td>
-              <el-input v-model="searchParam.storeName" width="180px" />
+              <el-input
+                v-model="searchParam.storeName"
+                width="180px"
+              />
             </td>
             <td>状态:</td>
             <td>
-              <el-select v-model="searchParam.enable" placeholder="请选择">
+              <el-select
+                v-model="searchParam.enable"
+                placeholder="请选择"
+              >
                 <el-option
                   v-for="item in enableList "
                   :key="item.id"
@@ -22,7 +31,10 @@
             </td>
             <td>门店状态:</td>
             <td>
-              <el-select v-model="searchParam.status" placeholder="请选择">
+              <el-select
+                v-model="searchParam.status"
+                placeholder="请选择"
+              >
                 <el-option
                   v-for="item in shopStatusList "
                   :key="item.id"
@@ -33,13 +45,20 @@
               </el-select>
             </td>
             <td>
-              <el-button icon="el-icon-search" @click="search()">搜索</el-button>
+              <el-button
+                icon="el-icon-search"
+                @click="search()"
+              >
+                搜索
+              </el-button>
               <el-button
                 plain
                 type="primary"
                 icon="el-icon-document-add"
                 @click="addOrEdit('add')"
-              >新建</el-button>
+              >
+                新建
+              </el-button>
             </td>
           </tr>
         </table>
@@ -55,15 +74,43 @@
             default-expand-all
             :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
           >
-            <el-table-column prop="storeName" label="门店名称" width="150px" />
-            <el-table-column prop="owerUserName" label="店主姓名" width="150px" />
-            <el-table-column prop="mobilePhone" label="店主手机号" width="150px" />
-            <el-table-column prop="empCnt" label="店员数" width="100px" />
+            <el-table-column
+              prop="storeName"
+              label="门店名称"
+              width="150px"
+            />
+            <el-table-column
+              prop="owerUserName"
+              label="店主姓名"
+              width="150px"
+            />
+            <el-table-column
+              prop="mobilePhone"
+              label="店主手机号"
+              width="150px"
+            />
+            <el-table-column
+              prop="empCnt"
+              label="店员数"
+              width="100px"
+            />
             <!-- <el-table-column prop="provinceName" label="省份" width="150px"></el-table-column>
             <el-table-column prop="cityName" label="城市" width="150px"></el-table-column> -->
-            <el-table-column prop="address" label="详细地址" width="250px" />
-            <el-table-column prop="statusText" label="门店状态" width="100px" />
-            <el-table-column prop="enable" label="是否启用" width="150px">
+            <el-table-column
+              prop="address"
+              label="详细地址"
+              width="250px"
+            />
+            <el-table-column
+              prop="statusText"
+              label="门店状态"
+              width="100px"
+            />
+            <el-table-column
+              prop="enable"
+              label="是否启用"
+              width="150px"
+            >
               <template slot-scope="scope">
                 <el-switch
                   v-model="scope.row.enable"
@@ -73,28 +120,41 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column prop="id" label="操作" width="360px">
+            <el-table-column
+              prop="id"
+              label="操作"
+              width="360px"
+            >
               <template slot-scope="scope">
                 <el-button
                   type="text"
                   size="small"
                   @click.native.prevent="addOrEdit('edit',scope.$index, tableData)"
-                >编辑门店</el-button>
+                >
+                  编辑门店
+                </el-button>
                 <el-button
+                  v-show="false"
                   type="text"
                   size="small"
                   @click.native.prevent="editEmp(scope.row, tableData)"
-                >编辑店员</el-button>
+                >
+                  编辑店员
+                </el-button>
                 <el-button
                   type="text"
                   size="small"
                   @click.native.prevent="editStoreService(scope.row, tableData)"
-                >编辑门店服务</el-button>
+                >
+                  编辑门店服务
+                </el-button>
                 <el-button
                   type="text"
                   size="small"
                   @click.native.prevent="downQrcode(scope.row, tableData)"
-                >下载二维码</el-button>
+                >
+                  下载二维码
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -113,8 +173,16 @@
       </div>
       <div class="list-panel" />
     </div>
-    <saveOrEdit v-if="showAddOrEdit" :edit-data="editData" @showListPanel="showListPanel" />
-    <empIndex v-if="showEditEmp" :store-data="storeData" @backToStoreIndex="backToStoreIndex" />
+    <saveOrEdit
+      v-if="showAddOrEdit"
+      :edit-data="editData"
+      @showListPanel="showListPanel"
+    />
+    <empIndex
+      v-if="showEditEmp"
+      :store-data="storeData"
+      @backToStoreIndex="backToStoreIndex"
+    />
     <addStoreService
       v-if="showStoreService"
       :store-data="storeData"

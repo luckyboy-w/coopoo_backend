@@ -1,18 +1,30 @@
 <template>
   <div class="update-form-panel">
-    <el-form ref="dataForm" :model="dataForm" label-width="140px" width="500px">
+    <el-form
+      ref="dataForm"
+      :model="dataForm"
+      label-width="140px"
+      width="500px"
+    >
       <el-form-item label="门店名称">
         <el-input v-model="dataForm.storeName" />
       </el-form-item>
       <el-form-item label="店主姓名">
         <el-input v-model="dataForm.owerUserName" />
       </el-form-item>
-      <el-form-item label="店主手机号" >
-        <el-input v-model="dataForm.mobilePhone" disabled=""/>
+      <el-form-item label="店主手机号">
+        <el-input
+          v-model="dataForm.mobilePhone"
+          disabled=""
+        />
       </el-form-item>
 
       <el-form-item label="E类服务商">
-        <el-select v-model="dataForm.serviceLevel" @change="setMobilePhone" style="width:300px">
+        <el-select
+          v-model="dataForm.serviceLevel"
+          style="width:300px"
+          @change="setMobilePhone"
+        >
           <el-option
             v-for="item in serviceList"
             :key="item.id"
@@ -23,8 +35,14 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="店铺图片-列表页面" prop="storeImg">
-        <el-input v-show="false" v-model="dataForm.storeImg" />
+      <el-form-item
+        label="店铺图片-列表页面"
+        prop="storeImg"
+      >
+        <el-input
+          v-show="false"
+          v-model="dataForm.storeImg"
+        />
         <el-upload
           :disabled="!viewSubmit"
           :action="uploadStoreImgUrl"
@@ -40,8 +58,15 @@
         </el-upload>
       </el-form-item>
 
-      <el-form-item label="店铺图片-详情页面" prop="storeImgDtl" style="width:1060px">
-        <el-input v-show="false" v-model="dataForm.storeImgDtl" />
+      <el-form-item
+        label="店铺图片-详情页面"
+        prop="storeImgDtl"
+        style="width:1060px"
+      >
+        <el-input
+          v-show="false"
+          v-model="dataForm.storeImgDtl"
+        />
         <el-upload
           :disabled="!viewSubmit"
           :action="uploadStoreImgDtlUrl"
@@ -58,7 +83,7 @@
       </el-form-item>
 
       <el-form-item label="详细地址">
-        <el-input v-model="dataForm.address" disabled />
+        <el-input v-model="dataForm.address" />
       </el-form-item>
       <el-form-item label="">
         <gdMap @callBackMap="callBackMap" />
@@ -70,19 +95,35 @@
             :key="item.id"
             :value-key="item.label"
             :label="item.label"
-            :value="item.id"/>
+            :value="item.id"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="是否启用">
-        <el-switch v-model="dataForm.enable" inactive-value="0" active-value="1" />
+        <el-switch
+          v-model="dataForm.enable"
+          inactive-value="0"
+          active-value="1"
+        />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitUpdate">添加</el-button>
-        <el-button @click="cancelUpdate">取消</el-button>
+        <el-button
+          type="primary"
+          @click="submitUpdate"
+        >
+          添加
+        </el-button>
+        <el-button @click="cancelUpdate">
+          取消
+        </el-button>
       </el-form-item>
     </el-form>
     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt="">
+      <img
+        width="100%"
+        :src="dialogImageUrl"
+        alt=""
+      >
     </el-dialog>
   </div>
 </template>
