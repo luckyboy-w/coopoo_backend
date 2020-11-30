@@ -1,400 +1,957 @@
 <template>
   <div style="padding-top:20px;width:100%">
     <el-row style="line-height:40px;padding:0px 25px 5px 25px">
-      <el-col :span="3" style="font-size:14px;">
+      <el-col
+        :span="3"
+        style="font-size:14px;"
+      >
         平台运营至今
       </el-col>
-      <el-col :span="2" style="font-size:14px;" />
-      <el-col :span="5" style="font-size:14px;backgroud-color:#F0F0F0;">
+      <el-col
+        :span="2"
+        style="font-size:14px;"
+      />
+      <el-col
+        :span="5"
+        style="font-size:14px;backgroud-color:#F0F0F0;"
+      >
         已提现总额(元)：{{ billFeeText | fmtFee }}
       </el-col>
-      <el-col :span="2" style="font-size:14px;" />
-      <el-col :span="5" style="font-size:14px;">
+      <el-col
+        :span="2"
+        style="font-size:14px;"
+      />
+      <el-col
+        :span="5"
+        style="font-size:14px;"
+      >
         已申请提现总额(元)：{{ allApplyFee | fmtFee }}
       </el-col>
-      <el-col :span="2" style="font-size:14px;" />
-      <el-col :span="5" style="font-size:14px;">
+      <el-col
+        :span="2"
+        style="font-size:14px;"
+      />
+      <el-col
+        :span="5"
+        style="font-size:14px;"
+      >
         返佣总金额(元)：{{ allPerFee | fmtFee }}
       </el-col>
     </el-row>
-    <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
-      <el-tab-pane label="待返佣数据" name="allFee" style="height:600px">
+    <el-tabs
+      v-model="activeName"
+      type="border-card"
+      @tab-click="handleClick"
+    >
+      <el-tab-pane
+        label="待返佣数据"
+        name="allFee"
+        style="height:600px"
+      >
         <el-row style="line-height:40px;padding:10px 0px ">
-          <el-col :span="1.5" style="font-size:14px;">
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
             服务商
           </el-col>
           <el-col :span="3">
-            <el-input v-model="searchParams.providerName" style="width:80px" placeholder="" />
+            <el-input
+              v-model="searchParams.providerName"
+              style="width:80px"
+              placeholder=""
+            />
           </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
             手机号码
           </el-col>
           <el-col :span="3">
-            <el-input v-model="searchParams.provPhone" style="width:80px" placeholder="" />
+            <el-input
+              v-model="searchParams.provPhone"
+              style="width:80px"
+              placeholder=""
+            />
           </el-col>
-          <el-col :span="9" style="padding-left:10px">
-            <el-button type="primary" @click="Tosearch()">
+          <el-col
+            :span="9"
+            style="padding-left:10px"
+          >
+            <el-button
+              type="primary"
+              @click="Tosearch()"
+            >
               搜索
             </el-button>
           </el-col>
         </el-row>
-        <el-table ref="allFeeData" :data="allFeeData.list" style="width: 100%; margin-bottom: 20px;" row-key="id">
-          <el-table-column type="index" width="50" label="序号" />
-          <el-table-column prop="provinceName" label="服务商" min-width="20%" />
-          <el-table-column prop="provLevel" label="服务类型" min-width="20%" />
-          <el-table-column prop="mobileNo" label="联系电话" min-width="20%" />
-          <el-table-column prop="cashNum" label="待返佣金额" min-width="20%">
+        <el-table
+          ref="allFeeData"
+          :data="allFeeData.list"
+          style="width: 100%; margin-bottom: 20px;"
+          row-key="id"
+        >
+          <el-table-column
+            type="index"
+            width="50"
+            label="序号"
+          />
+          <el-table-column
+            prop="provinceName"
+            label="服务商"
+            min-width="20%"
+          />
+          <el-table-column
+            prop="provLevel"
+            label="服务类型"
+            min-width="20%"
+          />
+          <el-table-column
+            prop="mobileNo"
+            label="联系电话"
+            min-width="20%"
+          />
+          <el-table-column
+            prop="cashNum"
+            label="待返佣金额"
+            min-width="20%"
+          >
             <template slot-scope="scope">
               {{ scope.row.cashNum | fmtFee }}
             </template>
           </el-table-column>
-          <el-table-column prop="provId" label="操作" min-width="20%">
+          <el-table-column
+            prop="provId"
+            label="操作"
+            min-width="20%"
+          >
             <template slot-scope="scope">
-              <el-link type="primary" @click="chkFeeDtl(scope.row)">
+              <el-link
+                type="primary"
+                @click="chkFeeDtl(scope.row)"
+              >
                 查看明细
               </el-link>
-              <el-link type="primary" @click="chkFriDtl(scope.row)">
+              <el-link
+                type="primary"
+                @click="chkFriDtl(scope.row)"
+              >
                 会员明细
               </el-link>
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination v-if="allFeeDataShow" :total="allFeeData.total" background layout="prev, pager, next"
-          @current-change="currentAllFeePage" @prev-click="currentAllFeePage" @next-click="currentAllFeePage" />
+        <el-pagination
+          v-if="allFeeDataShow"
+          :total="allFeeData.total"
+          background
+          layout="prev, pager, next"
+          @current-change="currentAllFeePage"
+          @prev-click="currentAllFeePage"
+          @next-click="currentAllFeePage"
+        />
       </el-tab-pane>
 
 
-      <el-tab-pane label="提现中" name="feeProcess" style="height:600px">
+      <el-tab-pane
+        label="提现中"
+        name="feeProcess"
+        style="height:600px"
+      >
         <el-row style="line-height:40px;padding:10px 0px ">
-          <el-col :span="24" style="padding-left:10px">
-            <el-button v-if="!back" type="primary" icon="el-icon-back" @click="backToAllFeeOne()">
+          <el-col
+            :span="24"
+            style="padding-left:10px"
+          >
+            <el-button
+              v-if="!back"
+              type="primary"
+              icon="el-icon-back"
+              @click="backToAllFeeOne()"
+            >
               返回列表
             </el-button>
           </el-col>
         </el-row>
-        <el-row v-show="det" style="line-height:40px;padding:10px 0px ">
-          <el-col :span="1" style="font-size:14px;">
+        <el-row
+          v-show="det"
+          style="line-height:40px;padding:10px 0px "
+        >
+          <el-col
+            :span="1"
+            style="font-size:14px;"
+          >
             申请单号
           </el-col>
           <el-col :span="2">
-            <el-input v-model="exportApplyFrm.cashNo" style="width:80px" placeholder="" />
+            <el-input
+              v-model="exportApplyFrm.cashNo"
+              style="width:80px"
+              placeholder=""
+            />
           </el-col>
-          <el-col :span="1" style="font-size:14px;">
+          <el-col
+            :span="1"
+            style="font-size:14px;"
+          >
             服务商姓名
           </el-col>
           <el-col :span="2">
-            <el-input v-model="exportApplyFrm.providerName" style="width:80px" placeholder="" />
+            <el-input
+              v-model="exportApplyFrm.providerName"
+              style="width:80px"
+              placeholder=""
+            />
           </el-col>
-          <el-col :span="1" style="font-size:14px;">
+          <el-col
+            :span="1"
+            style="font-size:14px;"
+          >
             服务商类型
           </el-col>
           <el-col :span="3">
-            <el-select v-model="exportApplyFrm.provLevel" placeholder="请选择服务商">
-              <el-option v-for="item in providerList" :label="item.provinceName" :value="item.id" />
+            <el-select
+              v-model="exportApplyFrm.provLevel"
+              placeholder="请选择服务商"
+            >
+              <el-option
+                v-for="item in providerList"
+                :label="item.provinceName"
+                :value="item.id"
+              />
             </el-select>
           </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
             手机号
           </el-col>
           <el-col :span="2">
-            <el-input v-model="exportApplyFrm.phoneNo" style="width:80px" placeholder="" />
+            <el-input
+              v-model="exportApplyFrm.phoneNo"
+              style="width:80px"
+              placeholder=""
+            />
           </el-col>
-          <el-col :span="1" style="font-size:14px;">
+          <el-col
+            :span="1"
+            style="font-size:14px;"
+          >
             申请时间
           </el-col>
           <el-col :span="5">
-            <el-date-picker v-model="exportApplyFrm.applyStartTime" type="date" width="120px" placeholder="选择开始日期" />
+            <el-date-picker
+              v-model="exportApplyFrm.applyStartTime"
+              type="date"
+              width="120px"
+              placeholder="选择开始日期"
+            />
             -
-            <el-date-picker v-model="exportApplyFrm.applyEndTime" type="date" width="120px" placeholder="选择结束日期" />
+            <el-date-picker
+              v-model="exportApplyFrm.applyEndTime"
+              type="date"
+              width="120px"
+              placeholder="选择结束日期"
+            />
           </el-col>
-          <el-col :span="3" style="padding-left:10px">
-            <el-button type="primary" @click="batchBill()">
+          <el-col
+            :span="3"
+            style="padding-left:10px"
+          >
+            <el-button
+              type="primary"
+              @click="batchBill()"
+            >
               搜索
             </el-button>
-            <el-button type="primary" plain icon="el-icon-download" @click="exportApplyCash()">
+            <el-button
+              type="primary"
+              plain
+              icon="el-icon-download"
+              @click="exportApplyCash()"
+            >
               导出
             </el-button>
           </el-col>
         </el-row>
-        <el-table v-if="det" ref="feeProcessData" :data="feeProcessData.list" style="width: 100%; margin-bottom: 20px;"
-          row-key="id">
-          <el-table-column type="index" width="50" label="序号" />
-          <el-table-column prop="cashNo" label="申请单号" min-width="24%" />
-          <el-table-column prop="provinceName" label="申请服务商" min-width="24%" />
-          <el-table-column prop="mobileNo" label="手机号" min-width="24%" />
-          <el-table-column prop="provinceRole" label="服务商类型" min-width="24%" />
-          <el-table-column prop="cashNum" label="提现金额" min-width="24%">
+        <el-table
+          v-if="det"
+          ref="feeProcessData"
+          :data="feeProcessData.list"
+          style="width: 100%; margin-bottom: 20px;"
+          row-key="id"
+        >
+          <el-table-column
+            type="index"
+            width="50"
+            label="序号"
+          />
+          <el-table-column
+            prop="cashNo"
+            label="申请单号"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="provinceName"
+            label="申请服务商"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="mobileNo"
+            label="手机号"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="provinceRole"
+            label="服务商类型"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="cashNum"
+            label="提现金额"
+            min-width="24%"
+          >
             <template slot-scope="scope">
               {{ scope.row.cashNum | fmtFee }}
             </template>
           </el-table-column>
-          <el-table-column prop="createTime" label="申请时间" min-width="24%">
+          <el-table-column
+            prop="createTime"
+            label="申请时间"
+            min-width="24%"
+          >
             <template slot-scope="scope">
               {{ scope.row.createTime | _formateDate }}
             </template>
           </el-table-column>
-          <el-table-column prop="pkBillId" label="操作" min-width="24%">
+          <el-table-column
+            prop="pkBillId"
+            label="操作"
+            min-width="24%"
+          >
             <template slot-scope="scope">
-              <el-link type="primary" @click="dealCash(scope.row)">
+              <el-link
+                type="primary"
+                @click="dealCash(scope.row)"
+              >
                 完成提现
               </el-link>
-              <el-link type="primary" @click="chkFeeProcessDtl(scope.row)">
+              <el-link
+                type="primary"
+                @click="chkFeeProcessDtl(scope.row)"
+              >
                 查看明细
               </el-link>
             </template>
           </el-table-column>
         </el-table>
-        <el-row v-show="def" style="line-height:40px;padding:10px 0px ">
-          <el-col :span="1.5" style="font-size:14px;">
+        <el-row
+          v-show="def"
+          style="line-height:40px;padding:10px 0px "
+        >
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
             会员名称
           </el-col>
           <el-col :span="3">
-            <el-input v-model="searchParamsOne.memName" style="width:80px" placeholder="" />
+            <el-input
+              v-model="searchParamsOne.memName"
+              style="width:80px"
+              placeholder=""
+            />
           </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
             手机号码
           </el-col>
           <el-col :span="3">
-            <el-input v-model="searchParamsOne.phoneNo" style="width:80px" placeholder="" />
+            <el-input
+              v-model="searchParamsOne.phoneNo"
+              style="width:80px"
+              placeholder=""
+            />
           </el-col>
-          <el-col :span="9" style="padding-left:10px">
-            <el-button type="primary" @click="TosearchOne()">
+          <el-col
+            :span="9"
+            style="padding-left:10px"
+          >
+            <el-button
+              type="primary"
+              @click="TosearchOne()"
+            >
               搜索
             </el-button>
           </el-col>
         </el-row>
-        <el-table v-show="def" :data="detList" style="width: 100%; margin-bottom: 20px;" row-key="id">
-          <el-table-column type="index" width="50" label="序号" />
-          <el-table-column prop="memName" label="会员姓名" min-width="24%" />
-          <el-table-column prop="phoneNo" label="手机号" min-width="24%" />
-          <el-table-column prop="orderNo" label="订单编号" min-width="24%" />
-          <el-table-column prop="ordPayPrice" label="订单金额(元)" min-width="24%">
+        <el-table
+          v-show="def"
+          :data="detList"
+          style="width: 100%; margin-bottom: 20px;"
+          row-key="id"
+        >
+          <el-table-column
+            type="index"
+            width="50"
+            label="序号"
+          />
+          <el-table-column
+            prop="memName"
+            label="会员姓名"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="phoneNo"
+            label="手机号"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="orderNo"
+            label="订单编号"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="ordPayPrice"
+            label="订单金额(元)"
+            min-width="24%"
+          >
             <template slot-scope="scope">
               {{ scope.row.ordPayPrice | fmtFee }}
             </template>
           </el-table-column>
-          <el-table-column prop="perPrice" label="返佣金额(元)" min-width="24%">
+          <el-table-column
+            prop="perPrice"
+            label="返佣金额(元)"
+            min-width="24%"
+          >
             <template slot-scope="scope">
               {{ scope.row.perPrice | fmtFee }}
             </template>
           </el-table-column>
-          <el-table-column prop="createTime" label="付费时间" min-width="24%">
+          <el-table-column
+            prop="createTime"
+            label="付费时间"
+            min-width="24%"
+          >
             <template slot-scope="scope">
               {{ scope.row.createTime | _formateDate }}
             </template>
           </el-table-column>
-          <el-table-column prop="pkBillId" label="操作" min-width="24%">
+          <el-table-column
+            prop="pkBillId"
+            label="操作"
+            min-width="24%"
+          >
             <template slot-scope="scope">
-              <el-link type="primary" @click="toDetails(scope.row)">
+              <el-link
+                type="primary"
+                @click="toDetails(scope.row)"
+              >
                 订单详情
               </el-link>
             </template>
           </el-table-column>
         </el-table>
 
-        <el-pagination v-show="det" :total="feeProcessData.total" background layout="prev, pager, next" @current-change="currentProcessPage"
-          @prev-click="currentProcessPage" @next-click="currentProcessPage" />
+        <el-pagination
+          v-show="det"
+          :total="feeProcessData.total"
+          background
+          layout="prev, pager, next"
+          @current-change="currentProcessPage"
+          @prev-click="currentProcessPage"
+          @next-click="currentProcessPage"
+        />
       </el-tab-pane>
 
 
 
 
-      <el-tab-pane label="已提现" name="feeEnd" style="height:600px">
+      <el-tab-pane
+        label="已提现"
+        name="feeEnd"
+        style="height:600px"
+      >
         <el-row style="line-height:40px;padding:10px 0px ">
-          <el-col :span="24" style="padding-left:10px">
-            <el-button v-if="!back_" type="primary" icon="el-icon-back" @click="backToAllFeeTwo()">
+          <el-col
+            :span="24"
+            style="padding-left:10px"
+          >
+            <el-button
+              v-if="!back_"
+              type="primary"
+              icon="el-icon-back"
+              @click="backToAllFeeTwo()"
+            >
               返回列表
             </el-button>
           </el-col>
         </el-row>
-        <el-row v-if="def_" style="line-height:40px;padding:10px 0px ">
-          <el-col :span="1" style="font-size:14px;">
+        <el-row
+          v-if="def_"
+          style="line-height:40px;padding:10px 0px "
+        >
+          <el-col
+            :span="1"
+            style="font-size:14px;"
+          >
             申请单号
           </el-col>
           <el-col :span="2">
-            <el-input v-model="exportApplyFrm_.cashNo" style="width:80px" placeholder="" />
+            <el-input
+              v-model="exportApplyFrm_.cashNo"
+              style="width:80px"
+              placeholder=""
+            />
           </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
             提现服务商
           </el-col>
           <el-col :span="2">
-            <el-input v-model="exportApplyFrm_.provPhone" style="width:80px" placeholder="" />
+            <el-input
+              v-model="exportApplyFrm_.provPhone"
+              style="width:80px"
+              placeholder=""
+            />
           </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
             手机号
           </el-col>
           <el-col :span="2">
-            <el-input v-model="exportApplyFrm_.provPhone" style="width:80px" placeholder="" />
+            <el-input
+              v-model="exportApplyFrm_.provPhone"
+              style="width:80px"
+              placeholder=""
+            />
           </el-col>
-          <el-col :span="1" style="font-size:14px;">
+          <el-col
+            :span="1"
+            style="font-size:14px;"
+          >
             服务商类型
           </el-col>
           <el-col :span="3">
-            <el-select v-model="exportApplyFrm_.provLevel" placeholder="请选择服务商型">
-              <el-option v-for="item in providerList" :label="item.provinceName" :value="item.id" />
+            <el-select
+              v-model="exportApplyFrm_.provLevel"
+              placeholder="请选择服务商型"
+            >
+              <el-option
+                v-for="item in providerList"
+                :label="item.provinceName"
+                :value="item.id"
+              />
             </el-select>
           </el-col>
-          <el-col :span="1" style="font-size:14px;">
+          <el-col
+            :span="1"
+            style="font-size:14px;"
+          >
             提现时间
           </el-col>
           <el-col :span="5">
-            <el-date-picker v-model="exportApplyFrm_.applyStartTime" type="date" width="120px" placeholder="选择开始日期" />
+            <el-date-picker
+              v-model="exportApplyFrm_.applyStartTime"
+              type="date"
+              width="120px"
+              placeholder="选择开始日期"
+            />
             -
-            <el-date-picker v-model="exportApplyFrm_.applyEndTime" type="date" width="120px" placeholder="选择结束日期" />
+            <el-date-picker
+              v-model="exportApplyFrm_.applyEndTime"
+              type="date"
+              width="120px"
+              placeholder="选择结束日期"
+            />
           </el-col>
-          <el-col :span="5" style="padding-left:10px">
-            <el-button type="primary" @click="batchBill_()">
+          <el-col
+            :span="5"
+            style="padding-left:10px"
+          >
+            <el-button
+              type="primary"
+              @click="batchBill_()"
+            >
               搜索
             </el-button>
-            <el-button type="primary" plain icon="el-icon-download" @click="exportApplyCash_()">
+            <el-button
+              type="primary"
+              plain
+              icon="el-icon-download"
+              @click="exportApplyCash_()"
+            >
               导出
             </el-button>
           </el-col>
         </el-row>
 
-        <el-table v-if="def_" ref="feeEnd" :data="feeEndData.list" style="width: 100%; margin-bottom: 20px;" row-key="id">
-          <el-table-column type="index" width="50" label="序号" />
-          <el-table-column prop="cashNo" label="申请单号" min-width="24%" />
-          <el-table-column prop="provinceName" label="提现服务商" min-width="24%" />
-          <el-table-column prop="mobileNo" label="手机号" min-width="24%" />
-          <el-table-column prop="provinceRole" label="服务商类型" min-width="24%" />
-          <el-table-column prop="cashNum" label="提现金额" min-width="24%">
+        <el-table
+          v-if="def_"
+          ref="feeEnd"
+          :data="feeEndData.list"
+          style="width: 100%; margin-bottom: 20px;"
+          row-key="id"
+        >
+          <el-table-column
+            type="index"
+            width="50"
+            label="序号"
+          />
+          <el-table-column
+            prop="cashNo"
+            label="申请单号"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="provinceName"
+            label="提现服务商"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="mobileNo"
+            label="手机号"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="provinceRole"
+            label="服务商类型"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="cashNum"
+            label="提现金额"
+            min-width="24%"
+          >
             <template slot-scope="scope">
               {{ scope.row.cashNum | fmtFee }}
             </template>
           </el-table-column>
-          <el-table-column prop="accountTime" label="提现时间" min-width="24%">
+          <el-table-column
+            prop="accountTime"
+            label="提现时间"
+            min-width="24%"
+          >
             <template slot-scope="scope">
               {{ scope.row.accountTime | _formateDate }}
             </template>
           </el-table-column>
-          <el-table-column label="操作" min-width="24%">
+          <el-table-column
+            label="操作"
+            min-width="24%"
+          >
             <template slot-scope="scope">
-              <el-link type="primary" @click="detail_(scope.row)">
+              <el-link
+                type="primary"
+                @click="detail_(scope.row)"
+              >
                 查看明细
               </el-link>
             </template>
           </el-table-column>
         </el-table>
 
-        <el-row v-if="det_" style="line-height:40px;padding:10px 0px ">
-          <el-col :span="1.5" style="font-size:14px;">
+        <el-row
+          v-if="det_"
+          style="line-height:40px;padding:10px 0px "
+        >
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
             会员名
           </el-col>
           <el-col :span="3">
-            <el-input v-model="searchParamsTwo.memName" style="width:80px" placeholder="" />
+            <el-input
+              v-model="searchParamsTwo.memName"
+              style="width:80px"
+              placeholder=""
+            />
           </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
             手机号码
           </el-col>
           <el-col :span="3">
-            <el-input v-model="searchParamsTwo.phoneNo" style="width:80px" placeholder="" />
+            <el-input
+              v-model="searchParamsTwo.phoneNo"
+              style="width:80px"
+              placeholder=""
+            />
           </el-col>
-          <el-col :span="9" style="padding-left:10px">
-            <el-button type="primary" @click="TosearchTwo()">
+          <el-col
+            :span="9"
+            style="padding-left:10px"
+          >
+            <el-button
+              type="primary"
+              @click="TosearchTwo()"
+            >
               搜索
             </el-button>
           </el-col>
         </el-row>
-        <el-table v-if="det_" :data="det_List" style="width: 100%; margin-bottom: 20px;" row-key="id">
-          <el-table-column type="index" width="50" label="序号" />
-          <el-table-column prop="memName" label="会员姓名" min-width="24%" />
-          <el-table-column prop="phoneNo" label="手机号" min-width="24%" />
-          <el-table-column prop="orderNo" label="订单编号" min-width="24%" />
-          <el-table-column prop="ordPayPrice" label="订单金额(元)" min-width="24%">
+        <el-table
+          v-if="det_"
+          :data="det_List"
+          style="width: 100%; margin-bottom: 20px;"
+          row-key="id"
+        >
+          <el-table-column
+            type="index"
+            width="50"
+            label="序号"
+          />
+          <el-table-column
+            prop="memName"
+            label="会员姓名"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="phoneNo"
+            label="手机号"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="orderNo"
+            label="订单编号"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="ordPayPrice"
+            label="订单金额(元)"
+            min-width="24%"
+          >
             <template slot-scope="scope">
               {{ scope.row.ordPayPrice | fmtFee }}
             </template>
           </el-table-column>
-          <el-table-column prop="perPrice" label="返佣金额(元)" min-width="24%">
+          <el-table-column
+            prop="perPrice"
+            label="返佣金额(元)"
+            min-width="24%"
+          >
             <template slot-scope="scope">
               {{ scope.row.perPrice | fmtFee }}
             </template>
           </el-table-column>
-          <el-table-column prop="createTime" label="付费时间" min-width="24%">
+          <el-table-column
+            prop="createTime"
+            label="付费时间"
+            min-width="24%"
+          >
             <template slot-scope="scope">
               {{ scope.row.createTime | _formateDate }}
             </template>
           </el-table-column>
-          <el-table-column prop="pkBillId" label="操作" min-width="24%">
+          <el-table-column
+            prop="pkBillId"
+            label="操作"
+            min-width="24%"
+          >
             <template slot-scope="scope">
-              <el-link type="primary" @click="toDetails(scope.row)">
+              <el-link
+                type="primary"
+                @click="toDetails(scope.row)"
+              >
                 订单详情
               </el-link>
             </template>
           </el-table-column>
         </el-table>
 
-        <el-pagination v-if="def_" :total="feeEndData.total" background layout="prev, pager, next" @current-change="currentEndPage"
-          @prev-click="currentEndPage" @next-click="currentEndPage" />
+        <el-pagination
+          v-if="def_"
+          :total="feeEndData.total"
+          background
+          layout="prev, pager, next"
+          @current-change="currentEndPage"
+          @prev-click="currentEndPage"
+          @next-click="currentEndPage"
+        />
       </el-tab-pane>
 
 
-      <el-tab-pane v-if="feeDtl_" label="待返佣明细" name="feeDtl" style="height:600px">
+      <el-tab-pane
+        v-if="feeDtl_"
+        label="待返佣明细"
+        name="feeDtl"
+        style="height:600px"
+      >
         <el-row style="line-height:40px;padding:10px 0px ">
-          <el-col :span="24" style="padding-left:10px">
-            <el-button v-if="!allFeeDataShow" type="primary" icon="el-icon-back" @click="backToAllFee()">
+          <el-col
+            :span="24"
+            style="padding-left:10px"
+          >
+            <el-button
+              v-if="!allFeeDataShow"
+              type="primary"
+              icon="el-icon-back"
+              @click="backToAllFee()"
+            >
               返回列表
             </el-button>
           </el-col>
         </el-row>
 
         <el-row style="line-height:40px;padding:10px 0px ">
-          <el-col :span="1.5" style="font-size:14px;">
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
             会员名称
           </el-col>
           <el-col :span="3">
-            <el-input v-model="searchParams_.memName" style="width:80px" placeholder="" />
+            <el-input
+              v-model="searchParams_.memName"
+              style="width:80px"
+              placeholder=""
+            />
           </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
+          <el-col
+            :span="1.5"
+            style="font-size:14px;"
+          >
             手机号码
           </el-col>
           <el-col :span="3">
-            <el-input v-model="searchParams_.phoneNo" style="width:80px" placeholder="" />
+            <el-input
+              v-model="searchParams_.phoneNo"
+              style="width:80px"
+              placeholder=""
+            />
           </el-col>
-          <el-col :span="9" style="padding-left:10px">
-            <el-button type="primary" @click="Tosearch_()">
+          <el-col
+            :span="9"
+            style="padding-left:10px"
+          >
+            <el-button
+              type="primary"
+              @click="Tosearch_()"
+            >
               搜索
             </el-button>
           </el-col>
         </el-row>
 
-        <el-table v-show="allFeeDtlFee" ref="dtlFeeRef" :data="dtlFeeList" style="width: 100%; margin-bottom: 20px;"
-          row-key="id">
-          <el-table-column type="index" width="50" label="序号" />
-          <el-table-column prop="nickName" label="会员姓名" min-width="24%" />
-          <el-table-column prop="phoneNo" label="手机号码" min-width="24%" />
-          <el-table-column prop="orderNo" label="订单编号" min-width="24%" />
-          <el-table-column prop="ordPayPrice" label="订单金额(元)" min-width="20%" />
-          <el-table-column prop="perPrice" label="返佣金额(元)" min-width="20%" />
-          <el-table-column prop="tradeTime" label="付费时间" min-width="24%">
+        <el-table
+          v-show="allFeeDtlFee"
+          ref="dtlFeeRef"
+          :data="dtlFeeList"
+          style="width: 100%; margin-bottom: 20px;"
+          row-key="id"
+        >
+          <el-table-column
+            type="index"
+            width="50"
+            label="序号"
+          />
+          <el-table-column
+            prop="nickName"
+            label="会员姓名"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="phoneNo"
+            label="手机号码"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="orderNo"
+            label="订单编号"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="ordPayPrice"
+            label="订单金额(元)"
+            min-width="20%"
+          />
+          <el-table-column
+            prop="perPrice"
+            label="返佣金额(元)"
+            min-width="20%"
+          />
+          <el-table-column
+            prop="tradeTime"
+            label="付费时间"
+            min-width="24%"
+          >
             <template slot-scope="scope">
               {{ scope.row.tradeTime | _formateDate }}
             </template>
           </el-table-column>
-          <el-table-column prop="pkBillId" label="操作" min-width="24%">
+          <el-table-column
+            prop="pkBillId"
+            label="操作"
+            min-width="24%"
+          >
             <template slot-scope="scope">
-              <el-link type="primary" @click="toDetails(scope.row)">
+              <el-link
+                type="primary"
+                @click="toDetails(scope.row)"
+              >
                 订单详情
               </el-link>
             </template>
           </el-table-column>
         </el-table>
       </el-tab-pane>
-      <el-tab-pane v-if="friDtl_" label="会员明细" name="friDtl" style="height:600px">
+      <el-tab-pane
+        v-if="friDtl_"
+        label="会员明细"
+        name="friDtl"
+        style="height:600px"
+      >
         <el-row style="line-height:40px;padding:10px 0px ">
-          <el-col :span="24" style="padding-left:10px">
-            <el-button v-if="!allFeeDataShow" type="primary" icon="el-icon-back" @click="backToAllFee()">
+          <el-col
+            :span="24"
+            style="padding-left:10px"
+          >
+            <el-button
+              v-if="!allFeeDataShow"
+              type="primary"
+              icon="el-icon-back"
+              @click="backToAllFee()"
+            >
               返回列表
             </el-button>
           </el-col>
         </el-row>
 
-        <el-table v-show="allFriDtlFee" ref="dtlFriRef" :data="dtlFriList" style="width: 100%; margin-bottom: 20px;"
-          row-key="id">
-          <el-table-column type="index" width="50" label="序号" />
-          <el-table-column prop="friName" label="会员昵称" min-width="24%" />
-          <el-table-column prop="friPhone" label="手机号码" min-width="24%" />
+        <el-table
+          v-show="allFriDtlFee"
+          ref="dtlFriRef"
+          :data="dtlFriList"
+          style="width: 100%; margin-bottom: 20px;"
+          row-key="id"
+        >
+          <el-table-column
+            type="index"
+            width="50"
+            label="序号"
+          />
+          <el-table-column
+            prop="friName"
+            label="会员昵称"
+            min-width="24%"
+          />
+          <el-table-column
+            prop="friPhone"
+            label="手机号码"
+            min-width="24%"
+          />
         </el-table>
       </el-tab-pane>
 

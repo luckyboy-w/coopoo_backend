@@ -1,70 +1,152 @@
 <template>
   <div style="padding:20px 10px">
     <el-row style="line-height:40px;padding:0px 25px 5px 25px">
-      <el-col :span="3" style="font-size:14px;">
+      <el-col
+        :span="3"
+        style="font-size:14px;"
+      >
         平台运营至今
       </el-col>
-      <el-col :span="2" style="font-size:14px;" />
-      <el-col :span="5" style="font-size:14px;backgroud-color:#F0F0F0;">
-        平台发放总靠谱豆：{{allBean}}
+      <el-col
+        :span="2"
+        style="font-size:14px;"
+      />
+      <el-col
+        :span="5"
+        style="font-size:14px;backgroud-color:#F0F0F0;"
+      >
+        平台发放总靠谱豆：{{ allBean }}
       </el-col>
-      <el-col :span="2" style="font-size:14px;" />
-      <el-col :span="5" style="font-size:14px;">
-        累计平台回收靠谱豆：{{returnBean}}
+      <el-col
+        :span="2"
+        style="font-size:14px;"
+      />
+      <el-col
+        :span="5"
+        style="font-size:14px;"
+      >
+        累计平台回收靠谱豆：{{ returnBean }}
       </el-col>
-      <el-col :span="2" style="font-size:14px;" />
-      <el-col :span="5" style="font-size:14px;">
-        会员所得总靠谱豆：{{memberBean}}
+      <el-col
+        :span="2"
+        style="font-size:14px;"
+      />
+      <el-col
+        :span="5"
+        style="font-size:14px;"
+      >
+        会员所得总靠谱豆：{{ memberBean }}
       </el-col>
-      <el-col :span="2" style="font-size:14px;" />
-      <el-col :span="5" style="font-size:14px;">
-        门店所得总靠谱豆：{{storeBean}}
+      <el-col
+        :span="2"
+        style="font-size:14px;"
+      />
+      <el-col
+        :span="5"
+        style="font-size:14px;"
+      >
+        门店所得总靠谱豆：{{ storeBean }}
       </el-col>
     </el-row>
     <el-tabs type="border-card">
       <el-tab-pane label="靠谱豆交易">
         <div v-if="showList">
-          <el-row v-if="def" style="line-height:40px;padding:10px 0px ">
-            <el-col :span="1.5" style="font-size:14px;">
+          <el-row
+            v-if="def"
+            style="line-height:40px;padding:10px 0px "
+          >
+            <el-col
+              :span="1.5"
+              style="font-size:14px;"
+            >
               会员名
             </el-col>
             <el-col :span="3">
-              <el-input v-model="searchParams.memName" style="width:80px" placeholder="" />
+              <el-input
+                v-model="searchParams.memName"
+                style="width:80px"
+                placeholder=""
+              />
             </el-col>
-            <el-col :span="1.5" style="font-size:14px;">
+            <el-col
+              :span="1.5"
+              style="font-size:14px;"
+            >
               手机号码
             </el-col>
             <el-col :span="3">
-              <el-input v-model="searchParams.phoneNo" style="width:80px" placeholder="" />
+              <el-input
+                v-model="searchParams.phoneNo"
+                style="width:80px"
+                placeholder=""
+              />
             </el-col>
-            <el-col :span="1" style="font-size:14px;">
+            <el-col
+              :span="1"
+              style="font-size:14px;"
+            >
               类型
             </el-col>
             <el-col :span="3">
-              <el-select v-model="searchParams.memberType" placeholder="请选择服务商">
-                <el-option v-for="item in providerList" :label="item.provinceName" :value="item.id" />
+              <el-select
+                v-model="searchParams.memberType"
+                placeholder="请选择服务商"
+              >
+                <el-option
+                  v-for="item in providerList"
+                  :label="item.provinceName"
+                  :value="item.id"
+                />
               </el-select>
             </el-col>
-            <el-col :span="9" style="padding-left:10px">
-              <el-button type="primary" @click="search()">
+            <el-col
+              :span="9"
+              style="padding-left:10px"
+            >
+              <el-button
+                type="primary"
+                @click="search()"
+              >
                 搜索
               </el-button>
             </el-col>
           </el-row>
-          <el-table v-if="def" ref="noBillData" stripe :data="noBillData.list" style="width: 100%; margin-bottom: 20px;"
-            row-key="id">
-            <el-table-column type="index" width="50" label="序号" />
-            <el-table-column prop="nickname" label="会员名称" min-width="15%">
+          <el-table
+            v-if="def"
+            ref="noBillData"
+            stripe
+            :data="noBillData.list"
+            style="width: 100%; margin-bottom: 20px;"
+            row-key="id"
+          >
+            <el-table-column
+              type="index"
+              width="50"
+              label="序号"
+            />
+            <el-table-column
+              prop="nickname"
+              label="会员名称"
+              min-width="15%"
+            >
               <template slot-scope="scope">
-                {{scope.row.nickname}}
+                {{ scope.row.nickname }}
               </template>
             </el-table-column>
-            <el-table-column prop="phoneNo" label="手机号" min-width="20%">
+            <el-table-column
+              prop="phoneNo"
+              label="手机号"
+              min-width="20%"
+            >
               <template slot-scope="scope">
-                {{scope.row.phoneNo}}
+                {{ scope.row.phoneNo }}
               </template>
             </el-table-column>
-            <el-table-column prop="provinceRole" label="服务商类型" min-width="10%">
+            <el-table-column
+              prop="provinceRole"
+              label="服务商类型"
+              min-width="10%"
+            >
               <template slot-scope="scope">
                 <span v-if="scope.row.memberType == '10' && scope.row.provinceRole ==undefined ">会员</span>
                 <span v-if="scope.row.memberType == '30' && scope.row.provinceRole =='1' ">A类服务商</span>
@@ -74,17 +156,26 @@
                 <span v-if="scope.row.memberType == '20' && scope.row.provinceRole =='5' ">E类服务商</span>
                 <span v-if="scope.row.memberType == '20' && scope.row.provinceRole =='6' ">EA类服务商</span>
               </template>
-
-
             </el-table-column>
-            <el-table-column prop="beanNum" label="靠谱豆数量" min-width="20%">
+            <el-table-column
+              prop="beanNum"
+              label="靠谱豆数量"
+              min-width="20%"
+            >
               <template slot-scope="scope">
-                {{scope.row.beanNum}}
+                {{ scope.row.beanNum }}
               </template>
             </el-table-column>
-            <el-table-column prop="pkBillId" label="操作" min-width="24%">
+            <el-table-column
+              prop="pkBillId"
+              label="操作"
+              min-width="24%"
+            >
               <template slot-scope="scope">
-                <el-link type="primary" @click="transdetails(scope.row)">
+                <el-link
+                  type="primary"
+                  @click="transdetails(scope.row)"
+                >
                   交易明细
                 </el-link>
               </template>
@@ -93,64 +184,155 @@
 
 
           <el-row style="line-height:40px;padding:10px 0px ">
-            <el-col :span="24" style="padding-left:10px">
-              <el-button v-if="!allFeeDataShow" type="primary" icon="el-icon-back" @click="backToAllFee()">
+            <el-col
+              :span="24"
+              style="padding-left:10px"
+            >
+              <el-button
+                v-if="!allFeeDataShow"
+                type="primary"
+                icon="el-icon-back"
+                @click="backToAllFee()"
+              >
                 返回列表
               </el-button>
             </el-col>
           </el-row>
-          <el-row v-if="det" style="line-height:40px;padding:10px 0px ">
-            <el-col :span="1.5" style="font-size:14px;">
+          <el-row
+            v-if="det"
+            style="line-height:40px;padding:10px 0px "
+          >
+            <el-col
+              :span="1.5"
+              style="font-size:14px;"
+            >
               交易路径
             </el-col>
             <el-col :span="3">
-              <el-select v-model="searchParams_.type" placeholder="请选择">
-                <el-option v-for="item in typeList" :label="item.typeName" :value="item.id" />
+              <el-select
+                v-model="searchParams_.type"
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in typeList"
+                  :label="item.typeName"
+                  :value="item.id"
+                />
               </el-select>
             </el-col>
-            <el-col :span="1.5" style="font-size:14px;">
+            <el-col
+              :span="1.5"
+              style="font-size:14px;"
+            >
               交易方式
             </el-col>
             <el-col :span="3">
-              <el-select v-model="searchParams_.opType" placeholder="请选择">
-                <el-option v-for="item in opTypeList" :label="item.opTypeName" :value="item.id" />
+              <el-select
+                v-model="searchParams_.opType"
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in opTypeList"
+                  :label="item.opTypeName"
+                  :value="item.id"
+                />
               </el-select>
             </el-col>
-            <el-col :span="1" style="font-size:14px;">
+            <el-col
+              :span="1"
+              style="font-size:14px;"
+            >
               入账时间
             </el-col>
             <el-col :span="5">
-              <el-date-picker v-model="searchParams_.startCreateTime" type="date" width="120px" placeholder="选择开始日期" />
+              <el-date-picker
+                v-model="searchParams_.startCreateTime"
+                type="date"
+                width="120px"
+                placeholder="选择开始日期"
+              />
               -
-              <el-date-picker v-model="searchParams_.endCreateTime" type="date" width="120px" placeholder="选择结束日期" />
+              <el-date-picker
+                v-model="searchParams_.endCreateTime"
+                type="date"
+                width="120px"
+                placeholder="选择结束日期"
+              />
             </el-col>
-            <el-col :span="9" style="padding-left:10px">
-              <el-button type="primary" @click="search_()">
+            <el-col
+              :span="9"
+              style="padding-left:10px"
+            >
+              <el-button
+                type="primary"
+                @click="search_()"
+              >
                 搜索
               </el-button>
             </el-col>
           </el-row>
-          <el-row v-if="det" style="line-height:40px;padding:0px 25px 5px 25px">
-            <el-col :span="2" style="font-size:14px;" />
-            <el-col :span="5" style="font-size:14px;backgroud-color:#F0F0F0;">
-              会员名称：{{memName}}
+          <el-row
+            v-if="det"
+            style="line-height:40px;padding:0px 25px 5px 25px"
+          >
+            <el-col
+              :span="2"
+              style="font-size:14px;"
+            />
+            <el-col
+              :span="5"
+              style="font-size:14px;backgroud-color:#F0F0F0;"
+            >
+              会员名称：{{ memName }}
             </el-col>
-            <el-col :span="2" style="font-size:14px;" />
-            <el-col :span="5" style="font-size:14px;">
-              剩余靠谱豆：{{availableBean}}
+            <el-col
+              :span="2"
+              style="font-size:14px;"
+            />
+            <el-col
+              :span="5"
+              style="font-size:14px;"
+            >
+              剩余靠谱豆：{{ availableBean }}
             </el-col>
-            <el-col :span="2" style="font-size:14px;" />
-            <el-col :span="5" style="font-size:14px;">
-              收入靠谱豆：{{incomeBean}}
+            <el-col
+              :span="2"
+              style="font-size:14px;"
+            />
+            <el-col
+              :span="5"
+              style="font-size:14px;"
+            >
+              收入靠谱豆：{{ incomeBean }}
             </el-col>
-            <el-col :span="2" style="font-size:14px;" />
-            <el-col :span="5" style="font-size:14px;">
-              支出靠谱豆：{{consumeBean}}
+            <el-col
+              :span="2"
+              style="font-size:14px;"
+            />
+            <el-col
+              :span="5"
+              style="font-size:14px;"
+            >
+              支出靠谱豆：{{ consumeBean }}
             </el-col>
           </el-row>
-          <el-table v-if="det" stripe :data="detailsListData.list" style="width: 100%; margin-bottom: 20px;" row-key="id">
-            <el-table-column type="index" width="50" label="序号" />
-            <el-table-column prop="type" label="交易路径" min-width="15%">
+          <el-table
+            v-if="det"
+            stripe
+            :data="detailsListData.list"
+            style="width: 100%; margin-bottom: 20px;"
+            row-key="id"
+          >
+            <el-table-column
+              type="index"
+              width="50"
+              label="序号"
+            />
+            <el-table-column
+              prop="type"
+              label="交易路径"
+              min-width="15%"
+            >
               <template slot-scope="scope">
                 <span v-if="scope.row.type == '1'">购买会员</span>
                 <span v-if="scope.row.type == '2'">邀请好友购买</span>
@@ -162,28 +344,54 @@
                 <span v-if="scope.row.type == '8'">参加活动</span>
               </template>
             </el-table-column>
-            <el-table-column prop="opType" label="交易方式" min-width="20%">
+            <el-table-column
+              prop="opType"
+              label="交易方式"
+              min-width="20%"
+            >
               <template slot-scope="scope">
                 <span v-if="scope.row.opType =='1'">收入</span>
                 <span v-if="scope.row.opType == '2'">支出</span>
               </template>
             </el-table-column>
-            <el-table-column prop="beanNum" label="靠谱豆数量" min-width="20%">
+            <el-table-column
+              prop="beanNum"
+              label="靠谱豆数量"
+              min-width="20%"
+            >
               <template slot-scope="scope">
-                {{scope.row.beanNum}}
+                {{ scope.row.beanNum }}
               </template>
             </el-table-column>
-            <el-table-column prop="createTime" label="交易时间" min-width="24%">
+            <el-table-column
+              prop="createTime"
+              label="交易时间"
+              min-width="24%"
+            >
               <template slot-scope="scope">
                 {{ scope.row.createTime | _formateDate }}
               </template>
             </el-table-column>
           </el-table>
 
-          <el-pagination v-if="def" :total="noBillData.total" background layout="prev, pager, next" @current-change="currentPage"
-            @prev-click="currentPage" @next-click="currentPage" />
-          <el-pagination v-if="det" :total="detailsListData.total" background layout="prev, pager, next"
-            @current-change="currentPage_" @prev-click="currentPage_" @next-click="currentPage_" />
+          <el-pagination
+            v-if="def"
+            :total="noBillData.total"
+            background
+            layout="prev, pager, next"
+            @current-change="currentPage"
+            @prev-click="currentPage"
+            @next-click="currentPage"
+          />
+          <el-pagination
+            v-if="det"
+            :total="detailsListData.total"
+            background
+            layout="prev, pager, next"
+            @current-change="currentPage_"
+            @prev-click="currentPage_"
+            @next-click="currentPage_"
+          />
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -200,6 +408,18 @@
 
   export default {
     components: {},
+    filters: {
+      _formateDate(time) {
+        if (time == undefined) {
+          return '';
+        }
+        let date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
+      }
+    },
+    props: {
+
+    },
     data() {
       return {
         tabIndex: 0,
@@ -314,18 +534,6 @@
         },
         activeName: 'noBill'
       };
-    },
-    props: {
-
-    },
-    filters: {
-      _formateDate(time) {
-        if (time == undefined) {
-          return '';
-        }
-        let date = new Date(time);
-        return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
-      }
     },
     mounted() {
       if (this.$route.query.dt != undefined) {
