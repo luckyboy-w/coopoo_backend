@@ -6,7 +6,7 @@
           :span="2"
           style="padding-left:10px"
         >
-          入账时间
+          生成时间
         </el-col>
         <el-col :span="8">
           <el-date-picker
@@ -77,21 +77,21 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="orderPrice"
-          label="销售金额(元)"
-          min-width="24%"
-        >
-          <template slot-scope="scope">
-            {{ scope.row.orderPrice | fmtFee }}
-          </template>
-        </el-table-column>
-        <el-table-column
           prop="billMoney"
-          label="结算金额(元)"
+          label="销售金额"
           min-width="24%"
         >
           <template slot-scope="scope">
             {{ scope.row.billMoney | fmtFee }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="totalAmount"
+          label="结算金额"
+          min-width="24%"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.totalAmount | fmtFee }}
           </template>
         </el-table-column>
         <el-table-column
@@ -137,91 +137,101 @@
   </div>
 </template>
 <script>
-import { getMethod, postMethod } from "@/api/request";
-import { formatDate } from "@/api/tools.js"
-import billDetail from './billDtl'
+  import {
+    getMethod,
+    postMethod
+  } from "@/api/request";
+  import {
+    formatDate
+  } from "@/api/tools.js"
+  import billDetail from './billDtl'
 
   export default {
-    components: { billDetail },
-    filters:{
-        _formateDate(time){
-            if(time == undefined){
-                return '';
-            }
-            let date = new Date(time);
-            return formatDate(date,'yyyy-MM-dd hh:mm:ss')
-        },
-        fmtFee(fee) {
-          if (fee == undefined) {
-            return '';
-          }
-          fee = fee + ''
-          if (fee.indexOf(".") == -1) {
-            return fee + ".00";
-          }
-          return fee;
-        }
+    components: {
+      billDetail
     },
-    props:{
+    filters: {
+      _formateDate(time) {
+        if (time == undefined) {
+          return '';
+        }
+        let date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
+      },
+      fmtFee(fee) {
+        if (fee == undefined) {
+          return '';
+        }
+        fee = fee + ''
+        if (fee.indexOf(".") == -1) {
+          return fee + ".00";
+        }
+        return fee;
+      }
+    },
+    props: {
 
     },
     data() {
       return {
-        tabIndex:0,
+        tabIndex: 0,
         showList: true,
-        detailList:[],
+        detailList: [],
         //10:未结算;20:结算中;30:已结算
-        searchParam:{
-            billType:'10',
-            billNo:"",
-            orderNo:"",
-            pageSize:15,
-            pageNum:1
+        searchParam: {
+          billType: '10',
+          billNo: "",
+          orderNo: "",
+          pageSize: 15,
+          pageNum: 1
         },
-        noBillData:{
-          list:[],
-          total:0  
+        noBillData: {
+          list: [],
+          total: 0
         },
         activeName: 'noBill'
       };
     },
     mounted() {
-        this.searchParam.billType = "10"
-        this.loadList();
+      this.searchParam.billType = "10"
+      this.loadList();
     },
     methods: {
-    backToList(){
+      backToList() {
         this.showList = true
-    },
-    batchBill(){
+      },
+      batchBill() {
         let selData = this.$refs.noBillData.selection
         let id = [];
-        selData.forEach(data=>{
-            id.push(data.pkBillId)
+        selData.forEach(data => {
+          id.push(data.pkBillId)
         });
         this.billOrd(id.join(","))
       },
-      singleBill(row){
+      singleBill(row) {
         this.billOrd(row.pkBillId)
       },
-      findBillDtl(row){
+      findBillDtl(row) {
+        console.log(row)
         let scope = this
         let param = {
-            billIds:row.pkBillIds
+          tenantId: row.tenantId,
+          pageSize:10,
+          pageNum:1
         }
         getMethod("/backend/orderBill/findBillDtl", param).then(res => {
-            scope.showList = false
-            scope.detailList = res.data
+          scope.showList = false
+          scope.detailList = res.data.list
         });
       },
       handleClick(tab, event) {
         this.tabIndex = tab.index
-        if(tab.index == 0 ){
-            this.searchParam.billType = "10"
-        }else if(tab.index == 1 ){
-            this.searchParam.billType = "20"
-        }else {
-            this.searchParam.billType = "30"
+        if (tab.index == 0) {
+          this.searchParam.billType = "10"
+        } else if (tab.index == 1) {
+          this.searchParam.billType = "20"
+        } else {
+          this.searchParam.billType = "30"
         }
         this.loadList();
       },
@@ -229,12 +239,12 @@ import billDetail from './billDtl'
         this.searchParam.pageNum = pageNum;
         this.loadList();
       },
-      loadList(){
+      loadList() {
         let scope = this
         let param = this.searchParam
         param.billType = 10
         postMethod("/backend/orderBill/findPlatBillList", param).then(res => {
-            scope.noBillData = res.data
+          scope.noBillData = res.data
         });
       }
     }
