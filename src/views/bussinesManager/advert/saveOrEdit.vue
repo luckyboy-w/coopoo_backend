@@ -58,9 +58,12 @@
             label="链接"
             value="2"
           />
-          <el-option label="商品分类" value="3" />
           <el-option
-            label="活动详情"
+            label="商品分类"
+            value="3"
+          />
+          <el-option
+            label="编辑器"
             value="4"
           />
         </el-select>
@@ -85,18 +88,39 @@
           v-model="dataForm.advertUrl"
         />
       </el-form-item>
-      <el-form-item v-if="dataForm.dataType == 3" label="所属分类">
-        <el-select v-model="typeId" placeholder="请选择分类" @change="loadtypeId2List()">
-          <el-option v-for="item in typeIdList" :key="item.id" :value-key="item.typeName" :label="item.typeName" :value="item.id" />
+      <el-form-item
+        v-if="dataForm.dataType == 3"
+        label="所属分类"
+      >
+        <el-select
+          v-model="typeId"
+          placeholder="请选择分类"
+          @change="loadtypeId2List()"
+        >
+          <el-option
+            v-for="item in typeIdList"
+            :key="item.id"
+            :value-key="item.typeName"
+            :label="item.typeName"
+            :value="item.id"
+          />
         </el-select>
-        <el-select v-model="typeId2" placeholder="请选择">
-          <el-option v-for="item in typeId2List" :key="item.id" :value-key="item.typeName" :label="item.typeName"
-            :value="item.id" />
+        <el-select
+          v-model="typeId2"
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="item in typeId2List"
+            :key="item.id"
+            :value-key="item.typeName"
+            :label="item.typeName"
+            :value="item.id"
+          />
         </el-select>
       </el-form-item>
       <el-form-item
         v-if="dataForm.dataType == 4"
-        label="活动详情"
+        label="编辑器"
       >
         <qEditor
           style="width: 650px;"
@@ -179,6 +203,9 @@
         goodList: [],
           typeId2: '',
           typeId: '',
+          key_:'-1',
+          item1:'',
+          item2:'',
         dataForm: {
           // typeId2: '',
           // typeId: '',
@@ -200,6 +227,9 @@
       this.$nextTick(function() {
         this.advertLocationList = this.GLOBAL.advertLocationList
         if (this.editData.id) {
+          let list = this.editData.advertUrl.split(",")
+          this.item1=list[0]
+          this.item2=list[1]
           this.dataForm = this.editData
           this.dataForm.enable = this.editData.enable + ''
           this.initDefaultImage();
@@ -212,20 +242,37 @@
       loadtypeIdList() {
         const scope = this;
         const param = {
-          parentId: "-1"
+          parentId: this.key_
         };
         getMethod("backend/goodType/findType", param).then(res => {
+          let obj = res.data
+          for (let i = 0; i < obj.length; i++) {
+            if(obj[i].id==this.item1){
+              this.typeId=obj[i].typeName
+              this.loadtypeId2List()
+            }
+            }
           scope.typeIdList = res.data;
         });
       },
       loadtypeId2List(typeId2) {
+        if(this.item1){
+          this.typeId = this.item1
+        }
         const scope = this
         this.typeId2 = typeId2 || ''
         const param = {
           parentId: this.typeId
         }
         getMethod('backend/goodType/findType', param).then(res => {
+          let obj = res.data
+          for (let i = 0; i < obj.length; i++) {
+            if(obj[i].id==this.item2){
+              this.typeId2=obj[i].typeName
+            }
+            }
           scope.typeId2List = res.data
+
         })
       },
       loadSkuCompose() {

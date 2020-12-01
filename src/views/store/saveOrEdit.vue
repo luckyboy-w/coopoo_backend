@@ -83,7 +83,7 @@
       </el-form-item>
 
       <el-form-item label="详细地址">
-        <el-input v-model="dataForm.address" />
+        <el-input v-model="dataForm.address" disabled/>
       </el-form-item>
       <el-form-item label="">
         <gdMap @callBackMap="callBackMap" />

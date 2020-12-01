@@ -117,10 +117,23 @@
           :disabled="!viewSubmit"
         />
       </el-form-item>
-      <el-form-item v-if="isPersonProvince" v-model="dataForm.type">
-          <el-radio v-model="dataForm.type" label="1">自然人</el-radio>
-          <el-radio v-model="dataForm.type" label="2">公司</el-radio>
-         </el-form-item>
+      <el-form-item
+        v-if="isPersonProvince"
+        v-model="dataForm.type"
+      >
+        <el-radio
+          v-model="dataForm.type"
+          label="1"
+        >
+          自然人
+        </el-radio>
+        <el-radio
+          v-model="dataForm.type"
+          label="2"
+        >
+          公司
+        </el-radio>
+      </el-form-item>
       <el-form-item
         label="身份证正面照片"
         prop="personFrontImg"

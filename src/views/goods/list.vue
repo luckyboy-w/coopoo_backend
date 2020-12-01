@@ -41,7 +41,7 @@
 								<el-option value="10" label="未审核商品" />
 								<el-option value="20" label="销售中商品" />
 								<el-option value="30" label="审核未通过商品" />
-								<!-- <el-option value="40" label="已下架商品" /> -->
+								<el-option value="40" label="已下架商品" />
 							</el-select>
 						</td>
 						<td>是否推荐:</td>

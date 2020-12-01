@@ -13,6 +13,7 @@
             textarea
             style="width:600px"
             size="large"
+            format="dd"
             placeholder="选择一个或多个日期">
         </el-date-picker>
       </el-form-item>
@@ -26,7 +27,7 @@
 <script>
 import { getMethod, postMethod, getUploadUrl } from "@/api/request";
 import { isInteger } from "@/utils/validate"
-
+import { formatDate } from "@/api/tools.js"
 export default {
   computed: {},
   components: {},
@@ -54,11 +55,32 @@ export default {
   },
   methods: {
     pickCfgDate(){
+      let obj = this.dataForm.cashDate
+      for (let i = 0; i < obj.length; i++) {
+       let data_=this.format(obj[i])
+        console.log(data_)
+        // if(obj[i].id==this.item1){
+        //   this.typeId=obj[i].typeName
+        //   this.loadtypeId2List()
+        // }
+        }
         this.dataForm.cashCount = this.dataForm.cashDate.length;
     },
-    changeContent(val){
-      this.dataForm.content = val
-    },
+    // changeContent(val){
+
+    //   console.log(val)
+    //   this.dataForm.content = val
+    // },
+    format(date){
+    			   // const year = date.getFullYear();
+    			   // const month = date.getMonth() + 1 >= 10 ? date.getMonth() + 1 : "0" + (date.getMonth() + 1);
+    			   const day = date.getDate() >= 10 ? date.getDate() : "0" + date.getDate();
+    			   // const hour = date.getHours() >= 10 ? date.getHours() : "0" + date.getHours();
+    			   // const minute = date.getMinutes() >= 10 ? date.getMinutes() : "0" + date.getMinutes();
+    			   // const second = date.getSeconds() >= 10 ? date.getSeconds() : "0" + date.getSeconds();
+    			   return day;
+    			 },
+
     loadData(){
       let param = {
         typeName:'cashCfg'
@@ -74,7 +96,7 @@ export default {
               }else{
                   scope.dataForm[rowObj.title] = rowObj.value
               }
-              
+
           }
         }
       );
