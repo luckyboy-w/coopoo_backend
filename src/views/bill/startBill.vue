@@ -3,6 +3,32 @@
     <div v-if="showList">
       <el-row style="line-height:40px;padding:10px 0px ">
         <el-col
+          :span="1.5"
+          style="font-size:14px;"
+        >
+          结算单号
+        </el-col>
+        <el-col :span="3">
+          <el-input
+            v-model="searchParam.test"
+            style="width:80px"
+            placeholder="请输入..."
+          />
+        </el-col>
+        <el-col
+          :span="1.5"
+          style="font-size:14px;"
+        >
+          供应商名称
+        </el-col>
+        <el-col :span="3">
+          <el-input
+            v-model="searchParam.test"
+            style="width:80px"
+            placeholder="请输入..."
+          />
+        </el-col>
+        <el-col
           :span="2"
           style="padding-left:10px"
         >
@@ -63,6 +89,11 @@
           label="序号"
         />
         <el-table-column
+          prop="settleNo"
+          label="结算单号"
+          min-width="20%"
+        />
+        <el-table-column
           prop="tenantName"
           label="供应商名称"
           min-width="20%"
@@ -94,16 +125,7 @@
             {{ scope.row.settleAmount | fmtFee }}
           </template>
         </el-table-column>
-        <el-table-column
-          prop="tenantName"
-          label="结算财务"
-          min-width="20%"
-        />
-        <el-table-column
-          prop="tenantName"
-          label="操作管理员"
-          min-width="20%"
-        />
+       
         <el-table-column
           prop="pkBillId"
           label="操作"

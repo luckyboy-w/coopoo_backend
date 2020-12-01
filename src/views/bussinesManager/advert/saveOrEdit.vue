@@ -58,7 +58,7 @@
             label="链接"
             value="2"
           />
-          <!-- <el-option label="商品分类" value="3" /> -->
+          <el-option label="商品分类" value="3" />
           <el-option
             label="活动详情"
             value="4"
@@ -85,15 +85,15 @@
           v-model="dataForm.advertUrl"
         />
       </el-form-item>
-      <!-- <el-form-item v-if="dataForm.dataType == 3" label="所属分类">
-        <el-select v-model="dataForm.typeId" placeholder="请选择分类" @change="loadtypeId2List()">
+      <el-form-item v-if="dataForm.dataType == 3" label="所属分类">
+        <el-select v-model="typeId" placeholder="请选择分类" @change="loadtypeId2List()">
           <el-option v-for="item in typeIdList" :key="item.id" :value-key="item.typeName" :label="item.typeName" :value="item.id" />
         </el-select>
-        <el-select v-model="dataForm.typeId2" placeholder="请选择" @change="loadSkuCompose()">
+        <el-select v-model="typeId2" placeholder="请选择">
           <el-option v-for="item in typeId2List" :key="item.id" :value-key="item.typeName" :label="item.typeName"
             :value="item.id" />
         </el-select>
-      </el-form-item> -->
+      </el-form-item>
       <el-form-item
         v-if="dataForm.dataType == 4"
         label="活动详情"
@@ -163,6 +163,7 @@
           "1": "选择商品",
           "2": "输入链接",
         },
+        // typeId2: '',
         typeIdList: [],
         typeId2List: [],
         moduleName: 'activityContentName',
@@ -176,7 +177,11 @@
         imageUrl: "",
         fileList: [],
         goodList: [],
+          typeId2: '',
+          typeId: '',
         dataForm: {
+          // typeId2: '',
+          // typeId: '',
           dataType: "1",
           advertName: "",
           advertUrl: "",
@@ -189,9 +194,9 @@
       };
     },
     mounted() {
-      // this.loadtypeIdList();
-      this.buildAdvertGroupId();
       this.loodGoodList();
+      this.loadtypeIdList();
+      this.buildAdvertGroupId();
       this.$nextTick(function() {
         this.advertLocationList = this.GLOBAL.advertLocationList
         if (this.editData.id) {
@@ -204,17 +209,29 @@
     },
     created() {},
     methods: {
-      // loadtypeIdList() {
-      //   const scope = this;
-      //   const param = {
-      //     parentId: "-1"
-      //   };
-      //   getMethod("/bu/good/findType", param).then(res => {
-      //     scope.typeIdList = res.data;
-      //   });
-      // },
+      loadtypeIdList() {
+        const scope = this;
+        const param = {
+          parentId: "-1"
+        };
+        getMethod("backend/goodType/findType", param).then(res => {
+          scope.typeIdList = res.data;
+        });
+      },
+      loadtypeId2List(typeId2) {
+        const scope = this
+        this.typeId2 = typeId2 || ''
+        const param = {
+          parentId: this.typeId
+        }
+        getMethod('backend/goodType/findType', param).then(res => {
+          scope.typeId2List = res.data
+        })
+      },
+      loadSkuCompose() {
+        const scope = this
 
-
+      },
       changeContent(val) {
         this.dataForm.advertUrl = val
       },
@@ -261,6 +278,7 @@
           pageNum: 0
         }
         getMethod("/backend/good/findPage", param).then(res => {
+          console.log(res)
           scope.goodList = res.data.list
         });
       },
@@ -292,6 +310,7 @@
         }
       },
       saveObject() {
+        console.log(1111111111111111111,this.dataForm)
         let scope = this;
         if (this.validate()) {
           delete this.dataForm.createTime;
@@ -352,6 +371,12 @@
         this.$emit("showListPanel", true);
       },
       submitUpdate() {
+        if(this.dataForm.dataType == 3 && this.typeId2 != '' ){
+          this.dataForm.advertUrl=this.typeId+','+this.typeId2
+        }
+        if(this.dataForm.dataType == 3 && this.typeId2 == '' ){
+          this.dataForm.advertUrl=this.typeId
+        }
         this.saveObject();
       }
     }

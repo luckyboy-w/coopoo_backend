@@ -63,7 +63,7 @@
         />
       </el-form-item>
       <el-form-item
-        v-show="!isPersonProvince"
+        v-show="!isPersonProvince|| dataForm.type==2"
         label="公司名称"
         prop="companyName"
       >
@@ -73,7 +73,7 @@
         />
       </el-form-item>
       <el-form-item
-        v-show="!isPersonProvince"
+        v-show="!isPersonProvince|| dataForm.type==2"
         label="税务代码"
         prop="taxNo"
       >
@@ -117,14 +117,10 @@
           :disabled="!viewSubmit"
         />
       </el-form-item>
-      <!-- <el-form-item label="">
-        <el-radio-group>
-         <el-radio  @change="a" value="1">自然人</el-radio>
-        <el-radio  @change="a" value="2">公司</el-radio>
-        </el-radio-group>
-
-      </el-form-item> -->
-
+      <el-form-item v-if="isPersonProvince" v-model="dataForm.type">
+          <el-radio v-model="dataForm.type" label="1">自然人</el-radio>
+          <el-radio v-model="dataForm.type" label="2">公司</el-radio>
+         </el-form-item>
       <el-form-item
         label="身份证正面照片"
         prop="personFrontImg"
@@ -184,7 +180,7 @@
         </el-dialog>
       </el-form-item>
       <el-form-item
-        v-show="!isPersonProvince"
+        v-show="!isPersonProvince || dataForm.type==2"
         label="营业执照照片"
         prop="licenseImg"
       >
@@ -214,7 +210,7 @@
         </el-dialog>
       </el-form-item>
       <el-form-item
-        v-show="!isPersonProvince"
+        v-show="!isPersonProvince|| dataForm.type==2"
         label="银行开户许可照片"
         prop="bankLicenseImg"
       >
@@ -506,6 +502,7 @@ export default {
     }
 
     return {
+      radio: '',
       dialogVisible:false,
 			dialogImageUrl:'',
       viewSubmit: true,
@@ -539,6 +536,7 @@ export default {
         owerName: '',
         owerMobileNo: '',
         forte: '',
+        type:'',
         shopStatus: '',
         mobileNo: '',
         protocalFile: '',
@@ -693,6 +691,7 @@ export default {
       }
     },
     switchLevel(val) {
+      this.dataForm.type=''
       let obj = {}
       obj = this.provinceRoleList.find((item) => {
         return item.id === val
@@ -1014,6 +1013,7 @@ export default {
       return fileTypeVerify && isLt2M
     },
     saveObject() {
+      console.log(this.dataForm,'wywywywyywy')
       let scope = this;
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
@@ -1027,23 +1027,23 @@ export default {
           fileList = fileList.concat(this.uploadBankLicenseList)
           this.dataForm.fileJsonStr = JSON.stringify(fileList)
           this.dataForm.files = []
-          postMethod('/backend/lyProvider/update', this.dataForm).then(
-            res => {
-              if(res.code != 200){
-                this.$message({
-                  message: res.message,
-                  type: 'warning'
-                })
-                return;
-              }
-              scope.typeList = res.data
-              this.$message({
-                message: '操作成功',
-                type: 'success'
-              })
-              this.$emit('showListPanel', true)
-            }
-          )
+          // postMethod('/backend/lyProvider/update', this.dataForm).then(
+          //   res => {
+          //     if(res.code != 200){
+          //       this.$message({
+          //         message: res.message,
+          //         type: 'warning'
+          //       })
+          //       return;
+          //     }
+          //     scope.typeList = res.data
+          //     this.$message({
+          //       message: '操作成功',
+          //       type: 'success'
+          //     })
+          //     this.$emit('showListPanel', true)
+          //   }
+          // )
         } else {
           return false;
         }

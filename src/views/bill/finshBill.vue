@@ -3,6 +3,32 @@
     <div v-if="showList">
       <el-row style="line-height:40px;padding:10px 0px ">
         <el-col
+          :span="1.5"
+          style="font-size:14px;"
+        >
+          结算单号
+        </el-col>
+        <el-col :span="3">
+          <el-input
+            v-model="searchParam.test"
+            style="width:80px"
+            placeholder="请输入..."
+          />
+        </el-col>
+        <el-col
+          :span="1.5"
+          style="font-size:14px;"
+        >
+          供应商名称
+        </el-col>
+        <el-col :span="3">
+          <el-input
+            v-model="searchParam.tenantName"
+            style="width:80px"
+            placeholder="请输入..."
+          />
+        </el-col>
+        <el-col
           :span="2"
           style="padding-left:10px"
         >
@@ -95,13 +121,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="tenantName"
-          label="结算财务"
-          min-width="20%"
-        />
-        <el-table-column
-          prop="tenantName"
-          label="操作管理员"
+          prop="test"
+          label="操作人"
           min-width="20%"
         />
         <el-table-column
