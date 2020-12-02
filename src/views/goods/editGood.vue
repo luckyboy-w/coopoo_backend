@@ -254,9 +254,9 @@ export default {
 				recContent:''
 			},
 			showSku: false,
-			styleList:["儒雅中式","雅色田园","北欧极简","轻奢时尚"],
+			styleList:["新品上架","七星睡眠"],
 			goodStyleList:[],
-			buServiceList:["7天无理由退货","先行赔付","超时赔偿","正品保证","全场包邮","无忧退换货"],
+			buServiceList:["会员制","全定制","大牌品质","工厂价格","包邮到家","满意付款","无忧退货"],
 			serviceRuleList:[],
 			typeIdList: [],
 			typeId2List: [],
