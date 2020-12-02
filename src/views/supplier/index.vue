@@ -273,6 +273,7 @@ export default {
 					id: data.list[rowIndex].id
 				};
 				getMethod("/backend/supplier/findObject", param).then(res => {
+          console.log(res)
 					scope.editData = res.data[0];
 					this.showList = false;
 					this.showAddOrEdit = true;

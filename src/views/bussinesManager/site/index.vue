@@ -24,6 +24,12 @@
                 label="靠谱家用户协议"
                 value="userProctal"
             ></el-option>
+            <el-option
+                key="memberRegister"
+                value-key="memberRegister"
+                label="会员注册协议"
+                value="memberRegister"
+            ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="内容">

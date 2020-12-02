@@ -256,7 +256,7 @@ export default {
 			showSku: false,
 			styleList:["新品上架","七星睡眠"],
 			goodStyleList:[],
-			buServiceList:["会员制","全定制","大牌品质","工厂价格","包邮到家","满意付款","无忧退货"],
+			buServiceList:["正品保证","全场包邮","无理由退货","超时赔偿"],
 			serviceRuleList:[],
 			typeIdList: [],
 			typeId2List: [],
