@@ -19,7 +19,7 @@
                   <el-option label="C类服务商" value="3"></el-option>
                   <el-option label="D类服务商" value="4"></el-option>
                   <el-option label="E类服务商" value="5"></el-option>
-                  <el-option label="EF类服务商" value="6"></el-option>
+                  <el-option label="EA类服务商" value="6"></el-option>
                 </el-select>
 						</td>
             <td>状态:</td>

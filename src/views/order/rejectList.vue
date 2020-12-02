@@ -8,14 +8,19 @@
             <td>
               <el-input v-model="searchParam.orderNo" width="180px" />
             </td>
-            <td>风险订单:</td>
-            <td>
-              <el-select v-model="searchParam.riskOrder" placeholder="请选择">
-                <el-option value="all" label="全部"></el-option>
-                <el-option value="moy" label="单个订单高金额"></el-option>
-                <el-option value="num" label="单个订单商品高数量"></el-option>
-              </el-select>
-            </td>
+           <td>订单状态:</td>
+           <td>
+              <el-select v-model="searchParam.status" placeholder="请选择">
+               <el-option value="" label="全部"></el-option>
+               <el-option value="0" label="已取消"></el-option>
+               <el-option value="10" label="待发货"></el-option>
+               <el-option value="20" label="待收货"></el-option>
+               <el-option value="30" label="待支付"></el-option>
+               <el-option value="40" label="已退货"></el-option>
+               <el-option value="41" label="退货中"></el-option>
+               <el-option value="60" label="定制信息确认中"></el-option>
+             </el-select>
+           </td>
             <td>买家姓名：</td>
             <td>
                <el-input v-model="searchParam.recUname" width="180px" />
@@ -28,7 +33,7 @@
               <el-button icon="el-icon-search" @click="search()">搜索</el-button>
             </td>
           </tr>
-          <tr>
+         <!-- <tr>
             <td>订单类型:</td>
             <td>
                <el-select v-model="searchParam.orderType" placeholder="请选择">
@@ -53,7 +58,7 @@
                   placeholder="结束时间">
                 </el-date-picker>
             </td>
-          </tr>
+          </tr> -->
         </table>
       </div>
       <div class="ly-table-panel">
@@ -346,6 +351,7 @@ export default {
         stockNum: ''
       },
       searchParam: {
+		status:'',
         orderNo:'',
         recUname:'',
         recMobile:'',

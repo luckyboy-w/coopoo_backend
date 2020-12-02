@@ -47,6 +47,7 @@ export default {
         onPick(minDate,maxDate){
         }
       },
+      day:'',
       dataForm: {
         billDate: "",
         billCount: ""
@@ -55,6 +56,12 @@ export default {
   },
   methods: {
     pickCfgDate(){
+      let obj = this.dataForm.billDate
+          let List=[] //定义空数组
+                for (let i = 0; i < obj.length; i++) {
+         List.push(this.format(obj[i])) //把天数添加到数组中
+                  }
+         this.day = List.toString() //把数组转字符串 赋值给str
         this.dataForm.billCount = this.dataForm.billDate.length;
         // if(this.dataForm.billDate.length > this.dataForm.billCount){
         //     this.$message({
@@ -66,6 +73,10 @@ export default {
         // }
 
     },
+    format(date){
+    			   const day = date.getDate() >= 10 ? date.getDate() : "0" + date.getDate();
+    			   return day;
+    			 },
     changeContent(val){
       this.dataForm.content = val
     },
@@ -96,7 +107,7 @@ export default {
         dataList.push({
           dataType:'billCfg',
           title:'billDate',
-          value: this.dataForm.billDate
+          value: this.day
         });
         dataList.push({
           dataType:'billCfg',
