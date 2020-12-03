@@ -270,6 +270,8 @@
         });
       },
       offLine(row, isSale) {
+        console.log(row,'888888')
+        console.log(isSale,'888888')
         let verifyStatus = '20'
         if (isSale == '3') {
           verifyStatus = '40'
@@ -277,7 +279,7 @@
         let param = {
           id: row.id,
           verifyStatus: verifyStatus, //下架退回到待审核
-          isSale: isSale
+          isSale: row.isSale
         }
         postMethod("/backend/good/modity", param).then(res => {
           this.loadList()

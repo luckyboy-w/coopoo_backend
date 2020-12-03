@@ -28,7 +28,7 @@
 			<el-form-item label="是否启用">
 				<el-switch v-model="dataForm.enable" inactive-value="0" active-value="1"></el-switch>
 			</el-form-item>
-			<el-form-item label="活动时间">
+			<el-form-item label="报名时间">
 				<el-date-picker v-model="dataForm.startTime" type="datetime" placeholder="选择开始时间"></el-date-picker>-
 				<el-date-picker v-model="dataForm.endTime" type="datetime" placeholder="选择结束时间"></el-date-picker>
 			</el-form-item>
