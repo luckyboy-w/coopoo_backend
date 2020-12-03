@@ -8,6 +8,7 @@
         <el-date-picker v-model="dataForm.cashDate" type="dates" :picker-options="pkOP" textarea style="width:600px"
           size="large" format="dd" placeholder="选择一个或多个日期" @change="pickCfgDate" />
       </el-form-item>
+     
       <el-form-item>
         <el-button type="primary" @click="saveObject">
           保存
@@ -42,6 +43,7 @@
         pkOP: {
           onPick(minDate, maxDate) {}
         },
+        test: '',
         day: '',
         dataForm: {
           cashDate: "",
@@ -57,13 +59,18 @@
     methods: {
       pickCfgDate() {
         let obj = this.dataForm.cashDate
+        console.log(obj)
         let List = [] //定义空数组
-        for (let i = 0; i < obj.length; i++) {
-          List.push(this.format(obj[i])) //把天数添加到数组中
-        }
-        this.day = List.toString() //把数组转字符串 赋值给str
-        console.log(this.day, '123456789')
-        this.dataForm.cashCount = this.dataForm.cashDate.length;
+       if (obj != null) {
+       	for (let i = 0; i < obj.length; i++) {
+       		List.push(this.format(obj[i])) //把天数添加到数组中
+       	}
+       	this.day = List.toString() //把数组转字符串 赋值给str
+       	console.log(this.day, '123456789')
+       	this.dataForm.cashCount = this.dataForm.cashDate.length;
+       } else {
+       	this.dataForm.cashCount = 0
+       }
       },
       // changeContent(val){
 
@@ -82,19 +89,37 @@
 
       loadData() {
         let param = {
-          typeName: 'cashCfg'
+          dataType: 'cashCfg'
         }
         let scope = this
         getMethod("/backend/lyConfig/findList", param).then(
           res => {
+            console.log(res.data)
             let dataList = res.data
             for (let i = 0; i < dataList.length; i++) {
-              let rowObj = dataList[i];
-              if (rowObj.title == 'cashDate') {
-                scope.dataForm[rowObj.title] = eval("(" + rowObj.value + ")");
-              } else {
-                scope.dataForm[rowObj.title] = rowObj.value
-              }
+            	let rowObj = dataList[i];
+            	if (rowObj.title == 'cashDate') {
+            		console.log(rowObj)
+            		let myDate = new Date();
+            		let tYear = myDate.getFullYear();
+            		let tMonth = myDate.getMonth() + 1;
+            		console.log(tMonth)
+            		console.log()
+            		if (rowObj.value != "") {
+            			this.dataForm.cashDate = rowObj.value.split(",")
+            			for (let j = 0; j < this.dataForm.cashDate.length; j++) {
+            				this.dataForm.cashDate[j] = tYear + "-" + tMonth + "-" + this.dataForm.cashDate[j]
+            			}
+            			this.dataForm.cashCount = this.dataForm.cashDate.length
+            		}
+
+            		// scope.dataForm[rowObj.title] = eval("("+rowObj.value+")");
+            		// this.dataForm.cashDate=
+            		console.log(scope.dataForm[rowObj.title])
+            	} else {
+            		// this.dataForm.cashCount=0
+            		scope.dataForm[rowObj.title] = rowObj.value
+            	}
 
             }
           }
