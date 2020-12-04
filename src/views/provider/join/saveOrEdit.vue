@@ -565,7 +565,8 @@ export default {
         city: '',
         getFileJsonStr: {},
         files: [],
-        id: ''
+        id: '',
+
       },
       rules: {
         provinceName: [
@@ -584,13 +585,13 @@ export default {
         owerName: [
           { required: true, validator: validateOwnerName, message: '请输入店主姓名', trigger: 'blur' },
         ],
-        companyName: [
-          { required: true, message: '请输入公司名称', trigger: 'blur' },
-        ],
-        taxNo: [
-          { required: true, message: "请输入税务代码", trigger: "blur"},
-          { required: true, validator: validateTaxNo, trigger: 'blur' },
-        ],
+        // companyName: [
+        //   { required: true, message: '请输入公司名称', trigger: 'blur' },
+        // ],
+        // taxNo: [
+        //   { required: true, message: "请输入税务代码", trigger: "blur"},
+        //   { required: true, validator: validateTaxNo, trigger: 'blur' },
+        // ],
         licenseImg: [
           { required: true, validator: isUploadLicenseImg, trigger: "blur" }
         ],
@@ -603,9 +604,9 @@ export default {
         protocalFile: [
           { required: true, validator: isUploadProtocalFile, trigger: "blur" }
         ],
-        bankLicenseImg: [
-          { required: true, validator: isUploadBankLicenseImg, trigger: "blur" }
-        ],
+        // bankLicenseImg: [
+        //   { required: true, validator: isUploadBankLicenseImg, trigger: "blur" }
+        // ],
         bankName: [
           { required: true, message: '请输入开户银行', trigger: 'blur' },
         ],
@@ -1030,6 +1031,7 @@ export default {
       let scope = this;
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
+          console.log(valid,'99999999')
           delete this.dataForm.createTime
           delete this.dataForm.createBy
           let fileList = []
@@ -1040,24 +1042,47 @@ export default {
           fileList = fileList.concat(this.uploadBankLicenseList)
           this.dataForm.fileJsonStr = JSON.stringify(fileList)
           this.dataForm.files = []
-          // postMethod('/backend/lyProvider/update', this.dataForm).then(
-          //   res => {
-          //     if(res.code != 200){
-          //       this.$message({
-          //         message: res.message,
-          //         type: 'warning'
-          //       })
-          //       return;
-          //     }
-          //     scope.typeList = res.data
-          //     this.$message({
-          //       message: '操作成功',
-          //       type: 'success'
-          //     })
-          //     this.$emit('showListPanel', true)
-          //   }
-          // )
+          if(this.dataForm.type=='2' || this.dataForm.provinceRole=='5'){
+            if(this.dataForm.companyName==''){
+              this.$message({
+                message: '公司名不能为空',
+                type: 'warning'
+              })
+              return;
+            }else if(this.dataForm.taxNo==''){
+              this.$message({
+                message: '税务代码',
+                type: 'warning'
+              })
+              return;
+            }
+            else if(this.dataForm.bankLicenseImg==''){
+              this.$message({
+                message: '银行开户许可照片',
+                type: 'warning'
+              })
+              return;
+            }
+          }
+          postMethod('/backend/lyProvider/update', this.dataForm).then(
+            res => {
+              if(res.code != 200){
+                this.$message({
+                  message: res.message,
+                  type: 'warning'
+                })
+                return;
+              }
+              scope.typeList = res.data
+              this.$message({
+                message: '操作成功',
+                type: 'success'
+              })
+              this.$emit('showListPanel', true)
+            }
+          )
         } else {
+          console.log('99999')
           return false;
         }
       });
