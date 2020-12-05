@@ -18,7 +18,8 @@
         />
       </el-form-item>
       <el-form-item label="启用">
-        <el-switch v-model="dataForm.enable" />
+        <el-switch v-model="dataForm.enable" active-value="1"
+    inactive-value="0"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitUpdate">添加</el-button>

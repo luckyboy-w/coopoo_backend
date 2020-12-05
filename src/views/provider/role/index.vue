@@ -34,6 +34,8 @@
                 <el-switch
                   v-model="scope.row.enable"
                   @change="updateEnable(scope.row)"
+                  active-value="1"
+                  inactive-value="0"
                 />
               </template>
             </el-table-column>
@@ -92,11 +94,12 @@ export default {
   },
   computed: {},
   mounted() {
-    this.initLoad()
+    this.loadList()
   },
   created() {},
   methods: {
     updateEnable(rowData) {
+      console.log(rowData,'8888888')
       const scope = this
       const param = {
         id: rowData.id,
@@ -171,14 +174,14 @@ export default {
       this.searchParam.pageNum = pageNum
       this.loadList()
     },
-    initLoad() {
-      this.loadList()
-    },
+    // initLoad() {
+    //   this.loadList()
+    // },
     loadList() {
       const scope = this
       getMethod('/backend/providerRole/findPage', this.searchParam).then(
         res => {
-
+console.log(res.data,'55555')
           scope.tableData = res.data
           let list = scope.tableData.list
           let efeObj = null;
@@ -194,7 +197,13 @@ export default {
               list[i].children = efeObj
             }
           }
-          console.log(list)
+          console.log(list,'333333333333')
+          // if(list.enable=='1'){
+          //   scope.tableData.list.enable="true"
+          // }
+          // if(list.enable=='0'){
+          //   scope.tableData.list.enable="false"
+          // }
           scope.tableData.list = list
           scope.showPagination = false
         }

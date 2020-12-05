@@ -120,18 +120,24 @@
       <el-form-item
         v-if="this.dataForm.provinceRole!='5'"
       >
-        <el-radio
+      <!--  <radio
        v-model="dataForm.type"
           :label="1"
         >
           自然人
-        </el-radio>
-        <el-radio
+        </radio>
+        <radio
       v-model="dataForm.type"
           :label="2"
         >
           公司
-        </el-radio>
+        </radio>
+        -->
+         <input type='radio' value='1' v-model='dataForm.type'/>
+         <label for='wuhan'>自然人</label>
+
+         <input type='radio' value='2' v-model='dataForm.type'/>
+         <label for='xian'>公司</label>
       </el-form-item>
       <el-form-item
         label="身份证正面照片"
@@ -514,6 +520,7 @@ export default {
     }
 
     return {
+      len:'',
       radio: '',
       dialogVisible:false,
 			dialogImageUrl:'',
@@ -591,9 +598,9 @@ export default {
         //   { required: true, message: "请输入税务代码", trigger: "blur"},
         //   { required: true, validator: validateTaxNo, trigger: 'blur' },
         // ],
-        licenseImg: [
-          { required: true, validator: isUploadLicenseImg, trigger: "blur" }
-        ],
+        // licenseImg: [
+        //   { required: true, validator: isUploadLicenseImg, trigger: "blur" }
+        // ],
         personFrontImg: [
           { required: true, validator: isUploadPersonNoFrontImg, trigger: "blur" }
         ],
@@ -645,11 +652,6 @@ export default {
       if (this.editData.id) {
         this.dataForm = this.editData
         console.log(this.dataForm.type,'wywyywy')
-        // if(this.dataForm.type=='1'){
-        //   this.dataForm.type=true
-        // }else if(this.dataForm.type=='2'){
-        //   this.dataForm.type=true
-        // }
         this.switchLevel(this.editData.provinceRole)
       }
       this.loadprovinceList()
@@ -982,7 +984,7 @@ export default {
       }
     },
     buildBankLicenseImgGroupId() {
-      if (this.dataForm.bankLicenseImg == '') {
+      if (this.dataForm.bankLicenseImg == ''|| this.dataForm.bankLicenseImg == undefined) {
         getMethod('/backend/oss/groupId', null).then(res => {
           this.uploadBankLicenseUrl = getUploadUrl() + '?groupId=' + res.data
           this.dataForm.bankLicenseImg = res.data
@@ -1050,7 +1052,10 @@ export default {
           fileList = fileList.concat(this.uploadLicenseList)
           fileList = fileList.concat(this.protocalFileList)
           fileList = fileList.concat(this.uploadBankLicenseList)
+          console.log(fileList,'5656565656')
+          this.len=fileList.length
           this.dataForm.fileJsonStr = JSON.stringify(fileList)
+          console.log(this.dataForm.type,'5555')
           this.dataForm.files = []
           if(this.dataForm.type=='2' || this.dataForm.provinceRole=='5'){
             console.log('1111111111111',this.dataForm.type)
@@ -1061,15 +1066,17 @@ export default {
                 type: 'warning'
               })
               return;
-            }else if(this.dataForm.taxNo=='' || this.dataForm.taxNo==undefined){
+            }
+            if(this.dataForm.taxNo=='' || this.dataForm.taxNo==undefined){
               this.$message({
                 message: '税务代码不能为空',
                 type: 'warning'
               })
               return;
-            }else if(this.dataForm.bankLicenseImg=='' || this.dataForm.bankLicenseImg==undefined){
+            }
+            if(this.len<'5'){
               this.$message({
-                message: '银行开户许可照片不能为空',
+                message: '照片或文件未满足所需',
                 type: 'warning'
               })
               return;

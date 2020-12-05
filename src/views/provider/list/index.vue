@@ -8,6 +8,10 @@
             <td>
               <el-input v-model="searchParam.provinceName" width="180px" />
             </td>
+            <td>手机号:</td>
+            <td>
+              <el-input v-model="searchParam.mobileNo" width="180px" />
+            </td>
             <td>服务商等级:</td>
             <td>
               <el-select v-model="searchParam.provinceRole" placeholder="请选择分类">
@@ -132,6 +136,7 @@ export default {
       showPagination: false,
       editData: {},
       searchParam: {
+        mobileNo:'',
         provinceName: '',
         provinceRole: '',
         enable: '',
