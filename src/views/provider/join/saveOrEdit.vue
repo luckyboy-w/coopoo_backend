@@ -122,13 +122,13 @@
       >
         <el-radio
        v-model="dataForm.type"
-          label="1"
+          :label="1"
         >
           自然人
         </el-radio>
         <el-radio
       v-model="dataForm.type"
-          label="2"
+          :label="2"
         >
           公司
         </el-radio>
@@ -644,6 +644,7 @@ export default {
     this.$nextTick(function() {
       if (this.editData.id) {
         this.dataForm = this.editData
+        console.log(this.dataForm.type,'wywyywy')
         // if(this.dataForm.type=='1'){
         //   this.dataForm.type=true
         // }else if(this.dataForm.type=='2'){
@@ -882,8 +883,11 @@ export default {
 			this.dialogVisible = true;
 		},
     handleLicenseRemove(res) {
+      console.log(res)
+      console.log(this.fileList,'ggggggg')
       for (let i = 0; i < this.fileList.length; i++) {
         if (this.fileList[i].url == (res.url || res.response.data.url)) {
+          console.log(this.fileList,'ppppp')
           this.fileList.splice(i, 1)
           break
         }
@@ -1059,14 +1063,13 @@ export default {
               return;
             }else if(this.dataForm.taxNo=='' || this.dataForm.taxNo==undefined){
               this.$message({
-                message: '税务代码',
+                message: '税务代码不能为空',
                 type: 'warning'
               })
               return;
-            }
-            else if(this.dataForm.bankLicenseImg=='' || this.dataForm.bankLicenseImg==undefined){
+            }else if(this.dataForm.bankLicenseImg=='' || this.dataForm.bankLicenseImg==undefined){
               this.$message({
-                message: '银行开户许可照片',
+                message: '银行开户许可照片不能为空',
                 type: 'warning'
               })
               return;
