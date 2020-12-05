@@ -410,7 +410,7 @@ export default {
   },
   data() {
     const isMobileNumber = (rule, value, callback) => {
-      const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
+      const reg = /^1[3|4|5|7|8|9][0-9]\d{8}$/;
       const isPhone = reg.test(value);
       value = Number(value); //转换为数字
       if (typeof value === "number" && !isNaN(value)) {//判断是否为数字
