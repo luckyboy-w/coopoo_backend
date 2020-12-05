@@ -118,17 +118,16 @@
         />
       </el-form-item>
       <el-form-item
-        v-if="isPersonProvince"
-        v-model="dataForm.type"
+        v-if="this.dataForm.provinceRole!='5'"
       >
         <el-radio
-          v-model="dataForm.type"
+       v-model="dataForm.type"
           label="1"
         >
           自然人
         </el-radio>
         <el-radio
-          v-model="dataForm.type"
+      v-model="dataForm.type"
           label="2"
         >
           公司
@@ -645,6 +644,11 @@ export default {
     this.$nextTick(function() {
       if (this.editData.id) {
         this.dataForm = this.editData
+        // if(this.dataForm.type=='1'){
+        //   this.dataForm.type=true
+        // }else if(this.dataForm.type=='2'){
+        //   this.dataForm.type=true
+        // }
         this.switchLevel(this.editData.provinceRole)
       }
       this.loadprovinceList()
@@ -705,7 +709,7 @@ export default {
       }
     },
     switchLevel(val) {
-      this.dataForm.type=''
+      console.log(this.dataForm.type,'99999')
       let obj = {}
       obj = this.provinceRoleList.find((item) => {
         return item.id === val
@@ -715,9 +719,11 @@ export default {
       }
       const getName = obj.providerLevel
       if (getName == 'E类') {
+        this.dataForm.type='2'
         this.isPersonProvince = false
         this.mobileTitle = '店主电话'
       } else {
+        this.dataForm.type='1'
         this.isPersonProvince = true
         this.mobileTitle = '手机号码'
       }
@@ -1043,20 +1049,22 @@ export default {
           this.dataForm.fileJsonStr = JSON.stringify(fileList)
           this.dataForm.files = []
           if(this.dataForm.type=='2' || this.dataForm.provinceRole=='5'){
-            if(this.dataForm.companyName==''){
+            console.log('1111111111111',this.dataForm.type)
+            console.log('333333',this.dataForm.provinceRole)
+            if(this.dataForm.companyName=='' || this.dataForm.companyName==undefined){
               this.$message({
                 message: '公司名不能为空',
                 type: 'warning'
               })
               return;
-            }else if(this.dataForm.taxNo==''){
+            }else if(this.dataForm.taxNo=='' || this.dataForm.taxNo==undefined){
               this.$message({
                 message: '税务代码',
                 type: 'warning'
               })
               return;
             }
-            else if(this.dataForm.bankLicenseImg==''){
+            else if(this.dataForm.bankLicenseImg=='' || this.dataForm.bankLicenseImg==undefined){
               this.$message({
                 message: '银行开户许可照片',
                 type: 'warning'
