@@ -30,7 +30,7 @@
 								<el-option value="" label="所有商品" />
 							</el-select>
 						</td> -->
-            <td>查询类型:</td>
+           <!-- <td>查询类型:</td>
             <td>
               <el-select v-model="searchParam.verifyStatus" placeholder="请选择">
                 <el-option value="" label="所有商品" />
@@ -39,7 +39,7 @@
                 <el-option value="30" label="审核未通过商品" />
                 <el-option value="40" label="已下架商品" />
               </el-select>
-            </td>
+            </td> -->
             <td>是否推荐:</td>
             <td>
               <el-select v-model="searchParam.recommend" placeholder="请选择">
@@ -82,11 +82,11 @@
             </el-table-column>
             <el-table-column prop="goodCode" label="商品货号" width="150px" />
             <el-table-column prop="goodStyle" label="风格专场" width="200px" />
-            <el-table-column prop="isGift" label="是否礼品" width="80px">
+           <!-- <el-table-column prop="isGift" label="是否礼品" width="80px">
               <template slot-scope="scope">
                 {{ scope.row.isGift == '1' ? '否':'是' }}
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column prop="supplierName" label="发布上架" width="150px" />
             <el-table-column prop="saleNum" label="销量" width="150px" />
             <el-table-column prop="recommend" label="是否推荐" width="150px">

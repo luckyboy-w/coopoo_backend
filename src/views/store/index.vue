@@ -245,7 +245,7 @@ export default {
         id: rowObj.id,
         enable: rowObj.enable
       }
-      postMethod('/backend/storeManage/update', param).then(res => {})
+      postMethod('/backend/storeManage/updateEnable', param).then(res => {})
     },
     downQrcode(rowObj){
       window.open( process.env.VUE_APP_BASE_API+'/backend/storeManage/storeQr?id='+rowObj.id+'&storeName='+rowObj.storeName)

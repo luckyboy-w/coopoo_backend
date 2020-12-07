@@ -29,6 +29,7 @@ requestBodyUrl.push("/backend/siteData/findUserInviteList")
 requestBodyUrl.push("/backend/user/enable")
 requestBodyUrl.push("/backend/siteData/selectCashDone")
 requestBodyUrl.push("/backend/siteData/selectCashDoneDtl")
+requestBodyUrl.push("/backend/storeManage/updateEnable")
 
 
 // create an axios instance
@@ -111,7 +112,7 @@ service.interceptors.response.use(
         });
         location.href = process.env.NODE_ENV === 'production' ? '/' : '/backend';
       }
-      
+
       if(res.msg == '登录超时，请重新登录'){
         Message({
           message: '登录超时，请重新登录',

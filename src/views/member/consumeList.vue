@@ -32,6 +32,7 @@
 						<el-table-column prop="realName" label="会员姓名" width="150px"></el-table-column>
 						<el-table-column prop="phoneNo" label="手机号" width="150px"></el-table-column>
 						<el-table-column prop="owerProvider" label="所属服务商" width="150px"></el-table-column>
+            <el-table-column prop="providerPhone" label="所属服务商手机号" width="150px"></el-table-column>
 						<el-table-column prop="consumePrice" label="消费总额" width="150px"></el-table-column>
                         <el-table-column prop="pkMemberId" label="操作" width="150px">
                             <template slot-scope="scope">
