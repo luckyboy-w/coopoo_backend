@@ -617,7 +617,8 @@ export default {
           { required: true, message: '请输入开户银行', trigger: 'blur' },
         ],
         cardNo: [
-          { required: true, validator: validateBankNo, message: '请输入银行账号', trigger: 'blur'},
+          { required: true, message: '请输入银行账号', trigger: 'blur'},
+            { required: true, validator: validateBankNo, trigger: 'blur' },
         ],
         area: [
           { required: true, validator: validateArea, trigger: "change" }
