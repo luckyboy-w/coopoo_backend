@@ -35,7 +35,7 @@
         :span="5"
         style="font-size:14px;"
       >
-        会员所得总靠谱豆：{{ memberBean }}
+        会员剩余总靠谱豆：{{ memberBean }}
       </el-col>
       <el-col
         :span="2"
@@ -159,7 +159,7 @@
             </el-table-column>
             <el-table-column
               prop="beanNum"
-              label="靠谱豆数量"
+              label="剩余靠谱豆数"
               min-width="20%"
             >
               <template slot-scope="scope">

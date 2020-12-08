@@ -123,7 +123,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="provId"
+            prop="memId"
             label="操作"
             min-width="20%"
           >
@@ -1115,7 +1115,7 @@
           applyStartTime: '',
           applyEndTime: '',
           cashNo: '',
-          provId: '',
+          memId: '',
           cashStatus: '1',
           providerName: '',
           provLevel: '',
@@ -1125,7 +1125,7 @@
           applyStartTime: '',
           applyEndTime: '',
           cashNo: '',
-          provId: '',
+          memId: '',
           cashStatus: '1',
           providerName: '',
           provLevel: '',
@@ -1274,7 +1274,7 @@
         postMethod("/backend/siteData/selectCashDtl", {
           memName: that.searchParams_.memName,
           phoneNo: that.searchParams_.phoneNo,
-          provId: this.provIds,
+          memId: this.provIds,
         }).then(res => {
           that.dtlFeeList = res.data.list // 返回的数据
 
@@ -1446,7 +1446,7 @@
           this.feeDtl_ = false
           this.friDtl_ = false
         } else if (tab.index == 3) {
-          this.searchParam.provId = ''
+          this.searchParam.memId = ''
           this.loadFeeDtl();
         } else {
           this.loadFriDtl();
@@ -1518,10 +1518,10 @@
         this.loadFeeEnd()
       },
       loadFeeDtlList(row) {
-        this.provIds = row.provId
+        this.provIds = row.memId
         let scope = this
         let param = {
-          provId: row.provId
+          memId: row.memId
         }
         postMethod("/backend/siteData/selectCashDtl", param).then(res => {
           scope.dtlFeeList = res.data.list
@@ -1550,7 +1550,7 @@
       loadFriDtlList(row) {
         let scope = this
         let param = {
-          provId: row.provId
+          memId: row.memId
         }
         postMethod("/backend/siteData/selectFriDtl", param).then(res => {
           scope.dtlFriList = res.data.list
