@@ -91,7 +91,7 @@ export default {
   mounted() {
     this.dataForm = this.editData;
     this.$nextTick(()=>{
-      
+
       if(this.dataForm.typeImage != undefined &&  this.dataForm.typeImage != ''){
         let data = {
           url:this.dataForm.typeImage
@@ -170,7 +170,27 @@ export default {
         this.dataForm.iconFiles = [];
         this.dataForm.fileJsonStr = JSON.stringify(fileList);
         this.dataForm.files = [];
-
+        if(this.dataForm.typeName==''||this.dataForm.typeName==undefined){
+          this.$message({
+            message: "请输入分类名称",
+            type: "warning"
+          });
+          return
+          }
+          if(this.dataForm.typeLabel==''||this.dataForm.typeLabel==undefined){
+            this.$message({
+              message: "请输入分类标签",
+              type: "warning"
+            });
+            return
+            }
+            if(this.dataForm.parentId==''||this.dataForm.parentId==undefined){
+              this.$message({
+                message: "请选择上级分类",
+                type: "warning"
+              });
+              return
+              }
         postMethod("/backend/goodType/update", this.dataForm).then(res => {
           scope.typeList = res.data;
           this.$message({
