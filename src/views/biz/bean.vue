@@ -640,12 +640,22 @@
       search() {
         let that = this
         let param = {
+          pageSize: 10,
+          pageNum: 1,
           memName: that.searchParams.memName,
           phoneNo: that.searchParams.phoneNo,
           memberType: that.searchParams.memberType
         }
         getMethod("/backend/siteData/memberBeanList", param).then(res => {
           console.log(res)
+          let obj=res.data.list
+          for(let i = 0; i < obj.length; i++){
+            console.log(obj[i])
+            if(obj[i].beanNum!=undefined&&obj[i].consumeBean!=undefined){
+              obj[i].beanNum=obj[i].beanNum-obj[i].consumeBean
+              console.log(obj[i].beanNum,'999999')
+            }
+          }
           that.noBillData = res.data // 返回的数据
 
         })
@@ -669,6 +679,14 @@
         let param = this.searchParam
         param.billType = 10
         getMethod("/backend/siteData/memberBeanList", param).then(res => {
+          let obj=res.data.list
+          for(let i = 0; i < obj.length; i++){
+            console.log(obj[i])
+            if(obj[i].beanNum!=undefined&&obj[i].consumeBean!=undefined){
+              obj[i].beanNum=obj[i].beanNum-obj[i].consumeBean
+              console.log(obj[i].beanNum,'999999')
+            }
+          }
           scope.noBillData = res.data
         });
       },
