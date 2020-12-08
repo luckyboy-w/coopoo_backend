@@ -191,13 +191,11 @@ export default {
       // this.setMaker();
       const lnglat = [res.position.lng, res.position.lat]
       this.marker.setPosition(lnglat)
-      console.log(res, 'res')
       this.formattedAddress = res.formattedAddress
       this.position = res.position
     },
     // 定位当前城市发生错误回调
     onCurrentPositionError(err) {
-      console.log(err)
     },
     // 按钮触发检索
     handelSearch() {

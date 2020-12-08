@@ -659,12 +659,10 @@ export default {
     // setTimeout(() =>{
  this.$nextTick(function() {
       if (this.editData.id) {
-        console.log(this.editData,'888888')
         if(this.editData.E_){
           this.E_=this.editData.E_
         }
         this.dataForm = this.editData
-        console.log(this.dataForm.type,'wywyywy')
         this.switchLevel(this.editData.provinceRole)
       }
       this.loadprovinceList()
@@ -730,7 +728,6 @@ export default {
       }
     },
     switchLevel(val) {
-      console.log(this.dataForm.type,'99999')
       let obj = {}
       obj = this.provinceRoleList.find((item) => {
         return item.id === val
@@ -901,11 +898,8 @@ export default {
 			this.dialogVisible = true;
 		},
     handleLicenseRemove(res) {
-      console.log(res)
-      console.log(this.fileList,'ggggggg')
       for (let i = 0; i < this.fileList.length; i++) {
         if (this.fileList[i].url == (res.url || res.response.data.url)) {
-          console.log(this.fileList,'ppppp')
           this.fileList.splice(i, 1)
           break
         }
@@ -1055,11 +1049,9 @@ export default {
       return fileTypeVerify && isLt2M
     },
     saveObject() {
-      console.log(this.dataForm,'wywywywyywy')
       let scope = this;
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
-          console.log(valid,'99999999')
           delete this.dataForm.createTime
           delete this.dataForm.createBy
           let fileList = []
@@ -1068,10 +1060,8 @@ export default {
           fileList = fileList.concat(this.uploadLicenseList)
           fileList = fileList.concat(this.protocalFileList)
           fileList = fileList.concat(this.uploadBankLicenseList)
-          console.log(fileList,'5656565656')
           this.len=fileList.length
           this.dataForm.fileJsonStr = JSON.stringify(fileList)
-          console.log(this.dataForm.type,'5555')
           this.dataForm.files = []
           if(this.dataForm.provinceRole=='5'){
             this.dataForm.type='2'
@@ -1080,8 +1070,6 @@ export default {
               this.dataForm.type='1'
               }
           if(this.dataForm.type=='2' || this.dataForm.provinceRole=='5'){
-            console.log('1111111111111',this.dataForm.type)
-            console.log('333333',this.dataForm.provinceRole)
             if(this.dataForm.companyName=='' || this.dataForm.companyName==undefined){
               this.$message({
                 message: '公司名不能为空',
@@ -1122,7 +1110,6 @@ export default {
             }
           )
         } else {
-          console.log('99999')
           return false;
         }
       });

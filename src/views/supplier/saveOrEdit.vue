@@ -214,7 +214,6 @@ export default {
 		this.buildProtocalFileGroupId();
 		this.$nextTick(function() {
 			if (this.editData.id) {
-        console.log(this.editData,'999999999999')
 				this.dataForm = this.editData;
 				this.initDefaultImage();
 				this.disabledLoginNo = true
@@ -430,7 +429,6 @@ export default {
 		},
 		buildLicenseImgGroupId() {
 			getMethod("/backend/oss/groupId", null).then(res => {
-        console.log(res,'88888888888')
 				this.uploadLicenseImgUrl =
 					getUploadUrl() + "?groupId=" + res.data;
 				this.dataForm.licenseImg = this.dataForm.licenseImg || res.data;
@@ -641,7 +639,6 @@ export default {
 			return fileTypeVerify && isLt2M;
 		},
 		initDefaultImage() {
-      console.log(this.dataForm.files,'45645646545')
 			this.fileList = this.dataForm.files;
 			for (let i = 0; i < this.dataForm.files.length; i++) {
 				let imageObj = this.dataForm.files[i];
@@ -675,7 +672,6 @@ export default {
 			}
 		},
 		saveObject() {
-      console.log(this.dataForm)
 			let scope = this;
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {

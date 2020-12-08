@@ -788,7 +788,6 @@
     },
     computed: {},
     mounted() {
-      console.log(this.$route.query)
       if (this.$route.query.dt != undefined) {
         this.searchParam.dataType = this.$route.query.dt
       }
@@ -859,7 +858,6 @@
         })
       },
       getOrdDtl_() {
-        console.log(11111111111111111111111111)
         let scope = this
         postMethod('/backend/order/getOrdDtl', {
           orderId: this.orderId_

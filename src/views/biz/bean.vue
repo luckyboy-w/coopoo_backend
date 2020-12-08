@@ -555,7 +555,6 @@
           this.loadList();
       },
       transdetails(row) {
-        console.log(row)
         this.memId = row.memId
         this.memName = row.nickname
         this.allFeeDataShow = false
@@ -572,7 +571,6 @@
           pageNum: this.searchParam.pageNum
         }
         getMethod("/backend/siteData/memberBeanDetailList", param).then(res => {
-          console.log(res)
           scope.detailsListData = res.data
         });
       },
@@ -647,13 +645,10 @@
           memberType: that.searchParams.memberType
         }
         getMethod("/backend/siteData/memberBeanList", param).then(res => {
-          console.log(res)
           let obj=res.data.list
           for(let i = 0; i < obj.length; i++){
-            console.log(obj[i])
             if(obj[i].beanNum!=undefined&&obj[i].consumeBean!=undefined){
               obj[i].beanNum=obj[i].beanNum-obj[i].consumeBean
-              console.log(obj[i].beanNum,'999999')
             }
           }
           that.noBillData = res.data // 返回的数据
@@ -670,7 +665,6 @@
           memId: this.memId
         }
         getMethod("/backend/siteData/memberBeanDetailList", param).then(res => {
-          console.log(res)
           that.detailsListData = res.data // 返回的数据
         })
       },
@@ -681,10 +675,8 @@
         getMethod("/backend/siteData/memberBeanList", param).then(res => {
           let obj=res.data.list
           for(let i = 0; i < obj.length; i++){
-            console.log(obj[i])
             if(obj[i].beanNum!=undefined&&obj[i].consumeBean!=undefined){
               obj[i].beanNum=obj[i].beanNum-obj[i].consumeBean
-              console.log(obj[i].beanNum,'999999')
             }
           }
           scope.noBillData = res.data

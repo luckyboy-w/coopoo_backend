@@ -61,7 +61,6 @@
         		List.push(this.format(obj[i])) //把天数添加到数组中
         	}
         	this.day = List.toString() //把数组转字符串 赋值给str
-        	console.log(this.day, '123456789')
         	this.dataForm.billCount = this.dataForm.billDate.length;
         } else {
         	this.dataForm.billCount = 0
@@ -90,17 +89,13 @@
         let scope = this
         getMethod("/backend/lyConfig/findList", param).then(
           res => {
-            console.log(res.data)
             let dataList = res.data
             for (let i = 0; i < dataList.length; i++) {
             	let rowObj = dataList[i];
             	if (rowObj.title == 'billDate') {
-            		console.log(rowObj)
             		let myDate = new Date();
             		let tYear = myDate.getFullYear();
             		let tMonth = myDate.getMonth() + 1;
-            		console.log(tMonth)
-            		console.log()
             		if (rowObj.value != "") {
             			this.dataForm.billDate = rowObj.value.split(",")
             			for (let j = 0; j < this.dataForm.billDate.length; j++) {
@@ -111,7 +106,6 @@
 
             		// scope.dataForm[rowObj.title] = eval("("+rowObj.value+")");
             		// this.dataForm.billDate=
-            		console.log(scope.dataForm[rowObj.title])
             	} else {
             		// this.dataForm.billCount=0
             		scope.dataForm[rowObj.title] = rowObj.value

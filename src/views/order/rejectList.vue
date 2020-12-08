@@ -270,14 +270,12 @@
     created() {},
     methods: {
       getOrdDtl(row) {
-        console.log(row)
         const scope = this
         const param = {
           orderNo: row.orderNo
         }
 
         getMethod('/backend/order/findRejectPage', param).then(res => {
-          console.log(res.data.list,'5446456')
           scope.showOrdDtl = true
           this.detailData = res.data.list[0]
         })

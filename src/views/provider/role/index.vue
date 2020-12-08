@@ -99,7 +99,6 @@ export default {
   created() {},
   methods: {
     updateEnable(rowData) {
-      console.log(rowData,'8888888')
       const scope = this
       const param = {
         id: rowData.id,
@@ -181,7 +180,6 @@ export default {
       const scope = this
       getMethod('/backend/providerRole/findPage', this.searchParam).then(
         res => {
-console.log(res.data,'55555')
           scope.tableData = res.data
           let list = scope.tableData.list
           let efeObj = null;
@@ -197,7 +195,6 @@ console.log(res.data,'55555')
               list[i].children = efeObj
             }
           }
-          console.log(list,'333333333333')
           // if(list.enable=='1'){
           //   scope.tableData.list.enable="true"
           // }

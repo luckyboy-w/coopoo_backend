@@ -72,11 +72,6 @@
        	this.dataForm.cashCount = 0
        }
       },
-      // changeContent(val){
-
-      //   console.log(val)
-      //   this.dataForm.content = val
-      // },
       format(date) {
         // const year = date.getFullYear();
         // const month = date.getMonth() + 1 >= 10 ? date.getMonth() + 1 : "0" + (date.getMonth() + 1);
@@ -99,12 +94,9 @@
             for (let i = 0; i < dataList.length; i++) {
             	let rowObj = dataList[i];
             	if (rowObj.title == 'cashDate') {
-            		console.log(rowObj)
             		let myDate = new Date();
             		let tYear = myDate.getFullYear();
             		let tMonth = myDate.getMonth() + 1;
-            		console.log(tMonth)
-            		console.log()
             		if (rowObj.value != "") {
             			this.dataForm.cashDate = rowObj.value.split(",")
             			for (let j = 0; j < this.dataForm.cashDate.length; j++) {
@@ -115,7 +107,6 @@
 
             		// scope.dataForm[rowObj.title] = eval("("+rowObj.value+")");
             		// this.dataForm.cashDate=
-            		console.log(scope.dataForm[rowObj.title])
             	} else {
             		// this.dataForm.cashCount=0
             		scope.dataForm[rowObj.title] = rowObj.value

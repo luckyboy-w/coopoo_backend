@@ -228,7 +228,6 @@
         this.billOrd(row.pkBillId)
       },
       findBillDtl(row) {
-        console.log(row)
         let scope = this
         let param = {
           tenantId: row.tenantId,

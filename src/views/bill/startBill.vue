@@ -218,7 +218,6 @@ import billDetail from './billDtl'
             this.showList = true
         },
         findBillDtl(row){
-          console.log(row)
             let scope = this
             let param = {
                 billNo:row.settleNo,

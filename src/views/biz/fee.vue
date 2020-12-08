@@ -1197,17 +1197,6 @@
           query: row,
         })
       },
-      // dealCash(row){
-      //   console.log(row)
-      //   let scope = this
-      //   getMethod('/backend/siteData/settlement', {
-      //     cashNo:row.cashNo
-      //   }).then(res => {
-      //     console.log(res)
-      //     let platData = res.data
-
-      //   })
-      //   },
       loadPlatFee() {
         let scope = this
         getMethod('/backend/siteData/selectPlatFee', {}).then(res => {
@@ -1263,7 +1252,6 @@
       //     providerName: ''
       //   }
       //   getMethod('/backend/lyProvider/findList', param).then(res => {
-      //     console.log(res)
       //     scope.providerList = res.data
       //   })
       // },
@@ -1277,7 +1265,6 @@
           provPhone: that.searchParams.provPhone
         }
         getMethod("/backend/siteData/selectAllCash", param).then(res => {
-          console.log(res)
           that.allFeeData = res.data // 返回的数据
 
         })
@@ -1289,14 +1276,12 @@
           phoneNo: that.searchParams_.phoneNo,
           provId: this.provIds,
         }).then(res => {
-          console.log(res)
           that.dtlFeeList = res.data.list // 返回的数据
 
         })
       },
       TosearchOne() {
         let that = this
-        console.log(this.cashNo)
         postMethod("/backend/siteData/selectCashDtl", {
           memName: that.searchParamsOne.memName,
           phoneNo: that.searchParamsOne.phoneNo,
@@ -1314,7 +1299,6 @@
           phoneNo: that.searchParamsTwo.phoneNo,
           cashNo: this.cashNos,
         }).then(res => {
-          console.log(res)
           that.det_List = res.data.list // 返回的数据
 
         })
@@ -1361,7 +1345,6 @@
         this.feeDtl_ = true
       },
       chkFriDtl(row) {
-        console.log(111111111111111111111)
         this.allFeeDataShow = false
         this.allFeeDtlFee = false
         this.allFriDtlFee = true
@@ -1403,7 +1386,6 @@
           applyEndTime: this.exportApplyFrm_.applyEndTime,
           cashStatus: 2
         }).then(res => {
-          console.log(res)
           scope.feeEndData = res.data // 返回的数据
 
         })
@@ -1480,17 +1462,14 @@
         let param1 = this.searchParam
         console.log(param1)
         getMethod("/backend/siteData/selectAllCash", param1).then(res => {
-          console.log(res)
           let obj = res.data.list
           for (let i = 0; i < obj.length; i++) {
-            console.log(obj[i]);
             this.types.forEach(e => {
               if (e.title == obj[i].provLevel) {
                 obj[i].provLevel = e.value;
               }
             });
           }
-          console.log(res.data.list)
           scope.allFeeData = res.data
         });
       },
@@ -1503,10 +1482,8 @@
         let param = this.searchParam
         param.cashStatus = 1
         postMethod("/backend/siteData/selectCashDone", param).then(res => {
-          console.log(res)
           let obj = res.data.list
           for (let i = 0; i < obj.length; i++) {
-            console.log(obj[i]);
             this.types.forEach(e => {
               if (e.title == obj[i].provinceRole) {
                 obj[i].provinceRole = e.value;
@@ -1525,10 +1502,8 @@
         let param = this.searchParam
         param.cashStatus = 2
         postMethod("/backend/siteData/selectCashDone", param).then(res => {
-          console.log(res)
           let obj = res.data.list
           for (let i = 0; i < obj.length; i++) {
-            console.log(obj[i]);
             this.types.forEach(e => {
               if (e.title == obj[i].provinceRole) {
                 obj[i].provinceRole = e.value;

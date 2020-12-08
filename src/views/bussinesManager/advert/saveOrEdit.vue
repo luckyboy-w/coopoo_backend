@@ -325,7 +325,6 @@
           pageNum: 0
         }
         getMethod("/backend/good/findPage", param).then(res => {
-          console.log(res)
           scope.goodList = res.data.list
         });
       },
@@ -357,7 +356,6 @@
         }
       },
       saveObject() {
-        console.log(1111111111111111111,this.dataForm)
         let scope = this;
         if (this.validate()) {
           delete this.dataForm.createTime;
@@ -369,7 +367,6 @@
 
           postMethod("/backend/advert/update", this.dataForm).then(
             res => {
-              console.log(res)
               scope.typeList = res.data;
               this.$message({
                 message: "操作成功",
