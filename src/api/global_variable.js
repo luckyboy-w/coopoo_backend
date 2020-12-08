@@ -49,8 +49,7 @@ let verifyProvinceLevelMap = {
   3: 'C类',
   4: 'D类',
   5: 'E类',
-  6: 'EF类',
-  7: 'EF-E类'
+  6: 'EA类'
 }
 
 

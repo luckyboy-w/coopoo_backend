@@ -100,7 +100,7 @@
                   <el-link v-if="scope.row.enable =='2'" type="primary" @click="opUserState(scope.row,1)">
                     启用
                   </el-link>
-                  <el-link v-if="scope.row.isSendGift =='0'" type="primary" @click="sendGift(scope.row)">
+                  <el-link v-if="scope.row.isSendGift =='0'&&scope.row.memberType != '30'"  type="primary" @click="sendGift(scope.row)">
                     发放赠品
                   </el-link>
                   <!--<el-link type="primary"  @click="viewMember(scope.row)" >查看</el-link>-->

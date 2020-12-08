@@ -276,6 +276,7 @@ export default {
         res => {
           scope.tableData = res.data
           for (let i = 0; i < scope.tableData.list.length; i++) {
+            console.log(scope.tableData.list[i])
             scope.formatterCol(scope.tableData.list[i])
           }
           scope.showPagination = scope.tableData.total == 0
@@ -284,7 +285,7 @@ export default {
     },
     formatterCol(rowData) {
       rowData.verifyStatusText = this.GLOBAL.verifyProvinceMap[rowData.verifyStatus]
-      rowData.provinceRoleText = this.providerMap[rowData.provinceRole]
+      rowData.provinceRoleText = this.GLOBAL.verifyProvinceLevelMap[rowData.provinceRole]
     }
   }
 }

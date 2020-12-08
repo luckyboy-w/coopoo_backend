@@ -20,6 +20,7 @@
         prop="provinceRole"
       >
         <el-select
+        v-if="dataForm.provinceRole!='6'"
           v-model="dataForm.provinceRole"
           :disabled="!viewSubmit"
           @change="switchLevel"
@@ -32,7 +33,11 @@
             :value="item.id"
           />
         </el-select>
+        <el-select v-if="dataForm.provinceRole=='6'" v-model="dataForm.provinceRole" disabled="">
+          <el-option value="6" label="EA类(个人类型)"></el-option>
+        </el-select>
       </el-form-item>
+
       <el-form-item
         :label="mobileTitle"
         prop="mobileNo"
@@ -117,28 +122,18 @@
           :disabled="!viewSubmit"
         />
       </el-form-item>
-      <el-form-item
-        v-if="this.dataForm.provinceRole!='5'"
-      >
-      <!--  <radio
-       v-model="dataForm.type"
-          :label="1"
-        >
-          自然人
-        </radio>
-        <radio
-      v-model="dataForm.type"
-          :label="2"
-        >
-          公司
-        </radio>
-        -->
-         <input type='radio' value='1' v-model='dataForm.type'/>
-         <label for='wuhan'>自然人</label>
 
-         <input type='radio' value='2' v-model='dataForm.type'/>
-         <label for='xian'>公司</label>
+      <el-form-item
+      v-if="dataForm.provinceRole!='5'&&dataForm.provinceRole!='6'"
+        label="自然人/公司"
+        prop="type"
+      >
+        <el-select v-model="dataForm.type" placeholder="请选择">
+          <el-option :value="1" label="个人"></el-option>
+          <el-option :value="2" label="公司" ></el-option>
+        </el-select>
       </el-form-item>
+
       <el-form-item
         label="身份证正面照片"
         prop="personFrontImg"
@@ -520,6 +515,7 @@ export default {
     }
 
     return {
+      E_:'',
       len:'',
       radio: '',
       dialogVisible:false,
@@ -528,6 +524,16 @@ export default {
       mobileTitle: '手机号码',
       fileSortImage: 0,
       isPersonProvince: true,
+      items:[
+                  {
+                  value:1,
+                  label:'个人'
+                  },
+                   {
+                  value:2,
+                  label:'公司'
+                  }
+              ],
       provinceRoleList: [],
       provinceList: [],
       cityList: [],
@@ -649,8 +655,14 @@ export default {
   },
   mounted() {
     this.loadprovinceRoleList()
-    this.$nextTick(function() {
+
+    // setTimeout(() =>{
+ this.$nextTick(function() {
       if (this.editData.id) {
+        console.log(this.editData,'888888')
+        if(this.editData.E_){
+          this.E_=this.editData.E_
+        }
         this.dataForm = this.editData
         console.log(this.dataForm.type,'wywyywy')
         this.switchLevel(this.editData.provinceRole)
@@ -663,11 +675,16 @@ export default {
       this.buildProtocalGroupId()
       this.buildBankLicenseImgGroupId()
     })
-    if (this.oper == 'view') {
-      this.viewSubmit = false
-    }
+       if (this.oper == 'view') {
+         this.viewSubmit = false
+       }
+    // },500);
+
+
   },
-  created() {},
+  created() {
+
+  },
   methods: {
     downlandFile(item) {
       window.open(item.url)
@@ -723,11 +740,9 @@ export default {
       }
       const getName = obj.providerLevel
       if (getName == 'E类') {
-        this.dataForm.type='2'
         this.isPersonProvince = false
         this.mobileTitle = '店主电话'
       } else {
-        this.dataForm.type='1'
         this.isPersonProvince = true
         this.mobileTitle = '手机号码'
       }
@@ -1058,6 +1073,12 @@ export default {
           this.dataForm.fileJsonStr = JSON.stringify(fileList)
           console.log(this.dataForm.type,'5555')
           this.dataForm.files = []
+          if(this.dataForm.provinceRole=='5'){
+            this.dataForm.type='2'
+            }
+            if(this.dataForm.provinceRole=='6'){
+              this.dataForm.type='1'
+              }
           if(this.dataForm.type=='2' || this.dataForm.provinceRole=='5'){
             console.log('1111111111111',this.dataForm.type)
             console.log('333333',this.dataForm.provinceRole)
