@@ -302,7 +302,7 @@ export default {
     },
     formatterCol(rowData) {
       rowData.verifyStatusText = this.GLOBAL.verifyProvinceMap[rowData.verifyStatus]
-      rowData.provinceRoleText = this.providerMap[rowData.provinceRole]
+      rowData.provinceRoleText = this.GLOBAL.verifyProvinceLevelMap[rowData.provinceRole]
     }
   }
 }
