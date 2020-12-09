@@ -6,73 +6,39 @@
           :span="1.5"
           style="font-size:14px;"
         >
-          结算单号
-        </el-col>
-        <el-col :span="3">
-          <el-input
-            v-model="searchParam.test"
-            style="width:80px"
-            placeholder="请输入..."
-          />
-        </el-col>
-        <el-col
-          :span="1.5"
-          style="font-size:14px;"
-        >
           供应商名称
         </el-col>
-        <el-col :span="3">
+        <el-col :span="4">
           <el-input
             v-model="searchParam.tenantName"
-            style="width:80px"
+            style="width:150px"
             placeholder="请输入..."
           />
         </el-col>
-        <el-col
-          :span="2"
-          style="padding-left:10px"
-        >
-          生成时间
-        </el-col>
-        <el-col :span="8">
-          <el-date-picker
-            v-model="searchParam.startTime"
-            type="date"
-            style="width:140px"
-            placeholder="开始日期"
-          />
-          至
-          <el-date-picker
-            v-model="searchParam.endTime"
-            type="date"
-            style="width:140px"
-            placeholder="结束日期"
-          />
-        </el-col>
-        <el-col
-          :span="2"
+<!--        <el-col
+          :span="1.5"
           style="padding-left:10px"
         >
           结算金额
         </el-col>
-        <el-col :span="8">
+        <el-col :span="5">
           <el-input
             v-model="searchParam.minBillFee"
-            style="width:80px"
+            style="width:120px"
             placeholder=""
           />
           -
           <el-input
             v-model="searchParam.maxBillFee"
-            style="width:80px"
+            style="width:120px"
             placeholder=""
           />
         </el-col>
         <el-col
-          :span="4"
+          :span="2"
           style="padding-left:10px"
-        >
-          <el-button type="primary">
+        > -->
+          <el-button @click="search()" type="primary">
             搜索
           </el-button>
         </el-col>
@@ -94,30 +60,21 @@
           min-width="20%"
         />
         <el-table-column
-          prop="createTime"
-          label="入账时间"
-          min-width="20%"
-        >
-          <template slot-scope="scope">
-            {{ scope.row.createTime | _formateDate }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="billMoney"
-          label="销售金额"
-          min-width="24%"
-        >
-          <template slot-scope="scope">
-            {{ scope.row.billMoney | fmtFee }}
-          </template>
-        </el-table-column>
-        <el-table-column
           prop="totalAmount"
-          label="结算金额"
+          label="支付金额"
           min-width="24%"
         >
           <template slot-scope="scope">
             {{ scope.row.totalAmount | fmtFee }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="billMoney"
+          label="结算金额"
+          min-width="24%"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.billMoney | fmtFee }}
           </template>
         </el-table-column>
         <el-table-column
@@ -195,7 +152,7 @@
         detailList: [],
         //10:未结算;20:结算中;30:已结算
         searchParam: {
-          billType: '10',
+          tenantName:'',
           billNo: "",
           orderNo: "",
           pageSize: 15,
@@ -209,10 +166,17 @@
       };
     },
     mounted() {
-      this.searchParam.billType = "10"
       this.loadList();
     },
     methods: {
+      search() {
+        let that = this
+        let param = this.searchParam
+        postMethod("/backend/orderBill/findPlatBillList", param).then(res => {
+          that.noBillData = res.data // 返回的数据
+
+        })
+      },
       backToList() {
         this.showList = true
       },
@@ -236,19 +200,9 @@
         }
         getMethod("/backend/orderBill/findBillDtl", param).then(res => {
           scope.showList = false
+
           scope.detailList = res.data.list
         });
-      },
-      handleClick(tab, event) {
-        this.tabIndex = tab.index
-        if (tab.index == 0) {
-          this.searchParam.billType = "10"
-        } else if (tab.index == 1) {
-          this.searchParam.billType = "20"
-        } else {
-          this.searchParam.billType = "30"
-        }
-        this.loadList();
       },
       currentPage(pageNum) {
         this.searchParam.pageNum = pageNum;
@@ -257,7 +211,6 @@
       loadList() {
         let scope = this
         let param = this.searchParam
-        param.billType = 10
         postMethod("/backend/orderBill/findPlatBillList", param).then(res => {
           scope.noBillData = res.data
         });

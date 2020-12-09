@@ -11,11 +11,11 @@
         <el-col :span="3">
           <el-input
             v-model="searchParam.test"
-            style="width:80px"
+            style="width:150px"
             placeholder="请输入..."
           />
         </el-col>
-        <el-col
+       <!-- <el-col
           :span="1.5"
           style="font-size:14px;"
         >
@@ -24,17 +24,17 @@
         <el-col :span="3">
           <el-input
             v-model="searchParam.tenantName"
-            style="width:80px"
+            style="width:150px"
             placeholder="请输入..."
           />
         </el-col>
         <el-col
-          :span="2"
+          :span="1.5"
           style="padding-left:10px"
         >
           完成时间
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-date-picker
             v-model="searchParam.startTime"
             type="date"
@@ -50,12 +50,12 @@
           />
         </el-col>
         <el-col
-          :span="2"
+          :span="1.5"
           style="padding-left:10px"
         >
           结算金额
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-input
             v-model="searchParam.minBillFee"
             style="width:80px"
@@ -67,9 +67,9 @@
             style="width:80px"
             placeholder=""
           />
-        </el-col>
+        </el-col> -->
         <el-col
-          :span="4"
+          :span="2"
           style="padding-left:10px"
         >
           <el-button type="primary">
@@ -89,6 +89,11 @@
           label="序号"
         />
         <el-table-column
+          prop="settleNo"
+          label="结算单号"
+          min-width="20%"
+        />
+        <el-table-column
           prop="tenantName"
           label="供应商名称"
           min-width="20%"
@@ -103,8 +108,17 @@
           </template>
         </el-table-column>
         <el-table-column
+          prop="orderAmount"
+          label="订单金额"
+          min-width="24%"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.orderAmount | fmtFee }}
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="orderPayAmount"
-          label="销售金额"
+          label="支付金额"
           min-width="24%"
         >
           <template slot-scope="scope">
@@ -121,10 +135,19 @@
           </template>
         </el-table-column>
         <el-table-column
+          prop="platformFee"
+          label="服务金额"
+          min-width="24%"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.platformFee | fmtFee }}
+          </template>
+        </el-table-column>
+       <!-- <el-table-column
           prop="test"
           label="操作人"
           min-width="20%"
-        />
+        /> -->
         <el-table-column
           prop="pkBillId"
           label="操作"
@@ -170,7 +193,7 @@ import billDetail from './billDtl'
                 return '';
             }
             let date = new Date(time);
-            return formatDate(date,'yyyy-MM-dd hh:mm:ss')
+            return formatDate(date,'yyyy-MM-dd')
         },
         fmtFee(fee) {
           if (fee == undefined) {
@@ -227,6 +250,7 @@ import billDetail from './billDtl'
             getMethod("/backend/orderBill/findBillSettledDtl", param).then(res => {
                 scope.showList = false
                 scope.detailList = res.data.list
+                scope.detailList.No='1'
             });
         },
         backToList(){

@@ -10,12 +10,12 @@
         </el-col>
         <el-col :span="3">
           <el-input
-            v-model="searchParam.test"
-            style="width:80px"
+            v-model="searchParam.billNo"
+            style="width:150px"
             placeholder="请输入..."
           />
         </el-col>
-        <el-col
+       <!-- <el-col
           :span="1.5"
           style="font-size:14px;"
         >
@@ -24,17 +24,17 @@
         <el-col :span="3">
           <el-input
             v-model="searchParam.test"
-            style="width:80px"
+            style="width:150px"
             placeholder="请输入..."
           />
-        </el-col>
-        <el-col
-          :span="2"
+        </el-col> -->
+       <!-- <el-col
+          :span="1.5"
           style="padding-left:10px"
         >
           申请时间
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-date-picker
             v-model="searchParam.startTime"
             type="date"
@@ -50,12 +50,12 @@
           />
         </el-col>
         <el-col
-          :span="2"
+          :span="1.5"
           style="padding-left:10px"
         >
           结算金额
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-input
             v-model="searchParam.minBillFee"
             style="width:80px"
@@ -67,12 +67,12 @@
             style="width:80px"
             placeholder=""
           />
-        </el-col>
+        </el-col> -->
         <el-col
-          :span="4"
+          :span="2"
           style="padding-left:10px"
         >
-          <el-button type="primary">
+          <el-button @click="search()"  type="primary">
             搜索
           </el-button>
         </el-col>
@@ -99,17 +99,26 @@
           min-width="20%"
         />
         <el-table-column
-          prop="settleDate"
+          prop="applyDate"
           label="申请时间"
           min-width="20%"
         >
           <template slot-scope="scope">
-            {{ scope.row.settleDate | _formateDate }}
+            {{ scope.row.applyDate | _formateDate }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="orderAmount"
+          label="订单金额"
+          min-width="24%"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.orderAmount | fmtFee }}
           </template>
         </el-table-column>
         <el-table-column
           prop="orderPayAmount"
-          label="销售金额"
+          label="支付金额"
           min-width="24%"
         >
           <template slot-scope="scope">
@@ -125,7 +134,15 @@
             {{ scope.row.settleAmount | fmtFee }}
           </template>
         </el-table-column>
-       
+        <el-table-column
+          prop="platformFee"
+          label="服务金额"
+          min-width="24%"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.platformFee | fmtFee }}
+          </template>
+        </el-table-column>
         <el-table-column
           prop="pkBillId"
           label="操作"
@@ -177,7 +194,7 @@ import billDetail from './billDtl'
                 return '';
             }
             let date = new Date(time);
-            return formatDate(date,'yyyy-MM-dd hh:mm:ss')
+            return formatDate(date,'yyyy-MM-dd')
         },
         fmtFee(fee) {
           if (fee == undefined) {
@@ -197,10 +214,10 @@ import billDetail from './billDtl'
         detailList:[],
         //10:未结算;20:结算中;30:已结算
         searchParam:{
-            billType:'10',
+            billType:'',
             billNo:"",
             orderNo:"",
-            pageSize:15,
+            pageSize:10,
             pageNum:1
         },
         noBillData:{
@@ -210,10 +227,19 @@ import billDetail from './billDtl'
       };
     },
     mounted() {
-        this.searchParam.billType = "10"
+        this.searchParam.billType = "1"
         this.loadList();
     },
     methods: {
+      search() {
+        let that = this
+        this.searchParam.billType='1'
+        let param = this.searchParam
+        postMethod("/backend/orderBill/findPlatApplyBill", param).then(res => {
+          that.noBillData = res.data // 返回的数据
+
+        })
+      },
         backToList(){
             this.showList = true
         },
@@ -238,11 +264,12 @@ import billDetail from './billDtl'
             this.billOrd(id.join(","))
         },
         billFee(row){
+          console.log(row,'这是单号')
             let scope = this
             let param = {
-                billIds:row.pkBillIds
+                settleNo:row.settleNo
             }
-            postMethod("/backend/orderBill/billFee", param).then(res => {
+            getMethod("/backend/siteData/settlement", param).then(res => {
                 this.$message({
                     message: '已完成结算',
                     type: 'success'
@@ -258,17 +285,6 @@ import billDetail from './billDtl'
             postMethod("/bu/orderBill/billOrd", param).then(res => {
                 scope.loadList()
             });
-        },
-        handleClick(tab, event) {
-            this.tabIndex = tab.index
-            if(tab.index == 0 ){
-                this.searchParam.billType = "10"
-            }else if(tab.index == 1 ){
-                this.searchParam.billType = "20"
-            }else {
-                this.searchParam.billType = "30"
-            }
-            this.loadList();
         },
         currentPage(pageNum) {
             this.searchParam.pageNum = pageNum;

@@ -47,21 +47,29 @@
         label="序号"
       />
       <el-table-column
-        prop="billNo"
-        label="账单流水号"
-        min-width="12%"
+      v-if="this.No=='1'"
+        prop="orderNo"
+        label="结算单号"
+        min-width="20%"
       />
       <el-table-column
-        prop="outBillNo"
-        label="外部流水号"
-        min-width="25%"
-      />
-      <el-table-column
+      v-if="this.No!='1'"
         prop="orderNo"
         label="订单号"
         min-width="18%"
       />
+<!--      <el-table-column
+      v-if="this.No=='1'"
+        prop="test"
+        label="结算时间"
+        min-width="15%"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.test | _formateDate }}
+        </template>
+      </el-table-column> -->
       <el-table-column
+      v-if="this.No!='1'"
         prop="createTime"
         label="入账时间"
         min-width="15%"
@@ -71,8 +79,17 @@
         </template>
       </el-table-column>
       <el-table-column
+        prop="orderPrice"
+        label="订单金额"
+        min-width="24%"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.orderPrice | fmtFee }}
+        </template>
+      </el-table-column>
+      <el-table-column
         prop="totalAmount"
-        label="销售金额"
+        label="支付金额"
         min-width="24%"
       >
         <template slot-scope="scope">
@@ -89,15 +106,20 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="billMemName"
-        label="结算财务"
-        min-width="10%"
-      />
-      <el-table-column
-        prop="opAdminName"
+        prop="platformFee"
+        label="服务金额"
+        min-width="24%"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.platformFee | fmtFee }}
+        </template>
+      </el-table-column>
+      <!-- <el-table-column
+      v-if="this.No=='1'"
+        prop="test"
         label="操作管理员"
-        min-width="10%"
-      />
+        min-width="18%"
+      /> -->
     </el-table>
   </div>
 </template>
@@ -142,11 +164,16 @@ import { formatDate } from "@/api/tools.js"
             pageSize:15,
             pageNum:1
         },
+        No:'',
         activeName: 'noBill',
         dataList:[]
       };
     },
     mounted() {
+      console.log(this.detailList)
+      if(this.detailList.No){
+        this.No=this.detailList.No
+      }
         this.dataList = this.detailList
     },
     methods: {

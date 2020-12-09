@@ -1422,7 +1422,7 @@
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-          getMethod("/backend/siteData/settlement", param).then(res => {
+          getMethod("/backend/siteData/rebate", param).then(res => {
             scope.loadFeeProcess()
             scope.loadPlatFee()
             this.$message.alert("提现成功");
