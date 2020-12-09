@@ -46,7 +46,7 @@
 
 						<el-table-column prop="isShow" label="是否显示" width="200px">
 							<template slot-scope="scope">
-								<span>{{ scope.row.show?'显示':'不显示' }}</span>
+								<span>{{ scope.row.isShow=='1'?'显示':'不显示' }}</span>
 							</template>
 						</el-table-column>
 

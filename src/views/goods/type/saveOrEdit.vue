@@ -33,7 +33,7 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="显示">
-        <el-switch v-model="dataForm.show" />
+        <el-switch v-model="dataForm.isShow" />
       </el-form-item>
 
       <el-form-item label="排序">
@@ -78,7 +78,7 @@ export default {
         id: "",
         typeName: "",
         typeLabel: "",
-        isShow: true,
+        isShow: '',
         sort: "",
         fileJsonStr: "",
         typeImage: "",
@@ -97,6 +97,11 @@ export default {
           url:this.dataForm.typeImage
         }
         this.uploadGoodImageList.push(data)
+      }
+      if(this.dataForm.isShow=='1'){
+        this.dataForm.isShow=true
+      }else{
+        this.dataForm.isShow=false
       }
     })
     this.findGoodType();
@@ -191,6 +196,11 @@ export default {
               });
               return
               }
+			  if(this.dataForm.isShow==true){
+				  this.dataForm.isShow='1'
+			  }else if(this.dataForm.isShow==false){
+				  this.dataForm.isShow='0'
+			  }
         postMethod("/backend/goodType/update", this.dataForm).then(res => {
           scope.typeList = res.data;
           this.$message({
