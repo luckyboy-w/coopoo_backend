@@ -7,7 +7,7 @@
 			<el-form-item label="报名靠谱豆">
 				<el-input v-model="dataForm.activityCost" style="width:400px"></el-input>
 			</el-form-item>
-			<el-form-item label="活动主图">
+			<el-form-item label="活动主图 (高度220)">
 				<el-input v-show="false" v-model="dataForm.activityImage"></el-input>
 				<el-upload
 					:action="uploadActivityImageUrl"
