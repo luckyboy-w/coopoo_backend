@@ -89,6 +89,7 @@ export default {
   },
   computed: {},
   mounted() {
+    console.log(this.editData,'xainshi')
     this.dataForm = this.editData;
     this.$nextTick(()=>{
 
@@ -100,7 +101,7 @@ export default {
       }
       if(this.dataForm.isShow=='1'){
         this.dataForm.isShow=true
-      }else{
+      }else if(this.dataForm.isShow=='0'){
         this.dataForm.isShow=false
       }
     })
