@@ -269,13 +269,21 @@ import billDetail from './billDtl'
             let param = {
                 settleNo:row.settleNo
             }
-            getMethod("/backend/siteData/settlement", param).then(res => {
-                this.$message({
-                    message: '已完成结算',
-                    type: 'success'
-                })
-                scope.loadList()
-            });
+            this.$confirm('是否确认完成结算?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          getMethod("/backend/siteData/settlement", param).then(res => {
+              this.$message({
+                  message: '已完成结算',
+                  type: 'success'
+              })
+              scope.loadList()
+          });
+        })
+            
+           
         },
         billOrd(billId){
             let scope = this
