@@ -44,6 +44,12 @@
       <el-form-item  label="店铺优势">
         <el-input v-model="dataForm.forte" disabled="true" />
       </el-form-item>
+	  <el-form-item v-if="dataForm.provinceRole!='5'&&dataForm.provinceRole!='6'" label="自然人/公司" prop="type">
+	    <el-select v-model="dataForm.type" placeholder="请选择">
+	      <el-option :value="1" label="个人"></el-option>
+	      <el-option :value="2" label="公司"></el-option>
+	    </el-select>
+	  </el-form-item>
       <el-form-item label="身份证正面照片" required>
         <el-input v-show="false" v-model="dataForm.personFrontImg" disabled="true" />
         <el-upload disabled="true" :action="uploadFrontUrl" list-type="picture-card" :on-preview="handleLicensePreview"
@@ -184,6 +190,7 @@
         imageUrl: '',
         fileList: [],
         dataForm: {
+			type:'',
           provinceName: '',
           provinceNo: '',
           owerName: '',
