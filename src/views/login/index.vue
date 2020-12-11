@@ -6,13 +6,13 @@
         <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on"
           label-position="left">
 
-          <lang-select style="margin-right:-300px;margin-top: 50px;" class="set-language" />
+          <!-- <lang-select style="margin-right:-300px;margin-top: 50px;" class="set-language" /> -->
 
           <el-form-item prop="username">
             <!-- <span class="svg-container">
             <svg-icon icon-class="user" />
           </span> -->
-            <el-input style="margin-top: 10px;" ref="username" v-model="loginForm.username" :placeholder="$t('login.username')"
+            <el-input style="margin-top: 80px;" ref="username" v-model="loginForm.username" :placeholder="$t('login.username')"
               name="username" type="text" tabindex="1" autocomplete="on" />
           </el-form-item>
 
@@ -24,9 +24,10 @@
               <el-input :key="passwordType" ref="password" v-model="loginForm.password" :type="passwordType"
                 :placeholder="$t('login.password')" name="password" tabindex="2" autocomplete="on" @keyup.native="checkCapslock"
                 @blur="capsTooltip = false" @keyup.enter.native="handleLogin" />
-              <span class="show-pwd" @click="showPwd">
-                <svg-icon style="position: absolute;margin-top: 40px;right: 55px;" :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-              </span>
+                <div style="position: absolute;margin-top: -40px;right: 55px;"><span @click="showPwd">
+                <svg-icon  :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+              </span></div>
+
             </el-form-item>
           </el-tooltip>
 
@@ -254,7 +255,7 @@
     min-width: 1000px;
     zoom: 1;
     background-color: #fff;
-    background: url(../../icons/login.png) no-repeat;
+    background: url(https://bucket.coopoo.cn/images/platform.png) no-repeat;
     background-size: cover;
     -webkit-background-size: cover;
     -o-background-size: cover;
