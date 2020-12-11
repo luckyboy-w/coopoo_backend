@@ -32,14 +32,19 @@
             ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="内容">
+     <!-- <el-form-item label="内容">
         <qEditor
           :content="dataForm.infoContent"
           ref="refEditor"
           moduleName="detailContent"
           @changeContent="changeContent">
         </qEditor>
-      </el-form-item>
+      </el-form-item> -->
+
+      <div style="border: 1px solid red;">
+      	 <editor1 :onchange="onchange"></editor1>
+      </div>
+
       <el-form-item>
         <el-button type="primary" @click="saveObject">添加</el-button>
       </el-form-item>
@@ -51,10 +56,10 @@
 import { getMethod, postMethod, getUploadUrl } from "@/api/request";
 import { isInteger } from "@/utils/validate"
 import qEditor from "@/components/RichText/quill-editor"
-
+import editor1 from '@/components/RichText/wangeditor';
 export default {
   computed: {},
-  components: { qEditor },
+  components: { qEditor , editor1 },
   mounted() {
     this.loadData()
   },
@@ -71,19 +76,24 @@ export default {
         infoType: "",
         infoContent: ""
       },
+      one: '',
       dataInfo:{
-          
+
       }
     };
   },
   methods: {
+    onchange(val){
+        this.dataForm.infoContent = val
+    },
     switchData(){
-      this.$refs.refEditor.richText = this.dataInfo[this.dataForm.infoType]
-      this.dataForm.infoContent = this.dataInfo[this.dataForm.infoType]
+      // this.$refs.refEditor.richText = this.dataInfo[this.dataForm.infoType]
+      // this.dataForm.infoContent = this.dataInfo[this.dataForm.infoType]
     },
-    changeContent(val){
-      this.dataForm.infoContent = val
-    },
+    // changeContent(val){
+    //   console.log(val)
+    //   this.dataForm.infoContent = val
+    // },
     loadData(){
       let param = {
         typeName:'bussCfg'
