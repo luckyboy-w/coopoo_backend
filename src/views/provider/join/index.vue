@@ -82,6 +82,7 @@
                   提交审核
                 </el-button>
                 <el-button
+                v-if="scope.row.provinceRole!='6'"
                   v-show="scope.row.verifyStatus == 10 || scope.row.verifyStatus == 21"
                   type="text"
                   size="small"

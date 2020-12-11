@@ -50,7 +50,11 @@
 	      <el-option :value="2" label="公司"></el-option>
 	    </el-select>
 	  </el-form-item>
-      <el-form-item label="身份证正面照片" required>
+   
+      <el-form-item  v-if="dataForm.provinceRole=='6'" label="身份证正面照片" prop="personFrontImg">
+            <img style="width: 150px;height: 150px;" :src="this.dataForm.personFrontImg" alt>
+            </el-form-item>
+      <el-form-item  v-if="dataForm.provinceRole!='6'" label="身份证正面照片" required>
         <el-input v-show="false" v-model="dataForm.personFrontImg" disabled="true" />
         <el-upload disabled="true" :action="uploadFrontUrl" list-type="picture-card" :on-preview="handleLicensePreview"
           :before-upload="beforeFrontUpload" :on-success="handleFrontSuccess" :class="{hide:hideFrontUpload}"
@@ -61,7 +65,10 @@
           <img width="100%" :src="imageUrl" alt>
         </el-dialog>
       </el-form-item>
-      <el-form-item label="身份证反面照片" required>
+      <el-form-item v-if="dataForm.provinceRole=='6'" label="身份证反面照片" prop="personSideImg">
+        <img  style="width: 150px;height: 150px;" width="100%" :src="this.dataForm.personSideImg" alt>
+        </el-form-item>
+      <el-form-item  v-if="dataForm.provinceRole!='6'" label="身份证反面照片" required>
         <el-input v-show="false" v-model="dataForm.personSideImg" />
         <el-upload disabled="true" :action="uploadSideUrl" list-type="picture-card" :on-preview="handleLicensePreview"
           :before-upload="beforeSideUpload" :on-success="handleSideSuccess" :class="{hide:hideSideUpload}" :file-list="uploadSideList"

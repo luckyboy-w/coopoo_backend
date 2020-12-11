@@ -48,8 +48,10 @@
           <el-option :value="2" label="公司"></el-option>
         </el-select>
       </el-form-item>
-
-      <el-form-item label="身份证正面照片" prop="personFrontImg">
+      <el-form-item  v-if="dataForm.provinceRole=='6'" label="身份证正面照片">
+      <img style="width: 150px;height: 150px;" :src="this.dataForm.personFrontImg" alt>
+      </el-form-item>
+      <el-form-item v-if="dataForm.provinceRole!='6'" label="身份证正面照片" prop="personFrontImg">
         <el-input v-show="false" v-model="dataForm.personFrontImg" />
         <el-upload :disabled="!viewSubmit" :action="uploadFrontUrl" list-type="picture-card" :on-preview="handleLicensePreview"
           :before-upload="beforeFrontUpload" :on-success="handleFrontSuccess" :class="{hide:hideFrontUpload}"
@@ -60,7 +62,10 @@
           <img width="100%" :src="imageUrl" alt>
         </el-dialog>
       </el-form-item>
-      <el-form-item label="身份证反面照片" prop="personSideImg">
+      <el-form-item v-if="dataForm.provinceRole=='6'" label="身份证反面照片">
+        <img  style="width: 150px;height: 150px;" width="100%" :src="this.dataForm.personSideImg" alt>
+        </el-form-item>
+      <el-form-item  v-if="dataForm.provinceRole!='6'" label="身份证反面照片" prop="personSideImg">
         <el-input v-show="false" v-model="dataForm.personSideImg" />
         <el-upload :disabled="!viewSubmit" :action="uploadSideUrl" list-type="picture-card" :on-preview="handleLicensePreview"
           :before-upload="beforeSideUpload" :on-success="handleSideSuccess" :class="{hide:hideSideUpload}" :file-list="uploadSideList"
@@ -460,6 +465,13 @@
           if (this.editData.E_) {
             this.E_ = this.editData.E_
           }
+		  if(this.editData.provinceRole=="6"){
+        this.dataForm.personFrontImg=this.editData.personFrontImg
+        this.dataForm.personSideImg=this.editData.personSideImg
+        console.log(this.uploadFrontList,'身份证正面')
+        console.log(this.uploadSideList,'身份证反面')
+		  }
+
           this.dataForm = this.editData
           this.switchLevel(this.editData.provinceRole)
         }
@@ -617,6 +629,7 @@
         const fileTypeVerify =
           file.type === 'image/jpeg' ||
           file.type === 'image/png' ||
+          file.type === 'image/jpg' ||
           file.type === 'application/pdf'
         const isLt2M = file.size / 1024 / 1024 < 5
 
@@ -669,6 +682,7 @@
         const fileTypeVerify =
           file.type === 'image/jpeg' ||
           file.type === 'image/png' ||
+          file.type === 'image/jpg' ||
           file.type === 'application/pdf'
         const isLt2M = file.size / 1024 / 1024 < 5
 
@@ -725,6 +739,7 @@
         const fileTypeVerify =
           file.type === 'image/jpeg' ||
           file.type === 'image/png' ||
+          file.type === 'image/jpg' ||
           file.type === 'application/pdf'
         const isLt2M = file.size / 1024 / 1024 < 5
 
@@ -770,6 +785,7 @@
         const fileTypeVerify =
           file.type === 'image/jpeg' ||
           file.type === 'image/png' ||
+          file.type === 'image/jpg' ||
           file.type === 'application/pdf'
         const isLt2M = file.size / 1024 / 1024 < 5
 
@@ -835,6 +851,7 @@
         const fileTypeVerify =
           file.type === 'image/jpeg' ||
           file.type === 'image/png' ||
+          file.type === 'image/jpg' ||
           file.type === 'application/pdf'
         const isLt2M = file.size / 1024 / 1024 < 5
 
