@@ -148,7 +148,7 @@
       loadServiceList() {
         let scope = this
         let searchProvider = {
-          providerRole: '5',
+          provinceRole: '5',
           verifyStatus: '30',
           pageSize: 1000,
           pageNum: 0
