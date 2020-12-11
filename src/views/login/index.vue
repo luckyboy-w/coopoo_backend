@@ -6,18 +6,13 @@
         <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on"
           label-position="left">
 
-          <!-- <div class="title-container">
-          <h3 class="title">
-            {{ $t('login.title') }}
-          </h3>
-          <lang-select class="set-language" />
-        </div> -->
+          <lang-select style="margin-right:-300px;margin-top: 50px;" class="set-language" />
 
           <el-form-item prop="username">
             <!-- <span class="svg-container">
             <svg-icon icon-class="user" />
           </span> -->
-            <el-input style="margin-top: 80px;" ref="username" v-model="loginForm.username" :placeholder="$t('login.username')"
+            <el-input style="margin-top: 10px;" ref="username" v-model="loginForm.username" :placeholder="$t('login.username')"
               name="username" type="text" tabindex="1" autocomplete="on" />
           </el-form-item>
 
