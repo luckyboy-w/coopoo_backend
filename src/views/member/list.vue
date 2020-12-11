@@ -78,7 +78,7 @@
                 <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '3' ">C类服务商</span>
                 <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '4' ">D类服务商</span>
                 <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '5' ">E类服务商</span>
-                <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '6' ">EF类服务商</span>
+                <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '6' ">EA类服务商</span>
               </template>
             </el-table-column>
             <el-table-column prop="isSendGift" label="赠品" width="150px">
