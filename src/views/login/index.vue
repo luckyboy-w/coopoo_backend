@@ -270,8 +270,8 @@
     background-size: cover;
     left: 50%;
     top: 50%;
-    margin-left: -300px;
-    margin-top: -300px;
+    margin-left: -412px;
+    margin-top: -188px;
   }
 
   .loginbg {
