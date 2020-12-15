@@ -191,7 +191,7 @@ export default {
         }
       }
 
-      let needInt = [];
+      let needInt = ["beanCost"];
       for (let i = 0; i < needInt.length; i++) {
         if (!isInteger(this.dataForm[needInt[i]])) {
           this.$message({
