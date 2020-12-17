@@ -177,6 +177,7 @@ export default {
 			this.loadList();
 		},
 		currentPage(pageNum) {
+      this.searchParam.typeName='',
 			this.searchParam.pageNum = pageNum;
 			this.loadList();
 		},
