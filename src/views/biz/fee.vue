@@ -58,7 +58,7 @@
           <el-col :span="3">
             <el-input
               v-model="searchParams.providerName"
-              style="width:80px"
+              style="width:120px"
               placeholder=""
             />
           </el-col>
@@ -71,7 +71,7 @@
           <el-col :span="3">
             <el-input
               v-model="searchParams.provPhone"
-              style="width:80px"
+              style="width:120px"
               placeholder=""
             />
           </el-col>
@@ -180,7 +180,7 @@
           style="line-height:40px;padding:10px 0px "
         >
           <el-col
-            :span="1"
+            :span="1.5"
             style="font-size:14px;"
           >
             申请单号
@@ -188,12 +188,12 @@
           <el-col :span="2">
             <el-input
               v-model="exportApplyFrm.cashNo"
-              style="width:80px"
+              style="width:120px"
               placeholder=""
             />
           </el-col>
           <el-col
-            :span="1"
+            :span="1.5"
             style="font-size:14px;"
           >
             服务商姓名
@@ -201,12 +201,12 @@
           <el-col :span="2">
             <el-input
               v-model="exportApplyFrm.providerName"
-              style="width:80px"
+              style="width:120px"
               placeholder=""
             />
           </el-col>
           <el-col
-            :span="1"
+            :span="1.5"
             style="font-size:14px;"
           >
             服务商类型
@@ -232,12 +232,12 @@
           <el-col :span="2">
             <el-input
               v-model="exportApplyFrm.phoneNo"
-              style="width:80px"
+              style="width:120px"
               placeholder=""
             />
           </el-col>
           <el-col
-            :span="1"
+            :span="1.5"
             style="font-size:14px;"
           >
             申请时间
@@ -245,6 +245,7 @@
           <el-col :span="5">
             <el-date-picker
               v-model="exportApplyFrm.applyStartTime"
+              value-format="yyyy-MM-dd"
               type="date"
               width="120px"
               placeholder="选择开始日期"
@@ -252,6 +253,7 @@
             -
             <el-date-picker
               v-model="exportApplyFrm.applyEndTime"
+              value-format="yyyy-MM-dd"
               type="date"
               width="120px"
               placeholder="选择结束日期"
@@ -498,7 +500,7 @@
           style="line-height:40px;padding:10px 0px "
         >
           <el-col
-            :span="1"
+            :span="1.5"
             style="font-size:14px;"
           >
             申请单号
@@ -506,7 +508,7 @@
           <el-col :span="2">
             <el-input
               v-model="exportApplyFrm_.cashNo"
-              style="width:80px"
+              style="width:120px"
               placeholder=""
             />
           </el-col>
@@ -519,7 +521,7 @@
           <el-col :span="2">
             <el-input
               v-model="exportApplyFrm_.provPhone"
-              style="width:80px"
+              style="width:120px"
               placeholder=""
             />
           </el-col>
@@ -532,7 +534,7 @@
           <el-col :span="2">
             <el-input
               v-model="exportApplyFrm_.provPhone"
-              style="width:80px"
+              style="width:120px"
               placeholder=""
             />
           </el-col>
@@ -563,6 +565,7 @@
           <el-col :span="5">
             <el-date-picker
               v-model="exportApplyFrm_.applyStartTime"
+              value-format="yyyy-MM-dd"
               type="date"
               width="120px"
               placeholder="选择开始日期"
@@ -570,6 +573,7 @@
             -
             <el-date-picker
               v-model="exportApplyFrm_.applyEndTime"
+              value-format="yyyy-MM-dd"
               type="date"
               width="120px"
               placeholder="选择结束日期"

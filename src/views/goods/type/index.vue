@@ -101,7 +101,7 @@ export default {
 			searchParam: {
 				typeName: "",
 				pageSize: 10,
-				pageNum: 0
+				pageNum: 1
 			},
 			tableData: {
 				list: [],

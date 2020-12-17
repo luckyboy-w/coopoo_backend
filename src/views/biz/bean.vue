@@ -247,6 +247,7 @@
             <el-col :span="5">
               <el-date-picker
                 v-model="searchParams_.startCreateTime"
+                value-format="yyyy-MM-dd"
                 type="date"
                 width="120px"
                 placeholder="选择开始日期"
@@ -254,6 +255,7 @@
               -
               <el-date-picker
                 v-model="searchParams_.endCreateTime"
+                value-format="yyyy-MM-dd"
                 type="date"
                 width="120px"
                 placeholder="选择结束日期"
