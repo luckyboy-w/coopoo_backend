@@ -8,14 +8,14 @@
 							评价状态
 						</td>
                         <td>
-                            <el-select v-model="searchParam.riskOrder" placeholder="请选择">
+                            <el-select v-model="searchParam.replyMsgStatus" placeholder="请选择">
                                 <el-option value="" label="全部"></el-option>
                                 <el-option value="1" label="未回复评价"></el-option>
                                 <el-option value="2" label="已回复评价"></el-option>
                             </el-select>
 						</td>
 						<td>
-							<el-button plain type="primary"  icon="el-icon-document-add">搜索</el-button>
+							<el-button plain type="primary" @click="search()"  icon="el-icon-document-add">搜索</el-button>
 						</td>
 					</tr>
 				</table>
