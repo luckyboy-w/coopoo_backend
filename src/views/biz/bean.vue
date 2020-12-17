@@ -64,7 +64,7 @@
             <el-col :span="3">
               <el-input
                 v-model="searchParams.memName"
-                style="width:80px"
+                style="width:120px"
                 placeholder=""
               />
             </el-col>
@@ -77,12 +77,12 @@
             <el-col :span="3">
               <el-input
                 v-model="searchParams.phoneNo"
-                style="width:80px"
+                style="width:120px"
                 placeholder=""
               />
             </el-col>
             <el-col
-              :span="1"
+              :span="1.5"
               style="font-size:14px;"
             >
               类型
@@ -239,17 +239,17 @@
               </el-select>
             </el-col>
             <el-col
-              :span="1"
+              :span="1.5"
               style="font-size:14px;"
             >
               入账时间
             </el-col>
-            <el-col :span="5">
+            <el-col :span="6">
               <el-date-picker
                 v-model="searchParams_.startCreateTime"
                 value-format="yyyy-MM-dd"
                 type="date"
-                width="120px"
+                width="80px"
                 placeholder="选择开始日期"
               />
               -
@@ -257,12 +257,12 @@
                 v-model="searchParams_.endCreateTime"
                 value-format="yyyy-MM-dd"
                 type="date"
-                width="120px"
+                width="80px"
                 placeholder="选择结束日期"
               />
             </el-col>
             <el-col
-              :span="9"
+              :span="4"
               style="padding-left:10px"
             >
               <el-button
