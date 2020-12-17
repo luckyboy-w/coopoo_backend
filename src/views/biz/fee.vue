@@ -326,7 +326,7 @@
             min-width="24%"
           >
             <template slot-scope="scope">
-              {{ scope.row.createTime | _formateDate }}
+              {{ scope.row.createTime}}
             </template>
           </el-table-column>
           <el-table-column
@@ -442,7 +442,7 @@
             min-width="24%"
           >
             <template slot-scope="scope">
-              {{ scope.row.createTime | _formateDate }}
+              {{ scope.row.createTime}}
             </template>
           </el-table-column>
           <el-table-column
@@ -647,7 +647,7 @@
             min-width="24%"
           >
             <template slot-scope="scope">
-              {{ scope.row.accountTime | _formateDate }}
+              {{ scope.row.accountTime}}
             </template>
           </el-table-column>
           <el-table-column
@@ -757,7 +757,7 @@
             min-width="24%"
           >
             <template slot-scope="scope">
-              {{ scope.row.createTime | _formateDate }}
+              {{ scope.row.createTime }}
             </template>
           </el-table-column>
           <el-table-column
@@ -820,7 +820,7 @@
           <el-col :span="3">
             <el-input
               v-model="searchParams_.memName"
-              style="width:80px"
+              style="width:120px"
               placeholder=""
             />
           </el-col>
@@ -833,7 +833,7 @@
           <el-col :span="3">
             <el-input
               v-model="searchParams_.phoneNo"
-              style="width:80px"
+              style="width:120px"
               placeholder=""
             />
           </el-col>
@@ -893,7 +893,7 @@
             min-width="24%"
           >
             <template slot-scope="scope">
-              {{ scope.row.tradeTime | _formateDate }}
+              {{ scope.row.tradeTime }}
             </template>
           </el-table-column>
           <el-table-column
