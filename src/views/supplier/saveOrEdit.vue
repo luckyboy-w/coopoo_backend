@@ -1,6 +1,9 @@
 <template>
 	<div class="update-form-panel">
 		<el-form ref="dataForm" :model="dataForm" :rules="rules"  label-width="120px">
+      <el-form-item label="供应商编号" prop="supplierNo">
+      	<el-input v-model="dataForm.supplierNo" :disabled="disabledSupplierNo"></el-input>
+      </el-form-item>
 			<el-form-item label="供应商名称" prop="supplierName">
 				<el-input v-model="dataForm.supplierName"></el-input>
 			</el-form-item>
@@ -19,6 +22,12 @@
 			<el-form-item label="联系电话" prop="phoneNo">
 				<el-input v-model="dataForm.phoneNo"></el-input>
 			</el-form-item>
+      <el-form-item label="税务代码" prop="taxNo">
+      	<el-input v-model="dataForm.taxNo"></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+      	<el-input v-model="dataForm.email"></el-input>
+      </el-form-item>
 			<el-form-item label="环信配置" style="width:1200px">
 				<el-row :span="24" style="" >
 					<el-col :span="2" style="padding-left:5px">客服ID:</el-col>
@@ -217,6 +226,7 @@ export default {
 				this.dataForm = this.editData;
 				this.initDefaultImage();
 				this.disabledLoginNo = true
+        this.disabledSupplierNo = true
 			}
 		});
 	},
@@ -301,6 +311,7 @@ export default {
         label: '40%'
       }],
 			disabledLoginNo:false,
+      disabledSupplierNo:false,
 			goodTypeList: [],
 			goodBrandList: [],
 			provinceList: [],
@@ -322,10 +333,13 @@ export default {
 			fileList: [],
 			dataForm: {
 				supplierName: "",
+        supplierNo: "",
 				loginNo: "",
 				linkPerson: "",
 				mobileNo: "",
 				phoneNo: "",
+        taxNo:'',
+        email:'',
 				address: "",
 				bankName: "",
 				bankCardNo: "",
@@ -347,6 +361,9 @@ export default {
         supplierName: [
           { required: true, message: '请输入供应商名称', trigger: 'blur' },
         ],
+        supplierNo: [
+          { required: true, message: '请输入供应商编号', trigger: 'blur' },
+        ],
         loginNo: [
           { required: true, message: '请输入登陆账号', trigger: 'blur' },
         ],
@@ -363,6 +380,12 @@ export default {
         phoneNo: [
           { required: true, message: "请输入联系电话", trigger: "blur"},
           { validator: isMobileNumber, trigger: "blur" }
+        ],
+        taxNo: [
+          { required: true, message: '请输入税务代码', trigger: 'blur' },
+        ],
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
         ],
         goodType: [
           { required: true, message: '请选择主营分类', trigger: 'change' },

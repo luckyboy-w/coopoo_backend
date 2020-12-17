@@ -1,6 +1,6 @@
 <template>
   <div>
-    
+
     <el-row :span="24" style="padding-top:25px" v-if="showSiteData">
               <el-col :span="8">
                 <div style="padding: 0px 10px;">
@@ -267,7 +267,7 @@
     },
     filters: {
       fmtSiteData(row){
-        
+
         if(row.dataType.indexOf('元') != -1){
           return row.siteData
         }
@@ -301,7 +301,7 @@
         }else{
           this.initData()
         }
-        
+
     },
     methods: {
       exportPlat(){
@@ -352,10 +352,6 @@
           this.$router.push({ path:'/order/list',query: { dt:'103'}});
         }else if(row.dataType == '今日总收入(元)'){
           this.$router.push({ path:'/order/list',query: { dt:'104'}});
-        }else if(row.dataType == '昨日总访客数(人)'){
-          this.$router.push({ path:'/invite/list',query: { dt:'105'}});
-        }else if(row.dataType == '今日总访客数(人)'){
-          this.$router.push({ path:'/invite/list',query: { dt:'106'}});
         }else if(row.dataType == '昨日订单数(笔)'){
           this.$router.push({ path:'/order/list',query: { dt:'101'}});
         }else if(row.dataType == '今日订单数(笔)'){
@@ -365,7 +361,7 @@
         }else if(row.dataType == '超期未付款订单(笔)'){
           this.$router.push({ path:'/order/list',query: { dt:'110'}});
         }
-        
+
         // this.showSiteData = false
         // this.showPlatList = true
         // this.initPlatList()
@@ -376,13 +372,13 @@
         }else if(row.dataType == '今日新增会员(人)'){
           this.$router.push({ path:'/member/list',query: { dt:'20'}});
         }else if(row.dataType == '昨日新增服务商(个)'){
-          this.$router.push({ path:'/provider/add/list',query: { dt:'10'}});
+          this.$router.push({ path:'/provider/list',query: { dt:'10'}});
         }else if(row.dataType == '今日新增服务商(个)'){
-          this.$router.push({ path:'/provider/add/list',query: { dt:'20'}});
+          this.$router.push({ path:'/provider/list',query: { dt:'20'}});
         }else if(row.dataType == '昨日新增供应商(个)'){
-          this.$router.push({ path:'/supplier/add/list',query: { dt:'10'}});
+          this.$router.push({ path:'/supplier/index',query: { dt:'10'}});
         }else if(row.dataType == '今日新增供应商(个)'){
-          this.$router.push({ path:'/supplier/add/list',query: { dt:'20'}});
+          this.$router.push({ path:'/supplier/index',query: { dt:'20'}});
         }else if(row.dataType == '昨日新增靠谱豆(个)'){
           this.$router.push({ path:'/biz/bean',query: { dt:'10'}});
         }else if(row.dataType == '今日新增靠谱豆(个)'){
@@ -403,11 +399,11 @@
         }else if(row.dataType == '本月新增会员数(人)'){
           this.$router.push({ path:'/member/list',query: { dt:'30'}});
         }else if(row.dataType == '本月新增服务商(个)'){
-          this.$router.push({ path:'/provider/add/list',query: { dt:'30'}});
+          this.$router.push({ path:'/provider/list',query: { dt:'30'}});
         }else if(row.dataType == '本月退货数(笔)'){
           this.$router.push({ path:'/order/rejectList',query: { dt:'108'}});
         }else if(row.dataType == '本月新增供应商(个)'){
-          this.$router.push({ path:'/supplier/add/list',query: { dt:'30'}});
+          this.$router.push({ path:'/supplier/index',query: { dt:'30'}});
         }else if(row.dataType == '本月超期未付款(元)'){
           this.$router.push({ path:'/order/list',query: { dt:'210'}});
         }
@@ -447,7 +443,7 @@
             scope.otherData = resData
         });
       },
-      
+
       initOtherList(){
         let scope = this;
 
