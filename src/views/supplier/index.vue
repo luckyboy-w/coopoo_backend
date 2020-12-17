@@ -12,7 +12,7 @@
 						<td>
 							<el-input v-model="searchParam.linkPerson" width="180px"></el-input>
 						</td>
-						<td>状态:</td>
+						<!-- <td>状态:</td>
 						<td>
                 <el-select v-model="searchParam.enable" placeholder="请选择">
                 <el-option
@@ -24,7 +24,7 @@
                 ></el-option>
               </el-select>
 						</td>
-
+ -->
 						<td>
 							<el-button icon="el-icon-search" @click="search()">搜索</el-button>
 							<el-button plain type="primary" @click="addOrEdit('add')" icon="el-icon-document-add">新建</el-button>
