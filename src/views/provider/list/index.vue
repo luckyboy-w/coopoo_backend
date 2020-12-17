@@ -15,13 +15,12 @@
             <td>服务商等级:</td>
             <td>
               <el-select v-model="searchParam.provinceRole" placeholder="请选择分类">
-                <el-option
-                  v-for="item in provinceRoleList "
-                  :key="item.id"
-                  :value-key="item.providerLevel"
-                  :label="item.providerLevel"
-                  :value="item.id"
-                />
+                <el-option label="A类" :value="1" />
+                <el-option label="B类" :value="2" />
+                <el-option label="C类" :value="3" />
+                <el-option label="D类" :value="4" />
+                <el-option label="E类" :value="5" />
+                <el-option label="EA类" :value="6" />
               </el-select>
             </td>
             <td>状态:</td>
