@@ -69,13 +69,21 @@
           />
         </el-col> -->
         <el-col
-          :span="2"
+          :span="4"
           style="padding-left:10px"
         >
+
           <el-button type="primary">
             搜索
           </el-button>
+          <el-button
+            icon="el-icon-download"
+            @click="exportData()"
+          >
+            导出
+          </el-button>
         </el-col>
+
       </el-row>
       <el-table
         ref="noBillData"
@@ -240,6 +248,18 @@ import billDetail from './billDtl'
         this.loadList();
     },
     methods: {
+      exportData() {
+        let param={
+          billType:this.searchParam.billType,
+          billNo:this.searchParam.billNo
+             }
+             console.log(param,'param')
+        let exportParam = [];
+        for (let key in param) {
+          exportParam.push(key + "=" + param[key]);
+        }
+        window.open(process.env.VUE_APP_BASE_API + "/backend/orderBill/export?" + exportParam.join("&"));
+      },
         findBillDtl(row){
             let scope = this
             let param = {
