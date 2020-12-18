@@ -783,6 +783,8 @@
           stockNum: ''
         },
         searchParam: {
+          status:'',
+          tenantId:'',
           isRisk: 0,
           orderNo: '',
           recUname: '',
@@ -823,9 +825,15 @@
         this.dzStep = false
       },
       exportData() {
+        let param={
+               orderNo:this.searchParam.orderNo,
+               recUname:this.searchParam.recUname,
+               status:this.searchParam.status,
+               tenantId:this.searchParam.tenantId
+             }
         let exportParam = [];
-        for (let key in this.searchParam) {
-          exportParam.push(key + "=" + this.searchParam[key]);
+        for (let key in this.param) {
+          exportParam.push(key + "=" + this.param[key]);
         }
         window.open(process.env.VUE_APP_BASE_API + "/backend/order/export?" + exportParam.join("&"));
       },
@@ -1095,6 +1103,8 @@
         this.loadList()
       },
       search() {
+        this.searchParam.pageSize = 10
+        this.searchParam.pageNum = 0
         this.searchParam.dataType = ''
         this.loadList()
       },
