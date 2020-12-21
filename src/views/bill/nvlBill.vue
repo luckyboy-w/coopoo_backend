@@ -200,8 +200,9 @@
         }
         getMethod("/backend/orderBill/findBillDtl", param).then(res => {
           scope.showList = false
-
           scope.detailList = res.data.list
+          scope.detailList.tenantId = row.tenantId
+          console.log(scope.detailList.tenantId,'')
         });
       },
       currentPage(pageNum) {

@@ -26,7 +26,10 @@
         <el-button @click="search()" type="primary">
           搜索
         </el-button>
-        <el-button @click="exportData()" type="primary">
+        <el-button v-if="tenantId==''" @click="exportData()" type="primary">
+          导出Excel
+        </el-button>
+        <el-button v-if="tenantId!=''" @click="exportData_()" type="primary">
           导出Excel
         </el-button>
         <el-button
@@ -159,6 +162,7 @@ import { formatDate } from "@/api/tools.js"
       return {
 		  billType:'',
 		  billMem:'',
+      tenantId:'',
         tabIndex:0,
         //10:未结算;20:结算中;30:已结算
         searchParam:{
@@ -181,12 +185,16 @@ import { formatDate } from "@/api/tools.js"
       if(this.detailList.billNo){
         this.searchParam.billNo=this.detailList.billNo
       }
+      if(this.detailList.tenantId){
+        this.tenantId=this.detailList.tenantId
+      }
+      console.log(this.tenantId,'tenan')
       if(this.detailList.billType=="1"){
-       this.billMem="可结算明细"
+       this.billMem="可结算"
       }else if(this.detailList.billType=="2"){
-       this.billMem="已结算明细"
+       this.billMem="已结算"
       }else{
-        this.billMem="未结算明细"
+        this.billMem="未结算"
       }
         this.dataList = this.detailList
 
@@ -215,6 +223,20 @@ import { formatDate } from "@/api/tools.js"
 			}
 			window.open( process.env.VUE_APP_BASE_API+"/backend/orderBill/exportDtl?"+exportParam.join("&"));
 		},
+    exportData_(){
+      let param={
+        startTime:this.searchParam.startTime,
+        endTime:this.searchParam.endTime,
+        billMem:this.billMem,
+        tenantId:this.tenantId
+           }
+           console.log(param,'param')
+    	let exportParam = [];
+    	for(let key in param){
+    		exportParam.push(key+"="+param[key]);
+    	}
+    	window.open( process.env.VUE_APP_BASE_API+"/backend/orderBill/exportWaitingDtl?"+exportParam.join("&"));
+    },
         backToList(){
             this.$emit("backToList");
         }
