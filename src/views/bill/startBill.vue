@@ -28,7 +28,7 @@
             placeholder="请输入..."
           />
         </el-col> -->
-       <!-- <el-col
+       <el-col
           :span="1.5"
           style="padding-left:10px"
         >
@@ -37,6 +37,7 @@
         <el-col :span="6">
           <el-date-picker
             v-model="searchParam.startTime"
+            value-format="yyyy-MM-dd"
             type="date"
             style="width:140px"
             placeholder="开始日期"
@@ -44,6 +45,7 @@
           至
           <el-date-picker
             v-model="searchParam.endTime"
+            value-format="yyyy-MM-dd"
             type="date"
             style="width:140px"
             placeholder="结束日期"
@@ -67,7 +69,7 @@
             style="width:80px"
             placeholder=""
           />
-        </el-col> -->
+        </el-col>
         <el-col
           :span="4"
           style="padding-left:10px"
@@ -220,6 +222,8 @@ import billDetail from './billDtl'
         detailList:[],
         //10:未结算;20:结算中;30:已结算
         searchParam:{
+          startTime:'',
+          endTime:'',
             billType:'',
             billNo:"",
             orderNo:"",
@@ -240,12 +244,15 @@ import billDetail from './billDtl'
 		exportData() {
 		  let param={
         billType:this.searchParam.billType,
-		    billNo:this.searchParam.billNo
+		    billNo:this.searchParam.billNo,
+        startTime:this.searchParam.startTime,
+        endTime:this.searchParam.endTime
 		       }
 		  let exportParam = [];
 		  for (let key in param) {
 		    exportParam.push(key + "=" + param[key]);
 		  }
+      console.log(exportParam,'传的参')
 		  window.open(process.env.VUE_APP_BASE_API + "/backend/orderBill/export?" + exportParam.join("&"));
 		},
       search() {
@@ -270,6 +277,8 @@ import billDetail from './billDtl'
             getMethod("/backend/orderBill/findBillSettledDtl", param).then(res => {
                 scope.showList = false
                 scope.detailList = res.data.list
+                scope.detailList.billNo=row.settleNo
+                scope.detailList.billType=this.searchParam.billType
             });
         },
         batchBill(){

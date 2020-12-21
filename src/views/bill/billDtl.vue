@@ -1,30 +1,32 @@
 <template>
   <div style="width:100%">
     <el-row style="line-height:40px;padding:10px 0px ">
-      <el-col :span="2">
+      <el-col :span="1.5">
         入账时间
       </el-col>
-      <el-col :span="12">
+      <el-col :span="8">
         <el-date-picker
           v-model="searchParam.startTime"
+          value-format="yyyy-MM-dd"
           type="date"
           placeholder="开始日期"
         />
         至
         <el-date-picker
           v-model="searchParam.endTime"
+          value-format="yyyy-MM-dd"
           type="date"
           placeholder="结束日期"
         />
       </el-col>
       <el-col
-        :span="10"
+        :span="6"
         style="padding-left:10px"
       >
-        <el-button type="primary">
+        <el-button @click="search()" type="primary">
           搜索
         </el-button>
-        <el-button type="info">
+        <el-button @click="exportData()" type="primary">
           导出Excel
         </el-button>
         <el-button
@@ -49,7 +51,7 @@
       <el-table-column
       v-if="this.No=='1'"
         prop="orderNo"
-        label="结算单号"
+        label="订单号"
         min-width="20%"
       />
       <el-table-column
@@ -58,16 +60,16 @@
         label="订单号"
         min-width="18%"
       />
-<!--      <el-table-column
+     <el-table-column
       v-if="this.No=='1'"
-        prop="test"
+        prop="billTime"
         label="结算时间"
         min-width="15%"
       >
         <template slot-scope="scope">
-          {{ scope.row.test | _formateDate }}
+          {{ scope.row.billTime | _formateDate }}
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column
       v-if="this.No!='1'"
         prop="createTime"
@@ -158,10 +160,11 @@ import { formatDate } from "@/api/tools.js"
         tabIndex:0,
         //10:未结算;20:结算中;30:已结算
         searchParam:{
-            billType:'10',
+            startTime:'',
+            endTime:'',
             billNo:"",
             orderNo:"",
-            pageSize:15,
+            pageSize:10,
             pageNum:1
         },
         No:'',
@@ -170,13 +173,39 @@ import { formatDate } from "@/api/tools.js"
       };
     },
     mounted() {
-      console.log(this.detailList)
       if(this.detailList.No){
         this.No=this.detailList.No
       }
+      if(this.detailList.billNo){
+        this.searchParam.billNo=this.detailList.billNo
+      }
+      console.log(this.searchParam.billType,'billtype')
         this.dataList = this.detailList
+
     },
     methods: {
+      search() {
+        let scope = this
+        getMethod("/backend/orderBill/findBillSettledDtl", this.searchParam).then(res => {
+          console.log(res,'返回成功的数据')
+            // showList = false
+            this.detailList = res.data.list
+        });
+      },
+
+		exportData(){
+      let param={
+        billNo:this.searchParam.billNo,
+        startTime:this.searchParam.startTime,
+        endTime:this.searchParam.endTime
+           }
+           console.log(param,'param')
+			let exportParam = [];
+			for(let key in param){
+				exportParam.push(key+"="+param[key]);
+			}
+			window.open( process.env.VUE_APP_BASE_API+"/backend/orderBill/exportDtl?"+exportParam.join("&"));
+		},
         backToList(){
             this.$emit("backToList");
         }

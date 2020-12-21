@@ -15,6 +15,29 @@
             placeholder="请输入..."
           />
         </el-col>
+        <el-col
+          :span="1.5"
+          style="padding-left:10px"
+        >
+          完成时间
+        </el-col>
+        <el-col :span="6">
+          <el-date-picker
+            v-model="searchParam.startTime"
+            value-format="yyyy-MM-dd"
+            type="date"
+            style="width:140px"
+            placeholder="开始日期"
+          />
+          至
+          <el-date-picker
+            v-model="searchParam.endTime"
+            value-format="yyyy-MM-dd"
+            type="date"
+            style="width:140px"
+            placeholder="结束日期"
+          />
+        </el-col>
        <!-- <el-col
           :span="1.5"
           style="font-size:14px;"
@@ -28,27 +51,7 @@
             placeholder="请输入..."
           />
         </el-col>
-        <el-col
-          :span="1.5"
-          style="padding-left:10px"
-        >
-          完成时间
-        </el-col>
-        <el-col :span="6">
-          <el-date-picker
-            v-model="searchParam.startTime"
-            type="date"
-            style="width:140px"
-            placeholder="开始日期"
-          />
-          至
-          <el-date-picker
-            v-model="searchParam.endTime"
-            type="date"
-            style="width:140px"
-            placeholder="结束日期"
-          />
-        </el-col>
+
         <el-col
           :span="1.5"
           style="padding-left:10px"
@@ -73,7 +76,7 @@
           style="padding-left:10px"
         >
 
-          <el-button type="primary">
+          <el-button @click="search()" type="primary">
             搜索
           </el-button>
           <el-button
@@ -221,10 +224,12 @@ import billDetail from './billDtl'
         tabIndex:0,
         //10:未结算;20:结算中;30:已结算
         searchParam:{
-            billType:'10',
+          startTime:'',
+          endTime:'',
+            billType:'',
             billNo:"",
             orderNo:"",
-            pageSize:15,
+            pageSize:10,
             pageNum:1
         },
         activeName: 'noBill',
@@ -244,14 +249,16 @@ import billDetail from './billDtl'
       };
     },
     mounted() {
-        this.searchParam.billType = "10"
+      this.searchParam.billType = "2"
         this.loadList();
     },
     methods: {
       exportData() {
         let param={
           billType:this.searchParam.billType,
-          billNo:this.searchParam.billNo
+          billNo:this.searchParam.billNo,
+          startTime:this.searchParam.startTime,
+          endTime:this.searchParam.endTime
              }
              console.log(param,'param')
         let exportParam = [];
@@ -259,6 +266,16 @@ import billDetail from './billDtl'
           exportParam.push(key + "=" + param[key]);
         }
         window.open(process.env.VUE_APP_BASE_API + "/backend/orderBill/export?" + exportParam.join("&"));
+      },
+      search() {
+        let that = this
+        this.searchParam.billType='2'
+        let param = this.searchParam
+        console.log(param,'参数')
+        postMethod("/backend/orderBill/findPlatApplyBill", param).then(res => {
+          that.noBillData = res.data // 返回的数据
+
+        })
       },
         findBillDtl(row){
             let scope = this
@@ -271,6 +288,8 @@ import billDetail from './billDtl'
                 scope.showList = false
                 scope.detailList = res.data.list
                 scope.detailList.No='1'
+                scope.detailList.billNo=row.settleNo
+                scope.detailList.billType=this.searchParam.billType
             });
         },
         backToList(){
@@ -308,17 +327,6 @@ import billDetail from './billDtl'
             postMethod("/bu/orderBill/billOrd", param).then(res => {
                 scope.loadList()
             });
-        },
-        handleClick(tab, event) {
-            this.tabIndex = tab.index
-            if(tab.index == 0 ){
-                this.searchParam.billType = "10"
-            }else if(tab.index == 1 ){
-                this.searchParam.billType = "20"
-            }else {
-                this.searchParam.billType = "30"
-            }
-            this.loadList();
         },
         currentPage(pageNum) {
             this.searchParam.pageNum = pageNum;
