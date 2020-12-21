@@ -8,6 +8,10 @@
 						<td>
 							<el-input v-model="searchParam.supplierName" width="180px"></el-input>
 						</td>
+            <td>供应商编号:</td>
+            <td>
+            	<el-input v-model="searchParam.supplierNo" width="180px"></el-input>
+            </td>
 						<td>联系人:</td>
 						<td>
 							<el-input v-model="searchParam.linkPerson" width="180px"></el-input>
@@ -47,10 +51,10 @@
 						<el-table-column type="selection" width="55"></el-table-column>
 
 						<el-table-column prop="supplierName" label="供应商名称" width="150px"></el-table-column>
+            <el-table-column prop="supplierNo" label="供应商编号" width="150px"></el-table-column>
 						<el-table-column prop="loginNo" label="登陆账号" width="150px"></el-table-column>
 						<el-table-column prop="linkPerson" label="联系人" width="150px"></el-table-column>
 						<el-table-column prop="mobileNo" label="手机号" width="150px"></el-table-column>
-						<el-table-column prop="supplierNo" label="供应商代码" width="150px"></el-table-column>
 						<el-table-column prop="enable" label="状态" width="150px">
 							<template slot-scope="scope">
 								<el-switch
@@ -148,6 +152,7 @@ export default {
 			showPagination: false,
 			editData: {},
 			searchParam: {
+        supplierNo:'',
 				supplierName: "",
 				linkPerson: "",
 				pageSize: 10,
