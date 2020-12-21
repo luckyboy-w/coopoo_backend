@@ -552,6 +552,7 @@
         dtlFriList: [],
         detList: [],
         det_List: [],
+        friName:'',
         billFeeText: '',
         allApplyFee: '',
         allPerFee: '',
@@ -715,6 +716,7 @@
          memName: that.searchParamsOne.memName,
          phoneNo: that.searchParamsOne.phoneNo,
          cashNo: this.cashNo,
+         friName:'提现中明细'
         }
         console.log(param, 'param')
         let exportParam = [];
@@ -756,6 +758,7 @@
          memName: that.searchParamsTwo.memName,
          phoneNo: that.searchParamsTwo.phoneNo,
          cashNo: this.cashNos,
+         friName:'已提现明细'
         }
         console.log(param, 'param')
         let exportParam = [];

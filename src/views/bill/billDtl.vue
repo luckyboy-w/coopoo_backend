@@ -157,6 +157,8 @@ import { formatDate } from "@/api/tools.js"
     },
     data() {
       return {
+		  billType:'',
+		  billMem:'',
         tabIndex:0,
         //10:未结算;20:结算中;30:已结算
         searchParam:{
@@ -179,7 +181,13 @@ import { formatDate } from "@/api/tools.js"
       if(this.detailList.billNo){
         this.searchParam.billNo=this.detailList.billNo
       }
-      console.log(this.searchParam.billType,'billtype')
+      if(this.detailList.billType=="1"){
+       this.billMem="可结算明细"
+      }else if(this.detailList.billType=="2"){
+       this.billMem="已结算明细"
+      }else{
+        this.billMem="未结算明细"
+      }
         this.dataList = this.detailList
 
     },
@@ -197,7 +205,8 @@ import { formatDate } from "@/api/tools.js"
       let param={
         billNo:this.searchParam.billNo,
         startTime:this.searchParam.startTime,
-        endTime:this.searchParam.endTime
+        endTime:this.searchParam.endTime,
+        billMem:this.billMem
            }
            console.log(param,'param')
 			let exportParam = [];
