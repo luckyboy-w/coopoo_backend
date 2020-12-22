@@ -311,10 +311,10 @@
             付费时间
           </el-col>
           <el-col :span="7">
-            <el-date-picker v-model="searchParamsOne.applyStartTime" value-format="yyyy-MM-dd" type="date" width="120px"
+            <el-date-picker v-model="searchParamsTwo.applyStartTime" value-format="yyyy-MM-dd" type="date" width="120px"
               placeholder="选择开始日期" />
             -
-            <el-date-picker v-model="searchParamsOne.applyEndTime" value-format="yyyy-MM-dd" type="date" width="120px"
+            <el-date-picker v-model="searchParamsTwo.applyEndTime" value-format="yyyy-MM-dd" type="date" width="120px"
               placeholder="选择结束日期" />
           </el-col>
           <el-col :span="9" style="padding-left:10px">
@@ -688,6 +688,12 @@
       提现中列表导出
       */
       exportApplyCash() {
+        if(this.exportApplyFrm.applyStartTime==null){
+          this.exportApplyFrm.applyStartTime=''
+          }
+          if(this.exportApplyFrm.applyEndTime==null){
+            this.exportApplyFrm.applyEndTime=''
+            }
         let param = {
           cashNo: this.exportApplyFrm.cashNo,
           providerName: this.exportApplyFrm.providerName,
@@ -710,6 +716,12 @@
       */
       exportApplyCashDtl() {
         let that = this
+        if(this.searchParamsOne.applyStartTime==null){
+          that.searchParamsOne.applyStartTime=''
+          }
+          if(this.searchParamsOne.applyEndTime==null){
+            that.searchParamsOne.applyEndTime=''
+            }
         let param = {
           applyStartTime:that.searchParamsOne.applyStartTime,
           applyEndTime:that.searchParamsOne.applyEndTime,
@@ -730,6 +742,12 @@
       已提现列表导出
       */
          exportApplyCash_() {
+           if(this.exportApplyFrm_.applyStartTime==null){
+             this.exportApplyFrm_.applyStartTime=''
+             }
+             if(this.exportApplyFrm_.applyEndTime==null){
+               this.exportApplyFrm_.applyEndTime=''
+               }
         let param = {
           cashNo: this.exportApplyFrm_.cashNo,
           providerName: this.exportApplyFrm_.providerName,
@@ -752,6 +770,12 @@
       */
       exportApplyCash_Dtl() {
         let that = this
+        if(this.searchParamsTwo.applyStartTime==null){
+          that.searchParamsTwo.applyStartTime=''
+          }
+          if(this.searchParamsTwo.applyEndTime==null){
+            that.searchParamsTwo.applyEndTime=''
+            }
         let param = {
           applyStartTime:that.searchParamsTwo.applyStartTime,
           applyEndTime:that.searchParamsTwo.applyEndTime,
@@ -829,11 +853,15 @@
         this.back = true
         this.def = false
         this.det = true
+        this.searchParamsOne.applyStartTime=''
+        this.searchParamsOne.applyEndTime=''
       },
       backToAllFeeTwo() {
         this.back_ = true
         this.det_ = false
         this.def_ = true
+        this.searchParamsTwo.applyStartTime=''
+        this.searchParamsTwo.applyEndTime=''
       },
       detail_(row) {
         this.back_ = false

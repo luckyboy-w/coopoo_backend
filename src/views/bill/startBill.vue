@@ -242,6 +242,12 @@ import billDetail from './billDtl'
     },
     methods: {
 		exportData() {
+      if(this.searchParam.startTime==null){
+        this.searchParam.startTime=''
+        }
+        if(this.searchParam.endTime==null){
+          this.searchParam.endTime=''
+          }
 		  let param={
         billType:this.searchParam.billType,
 		    billNo:this.searchParam.billNo,

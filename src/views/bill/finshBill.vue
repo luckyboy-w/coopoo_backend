@@ -10,7 +10,7 @@
         </el-col>
         <el-col :span="3">
           <el-input
-            v-model="searchParam.test"
+            v-model="searchParam.billNo"
             style="width:150px"
             placeholder="请输入..."
           />
@@ -254,6 +254,12 @@ import billDetail from './billDtl'
     },
     methods: {
       exportData() {
+        if(this.searchParam.startTime==null){
+          this.searchParam.startTime=''
+          }
+          if(this.searchParam.endTime==null){
+            this.searchParam.endTime=''
+            }
         let param={
           billType:this.searchParam.billType,
           billNo:this.searchParam.billNo,
