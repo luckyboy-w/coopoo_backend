@@ -282,7 +282,8 @@ import billDetail from './billDtl'
             let param = {
                 billNo:row.settleNo,
                 pageSize:10,
-                pageNum:1
+                pageNum:1,
+                billType:2
             }
             getMethod("/backend/orderBill/findBillSettledDtl", param).then(res => {
                 scope.showList = false

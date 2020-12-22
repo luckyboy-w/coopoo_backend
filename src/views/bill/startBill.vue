@@ -51,7 +51,7 @@
             placeholder="结束日期"
           />
         </el-col>
-        <el-col
+        <!-- <el-col
           :span="1.5"
           style="padding-left:10px"
         >
@@ -69,7 +69,7 @@
             style="width:80px"
             placeholder=""
           />
-        </el-col>
+        </el-col> -->
         <el-col
           :span="4"
           style="padding-left:10px"
@@ -272,7 +272,8 @@ import billDetail from './billDtl'
             let param = {
                 billNo:row.settleNo,
                 pageSize:10,
-                pageNum:1
+                pageNum:1,
+                billType:1
             }
             getMethod("/backend/orderBill/findBillSettledDtl", param).then(res => {
                 scope.showList = false

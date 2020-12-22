@@ -194,8 +194,10 @@ import { formatDate } from "@/api/tools.js"
       console.log(this.tenantId,'tenan')
       if(this.detailList.billType=="1"){
        this.billMem="可结算"
+       this.billType="1"
       }else if(this.detailList.billType=="2"){
        this.billMem="已结算"
+       this.billType="2"
       }else{
         this.billMem="未结算"
       }
@@ -225,7 +227,8 @@ search_() {
         billNo:this.searchParam.billNo,
         startTime:this.searchParam.startTime,
         endTime:this.searchParam.endTime,
-        billMem:this.billMem
+        billMem:this.billMem,
+        billType:this.billType
            }
            console.log(param,'param')
 			let exportParam = [];
