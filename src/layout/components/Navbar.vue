@@ -84,6 +84,9 @@ export default {
     Search,
   },
   computed: {
+    obj() {
+      return this.resetFrm.password.length
+     },
     ...mapGetters(["sidebar", "avatar", "device"]),
   },
   data() {
@@ -112,7 +115,13 @@ export default {
         });
         return
       }
-
+if (this.obj<6) {
+	    this.$message({
+	      message: "密码不能小于6位数",
+	      type: "warning",
+	    });
+	    return
+	  }
       if (this.resetFrm.password != this.resetFrm.reppwd) {
         this.$message({
           message: "俩次输入的新密码不一致",
