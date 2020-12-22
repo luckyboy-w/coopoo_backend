@@ -23,7 +23,10 @@
         :span="6"
         style="padding-left:10px"
       >
-        <el-button @click="search()" type="primary">
+        <el-button v-if="tenantId==''" @click="search()" type="primary">
+          搜索
+        </el-button>
+        <el-button v-if="tenantId!=''" @click="search_()" type="primary">
           搜索
         </el-button>
         <el-button v-if="tenantId==''" @click="exportData()" type="primary">
@@ -208,7 +211,15 @@ import { formatDate } from "@/api/tools.js"
             this.detailList = res.data.list
         });
       },
-
+search_() {
+        let scope = this
+        this.searchParam.tenantId=this.tenantId
+        getMethod("/backend/orderBill/findBillDtl", this.searchParam).then(res => {
+          console.log(res,'返回成功的数据')
+            // showList = false
+            this.detailList = res.data.list
+        });
+      },
 		exportData(){
       let param={
         billNo:this.searchParam.billNo,
