@@ -1,90 +1,42 @@
 <template>
   <div style="padding:20px 10px">
     <div v-if="showList">
-      <el-row style="line-height:40px;padding:10px 0px ">
-        <el-col
-          :span="1.5"
-          style="font-size:14px;"
-        >
-          结算单号
-        </el-col>
-        <el-col :span="3">
-          <el-input
+      <table>
+        <tr>
+          <td style="padding-left: 20px;">结算单号</td>
+          <td> <el-input
             v-model="searchParam.billNo"
             style="width:150px"
             placeholder="请输入..."
-          />
-        </el-col>
-       <!-- <el-col
-          :span="1.5"
-          style="font-size:14px;"
-        >
-          供应商名称
-        </el-col>
-        <el-col :span="3">
-          <el-input
-            v-model="searchParam.test"
-            style="width:150px"
-            placeholder="请输入..."
-          />
-        </el-col> -->
-       <el-col
-          :span="1.5"
-          style="padding-left:10px"
-        >
-          申请时间
-        </el-col>
-        <el-col :span="6">
-          <el-date-picker
+          /></td>
+          <td style="padding-left: 20px;">申请时间</td>
+          <td>  <el-date-picker
             v-model="searchParam.startTime"
             value-format="yyyy-MM-dd"
             type="date"
             style="width:140px"
             placeholder="开始日期"
-          />
-          至
-          <el-date-picker
+          /></td>
+          <td>至</td>
+          <td>  <el-date-picker
             v-model="searchParam.endTime"
             value-format="yyyy-MM-dd"
             type="date"
             style="width:140px"
             placeholder="结束日期"
-          />
-        </el-col>
-        <!-- <el-col
-          :span="1.5"
-          style="padding-left:10px"
-        >
-          结算金额
-        </el-col>
-        <el-col :span="6">
-          <el-input
-            v-model="searchParam.minBillFee"
-            style="width:80px"
-            placeholder=""
-          />
-          -
-          <el-input
-            v-model="searchParam.maxBillFee"
-            style="width:80px"
-            placeholder=""
-          />
-        </el-col> -->
-        <el-col
-          :span="4"
-          style="padding-left:10px"
-        >
-          <el-button @click="search()"  type="primary">
+          /></td>
+          <td style="padding-left: 20px;">  <el-button @click="search()"  type="primary">
             搜索
-          </el-button>
-		  <el-button
+          </el-button></td>
+          <td style="padding-left: 20px;"> <el-button
 		    icon="el-icon-download"
 		    @click="exportData()"
 		  >
 		    导出
-		  </el-button>
-        </el-col>
-      </el-row>
+		  </el-button></td>
+        </tr>
+      </table>
+
       <el-table
         ref="noBillData"
         :data="noBillData.list"

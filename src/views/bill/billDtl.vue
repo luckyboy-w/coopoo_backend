@@ -1,35 +1,44 @@
 <template>
   <div style="width:100%">
-    <el-row style="line-height:40px;padding:10px 0px ">
-      <el-col v-if="this.billType!=2" :span="1.5">
-        入账时间
-      </el-col>
-      <el-col v-if="this.billType==2" :span="1.5">
-        结算时间
-      </el-col>
-      <el-col :span="8">
-        <el-date-picker v-model="searchParam.startTime" value-format="yyyy-MM-dd" type="date" placeholder="开始日期" />
-        至
-        <el-date-picker v-model="searchParam.endTime" value-format="yyyy-MM-dd" type="date" placeholder="结束日期" />
-      </el-col>
-      <el-col :span="6" style="padding-left:10px">
-        <el-button v-if="tenantId==''" @click="search()" type="primary">
-          搜索
-        </el-button>
-        <el-button v-if="tenantId!=''" @click="search_()" type="primary">
-          搜索
-        </el-button>
-        <el-button v-if="tenantId==''" @click="exportData()" type="primary">
-          导出Excel
-        </el-button>
-        <el-button v-if="tenantId!=''" @click="exportData_()" type="primary">
-          导出Excel
-        </el-button>
-        <el-button type="normal" @click="backToList()">
-          返回列表
-        </el-button>
-      </el-col>
-    </el-row>
+    <table>
+      <tr>
+        <td  style="padding-left: 20px;" v-if="this.billType!=2">入账时间</td>
+        <td  style="padding-left: 20px;" v-if="this.billType==2">结算时间</td>
+        <td>
+          <el-date-picker v-model="searchParam.startTime" value-format="yyyy-MM-dd" type="date" placeholder="开始日期" />
+        </td>
+        <td>至</td>
+        <td>
+          <el-date-picker v-model="searchParam.endTime" value-format="yyyy-MM-dd" type="date" placeholder="结束日期" />
+        </td>
+        <td style="padding-left: 20px;">
+          <el-button v-if="tenantId==''" @click="search()" type="primary">
+            搜索
+          </el-button>
+        </td>
+        <td style="padding-left: 20px;">
+          <el-button v-if="tenantId!=''" @click="search_()" type="primary">
+            搜索
+          </el-button>
+        </td>
+        <td style="padding-left: 20px;">
+          <el-button v-if="tenantId==''" @click="exportData()" type="primary">
+            导出Excel
+          </el-button>
+        </td>
+        <td style="padding-left: 20px;">
+          <el-button v-if="tenantId!=''" @click="exportData_()" type="primary">
+            导出Excel
+          </el-button>
+        </td>
+        <td style="padding-left: 20px;">
+          <el-button type="normal" @click="backToList()">
+            返回列表
+          </el-button>
+        </td>
+      </tr>
+    </table>
+
     <el-table ref="dtlTable" :data="detailList" style="width: 100%; margin-bottom: 20px;" row-key="id">
       <el-table-column type="index" width="50" label="序号" />
       <el-table-column v-if="this.No=='1'" prop="orderNo" label="订单号" min-width="20%" />
@@ -170,12 +179,12 @@
         });
       },
       exportData() {
-        if(this.searchParam.startTime==null){
-          this.searchParam.startTime=''
-          }
-          if(this.searchParam.endTime==null){
-            this.searchParam.endTime=''
-            }
+        if (this.searchParam.startTime == null) {
+          this.searchParam.startTime = ''
+        }
+        if (this.searchParam.endTime == null) {
+          this.searchParam.endTime = ''
+        }
         let param = {
           billNo: this.searchParam.billNo,
           startTime: this.searchParam.startTime,
@@ -191,12 +200,12 @@
         window.open(process.env.VUE_APP_BASE_API + "/backend/orderBill/exportDtl?" + exportParam.join("&"));
       },
       exportData_() {
-        if(this.searchParam.startTime==null){
-          this.searchParam.startTime=''
-          }
-          if(this.searchParam.endTime==null){
-            this.searchParam.endTime=''
-            }
+        if (this.searchParam.startTime == null) {
+          this.searchParam.startTime = ''
+        }
+        if (this.searchParam.endTime == null) {
+          this.searchParam.endTime = ''
+        }
         let param = {
           startTime: this.searchParam.startTime,
           endTime: this.searchParam.endTime,

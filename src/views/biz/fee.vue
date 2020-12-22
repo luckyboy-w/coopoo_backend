@@ -18,26 +18,25 @@
       </el-col>
     </el-row>
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
-      <el-tab-pane label="待返佣数据" name="allFee" style="height:600px">
-        <el-row style="line-height:40px;padding:10px 0px ">
-          <el-col :span="1.5" style="font-size:14px;">
-            服务商
-          </el-col>
-          <el-col :span="3">
-            <el-input v-model="searchParams.providerName" style="width:120px" placeholder="" />
-          </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
-            手机号码
-          </el-col>
-          <el-col :span="3">
-            <el-input v-model="searchParams.provPhone" style="width:120px" placeholder="" />
-          </el-col>
-          <el-col :span="9" style="padding-left:10px">
-            <el-button type="primary" @click="Tosearch()">
-              搜索
-            </el-button>
-          </el-col>
-        </el-row>
+      <el-tab-pane label="待返佣数据" name="allFee" style="height:800px">
+        <table>
+          <tr>
+            <td style="padding-left: 20px;"> 服务商</td>
+            <td>
+              <el-input v-model="searchParams.providerName" style="width:180px" placeholder="" />
+            </td>
+            <td style="padding-left: 20px;"> 手机号码</td>
+            <td>
+              <el-input v-model="searchParams.provPhone" style="width:180px" placeholder="" />
+            </td>
+            <td>
+              <el-button type="primary" @click="Tosearch()">
+                搜索
+              </el-button>
+            </td>
+          </tr>
+        </table>
+
         <el-table ref="allFeeData" :data="allFeeData.list" style="width: 100%; margin-bottom: 20px;" row-key="id">
           <el-table-column type="index" width="50" label="序号" />
           <el-table-column prop="provinceName" label="服务商" min-width="20%" />
@@ -64,7 +63,7 @@
       </el-tab-pane>
 
 
-      <el-tab-pane label="提现中" name="feeProcess" style="height:600px">
+      <el-tab-pane label="提现中" name="feeProcess" style="height:800px">
         <el-row style="line-height:40px;padding:10px 0px ">
           <el-col :span="24" style="padding-left:10px">
             <el-button v-if="!back" type="primary" icon="el-icon-back" @click="backToAllFeeOne()">
@@ -72,52 +71,35 @@
             </el-button>
           </el-col>
         </el-row>
-        <el-row v-show="det" style="line-height:40px;padding:10px 0px ">
-          <el-col :span="1.5" style="font-size:14px;">
-            申请单号
-          </el-col>
-          <el-col :span="2">
-            <el-input v-model="exportApplyFrm.cashNo" style="width:120px" placeholder="" />
-          </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
-            服务商姓名
-          </el-col>
-          <el-col :span="2">
-            <el-input v-model="exportApplyFrm.providerName" style="width:120px" placeholder="" />
-          </el-col>
-          <el-col :span="1.5 " style="font-size:14px;">
-            服务商类型
-          </el-col>
-          <el-col :span="3">
-            <el-select v-model="exportApplyFrm.provLevel" placeholder="请选择服务商">
+        <table v-show="det">
+          <tr>
+            <td style="padding-left: 20px;">申请单号</td>
+            <td>            <el-input v-model="exportApplyFrm.cashNo" style="width:180px" placeholder="" /></td>
+            <td style="padding-left: 20px;">服务商姓名</td>
+            <td>            <el-input v-model="exportApplyFrm.providerName" style="width:220px" placeholder="" /></td>
+            <td style="padding-left: 20px;">服务商类型</td>
+            <td><el-select v-model="exportApplyFrm.provLevel" placeholder="请选择服务商">
               <el-option v-for="item in providerList" :label="item.provinceName" :value="item.id" />
-            </el-select>
-          </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
-            手机号
-          </el-col>
-          <el-col :span="2">
-            <el-input v-model="exportApplyFrm.phoneNo" style="width:120px" placeholder="" />
-          </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
-            申请时间
-          </el-col>
-          <el-col :span="7">
-            <el-date-picker v-model="exportApplyFrm.applyStartTime" value-format="yyyy-MM-dd" type="date" width="120px"
-              placeholder="选择开始日期" />
-            -
-            <el-date-picker v-model="exportApplyFrm.applyEndTime" value-format="yyyy-MM-dd" type="date" width="120px"
-              placeholder="选择结束日期" />
-          </el-col>
-          <el-col :span="3" style="padding-left:10px">
-            <el-button type="primary" @click="batchBill()">
+            </el-select></td>
+            <td><el-button type="primary" @click="batchBill()">
               搜索
             </el-button>
-            <el-button type="primary" plain icon="el-icon-download" @click="exportApplyCash()">
+            </td>
+            <td><el-button type="primary" plain icon="el-icon-download" @click="exportApplyCash()">
               导出
-            </el-button>
-          </el-col>
-        </el-row>
+            </el-button></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 20px;">手机号</td>
+            <td>            <el-input v-model="exportApplyFrm.phoneNo" style="width:180px" placeholder="" /></td>
+            <td style="padding-left: 20px;">申请时间</td>
+            <td><el-date-picker v-model="exportApplyFrm.applyStartTime" value-format="yyyy-MM-dd" type="date" width="120px"
+              placeholder="选择开始日期" /></td>
+            <td style="text-align: center;">至</td>
+            <td><el-date-picker v-model="exportApplyFrm.applyEndTime" value-format="yyyy-MM-dd" type="date" width="120px"
+              placeholder="选择结束日期" /></td>
+          </tr>
+        </table>
         <el-table v-if="det" ref="feeProcessData" :data="feeProcessData.list" style="width: 100%; margin-bottom: 20px;"
           row-key="id">
           <el-table-column type="index" width="50" label="序号" />
@@ -146,38 +128,28 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-row v-show="def" style="line-height:40px;padding:10px 0px ">
-          <el-col :span="1.5" style="font-size:14px;">
-            会员名称
-          </el-col>
-          <el-col :span="3">
-            <el-input v-model="searchParamsOne.memName" style="width:120px" placeholder="" />
-          </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
-            手机号码
-          </el-col>
-          <el-col :span="3">
-            <el-input v-model="searchParamsOne.phoneNo" style="width:120px" placeholder="" />
-          </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
-            付费时间
-          </el-col>
-          <el-col :span="7">
-            <el-date-picker v-model="searchParamsOne.applyStartTime" value-format="yyyy-MM-dd" type="date" width="120px"
-              placeholder="选择开始日期" />
-            -
-            <el-date-picker v-model="searchParamsOne.applyEndTime" value-format="yyyy-MM-dd" type="date" width="120px"
-              placeholder="选择结束日期" />
-          </el-col>
-          <el-col :span="9" style="padding-left:10px">
-            <el-button type="primary" @click="TosearchOne()">
+        <table v-show="def">
+          <tr>
+            <td style="padding-left: 20px;">会员名称</td>
+            <td>            <el-input v-model="searchParamsOne.memName" style="width:120px" placeholder="" /></td>
+            <td style="padding-left: 20px;">手机号码</td>
+            <td>            <el-input v-model="searchParamsOne.phoneNo" style="width:120px" placeholder="" /></td>
+            <td style="padding-left: 20px;">付费时间</td>
+            <td> <el-date-picker v-model="searchParamsOne.applyStartTime" value-format="yyyy-MM-dd" type="date" width="120px"
+              placeholder="选择开始日期" /></td>
+            <td style="text-align: center;">至</td>
+            <td><el-date-picker v-model="searchParamsOne.applyEndTime" value-format="yyyy-MM-dd" type="date" width="120px"
+              placeholder="选择结束日期" /></td>
+            <td> <el-button type="primary" @click="TosearchOne()">
               搜索
             </el-button>
-            <el-button type="primary" plain icon="el-icon-download" @click="exportApplyCashDtl()">
+           </td>
+            <td> <el-button type="primary" plain icon="el-icon-download" @click="exportApplyCashDtl()">
               导出
-            </el-button>
-          </el-col>
-        </el-row>
+            </el-button></td>
+          </tr>
+        </table>
+
         <el-table v-show="def" :data="detList" style="width: 100%; margin-bottom: 20px;" row-key="id">
           <el-table-column type="index" width="50" label="序号" />
           <el-table-column prop="memName" label="会员姓名" min-width="24%" />
@@ -214,7 +186,7 @@
 
 
 
-      <el-tab-pane label="已提现" name="feeEnd" style="height:600px">
+      <el-tab-pane label="已提现" name="feeEnd" style="height:800px">
         <el-row style="line-height:40px;padding:10px 0px ">
           <el-col :span="24" style="padding-left:10px">
             <el-button v-if="!back_" type="primary" icon="el-icon-back" @click="backToAllFeeTwo()">
@@ -222,52 +194,36 @@
             </el-button>
           </el-col>
         </el-row>
-        <el-row v-if="def_" style="line-height:40px;padding:10px 0px ">
-          <el-col :span="1.5" style="font-size:14px;">
-            申请单号
-          </el-col>
-          <el-col :span="2">
-            <el-input v-model="exportApplyFrm_.cashNo" style="width:120px" placeholder="" />
-          </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
-            提现服务商
-          </el-col>
-          <el-col :span="2">
-            <el-input v-model="exportApplyFrm_.provPhone" style="width:120px" placeholder="" />
-          </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
-            手机号
-          </el-col>
-          <el-col :span="2">
-            <el-input v-model="exportApplyFrm_.provPhone" style="width:120px" placeholder="" />
-          </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
-            服务商类型
-          </el-col>
-          <el-col :span="3">
-            <el-select v-model="exportApplyFrm_.provLevel" placeholder="请选择服务商型">
+        <table v-show="def_">
+          <tr>
+            <td style="padding-left: 20px;">申请单号</td>
+            <td>            <el-input v-model="exportApplyFrm_.cashNo" style="width:180px" placeholder="" /></td>
+            <td style="padding-left: 20px;">提现服务商</td>
+            <td>            <el-input v-model="exportApplyFrm_.provPhone" style="width:220px" placeholder="" /></td>
+            <td style="padding-left: 20px;">服务商类型</td>
+            <td><el-select v-model="exportApplyFrm_.provLevel" placeholder="请选择服务商">
               <el-option v-for="item in providerList" :label="item.provinceName" :value="item.id" />
-            </el-select>
-          </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
-            提现时间
-          </el-col>
-          <el-col :span="7">
-            <el-date-picker v-model="exportApplyFrm_.applyStartTime" value-format="yyyy-MM-dd" type="date" width="120px"
-              placeholder="选择开始日期" />
-            -
-            <el-date-picker v-model="exportApplyFrm_.applyEndTime" value-format="yyyy-MM-dd" type="date" width="120px"
-              placeholder="选择结束日期" />
-          </el-col>
-          <el-col :span="3" style="padding-left:10px">
-            <el-button type="primary" @click="batchBill_()">
+            </el-select></td>
+            <td> <el-button type="primary" @click="batchBill_()">
               搜索
             </el-button>
-            <el-button type="primary" plain icon="el-icon-download" @click="exportApplyCash_()">
+            </td>
+            <td><el-button type="primary" plain icon="el-icon-download" @click="exportApplyCash_()">
               导出
-            </el-button>
-          </el-col>
-        </el-row>
+            </el-button></td>
+          </tr>
+          <tr>
+            <td style="padding-left: 20px;">手机号</td>
+            <td>             <el-input v-model="exportApplyFrm_.provPhone" style="width:180px" placeholder="" /></td>
+            <td style="padding-left: 20px;">提现时间</td>
+            <td>  <el-date-picker v-model="exportApplyFrm_.applyStartTime" value-format="yyyy-MM-dd" type="date" width="120px"
+              placeholder="选择开始日期" /></td>
+            <td style="text-align: center;">至</td>
+            <td> <el-date-picker v-model="exportApplyFrm_.applyEndTime" value-format="yyyy-MM-dd" type="date" width="120px"
+              placeholder="选择结束日期" /></td>
+          </tr>
+        </table>
+
 
         <el-table v-if="def_" ref="feeEnd" :data="feeEndData.list" style="width: 100%; margin-bottom: 20px;" row-key="id">
           <el-table-column type="index" width="50" label="序号" />
@@ -294,38 +250,27 @@
           </el-table-column>
         </el-table>
 
-        <el-row v-if="det_" style="line-height:40px;padding:10px 0px ">
-          <el-col :span="1.5" style="font-size:14px;">
-            会员名
-          </el-col>
-          <el-col :span="3">
-            <el-input v-model="searchParamsTwo.memName" style="width:80px" placeholder="" />
-          </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
-            手机号码
-          </el-col>
-          <el-col :span="3">
-            <el-input v-model="searchParamsTwo.phoneNo" style="width:80px" placeholder="" />
-          </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
-            付费时间
-          </el-col>
-          <el-col :span="7">
-            <el-date-picker v-model="searchParamsTwo.applyStartTime" value-format="yyyy-MM-dd" type="date" width="120px"
-              placeholder="选择开始日期" />
-            -
-            <el-date-picker v-model="searchParamsTwo.applyEndTime" value-format="yyyy-MM-dd" type="date" width="120px"
-              placeholder="选择结束日期" />
-          </el-col>
-          <el-col :span="9" style="padding-left:10px">
-            <el-button type="primary" @click="TosearchTwo()">
+        <table v-show="det_">
+          <tr>
+            <td style="padding-left: 20px;">会员名称</td>
+            <td>            <el-input v-model="searchParamsTwo.memName" style="width:80px" placeholder="" /></td>
+            <td style="padding-left: 20px;">手机号码</td>
+            <td>            <el-input v-model="searchParamsTwo.phoneNo" style="width:80px" placeholder="" /></td>
+            <td style="padding-left: 20px;">付费时间</td>
+            <td> <el-date-picker v-model="searchParamsTwo.applyStartTime" value-format="yyyy-MM-dd" type="date" width="120px"
+              placeholder="选择开始日期" /></td>
+            <td style="text-align: center;">至</td>
+            <td> <el-date-picker v-model="searchParamsTwo.applyEndTime" value-format="yyyy-MM-dd" type="date" width="120px"
+              placeholder="选择结束日期" /></td>
+            <td> <el-button type="primary" @click="TosearchTwo()">
               搜索
             </el-button>
-            <el-button type="primary" plain icon="el-icon-download" @click="exportApplyCash_Dtl()">
+           </td>
+            <td> <el-button type="primary" plain icon="el-icon-download" @click="exportApplyCash_Dtl()">
               导出
-            </el-button>
-          </el-col>
-        </el-row>
+            </el-button></td>
+          </tr>
+        </table>
         <el-table v-if="det_" :data="det_List" style="width: 100%; margin-bottom: 20px;" row-key="id">
           <el-table-column type="index" width="50" label="序号" />
           <el-table-column prop="memName" label="会员姓名" min-width="24%" />
@@ -360,7 +305,7 @@
       </el-tab-pane>
 
 
-      <el-tab-pane v-if="feeDtl_" label="待返佣明细" name="feeDtl" style="height:600px">
+      <el-tab-pane v-if="feeDtl_" label="待返佣明细" name="feeDtl" style="height:800px">
         <el-row style="line-height:40px;padding:10px 0px ">
           <el-col :span="24" style="padding-left:10px">
             <el-button v-if="!allFeeDataShow" type="primary" icon="el-icon-back" @click="backToAllFee()">
@@ -368,27 +313,17 @@
             </el-button>
           </el-col>
         </el-row>
-
-        <el-row style="line-height:40px;padding:10px 0px ">
-          <el-col :span="1.5" style="font-size:14px;">
-            会员名称
-          </el-col>
-          <el-col :span="3">
-            <el-input v-model="searchParams_.memName" style="width:120px" placeholder="" />
-          </el-col>
-          <el-col :span="1.5" style="font-size:14px;">
-            手机号码
-          </el-col>
-          <el-col :span="3">
-            <el-input v-model="searchParams_.phoneNo" style="width:120px" placeholder="" />
-          </el-col>
-          <el-col :span="9" style="padding-left:10px">
-            <el-button type="primary" @click="Tosearch_()">
+        <table>
+          <tr>
+            <td style="padding-left: 20px;">会员名称</td>
+            <td>            <el-input v-model="searchParams_.memName" style="width:180px" placeholder="" /></td>
+            <td style="padding-left: 20px;">手机号码</td>
+            <td>            <el-input v-model="searchParams_.phoneNo" style="width:180px" placeholder="" /></td>
+            <td><el-button type="primary" @click="Tosearch_()">
               搜索
-            </el-button>
-          </el-col>
-        </el-row>
-
+            </el-button></td>
+          </tr>
+        </table>
         <el-table v-show="allFeeDtlFee" ref="dtlFeeRef" :data="dtlFeeList" style="width: 100%; margin-bottom: 20px;"
           row-key="id">
           <el-table-column type="index" width="50" label="序号" />
@@ -411,7 +346,7 @@
           </el-table-column>
         </el-table>
       </el-tab-pane>
-      <el-tab-pane v-if="friDtl_" label="会员明细" name="friDtl" style="height:600px">
+      <el-tab-pane v-if="friDtl_" label="会员明细" name="friDtl" style="height:800px">
         <el-row style="line-height:40px;padding:10px 0px ">
           <el-col :span="24" style="padding-left:10px">
             <el-button v-if="!allFeeDataShow" type="primary" icon="el-icon-back" @click="backToAllFee()">
@@ -428,7 +363,7 @@
         </el-table>
       </el-tab-pane>
 
-      <!-- <el-tab-pane  label="返佣明细" name="feeDtl" style="height:600px">
+      <!-- <el-tab-pane  label="返佣明细" name="feeDtl" style="height:800px">
                             <el-table
                                 ref="feeDtlData"
                                 :data="feeDtlData.list"
@@ -456,7 +391,7 @@
                                 @next-click="currentFeePage"
                             />
                         </el-tab-pane>
-                        <el-tab-pane label="会员明细" name="friDtl" style="height:600px">
+                        <el-tab-pane label="会员明细" name="friDtl" style="height:800px">
                             <el-table
                                 ref="friDtlData"
                                 :data="friDtlData.list"
@@ -552,7 +487,7 @@
         dtlFriList: [],
         detList: [],
         det_List: [],
-        friName:'',
+        friName: '',
         billFeeText: '',
         allApplyFee: '',
         allPerFee: '',
@@ -625,14 +560,14 @@
           phoneNo: '',
         },
         searchParamsOne: {
-          applyStartTime:'',
-          applyEndTime:'',
+          applyStartTime: '',
+          applyEndTime: '',
           memName: '',
           phoneNo: '',
         },
         searchParamsTwo: {
-          applyStartTime:'',
-          applyEndTime:'',
+          applyStartTime: '',
+          applyEndTime: '',
           memName: '',
           phoneNo: '',
         },
@@ -688,12 +623,12 @@
       提现中列表导出
       */
       exportApplyCash() {
-        if(this.exportApplyFrm.applyStartTime==null){
-          this.exportApplyFrm.applyStartTime=''
-          }
-          if(this.exportApplyFrm.applyEndTime==null){
-            this.exportApplyFrm.applyEndTime=''
-            }
+        if (this.exportApplyFrm.applyStartTime == null) {
+          this.exportApplyFrm.applyStartTime = ''
+        }
+        if (this.exportApplyFrm.applyEndTime == null) {
+          this.exportApplyFrm.applyEndTime = ''
+        }
         let param = {
           cashNo: this.exportApplyFrm.cashNo,
           providerName: this.exportApplyFrm.providerName,
@@ -716,19 +651,19 @@
       */
       exportApplyCashDtl() {
         let that = this
-        if(this.searchParamsOne.applyStartTime==null){
-          that.searchParamsOne.applyStartTime=''
-          }
-          if(this.searchParamsOne.applyEndTime==null){
-            that.searchParamsOne.applyEndTime=''
-            }
+        if (this.searchParamsOne.applyStartTime == null) {
+          that.searchParamsOne.applyStartTime = ''
+        }
+        if (this.searchParamsOne.applyEndTime == null) {
+          that.searchParamsOne.applyEndTime = ''
+        }
         let param = {
-          applyStartTime:that.searchParamsOne.applyStartTime,
-          applyEndTime:that.searchParamsOne.applyEndTime,
-         memName: that.searchParamsOne.memName,
-         phoneNo: that.searchParamsOne.phoneNo,
-         cashNo: this.cashNo,
-         friName:'提现中明细'
+          applyStartTime: that.searchParamsOne.applyStartTime,
+          applyEndTime: that.searchParamsOne.applyEndTime,
+          memName: that.searchParamsOne.memName,
+          phoneNo: that.searchParamsOne.phoneNo,
+          cashNo: this.cashNo,
+          friName: '提现中明细'
         }
         console.log(param, 'param')
         let exportParam = [];
@@ -741,13 +676,13 @@
       /*
       已提现列表导出
       */
-         exportApplyCash_() {
-           if(this.exportApplyFrm_.applyStartTime==null){
-             this.exportApplyFrm_.applyStartTime=''
-             }
-             if(this.exportApplyFrm_.applyEndTime==null){
-               this.exportApplyFrm_.applyEndTime=''
-               }
+      exportApplyCash_() {
+        if (this.exportApplyFrm_.applyStartTime == null) {
+          this.exportApplyFrm_.applyStartTime = ''
+        }
+        if (this.exportApplyFrm_.applyEndTime == null) {
+          this.exportApplyFrm_.applyEndTime = ''
+        }
         let param = {
           cashNo: this.exportApplyFrm_.cashNo,
           providerName: this.exportApplyFrm_.providerName,
@@ -770,19 +705,19 @@
       */
       exportApplyCash_Dtl() {
         let that = this
-        if(this.searchParamsTwo.applyStartTime==null){
-          that.searchParamsTwo.applyStartTime=''
-          }
-          if(this.searchParamsTwo.applyEndTime==null){
-            that.searchParamsTwo.applyEndTime=''
-            }
+        if (this.searchParamsTwo.applyStartTime == null) {
+          that.searchParamsTwo.applyStartTime = ''
+        }
+        if (this.searchParamsTwo.applyEndTime == null) {
+          that.searchParamsTwo.applyEndTime = ''
+        }
         let param = {
-          applyStartTime:that.searchParamsTwo.applyStartTime,
-          applyEndTime:that.searchParamsTwo.applyEndTime,
-         memName: that.searchParamsTwo.memName,
-         phoneNo: that.searchParamsTwo.phoneNo,
-         cashNo: this.cashNos,
-         friName:'已提现明细'
+          applyStartTime: that.searchParamsTwo.applyStartTime,
+          applyEndTime: that.searchParamsTwo.applyEndTime,
+          memName: that.searchParamsTwo.memName,
+          phoneNo: that.searchParamsTwo.phoneNo,
+          cashNo: this.cashNos,
+          friName: '已提现明细'
         }
         console.log(param, 'param')
         let exportParam = [];
@@ -853,15 +788,15 @@
         this.back = true
         this.def = false
         this.det = true
-        this.searchParamsOne.applyStartTime=''
-        this.searchParamsOne.applyEndTime=''
+        this.searchParamsOne.applyStartTime = ''
+        this.searchParamsOne.applyEndTime = ''
       },
       backToAllFeeTwo() {
         this.back_ = true
         this.det_ = false
         this.def_ = true
-        this.searchParamsTwo.applyStartTime=''
-        this.searchParamsTwo.applyEndTime=''
+        this.searchParamsTwo.applyStartTime = ''
+        this.searchParamsTwo.applyEndTime = ''
       },
       detail_(row) {
         this.back_ = false

@@ -1,48 +1,19 @@
 <template>
   <div style="padding:20px 10px">
     <div v-if="showList">
-      <el-row style="line-height:40px;padding:10px 0px ">
-        <el-col
-          :span="1.5"
-          style="font-size:14px;"
-        >
-          供应商名称
-        </el-col>
-        <el-col :span="4">
-          <el-input
+      <table>
+        <tr>
+          <td>供应商名称</td>
+          <td> <el-input
             v-model="searchParam.tenantName"
             style="width:150px"
             placeholder="请输入..."
-          />
-        </el-col>
-<!--        <el-col
-          :span="1.5"
-          style="padding-left:10px"
-        >
-          结算金额
-        </el-col>
-        <el-col :span="5">
-          <el-input
-            v-model="searchParam.minBillFee"
-            style="width:120px"
-            placeholder=""
-          />
-          -
-          <el-input
-            v-model="searchParam.maxBillFee"
-            style="width:120px"
-            placeholder=""
-          />
-        </el-col>
-        <el-col
-          :span="2"
-          style="padding-left:10px"
-        > -->
-          <el-button @click="search()" type="primary">
+          /></td>
+          <td style="padding-left: 20px;"><el-button @click="search()" type="primary">
             搜索
-          </el-button>
-        </el-col>
-      </el-row>
+          </el-button></td>
+        </tr>
+      </table>
       <el-table
         ref="noBillData"
         :data="noBillData.list"
