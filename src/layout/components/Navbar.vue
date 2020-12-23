@@ -40,7 +40,7 @@
         </el-dropdown-menu>
       </el-dropdown>
 
-      <el-dialog :visible="showReset" v-if="showReset" title="密码重置" width="600px">
+      <el-dialog :visible="showReset" @close="close()" v-if="showReset" title="密码重置" width="600px">
         <el-form ref="dataForm" :model="resetFrm" label-width="100px" style="width:500px">
           <el-form-item label="旧密码">
             <el-input v-model="resetFrm.oldPwd" placeholder="请输入密码" show-password clearable />
@@ -147,6 +147,9 @@ if (this.obj<6) {
     },
     showResetPwd() {
       this.showReset = true;
+    },
+    close(){
+      this.showReset = false;
     },
     getUser() {
       let scope = this;
