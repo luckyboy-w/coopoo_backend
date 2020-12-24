@@ -416,7 +416,6 @@ export default {
         ],
         bankCardNo: [
           { required: true, message: '请输入银行卡号', trigger: 'blur' },
-          { validator: validateBankNo, trigger: "blur" }
         ],
       },
 

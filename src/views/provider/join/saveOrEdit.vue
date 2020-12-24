@@ -419,11 +419,6 @@
               message: '请输入银行账号',
               trigger: 'blur'
             },
-            {
-              required: true,
-              validator: validateBankNo,
-              trigger: 'blur'
-            },
           ],
           area: [{
             required: true,
