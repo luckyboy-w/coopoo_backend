@@ -292,6 +292,16 @@
       height: 50px;
       line-height: 36px;
     }
+    .el-form-item__error {
+      color: #ff4949;
+      font-size: 12px;
+      line-height: 1;
+      padding-top: 4px;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 85%;
+    }
 
     .el-button--primary {
       color: #fff;
