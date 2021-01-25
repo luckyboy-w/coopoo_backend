@@ -194,7 +194,6 @@
         showAddOrEdit: false,
         showResult: false,
         dialogVerify: false,
-        typeIdList: [],
         typeId2List: [],
         typeIdList: [],
         goodBrandList: [],
@@ -210,7 +209,6 @@
           dataId: ""
         },
         searchParam: {
-          queryType: '',
           goodStyle: '',
           queryType: '',
           typeName: "",
