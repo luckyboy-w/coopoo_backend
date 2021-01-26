@@ -321,7 +321,7 @@
         let param = {
           isSale: 1,
           verifyStatus: '20',
-          pageSize: 1000,
+          pageSize: 30,
           pageNum: 0
         }
         getMethod("/backend/good/findPage", param).then(res => {
