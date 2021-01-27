@@ -109,7 +109,7 @@ export default {
     },
     validate() {
       const notNvl = ["name", "imgUrl"];
-      for (let i = 0; i < notNvl; i++) {
+      for (let i = 0; i < notNvl.length; i++) {
         if (this.dataForm[notNvl[i]] == "") {
           this.$message.warning("字段不能为空")
           return false;
