@@ -34,8 +34,8 @@
 					<el-col :span="4"><el-input v-model="dataForm.huanxNo"></el-input></el-col>
 					<el-col :span="2" style="padding-left:5px">技能组:</el-col>
 					<el-col :span="4"><el-input v-model="dataForm.skillGroup"></el-input></el-col>
-					<el-col :span="2" style="padding-left:5px"></el-col>
-					<el-col :span="8"><el-input v-show="false" style="120px" v-model="dataForm.hxConfigId"></el-input></el-col>
+					<el-col :span="3" style="padding-left:5px">H5客服配置ID:</el-col>
+					<el-col :span="4"><el-input v-model="dataForm.hxConfigId"></el-input></el-col>
 				</el-row>
 				<el-row :span="24" style="padding-top:15px" >
 					<el-col :span="2" style="padding-left:5px">登录账号:</el-col>

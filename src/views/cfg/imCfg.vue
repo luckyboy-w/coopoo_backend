@@ -7,7 +7,7 @@
       <el-form-item label="平台端技能组名称">
         <el-input v-model="dataForm.platHxSkillGrp" style="width:260px"></el-input>
       </el-form-item>
-      <el-form-item v-whow='false' label="平台端配置ID">
+      <el-form-item label="平台端H5客服配置ID">
         <el-input v-model="dataForm.platHxConfigId" style="width:260px"></el-input>
       </el-form-item>
       <el-form-item>
