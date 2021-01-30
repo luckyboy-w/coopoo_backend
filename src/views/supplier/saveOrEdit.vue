@@ -183,15 +183,10 @@
 <!--			<el-form-item label="发布礼品">
 				<el-switch v-model="dataForm.publishGift" inactive-value="0" active-value="1"></el-switch>
 			</el-form-item>-->
-      <el-form-item label="平台服务比率" prop="serviceRatio">
-        <el-select v-model="dataForm.serviceRatio">
-          <el-option
-            v-for="item in serviceRatioList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
+      <el-form-item label="供应商比例" prop="serviceRatio">
+        <el-input placeholder="请输入内容" v-model.number="dataForm.serviceRatio">
+          <template slot="append">%</template>
+        </el-input>
 			</el-form-item>
 			<el-form-item label="银行名称" prop="bankName">
 				<el-input v-model="dataForm.bankName"></el-input>
@@ -251,6 +246,14 @@ export default {
         }
       } else {
         callback(new Error("电话号码输入错误"));
+      }
+    }
+
+    const validateServiceRatio = (rule, value, callback) => {
+      if (value < 50 || value > 70) {
+        callback(new Error("供应商比例只能为50~70之间"));
+      } else {
+        callback();
       }
     }
 
@@ -397,7 +400,7 @@ export default {
           { required: true, message: '请选择省份', trigger: 'change' },
         ],
         serviceRatio: [
-          { required: true, message: '请选择平台服务比率', trigger: 'change' },
+          { required: true, validator: validateServiceRatio, trigger: 'blur' },
         ],
         licenseImg: [
           { required: true, validator: isUploadLicenseImg, trigger: "blur" }
@@ -499,6 +502,11 @@ export default {
 			if (!isLt2M) {
 				this.$message.error("上传文件大小不能超过 5MB!");
 			}
+      if (file.name.length > 30) {
+        this.$message.error("上传文件名称大小不能超过30个字符!");
+        return false;
+      }
+
 			return fileTypeVerify && isLt2M;
 		},
 		buildPersonNoFrontImgGroupId() {
@@ -549,6 +557,11 @@ export default {
 			if (!isLt2M) {
 				this.$message.error("上传文件大小不能超过 5MB!");
 			}
+      if (file.name.length > 30) {
+        this.$message.error("上传文件名称大小不能超过30个字符!");
+        return false;
+      }
+
 			return fileTypeVerify && isLt2M;
 		},
 		buildpersonNoSideImgGroupId() {
@@ -601,6 +614,10 @@ export default {
 			if (!isLt2M) {
 				this.$message.error("上传文件大小不能超过 5MB!");
 			}
+      if (file.name.length > 30) {
+        this.$message.error("上传文件名称大小不能超过30个字符!");
+        return false;
+      }
 			return fileTypeVerify && isLt2M;
 		},
 		buildProtocalFileGroupId() {
@@ -658,6 +675,10 @@ export default {
 			if (!isLt2M) {
 				this.$message.error("上传文件大小不能超过 5MB!");
 			}
+      if (file.name.length > 30) {
+        this.$message.error("上传文件名称大小不能超过30个字符!");
+        return false;
+      }
 			return fileTypeVerify && isLt2M;
 		},
 		initDefaultImage() {
