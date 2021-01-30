@@ -499,6 +499,11 @@ export default {
 			if (!isLt2M) {
 				this.$message.error("上传文件大小不能超过 5MB!");
 			}
+      if (file.name.length > 30) {
+        this.$message.error("上传文件名称大小不能超过30个字符!");
+        return false;
+      }
+
 			return fileTypeVerify && isLt2M;
 		},
 		buildPersonNoFrontImgGroupId() {
@@ -549,6 +554,11 @@ export default {
 			if (!isLt2M) {
 				this.$message.error("上传文件大小不能超过 5MB!");
 			}
+      if (file.name.length > 30) {
+        this.$message.error("上传文件名称大小不能超过30个字符!");
+        return false;
+      }
+
 			return fileTypeVerify && isLt2M;
 		},
 		buildpersonNoSideImgGroupId() {
@@ -601,6 +611,10 @@ export default {
 			if (!isLt2M) {
 				this.$message.error("上传文件大小不能超过 5MB!");
 			}
+      if (file.name.length > 30) {
+        this.$message.error("上传文件名称大小不能超过30个字符!");
+        return false;
+      }
 			return fileTypeVerify && isLt2M;
 		},
 		buildProtocalFileGroupId() {
@@ -658,6 +672,10 @@ export default {
 			if (!isLt2M) {
 				this.$message.error("上传文件大小不能超过 5MB!");
 			}
+      if (file.name.length > 30) {
+        this.$message.error("上传文件名称大小不能超过30个字符!");
+        return false;
+      }
 			return fileTypeVerify && isLt2M;
 		},
 		initDefaultImage() {
