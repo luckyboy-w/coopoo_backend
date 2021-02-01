@@ -997,6 +997,7 @@ export default {
     },
     handleClick(tab, event) {
       console.log(tab.index)
+      this.cashNo = ''
       this.tabIndex = tab.index
       if (tab.index == 0) {
         this.loadList();
