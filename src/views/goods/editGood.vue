@@ -879,7 +879,7 @@ export default {
           return "error";
         }
 
-        if (rowObj.stock == '') {
+        if (rowObj.stock < 0) {
           errorMsg = '库存不能为空'
         }
 
