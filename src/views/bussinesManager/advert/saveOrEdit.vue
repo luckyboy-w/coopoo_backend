@@ -66,6 +66,10 @@
             label="编辑器"
             value="4"
           />
+          <el-option
+            label="活动商品"
+            value="5"
+          />
         </el-select>
       </el-form-item>
       <el-form-item :label="choiceTitle[dataForm.dataType]">
@@ -87,6 +91,20 @@
           v-if="dataForm.dataType == 2"
           v-model="dataForm.advertUrl"
         />
+        <el-select
+          v-if="dataForm.dataType == 5"
+          v-model="dataForm.advertUrl"
+          filterable
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="item in goodActivityList"
+            :key="item.id"
+            :value-key="item.activityName"
+            :label="item.activityName"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item
         v-if="dataForm.dataType == 3"
@@ -186,8 +204,10 @@
         choiceTitle: {
           "1": "选择商品",
           "2": "输入链接",
+          "5": "选择商品活动"
         },
         // typeId2: '',
+        goodActivityList: [],
         typeIdList: [],
         typeId2List: [],
         moduleName: 'activityContentName',
@@ -222,6 +242,7 @@
     },
     mounted() {
       this.loodGoodList();
+      this.loadGoodActivity();
       this.loadtypeIdList();
       this.buildAdvertGroupId();
       this.$nextTick(function() {
@@ -326,6 +347,15 @@
         }
         getMethod("/backend/good/findPage", param).then(res => {
           scope.goodList = res.data.list
+        });
+      },
+      loadGoodActivity() {
+        getMethod("/backend/goodActivity/findAll").then(res => {
+          res.data.map(item => item.id + "");
+          this.goodActivityList = res.data.map(item => {
+            item.id += ""
+            return item
+          })
         });
       },
       beforeAdvertUpload(file) {
