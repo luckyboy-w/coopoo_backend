@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="ly-container">
+    <div class="ly-container" v-if="showActivityList">
       <div class="ly-tool-panel">
         <table>
           <tr>
@@ -32,7 +32,7 @@
           <el-table-column label="操作" width="200px">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click.native.prevent="addOrEdit('edit', scope.row)">修改</el-button>
-              <el-button type="text" size="small" @click.native.prevent="closeActivityDialog">新增商品</el-button>
+              <el-button type="text" size="small" @click.native.prevent="addGood(scope.row)">新增商品</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -78,10 +78,13 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <goodsList v-if="showGoodList" :activityData="activityData"></goodsList>
   </div>
 </template>
 
 <script>
+import goodsList from "./goodsList";
 import { getUploadUrl, postMethod, getMethod  } from "@/api/request";
 import { formatDate } from "@/api/tools.js"
 
@@ -93,7 +96,7 @@ export default {
       }
       let date = new Date(time);
       return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
-    },
+    }
   },
   name:'',
   props:[''],
@@ -114,6 +117,8 @@ export default {
     }
     return {
       isLoading: true,
+      showActivityList: true,
+      showGoodList: false,
       showPagination: false,
       isShowActivityDialog: false,
       hideActivityFrontImageUpload: false,
@@ -127,6 +132,7 @@ export default {
         frontImage: [{ required: true, validator: validateFrontImage, trigger: "blur"}],
         activityDateTimePeriod: [{ required: true, validator: validateActivityDateTimePeriod}],
       },
+      activityData: null,
       uploadActivityFrontImageUrl: getUploadUrl(),
       activityForm: {
       },
@@ -136,7 +142,7 @@ export default {
       }
     };
   },
-  computed: {},
+  components: {goodsList},
   beforeMount() {},
 
   mounted() {
@@ -195,7 +201,6 @@ export default {
         let imgObj = {url: activity.frontImage}
         this.uploadActivityFrontImageList.push(imgObj)
         this.hideActivityFrontImageUpload = true
-        console.info(activity)
         let startTime = new Date(activity.startTime);
         this.activityForm.startTime = formatDate(startTime, 'yyyy-MM-dd hh:mm:ss')
         let endTime = new Date(activity.endTime);
@@ -206,6 +211,12 @@ export default {
         this.activity = {};
       }
       this.isShowActivityDialog = true
+    },
+
+    addGood(row) {
+      this.activityData = row
+      this.showGoodList = true
+      this.showActivityList = false
     },
 
     submit() {
