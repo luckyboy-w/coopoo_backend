@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="padding:20px 10px">
+    <div style="padding:20px 10px" v-if="showActivityGoodList">
       <div class="ly-tool-panel">
         <table>
           <tr>
@@ -30,7 +30,7 @@
             </td>
             <td>
               <el-button icon="el-icon-search" @click="search()">查询</el-button>
-              <el-button plain type="primary" @click="addOrEdit('add')" icon="el-icon-document-add">新增</el-button>
+              <el-button plain type="primary" @click="saveOrUpdate('add')" icon="el-icon-document-add">新增</el-button>
             </td>
           </tr>
         </table>
@@ -69,7 +69,7 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click.native.prevent="addOrEdit('edit', scope.row)">修改</el-button>
-              <el-button type="text" size="small" @click.native.prevent="addGood(scope.row)">新增商品</el-button>
+              <el-button type="text" size="small" @click.native.prevent="saveOrUpdate('edit')">修改</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -79,11 +79,14 @@
         </div>
       </div>
     </div>
+
+    <saveOrUpdate v-if="showSaveOrUpdate" :activityName="activityName"></saveOrUpdate>
   </div>
 </template>
 
 <script>
-import { getMethod, postMethod } from '@/api/request'
+import saveOrUpdate from "./saveOrUpdate";
+import { getMethod } from '@/api/request'
 import { formatDate } from "@/api/tools.js"
 
 export default {
@@ -106,7 +109,10 @@ export default {
   data () {
     return {
       isLoading: false,
+      showActivityGoodList: true,
+      showSaveOrUpdate: false,
       showPagination: false,
+      activityName: '',
       tableData: {
         list: []
       },
@@ -117,12 +123,12 @@ export default {
       }
     };
   },
-  components: {},
+  components: { saveOrUpdate },
   computed: {},
   beforeMount() {},
 
   mounted() {
-    console.info(this.activityData)
+    this.activityName = this.activityData.activityName
     this.searchParam.goodActivityId = this.activityData.id;
     this.initSupplyList();
     this.loadList();
@@ -131,7 +137,6 @@ export default {
   methods: {
     initSupplyList() {
       getMethod('/backend/supplier/findList', {}).then(res => {
-        console.info(res.data)
         this.supplyList = res.data
       })
     },
@@ -142,14 +147,19 @@ export default {
         scope.isLoading = true
       }
       getMethod("/backend/goodActivity/findMarketingGood", this.searchParam).then(res => {
-        scope.tableData = res.data;
+        scope.tableData = res.data
         scope.isLoading = false
-        scope.showPagination = scope.tableData.total == 0;
+        scope.showPagination = scope.tableData.total == 0
       });
     },
 
     search() {
       this.loadList();
+    },
+
+    saveOrUpdate(oper) {
+      this.showActivityGoodList = false
+      this.showSaveOrUpdate = true
     },
 
     currentPage(pageNum) {
