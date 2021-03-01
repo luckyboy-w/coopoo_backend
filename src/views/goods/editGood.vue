@@ -4,10 +4,10 @@
       <el-col :xs="24" :sm="24" :lg="24" class="card-panel-col">
         <el-form ref="dataForm" :model="dataForm" label-width="100px">
           <el-form-item label="商品名称">
-            <el-input v-model="dataForm.goodName" style="width:450px"/>
+            <el-input v-model="dataForm.goodName" style="width:450px" :disabled="isDisabled"/>
           </el-form-item>
           <el-form-item label="商品库存" v-show="false">
-            <el-input v-model="dataForm.stockNum" style="width:260px"/>
+            <el-input v-model="dataForm.stockNum" style="width:260px" :disabled="isDisabled"/>
           </el-form-item>
           <el-form-item label="所属分类">
             <el-input v-model="dataForm.typeName" style="width:120px" disabled/>
@@ -17,7 +17,7 @@
             <el-input v-model="stockTypeText" style="width:120px" disabled/>
           </el-form-item>
           <el-form-item label="库存数量" v-show="stockCls == 'hide' ">
-            <el-input v-model="dataForm.stockNum" style="width:260px"/>
+            <el-input v-model="dataForm.stockNum" style="width:260px" :disabled="isDisabled"/>
           </el-form-item>
           <el-form-item label="SKU配置">
             <el-table ref="skuTable" :data="skuList" style="width: 100%; margin-bottom: 20px;">
@@ -47,18 +47,19 @@
             </el-table>
           </el-form-item>
           <el-form-item label="商品产地">
-            <el-input v-model="dataForm.goodOrigin" style="width:260px" placeholder="输入商品产地"/>
+            <el-input v-model="dataForm.goodOrigin" style="width:260px" placeholder="输入商品产地" :disabled="isDisabled"/>
           </el-form-item>
           <el-form-item label="商品编码">
-            <el-input v-model="dataForm.goodCode" style="width:260px"/>
+            <el-input v-model="dataForm.goodCode" style="width:260px" :disabled="isDisabled"/>
           </el-form-item>
           <el-form-item label="所属品牌">
-            <el-input v-model="dataForm.brandName" style="width:260px"/>
+            <el-input v-model="dataForm.brandName" style="width:260px" :disabled="isDisabled"/>
           </el-form-item>
           <el-form-item label="封面图片">
             <div id="front-img">
               <el-input v-show="false" v-model="dataForm.goodFrontImage"></el-input>
               <el-upload
+                :disabled="isDisabled"
                 :action="uploadGoodFrontImageUrl"
                 list-type="picture-card"
                 :on-preview="handleGoodImagePreview"
@@ -77,6 +78,7 @@
           <el-form-item label="商品图片">
             <el-input v-show="false" v-model="dataForm.goodImage"/>
             <el-upload
+              :disabled="isDisabled"
               :action="uploadGoodImageUrl"
               list-type="picture-card"
               :on-preview="handleGoodImagePreview"
@@ -96,7 +98,7 @@
             <img width="100%" :src="goodSaleDescImgUrl" alt>
           </el-dialog>
           <el-form-item label="售后说明图片">
-            <el-radio-group v-model="dataForm.afterSaleId">
+            <el-radio-group v-model="dataForm.afterSaleId" :disabled="isDisabled">
               <el-radio
                 class="my-el-radio"
                 v-for="(item,index) in goodSaleDescList"
@@ -125,7 +127,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="商品卖点">
-            <el-input v-model="dataForm.goodMerit" style="width:260px" placeholder="请输入卖点"/>
+            <el-input v-model="dataForm.goodMerit" style="width:260px" placeholder="请输入卖点" :disabled="isDisabled"/>
           </el-form-item>
           <el-form-item label="成本价">
             <el-row>
@@ -133,19 +135,19 @@
                 成本价:
               </el-col>
               <el-col :span="6">
-                <el-input v-model="dataForm.primeCost" placeholder="成本价" style="width:80px"/>
+                <el-input v-model="dataForm.primeCost" placeholder="成本价" style="width:80px" :disabled="isDisabled"/>
               </el-col>
               <el-col :span="2">
                 包装成本:
               </el-col>
               <el-col :span="6">
-                <el-input v-model="dataForm.packageCost" placeholder="包装成本" style="width:80px"/>
+                <el-input v-model="dataForm.packageCost" placeholder="包装成本" style="width:80px" :disabled="isDisabled"/>
               </el-col>
               <el-col :span="2">
                 加工成本:
               </el-col>
               <el-col :span="6">
-                <el-input v-model="dataForm.processCost" placeholder="加工成本" style="width:80px"/>
+                <el-input v-model="dataForm.processCost" placeholder="加工成本" style="width:80px" :disabled="isDisabled"/>
               </el-col>
             </el-row>
             <el-row>
@@ -153,36 +155,36 @@
                 物流成本:
               </el-col>
               <el-col :span="6">
-                <el-input v-model="dataForm.expressCost" placeholder="物流成本" style="width:80px"/>
+                <el-input v-model="dataForm.expressCost" placeholder="物流成本" style="width:80px" :disabled="isDisabled"/>
               </el-col>
               <el-col :span="2">
                 利润:
               </el-col>
               <el-col :span="6">
-                <el-input v-model="dataForm.profit" placeholder="利润" style="width:80px"/>
+                <el-input v-model="dataForm.profit" placeholder="利润" style="width:80px" :disabled="isDisabled"/>
               </el-col>
               <el-col :span="2">
                 预估报价:
               </el-col>
               <el-col :span="6">
-                <el-input v-model="dataForm.predictFee" placeholder="预估报价" style="width:80px"/>
+                <el-input v-model="dataForm.predictFee" placeholder="预估报价" style="width:80px" :disabled="isDisabled"/>
               </el-col>
             </el-row>
           </el-form-item>
           <el-form-item label="是否推荐">
-            <el-switch v-model="dataForm.recommend" inactive-value="0" active-value="1"/>
+            <el-switch v-model="dataForm.recommend" inactive-value="0" active-value="1" :disabled="isDisabled"/>
           </el-form-item>
           <el-form-item label="是否定制">
-            <el-switch v-model="dataForm.custom" inactive-value="0" active-value="1"/>
+            <el-switch v-model="dataForm.custom" inactive-value="0" active-value="1" :disabled="isDisabled"/>
           </el-form-item>
           <el-form-item label="商品风格专场">
-            <el-checkbox-group v-model="goodStyleList" @change="changeStyle">
+            <el-checkbox-group v-model="goodStyleList" @change="changeStyle" :disabled="isDisabled">
               <el-checkbox v-for="styleText in styleList" :label="styleText" :key="styleText">{{ styleText }}
               </el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="商家承偌服务">
-            <el-checkbox-group v-model="serviceRuleList">
+            <el-checkbox-group v-model="serviceRuleList" :disabled="isDisabled">
               <el-checkbox v-for="obj in buServiceList" :label="obj" :key="obj">{{ obj }}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
@@ -229,6 +231,7 @@
       <el-form ref="verifyForm" :model="verifyForm" label-width="100px">
         <el-form-item label="">
           <el-input
+            :disabled="isDisabled"
             v-model="verifyForm.recContent"
             type="textarea"
             :rows="5"
@@ -236,16 +239,16 @@
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="rejectSubmit()">驳回</el-button>
+          <el-button type="primary" @click="rejectSubmit()" :disabled="isDisabled">驳回</el-button>
           <el-button @click="dialogVerify = false">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
 
     <el-footer style="padding:0px 100px">
-      <el-button type="primary" @click="submitFee()" v-if="!isEditGood">审核通过</el-button>
-      <el-button @click="rejectSubmit()" v-if="!isEditGood">驳回提交</el-button>
-      <el-button @click="saveSubmit()" v-if="isEditGood">保存编辑</el-button>
+      <el-button type="primary" @click="submitFee()" v-if="!isEditGood" :disabled="isDisabled">审核通过</el-button>
+      <el-button @click="rejectSubmit()" v-if="!isEditGood" :disabled="isDisabled">驳回提交</el-button>
+      <el-button @click="saveSubmit()" v-if="isEditGood" :disabled="isDisabled">保存编辑</el-button>
       <el-button @click="backToList()">返回列表</el-button>
     </el-footer>
   </div>
@@ -273,6 +276,11 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    isDisabled: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data() {
