@@ -32,7 +32,7 @@
           <el-table-column label="操作" width="200px">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click.native.prevent="addOrEdit('edit', scope.row)">修改</el-button>
-              <el-button type="text" size="small" @click.native.prevent="addGood(scope.row)">新增商品</el-button>
+              <!--<el-button type="text" size="small" @click.native.prevent="addGood(scope.row)">新增商品</el-button>-->
             </template>
           </el-table-column>
         </el-table>
