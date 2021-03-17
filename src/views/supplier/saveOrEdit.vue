@@ -165,7 +165,7 @@
 						class="el-upload-list__item is-success el-list-enter-to"
 					>
 						<!---->
-						<a class="el-upload-list__item-name" @click="downlandFile(item)">
+						<a class="el-upload-list__item-name" @click="downloadFile(item)">
 							<i class="el-icon-document"></i>{{item.name}}</a>
 						<label class="el-upload-list__item-status-label">
 							<i
@@ -205,6 +205,7 @@
 <script>
 import { getMethod, postMethod, getUploadUrl } from "@/api/request";
 import { luhnCheck } from "@/utils/validate";
+import axios from 'axios'
 
 export default {
 	computed: {},
@@ -644,6 +645,29 @@ export default {
 				}
 			}
 		},
+    downloadFile(file) {
+      /*console.info(file);
+      window.open(file.url);*/
+      //下载图片地址和图片名
+      var image = new Image();
+      // 解决跨域 Canvas 污染问题
+      image.setAttribute("crossOrigin", "anonymous");
+      image.onload = function() {
+        var canvas = document.createElement("canvas");
+        canvas.width = image.width;
+        canvas.height = image.height;
+        var context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0, image.width, image.height);
+        var url = canvas.toDataURL("image/png"); //得到图片的base64编码数据
+
+        var a = document.createElement("a"); // 生成一个a元素
+        var event = new MouseEvent("click"); // 创建一个单击事件
+        a.download = name || "photo"; // 设置图片名称
+        a.href = url; // 将生成的URL设置为a.href属性
+        a.dispatchEvent(event); // 触发a的单击事件
+      };
+      image.src = file.url;
+    },
 		handleProtocalFileSuccess(res, file) {
 			res.data.fileType = file.raw.type;
 			res.data.sort = this.fileSortImage++;

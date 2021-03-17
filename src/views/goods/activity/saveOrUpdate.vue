@@ -5,7 +5,7 @@
       <span>活动商品信息</span>
       <el-divider content-position="left"/>
       <el-form-item label="活动名称:">
-        {{ activityName }}
+        {{ activity.activityName }}
       </el-form-item>
       <el-divider content-position="left"/>
       <el-form-item label="供应商名名称:" prop="supplierId">
@@ -33,8 +33,8 @@
         </div>
       </el-scrollbar>
       <el-divider content-position="left"/>
+      <!--用户限购 <el-input v-model=""></el-input>-->
       <el-table style="margin-top: 10px" :key="table.goodId" v-for="(table,index) in tableList" :data="table.table" :span-method="objectSpanMethod" border>
-        <el-table-column  align="center" prop="goodName" label="商品名称"></el-table-column>
         <el-table-column
           align="center"
           v-for="(item,index) in table.columnList"
@@ -113,6 +113,7 @@
           v-model="activityGoodForm.preheatTimePeriod"
           type="datetimerange"
           range-separator="至"
+          disabled
           start-placeholder="开始日期"
           end-placeholder="结束日期">
         </el-date-picker>
@@ -123,6 +124,7 @@
           v-model="activityGoodForm.activityTimePeriod"
           type="datetimerange"
           range-separator="至"
+          disabled
           start-placeholder="开始日期"
           end-placeholder="结束日期">
         </el-date-picker>
@@ -149,8 +151,8 @@ export default {
       type: Object,
       required: false
     },
-    activityName: {
-      type: String,
+    activity: {
+      type: Object,
       required: false
     }
   },
@@ -165,6 +167,7 @@ export default {
       goodName: null,
       supplyList: [],
       goodList: [],
+      activityGoodList: [],
       tableList: [],
       addStockColumnList: [],
       goodSkuList: [],
@@ -181,6 +184,8 @@ export default {
   beforeMount() {},
 
   mounted() {
+    console.info(this.activity)
+    this.activityGoodForm.activityTimePeriod = [new Date(this.activity.startTime), new Date(this.activity.endTime)]
     this.initSupplyList()
   },
 
@@ -203,9 +208,14 @@ export default {
       if (this.tableList.length > checkedGood.length) {
         let tableList = this.tableList.filter(item => item.goodId == checkedGoodId);
         this.tableList = tableList;
+        console.info("减")
+        console.info(this.tableList)
+        console.info(checkedGood)
       } else if (this.tableList.length < checkedGood.length) {
         let good = this.goodList.filter(item => item.id == checkedGoodId)
-
+        console.info("加")
+        console.info(this.tableList)
+        console.info(checkedGood)
         let param = {
           goodId: checkedGood[checkedGood.length - 1]
         }

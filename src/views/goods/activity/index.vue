@@ -24,6 +24,11 @@
             </template>
           </el-table-column>
           <el-table-column prop="activityName" label="活动名称" width="200px"/>
+          <el-table-column prop="frontImage" label="预热有效期" width="400px">
+            <template slot-scope="scope">
+              {{ scope.row.preheatStartTime | _formateDate}} 至 {{scope.row.preheatEndTime | _formateDate }}
+            </template>
+          </el-table-column>
           <el-table-column prop="frontImage" label="活动有效期" width="400px">
             <template slot-scope="scope">
               {{ scope.row.startTime | _formateDate}} 至 {{scope.row.endTime | _formateDate }}
@@ -32,7 +37,7 @@
           <el-table-column label="操作" width="200px">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click.native.prevent="addOrEdit('edit', scope.row)">修改</el-button>
-              <!--<el-button type="text" size="small" @click.native.prevent="addGood(scope.row)">新增商品</el-button>-->
+              <el-button type="text" size="small" @click.native.prevent="addGood(scope.row)">新增商品</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -59,6 +64,18 @@
           >
             <i class="el-icon-plus"></i>
           </el-upload>
+        </el-form-item>
+        <el-form-item label="预热有效期" prop="activityPreheatDateTimePeriod">
+          <el-date-picker
+            v-model="activityPreheatDateTimePeriod"
+            type="datetimerange"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            @change="activityPreheatDateTimeChange"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            :default-time="['12:00:00']">
+            style="width:80%"
+          </el-date-picker>
         </el-form-item>
         <el-form-item label="活动有效期" prop="activityDateTimePeriod">
           <el-date-picker
@@ -115,6 +132,13 @@ export default {
         callback()
       }
     }
+    const validateActivityPreheatDateTimePeriod = (rule, value, callback) => {
+      if (this.activityDateTimePeriod === undefined || this.activityDateTimePeriod === null || this.activityDateTimePeriod === '') {
+        callback(new Error('请选择预热有效期'))
+      } else {
+        callback()
+      }
+    }
     return {
       isLoading: true,
       showActivityList: true,
@@ -124,6 +148,7 @@ export default {
       hideActivityFrontImageUpload: false,
       uploadActivityFrontImageList: [],
       activityDateTimePeriod: null,
+      activityPreheatDateTimePeriod: null,
       tableData: {
         list: []
       },
@@ -131,6 +156,7 @@ export default {
         activityName: [{ required: true, message: '请输入活动名称', trigger: 'blur'}],
         frontImage: [{ required: true, validator: validateFrontImage, trigger: "blur"}],
         activityDateTimePeriod: [{ required: true, validator: validateActivityDateTimePeriod}],
+        activityPreheatDateTimePeriod: [{ required: true, validator: validateActivityPreheatDateTimePeriod}],
       },
       activityData: null,
       uploadActivityFrontImageUrl: getUploadUrl(),
@@ -178,6 +204,7 @@ export default {
       this.hideActivityFrontImageUpload = true
       this.activityForm.frontImage = res.data.url
       this.clearValidate('activityDateTimePeriod')
+      this.clearValidate('activityPreheatDateTimePeriod')
     },
 
     handleActivityFrontImageRemove() {
@@ -190,6 +217,11 @@ export default {
       this.activityForm.endTime = this.activityDateTimePeriod[1]
     },
 
+    activityPreheatDateTimeChange() {
+      this.activityForm.preheatStartTime = this.activityPreheatDateTimePeriod[0]
+      this.activityForm.preheatEndTime = this.activityPreheatDateTimePeriod[1]
+    },
+
     search() {
       this.loadList();
     },
@@ -198,6 +230,7 @@ export default {
       if (oper == "edit") {
         this.activityForm = JSON.parse(JSON.stringify(activity))
         this.activityDateTimePeriod = [new Date(activity.startTime), new Date(activity.endTime)]
+        this.activityDateTimePeriod = [new Date(activity.preheatStartTime), new Date(activity.preheatEndTime)]
         let imgObj = {url: activity.frontImage}
         this.uploadActivityFrontImageList.push(imgObj)
         this.hideActivityFrontImageUpload = true

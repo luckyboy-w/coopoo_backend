@@ -68,7 +68,6 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click.native.prevent="addOrEdit('edit', scope.row)">修改</el-button>
               <el-button type="text" size="small" @click.native.prevent="saveOrUpdate('edit')">修改</el-button>
             </template>
           </el-table-column>
@@ -80,7 +79,7 @@
       </div>
     </div>
 
-    <saveOrUpdate v-if="showSaveOrUpdate" :activityName="activityName"></saveOrUpdate>
+    <saveOrUpdate v-if="showSaveOrUpdate" :activity="activity"></saveOrUpdate>
   </div>
 </template>
 
@@ -112,7 +111,7 @@ export default {
       showActivityGoodList: true,
       showSaveOrUpdate: false,
       showPagination: false,
-      activityName: '',
+      activity: null,
       tableData: {
         list: []
       },
@@ -128,7 +127,7 @@ export default {
   beforeMount() {},
 
   mounted() {
-    this.activityName = this.activityData.activityName
+    this.activity = this.activityData
     this.searchParam.goodActivityId = this.activityData.id;
     this.initSupplyList();
     this.loadList();
