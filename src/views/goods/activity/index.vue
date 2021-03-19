@@ -49,6 +49,13 @@
     </div>
     <el-dialog :visible.sync="isShowActivityDialog" v-if="isShowActivityDialog" @close="closeActivityDialog" width="30%">
       <el-form class="update-form-panel" ref="activityForm" :rules="activityFormRules" :model="activityForm" label-width="100px" style="width:80%">
+        <el-form-item label="活动类型" prop="activityType">
+          <el-select ref="select" v-model="activityForm.activityType" placeholder="请选择活动类型">
+            <el-option label="请选择..." value="" />
+            <el-option label="普通活动" value="1" />
+            <el-option label="雷锋商品" value="2" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="活动名称" prop="activityName">
           <el-input v-model="activityForm.activityName"/>
         </el-form-item>
@@ -139,6 +146,14 @@ export default {
         callback()
       }
     }
+
+    const validateActivityType = (rule, value, callback) => {
+      if (this.activityForm.activityType === undefined || this.activityForm.activityType === null || this.activityForm.activityType === '') {
+        callback(new Error('选择活动类型'))
+      } else {
+        callback()
+      }
+    }
     return {
       isLoading: true,
       showActivityList: true,
@@ -154,6 +169,7 @@ export default {
       },
       activityFormRules: {
         activityName: [{ required: true, message: '请输入活动名称', trigger: 'blur'}],
+        activityType: [{ required: true, validator: validateActivityType, trigger: 'change'}],
         frontImage: [{ required: true, validator: validateFrontImage, trigger: "blur"}],
         activityDateTimePeriod: [{ required: true, validator: validateActivityDateTimePeriod}],
         activityPreheatDateTimePeriod: [{ required: true, validator: validateActivityPreheatDateTimePeriod}],
@@ -161,6 +177,7 @@ export default {
       activityData: null,
       uploadActivityFrontImageUrl: getUploadUrl(),
       activityForm: {
+        activityType: ""
       },
       searchParam: {
         pageSize: 10,
