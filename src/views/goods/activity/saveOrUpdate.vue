@@ -33,36 +33,39 @@
         </div>
       </el-scrollbar>
       <el-divider content-position="left"/>
-      <!--用户限购 <el-input v-model=""></el-input>-->
-      <el-table style="margin-top: 10px" :key="table.goodId" v-for="(table,index) in tableList" :data="table.table" :span-method="objectSpanMethod" border>
-        <el-table-column
-          align="center"
-          v-for="(item,index) in table.columnList"
-          :key="index"
-          :label="item"
-          width=""
-        >
-          <template slot-scope="scope">
-            {{ scope.row.tdList[index].value }}
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="saleMemPrice" label="会员价"></el-table-column>
-        <el-table-column align="center" prop="stock" label="价格">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.marketingPrice"></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="stock" label="库存">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.marketingStock"></el-input>
-          </template>
-        </el-table-column>
-      </el-table>
+      <div v-for="(table,index) in tableList" :key="table.goodId" style="margin-top: 20px">
+        <p>{{ table.goodName }}</p>
+        <span>用户限购&nbsp;&nbsp;&nbsp;&nbsp;</span> <el-input v-model="table.userLimit" style="width: 200px"></el-input>
+        <el-table style="margin-top: 10px" :data="table.table" :span-method="objectSpanMethod" border>
+          <el-table-column
+            align="center"
+            v-for="(item,index) in table.columnList"
+            :key="index"
+            :label="item"
+            width=""
+          >
+            <template slot-scope="scope">
+              {{ scope.row.tdList[index].value }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="saleMemPrice" label="会员价"></el-table-column>
+          <el-table-column align="center" prop="marketingPrice" label="活动价">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.marketingPrice"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column prop="stock" label="库存">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.marketingStock"></el-input>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
       <el-divider content-position="left"/>
       <el-row align="middle">
         <el-col :span="4">
           <div style="height:130px;display: table-cell;vertical-align:middle" class="grid-content bg-purple-dark">
-            <span>服务商比例:</span><el-input placeholder="请输入..." style="width: 180px" v-model="activityGoodForm.providerRebateRatioA"/>%
+            <span>供应商比例:</span><el-input placeholder="请输入..." style="width: 180px" v-model="activityGoodForm.supplierRebateRatio"/>%
           </div>
         </el-col>
         <el-col :span="1">
@@ -74,33 +77,33 @@
           <div class="grid-content bg-purple-dark" style="height:150px">
             <el-table :data="rebateRatioData" border>
               <el-table-column prop="id" label="A（%）">
-                <template>
-                  <el-input placeholder="请输入..." v-model="activityGoodForm.providerRebateRatioA"/>
+                <template slot-scope="scope">
+                  <el-input placeholder="请输入..." v-model="scope.row.providerRebateRatioA"  />
                 </template>
               </el-table-column>
               <el-table-column prop="id" label="B（%）">
-                <template>
-                  <el-input placeholder="请输入..." v-model="activityGoodForm.providerRebateRatioB"/>
+                <template slot-scope="scope">
+                  <el-input placeholder="请输入..." v-model="scope.row.providerRebateRatioB"/>
                 </template>
               </el-table-column>
               <el-table-column prop="id" label="C（%）">
-                <template>
-                  <el-input placeholder="请输入..." v-model="activityGoodForm.providerRebateRatioC"/>
+                <template slot-scope="scope">
+                  <el-input placeholder="请输入..." v-model="scope.row.providerRebateRatioC"/>
                 </template>
               </el-table-column>
               <el-table-column prop="id" label="D（%）">
-                <template>
-                  <el-input placeholder="请输入..." v-model="activityGoodForm.providerRebateRatioD"/>
+                <template slot-scope="scope">
+                  <el-input placeholder="请输入..." v-model="scope.row.providerRebateRatioD"/>
                 </template>
               </el-table-column>
               <el-table-column prop="id" label="E（%）">
-                <template>
-                  <el-input placeholder="请输入..." v-model="activityGoodForm.providerRebateRatioE"/>
+                <template slot-scope="scope">
+                  <el-input placeholder="请输入..." v-model="scope.row.providerRebateRatioE"/>
                 </template>
               </el-table-column>
               <el-table-column prop="id" label="EA（%）">
-                <template>
-                  <el-input placeholder="请输入..." v-model="activityGoodForm.providerRebateRatioEA"/>
+                <template slot-scope="scope">
+                  <el-input placeholder="请输入..." v-model="scope.row.providerRebateRatioEA"/>
                 </template>
               </el-table-column>
             </el-table>
@@ -130,7 +133,7 @@
         </el-date-picker>
       </el-form-item>
       <el-divider content-position="left"/>
-      <el-button @click="submit" style="display:block;margin:0 auto" type="primary">提交</el-button>
+      <el-button @click="submit" :loading="loading" style="display:block;margin:0 auto" type="primary">提交</el-button>
     </el-form>
 
     <el-dialog :visible.sync="isShowGoodDetail" width="80%" append-to-body>
@@ -140,7 +143,7 @@
 </template>
 
 <script>
-import { getMethod } from '@/api/request'
+import { getMethod, postMethod } from '@/api/request'
 import showGoodDetail from "./goodDetial.vue";
 import { deepCopy } from '@/utils/util'
 
@@ -161,6 +164,7 @@ export default {
     return {
       isShowGoodDetail: false,
       isEditGood: false,
+      loading: false,
       goodInfo: null,
       isGift: '1',
       checkedGood: [],
@@ -171,9 +175,17 @@ export default {
       tableList: [],
       addStockColumnList: [],
       goodSkuList: [],
-      rebateRatioData: [{id: 11}],
+      rebateRatioData: [{
+        providerRebateRatioA: 10,
+        providerRebateRatioB: 10,
+        providerRebateRatioC: 10,
+        providerRebateRatioD: 10,
+        providerRebateRatioE: 10,
+        providerRebateRatioEA: 5
+      }],
       activityGoodForm: {
-        supplierId: ''
+        supplierId: '',
+        supplierRebateRatio: 90
       },
       activityFormRules: {
 
@@ -184,7 +196,6 @@ export default {
   beforeMount() {},
 
   mounted() {
-    console.info(this.activity)
     this.activityGoodForm.activityTimePeriod = [new Date(this.activity.startTime), new Date(this.activity.endTime)]
     this.initSupplyList()
   },
@@ -203,30 +214,31 @@ export default {
     },
 
     handleCheckedGoodChange(checkedGood) {
-      let checkedGoodId = checkedGood[checkedGood.length - 1]
+      let newGoodArray = this.tableList.filter(good => checkedGood.some(goodId => goodId === good.goodId));
 
       if (this.tableList.length > checkedGood.length) {
-        let tableList = this.tableList.filter(item => item.goodId == checkedGoodId);
-        this.tableList = tableList;
-        console.info("减")
-        console.info(this.tableList)
-        console.info(checkedGood)
+        if (checkedGood.length == 0) {
+          this.tableList = []
+        } else {
+          this.tableList = []
+          for (let i = 0; i < newGoodArray.length; i++) {
+            this.tableList.push(newGoodArray[i])
+          }
+        }
       } else if (this.tableList.length < checkedGood.length) {
+        let checkedGoodId = checkedGood[checkedGood.length - 1]
         let good = this.goodList.filter(item => item.id == checkedGoodId)
-        console.info("加")
-        console.info(this.tableList)
-        console.info(checkedGood)
         let param = {
           goodId: checkedGood[checkedGood.length - 1]
         }
 
         getMethod("/backend/good/findById", param).then(res => {
           this.$nextTick(() => {
-            this.loadTableList(res.data.skuPriceList, good[0].goodName, good[0].id)
+            let table = this.loadTableList(res.data.skuPriceList, good[0].goodName, good[0].id)
+            this.tableList.push(table)
           })
         });
       }
-
     },
 
     goodInputEvent(inputValue) {
@@ -255,28 +267,146 @@ export default {
     },
 
     submit() {
-      console.info(this.tableList)
-/*      this.$refs.activityGoodForm.validate(valid => {
-        if (valid) {
-          postMethod('/backend/goodActivity/save', this.activityForm).then(
-            res => {
-              if (res.code != 200) {
-                this.$message({
-                  message: res.message,
-                  type: 'warning'
-                })
-                return;
-              }
-              this.$message({
-                message: '添加成功',
-                type: 'success'
-              })
-              this.closeActivityDialog()
-              this.loadList()
-            }
-          )
+      if (this.tableList.length == 0) {
+        this.$message({
+          message: "请选择商品",
+          type: 'warning'
+        });
+        return;
+      }
+
+      this.activityGoodForm.providerRebateRatioA = this.rebateRatioData[0].providerRebateRatioA;
+      this.activityGoodForm.providerRebateRatioB = this.rebateRatioData[0].providerRebateRatioB
+      this.activityGoodForm.providerRebateRatioC = this.rebateRatioData[0].providerRebateRatioC
+      this.activityGoodForm.providerRebateRatioD = this.rebateRatioData[0].providerRebateRatioD
+      this.activityGoodForm.providerRebateRatioE = this.rebateRatioData[0].providerRebateRatioE
+      this.activityGoodForm.providerRebateRatioEA = this.rebateRatioData[0].providerRebateRatioEA
+      const integerReg = /^\+?[1-9][0-9]*$/;
+
+      let marketingGoodsList = []
+
+      for (let i = 0; i < this.tableList.length; i++) {
+        let table = this.tableList[i]
+
+        table.supplierRebateRatio = this.activityGoodForm.supplierRebateRatio
+        table.providerRebateRatioA = this.activityGoodForm.providerRebateRatioA
+        table.providerRebateRatioB = this.activityGoodForm.providerRebateRatioB
+        table.providerRebateRatioC = this.activityGoodForm.providerRebateRatioC
+        table.providerRebateRatioD = this.activityGoodForm.providerRebateRatioD
+        table.providerRebateRatioE = this.activityGoodForm.providerRebateRatioE
+        table.providerRebateRatioEA = this.activityGoodForm.providerRebateRatioEA
+        table.providerRebateRatioA = this.activityGoodForm.providerRebateRatioA
+        marketingGoodsList[i] = table
+        table.goodSkuValList = table.table
+
+        if (table.userLimit !== 0) {
+          if (!integerReg.test(table.userLimit)) {
+            this.$message({
+              message: "商品名称为：" + table.goodName + "的用户限购数量不是正整数",
+              type: 'warning'
+            });
+            return;
+          }
         }
-      })*/
+
+        for (let j = 0; j < this.tableList[i].table.length; j++) {
+          let skuTable = table.table
+
+          for (let k = 0; k < skuTable.length; k++) {
+            let sku = skuTable[k];
+            if (sku.marketingPrice == '' || sku.marketingPrice == undefined || sku.marketingPrice == null) {
+              this.$message({
+                message: "商品名称为：" + table.goodName + "的活动价格不能为空",
+                type: 'warning'
+              })
+              return
+            }
+
+            if (isNaN(sku.marketingPrice) || Number(sku.marketingPrice) <= 0) {
+              this.$message({
+                message: "商品名称为：" + table.goodName + "的活动价格不正确",
+                type: 'warning'
+              });
+              return;
+            } else {
+              let marketingPriceStr = sku.marketingPrice + "";
+              const bitPos = marketingPriceStr.indexOf(".");
+              const totalBits = marketingPriceStr.length - bitPos - 1;
+
+              if (bitPos == -1 && totalBits > 2) {
+                this.$message({
+                  message: "商品名称为：" + table.goodName + "的活动价格小数点只能有后两位",
+                  type: 'warning'
+                });
+                return
+              }
+            }
+          }
+        }
+      }
+
+      if (this.checkRebateRatio(this.activityGoodForm.supplierRebateRatio, "供应商比例输入错误", "供应商比例小数点后只能一位")) {
+        return
+      }
+
+      if (this.checkRebateRatio(this.activityGoodForm.providerRebateRatioA, "服务商A比例输入错误", "服务商A比例小数点后只能一位")) {
+        return
+      }
+
+      if (this.checkRebateRatio(this.activityGoodForm.providerRebateRatioB, "服务商B比例输入错误", "服务商B比例小数点后只能一位")) {
+        return
+      }
+
+      if (this.checkRebateRatio(this.activityGoodForm.providerRebateRatioC, "服务商C比例输入错误", "服务商C比例小数点后只能一位")) {
+        return
+      }
+
+      if (this.checkRebateRatio(this.activityGoodForm.supplierRebateRatio, "服务商D比例输入错误", "服务商D比例小数点后只能一位")) {
+        return
+      }
+
+      if (this.checkRebateRatio(this.activityGoodForm.providerRebateRatioD, "服务商E比例输入错误", "服务商E比例小数点后只能一位")) {
+        return
+      }
+
+      if (this.checkRebateRatio(this.activityGoodForm.providerRebateRatioEA, "服务商EA比例输入错误", "服务商EA比例小数点后只能一位")) {
+        return
+      }
+
+      let supplierRebateRatioFloat = parseFloat(this.activityGoodForm.supplierRebateRatio);
+
+      if (supplierRebateRatioFloat + parseFloat(this.activityGoodForm.providerRebateRatioA) > 100 ||
+          supplierRebateRatioFloat + parseFloat(this.activityGoodForm.providerRebateRatioB) > 100 ||
+          supplierRebateRatioFloat + parseFloat(this.activityGoodForm.providerRebateRatioC) > 100 ||
+          supplierRebateRatioFloat + parseFloat(this.activityGoodForm.providerRebateRatioD) > 100 ||
+          supplierRebateRatioFloat + parseFloat(this.activityGoodForm.providerRebateRatioE) > 100) {
+        this.$message({
+          message: "供应商比例+服务商比例只能小于等于100%",
+          type: 'warning'
+        })
+
+        return
+      }
+
+      this.loading = true
+      postMethod('/backend/goodActivity/marketingGoods', this.tableList).then(
+        res => {
+          this.loading = false
+          if (res.code != 200) {
+            this.$message({
+              message: res.message,
+              type: 'warning'
+            })
+            return;
+          }
+          this.$message({
+            message: '添加成功',
+            type: 'success'
+          })
+        }
+      ).catch(error => {
+        this.loading = false
+      })
     },
 
     // 控制合并表格的行和列
@@ -373,12 +503,49 @@ export default {
         }
       }
 
-      this.tableList.push({
+      return {
         goodId: goodId,
+        goodName: goodName,
+        userLimit: 0,
         table: tempTableList,
         columnList: columnList
-      })
+      }
     },
+
+    checkRebateRatio(input, floatMessage, bitNumMessage) {
+      if (this.checkIfPositiveFloat(input)) {
+        this.$message({
+          message: floatMessage,
+          type: 'warning'
+        });
+
+        return true
+      } else {
+        if (this.checkFloatBitNum(input, 1)) {
+          this.$message({
+            message: bitNumMessage,
+            type: 'warning'
+          });
+          return true
+        } else {
+          return false
+        }
+      }
+    },
+
+    checkIfPositiveFloat(input) {
+      return isNaN(input) || Number(input) <= 0;
+    },
+
+    checkFloatBitNum(input, bitNum) {
+      let inputStr = input + "";
+      const bitPos = inputStr.indexOf(".");
+      if (bitPos == -1) {
+        return false
+      }
+      const totalBits = inputStr.length - bitPos - 1;
+      return totalBits > bitNum;
+    }
 
   },
 
