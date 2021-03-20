@@ -1,8 +1,8 @@
 <template>
   <div class="ly-container">
+    <el-button style="margin-bottom: 10px" @click="backToMarketingGoodsList()" plain icon="el-icon-back">返回列表</el-button>
     <el-form class="update-form-panel" ref="activityGoodForm" :rules="activityFormRules" :model="activityGoodForm"
              label-width="120px" style="width:80%">
-      <span>活动商品信息</span>
       <el-divider content-position="left"/>
       <el-form-item label="活动名称:">
         {{ activity.activityName }}
@@ -54,9 +54,9 @@
               <el-input v-model="scope.row.marketingPrice"></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="stock" label="库存">
+          <el-table-column prop="marketingStock" label="活动库存">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.marketingStock"></el-input>
+              <el-input v-model="scope.row.stock"></el-input>
             </template>
           </el-table-column>
         </el-table>
@@ -197,6 +197,7 @@ export default {
 
   mounted() {
     this.activityGoodForm.activityTimePeriod = [new Date(this.activity.startTime), new Date(this.activity.endTime)]
+    this.activityGoodForm.preheatTimePeriod = [new Date(this.activity.preheatStartTime), new Date(this.activity.preheatEndTime)]
     this.initSupplyList()
   },
 
@@ -296,6 +297,14 @@ export default {
         table.providerRebateRatioE = this.activityGoodForm.providerRebateRatioE
         table.providerRebateRatioEA = this.activityGoodForm.providerRebateRatioEA
         table.providerRebateRatioA = this.activityGoodForm.providerRebateRatioA
+        table.goodActivityId = this.activity.id
+        table.activityName = this.activity.activityName
+        table.activityImageUrl = this.activity.frontImage
+        table.activityStartTime = this.activity.startTime
+        table.activityStartTime = this.activity.startTime
+        table.activityEndTime = this.activity.endTime
+        table.preheatStartTime = this.activity.preheatStartTime
+        table.preheatEndTime = this.activity.preheatEndTime
         marketingGoodsList[i] = table
         table.goodSkuValList = table.table
 
@@ -341,6 +350,24 @@ export default {
                 return
               }
             }
+
+            if (sku.stock == 0) {
+              this.$message({
+                message: "商品名称为：" + table.goodName + "的活动库存不能为0",
+                type: 'warning'
+              });
+              return;
+            }
+
+            if (!integerReg.test(sku.stock)) {
+              this.$message({
+                message: "商品名称为：" + table.goodName + "的活动库存不是正整数",
+                type: 'warning'
+              });
+              return;
+            }
+
+            sku.marketingStock = sku.stock
           }
         }
       }
@@ -403,6 +430,8 @@ export default {
             message: '添加成功',
             type: 'success'
           })
+
+          this.$emit('hidden')
         }
       ).catch(error => {
         this.loading = false
@@ -531,6 +560,10 @@ export default {
           return false
         }
       }
+    },
+
+    backToMarketingGoodsList() {
+      this.$emit('hidden')
     },
 
     checkIfPositiveFloat(input) {

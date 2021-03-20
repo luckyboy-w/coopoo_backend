@@ -68,7 +68,9 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
+              <el-button type="text" size="small" @click.native.prevent="saveOrUpdate('edit')">查看</el-button>
               <el-button type="text" size="small" @click.native.prevent="saveOrUpdate('edit')">修改</el-button>
+              <el-button type="text" size="small" @click.native.prevent="saveOrUpdate('edit')">禁用</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -79,7 +81,7 @@
       </div>
     </div>
 
-    <saveOrUpdate v-if="showSaveOrUpdate" :activity="activity"></saveOrUpdate>
+    <saveOrUpdate v-if="showSaveOrUpdate" :activity="activity" @hidden="hidden()"></saveOrUpdate>
   </div>
 </template>
 
@@ -164,6 +166,12 @@ export default {
     currentPage(pageNum) {
       this.searchParam.pageNum = pageNum;
       this.loadList();
+    },
+
+    hidden() {
+      this.showActivityGoodList = true
+      this.showSaveOrUpdate = false
+      this.loadList()
     }
 
   },
