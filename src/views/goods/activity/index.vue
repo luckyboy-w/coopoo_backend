@@ -24,6 +24,12 @@
             </template>
           </el-table-column>
           <el-table-column prop="activityName" label="活动名称" width="200px"/>
+          <el-table-column prop="activityType" label="活动类型" width="200px">
+            <template slot-scope="scope">
+              <sapn v-if="scope.row.activityType == '1'">普通活动</sapn>
+              <sapn v-if="scope.row.activityType == '2'">雷锋爆品</sapn>
+            </template>
+          </el-table-column>
           <el-table-column prop="frontImage" label="预热有效期" width="400px">
             <template slot-scope="scope">
               {{ scope.row.preheatStartTime | _formateDate}} 至 {{scope.row.preheatEndTime | _formateDate }}
@@ -53,7 +59,7 @@
           <el-select ref="select" v-model="activityForm.activityType" placeholder="请选择活动类型">
             <el-option label="请选择..." value="" />
             <el-option label="普通活动" value="1" />
-            <el-option label="雷锋商品" value="2" />
+            <el-option label="雷锋爆品" value="2" />
           </el-select>
         </el-form-item>
         <el-form-item label="活动名称" prop="activityName">
@@ -80,7 +86,8 @@
             end-placeholder="结束日期"
             @change="activityPreheatDateTimeChange"
             value-format="yyyy-MM-dd HH:mm:ss"
-            :default-time="['12:00:00']">
+            :picker-options="preheatDateTimePickerOptions"
+            :default-time="['00:00:00', '00:00:00']">
             style="width:80%"
           </el-date-picker>
         </el-form-item>
@@ -91,8 +98,9 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             @change="activityDateTimeChange"
+            :picker-options="startDateTimePickerOptions"
             value-format="yyyy-MM-dd HH:mm:ss"
-            :default-time="['12:00:00']">
+            :default-time="['00:00:00', '00:00:00']">
             style="width:80%"
           </el-date-picker>
         </el-form-item>
@@ -140,7 +148,7 @@ export default {
       }
     }
     const validateActivityPreheatDateTimePeriod = (rule, value, callback) => {
-      if (this.activityDateTimePeriod === undefined || this.activityDateTimePeriod === null || this.activityDateTimePeriod === '') {
+      if (this.activityPreheatDateTimePeriod === undefined || this.activityPreheatDateTimePeriod === null || this.activityPreheatDateTimePeriod === '') {
         callback(new Error('请选择预热有效期'))
       } else {
         callback()
@@ -164,6 +172,16 @@ export default {
       uploadActivityFrontImageList: [],
       activityDateTimePeriod: null,
       activityPreheatDateTimePeriod: null,
+      preheatDateTimePickerOptions: {
+        disabledDate (time) {
+          return time.getTime() <= Date.now()
+        }
+      },
+      startDateTimePickerOptions: {
+        disabledDate (time) {
+          return time.getTime() <= Date.now()
+        }
+      },
       tableData: {
         list: []
       },
@@ -198,6 +216,7 @@ export default {
       this.hideActivityFrontImageUpload = false
       this.uploadActivityFrontImageList = []
       this.activityDateTimePeriod = null
+      this.activityPreheatDateTimePeriod = null
       this.isShowActivityDialog = false
     },
 
@@ -247,7 +266,7 @@ export default {
       if (oper == "edit") {
         this.activityForm = JSON.parse(JSON.stringify(activity))
         this.activityDateTimePeriod = [new Date(activity.startTime), new Date(activity.endTime)]
-        this.activityDateTimePeriod = [new Date(activity.preheatStartTime), new Date(activity.preheatEndTime)]
+        this.activityPreheatDateTimePeriod = [new Date(activity.preheatStartTime), new Date(activity.preheatEndTime)]
         let imgObj = {url: activity.frontImage}
         this.uploadActivityFrontImageList.push(imgObj)
         this.hideActivityFrontImageUpload = true
