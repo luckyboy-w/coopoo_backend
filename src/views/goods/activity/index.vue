@@ -26,8 +26,8 @@
           <el-table-column prop="activityName" label="活动名称" width="200px"/>
           <el-table-column prop="activityType" label="活动类型" width="200px">
             <template slot-scope="scope">
-              <sapn v-if="scope.row.activityType == '1'">普通活动</sapn>
-              <sapn v-if="scope.row.activityType == '2'">雷锋爆品</sapn>
+              <span v-if="scope.row.activityType == '1'">普通活动</span>
+              <span v-if="scope.row.activityType == '2'">雷锋爆品</span>
             </template>
           </el-table-column>
           <el-table-column prop="frontImage" label="预热有效期" width="400px">

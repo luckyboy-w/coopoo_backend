@@ -209,6 +209,9 @@ export default {
     },
 
     changeSupplierEvent(supplierId) {
+      if (supplierId == '' || supplierId == undefined || supplierId == null) {
+        return
+      }
       getMethod('/backend/goodActivity/findAllGoodBySupplierId', {supplierId}).then(res => {
         this.goodList = res.data
       })

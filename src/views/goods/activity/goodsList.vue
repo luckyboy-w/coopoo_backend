@@ -30,7 +30,7 @@
             </td>
             <td>
               <el-button icon="el-icon-search" @click="search()">查询</el-button>
-              <el-button plain type="primary" @click="saveOrUpdate('add')" icon="el-icon-document-add">新增</el-button>
+              <el-button plain type="primary" @click="save('add')" icon="el-icon-document-add">新增</el-button>
             </td>
           </tr>
         </table>
@@ -43,7 +43,7 @@
               <el-table :data="props.row.goodSkuValList" style="width: 100%; margin-bottom: 20px;" border>
                 <el-table-column prop="skuText" label="sku属性"/>
                 <el-table-column prop="marketingStock" label="库存"/>
-                <el-table-column prop="salePrice" label="零售价"/>
+                <el-table-column prop="saleMemPrice" label="会员价"/>
                 <el-table-column prop="marketingPrice" label="活动价"/>
               </el-table>
             </template>
@@ -68,9 +68,9 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click.native.prevent="saveOrUpdate('edit')">查看</el-button>
-              <el-button type="text" size="small" @click.native.prevent="saveOrUpdate('edit')">修改</el-button>
-              <el-button type="text" size="small" @click.native.prevent="saveOrUpdate('edit')">禁用</el-button>
+              <el-button type="text" size="small" @click.native.prevent="save()">查看</el-button>
+              <el-button type="text" size="small" @click.native.prevent="update()">修改</el-button>
+              <el-button type="text" size="small" @click.native.prevent="disable()">禁用</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -81,12 +81,14 @@
       </div>
     </div>
 
-    <saveOrUpdate v-if="showSaveOrUpdate" :activity="activity" @hidden="hidden()"></saveOrUpdate>
+    <save v-if="showSave" :activity="activity" @hidden="hiddenSave()"></save>
+    <update v-if="showUpdate" :activity="activity" @hidden="hiddenUpdate()"></update>
   </div>
 </template>
 
 <script>
-import saveOrUpdate from "./saveOrUpdate";
+import save from "./save";
+import update from "./update";
 import { getMethod } from '@/api/request'
 import { formatDate } from "@/api/tools.js"
 
@@ -111,7 +113,8 @@ export default {
     return {
       isLoading: false,
       showActivityGoodList: true,
-      showSaveOrUpdate: false,
+      showSave: false,
+      showUpdate: false,
       showPagination: false,
       activity: null,
       tableData: {
@@ -124,7 +127,7 @@ export default {
       }
     };
   },
-  components: { saveOrUpdate },
+  components: { save, update },
   computed: {},
   beforeMount() {},
 
@@ -158,9 +161,14 @@ export default {
       this.loadList();
     },
 
-    saveOrUpdate(oper) {
+    save() {
       this.showActivityGoodList = false
-      this.showSaveOrUpdate = true
+      this.showSave = true
+    },
+
+    update() {
+      this.showActivityGoodList = false
+      this.showUpdate = true
     },
 
     currentPage(pageNum) {
@@ -168,10 +176,20 @@ export default {
       this.loadList();
     },
 
-    hidden() {
+    hiddenSave() {
       this.showActivityGoodList = true
-      this.showSaveOrUpdate = false
+      this.showSave = false
       this.loadList()
+    },
+
+    hiddenUpdate() {
+      this.showActivityGoodList = true
+      this.showUpdate = false
+      this.loadList()
+    },
+
+    disable() {
+
     }
 
   },
