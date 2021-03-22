@@ -35,7 +35,7 @@
           </tr>
         </table>
       </div>
-      <div class="ly-table-panel" v-loading="isLoading">
+      <div class="ly-table-panel" :loading="isLoading">
         <el-table ref="mainTable" :data="tableData.list" row-key="id"
                   border :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
           <el-table-column type="expand">
@@ -70,7 +70,8 @@
             <template slot-scope="scope">
               <el-button type="text" size="small" @click.native.prevent="present(scope.row.supplierId, scope.row.supplierName)">查看</el-button>
               <el-button type="text" size="small" @click.native.prevent="update(scope.row.supplierId, scope.row.supplierName)">修改</el-button>
-              <el-button type="text" size="small" @click.native.prevent="disable()">禁用</el-button>
+              <el-button type="text" size="small" v-if="scope.row.enable == 1" @click.native.prevent="disable(scope.row.id)">禁用</el-button>
+              <el-button type="text" size="small" v-if="scope.row.enable == 0" @click.native.prevent="enable(scope.row.id)">启用</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -154,8 +155,15 @@ export default {
         scope.isLoading = true
       }
       getMethod("/backend/goodActivity/findMarketingGood", this.searchParam).then(res => {
+        this.loading = false
+        if (res.code != 200) {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          })
+          return;
+        }
         scope.tableData = res.data
-        scope.isLoading = false
         scope.showPagination = scope.tableData.total == 0
       });
     },
@@ -209,8 +217,44 @@ export default {
       this.activity.supplierName = supplierName
     },
 
-    disable() {
+    disable(id) {
+      this.loading = true
+      const marketingGoodsId = id
+      getMethod("/backend/goodActivity/disable", {marketingGoodsId}).then(res => {
+        this.loading = false
+        if (res.code != 200) {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          })
+          return;
+        }
+        this.$message({
+          message: "操作成功",
+          type: 'warning'
+        });
+        this.loadList()
+      });
+    },
 
+    enable(id) {
+      this.loading = true
+      const marketingGoodsId = id
+      getMethod("/backend/goodActivity/enable", {marketingGoodsId}).then(res => {
+        this.loading = false
+        if (res.code != 200) {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          })
+          return;
+        }
+        this.$message({
+          message: "操作成功",
+          type: 'warning'
+        });
+        this.loadList()
+      });
     }
 
   },
