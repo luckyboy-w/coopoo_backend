@@ -111,7 +111,7 @@
       </el-form>
     </el-dialog>
 
-    <goodsList v-if="showGoodList" :activityData="activityData"></goodsList>
+    <goodsList v-if="showGoodList" :activityData="activityData" @hiddenGoodsList="hiddenGoodsList"></goodsList>
   </div>
 </template>
 
@@ -270,12 +270,11 @@ export default {
         let imgObj = {url: activity.frontImage}
         this.uploadActivityFrontImageList.push(imgObj)
         this.hideActivityFrontImageUpload = true
-        let startTime = new Date(activity.startTime);
-        this.activityForm.startTime = formatDate(startTime, 'yyyy-MM-dd hh:mm:ss')
-        let endTime = new Date(activity.endTime);
-        this.activityForm.endTime = formatDate(endTime, 'yyyy-MM-dd hh:mm:ss')
-        let createTime = new Date(activity.createTime);
-        this.activityForm.createTime = formatDate(createTime, 'yyyy-MM-dd hh:mm:ss')
+        this.activityForm.startTime = formatDate(new Date(activity.startTime), 'yyyy-MM-dd hh:mm:ss')
+        this.activityForm.endTime = formatDate(new Date(activity.endTime), 'yyyy-MM-dd hh:mm:ss')
+        this.activityForm.preheatStartTime = formatDate(new Date(activity.preheatStartTime), 'yyyy-MM-dd hh:mm:ss')
+        this.activityForm.preheatEndTime = formatDate(new Date(activity.preheatEndTime), 'yyyy-MM-dd hh:mm:ss')
+        this.activityForm.createTime = formatDate(new Date(activity.createTime), 'yyyy-MM-dd hh:mm:ss')
       } else {
         this.activity = {};
       }
@@ -326,6 +325,11 @@ export default {
         scope.isLoading = false
         scope.showPagination = scope.tableData.total == 0;
       });
+    },
+
+    hiddenGoodsList() {
+      this.showGoodList = false
+      this.showActivityList = true
     },
 
     clearValidate(field) {

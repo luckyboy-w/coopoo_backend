@@ -4,6 +4,7 @@
       <div class="ly-tool-panel">
         <table>
           <tr>
+            <el-button style="margin-bottom: 10px" @click="backToActivityList()" plain icon="el-icon-back">返回活动列表</el-button>
             <td>商品名称:</td>
             <td>
               <el-input v-model="searchParam.goodName" width="180px"></el-input>
@@ -206,7 +207,7 @@ export default {
       this.showActivityGoodList = true
       this.showUpdate = false
       this.activity.supplierId = null
-      this.activity.supplierName = supplierName
+      this.activity.supplierName = null
       this.loadList()
     },
 
@@ -214,7 +215,7 @@ export default {
       this.showActivityGoodList = true
       this.showPresent = false
       this.activity.supplierId = null
-      this.activity.supplierName = supplierName
+      this.activity.supplierName = null
     },
 
     disable(id) {
@@ -255,6 +256,10 @@ export default {
         });
         this.loadList()
       });
+    },
+
+    backToActivityList() {
+      this.$emit('hiddenGoodsList')
     }
 
   },
