@@ -10,7 +10,6 @@
       <el-divider content-position="left"/>
       <el-form-item label="供应商名名称:" prop="supplierId">
         <el-select v-model="activityGoodForm.supplierId" @change="changeSupplierEvent" placeholder="请选择">
-          <el-option value="" label="全部"/>
           <el-option
             v-for="item in supplyList"
             :key="item.id"
@@ -103,7 +102,7 @@
               </el-table-column>
               <el-table-column prop="id" label="EA（%）">
                 <template slot-scope="scope">
-                  <el-input placeholder="请输入..." v-model="scope.row.providerRebateRatioEA"/>
+                  <el-input placeholder="请输入..." v-model="scope.row.providerRebateRatioEa"/>
                 </template>
               </el-table-column>
             </el-table>
@@ -181,7 +180,7 @@ export default {
         providerRebateRatioC: 10,
         providerRebateRatioD: 10,
         providerRebateRatioE: 10,
-        providerRebateRatioEA: 5
+        providerRebateRatioEa: 5
       }],
       activityGoodForm: {
         supplierId: '',
@@ -199,14 +198,34 @@ export default {
     this.activityGoodForm.activityTimePeriod = [new Date(this.activity.startTime), new Date(this.activity.endTime)]
     this.activityGoodForm.preheatTimePeriod = [new Date(this.activity.preheatStartTime), new Date(this.activity.preheatEndTime)]
     this.initSupplyList()
+    getMethod('/backend/goodActivity/findActivityMarketingGoodList', {"goodActivityId" : this.activity.id, "supplierId": this.activity.supplierId}).then(res => {
+      this.activityGoodForm.supplierRebateRatio = res.data[0].supplierRebateRatio
+      this.rebateRatioData[0].providerRebateRatioA = res.data[0].providerRebateRatioA
+      this.rebateRatioData[0].providerRebateRatioB = res.data[0].providerRebateRatioB
+      this.rebateRatioData[0].providerRebateRatioC = res.data[0].providerRebateRatioC
+      this.rebateRatioData[0].providerRebateRatioD = res.data[0].providerRebateRatioD
+      this.rebateRatioData[0].providerRebateRatioE = res.data[0].providerRebateRatioE
+      this.rebateRatioData[0].providerRebateRatioEa = res.data[0].providerRebateRatioEa
+
+      for (let i = 0; i < res.data.length; i++) {
+        let marketingGoods = res.data[i]
+        let goodSkuValList = marketingGoods.goodSkuValList
+        for(let j = 0; j < goodSkuValList.length; j++) {
+          goodSkuValList[j].stock = goodSkuValList[j].marketingStock
+        }
+        let table = this.loadTableList(marketingGoods.goodSkuValList, marketingGoods.goodName, marketingGoods.goodId, marketingGoods.id, marketingGoods.userLimit)
+        this.checkedGood.push(marketingGoods.goodId)
+        this.tableList.push(table)
+      }
+
+    })
   },
 
   methods: {
     initSupplyList() {
-      const goodActivityId = this.activity.id
-      getMethod('/backend/supplier/activityGoodSupplierList', {goodActivityId}).then(res => {
-        this.supplyList = res.data
-      })
+      this.supplyList.push({"id": this.activity.supplierId, "supplierName": this.activity.supplierName})
+      this.activityGoodForm.supplierId = this.activity.supplierId
+      this.changeSupplierEvent(this.activity.supplierId)
     },
 
     changeSupplierEvent(supplierId) {
@@ -216,7 +235,7 @@ export default {
       const goodActivityId = this.activity.id
       getMethod('/backend/goodActivity/findAllGoodBySupplierId', {supplierId, goodActivityId}).then(res => {
         this.goodList = res.data
-      })
+      });
     },
 
     handleCheckedGoodChange(checkedGood) {
@@ -240,7 +259,7 @@ export default {
 
         getMethod("/backend/good/findById", param).then(res => {
           this.$nextTick(() => {
-            let table = this.loadTableList(res.data.skuPriceList, good[0].goodName, good[0].id)
+            let table = this.loadTableList(res.data.skuPriceList, good[0].goodName, good[0].id, null, 0)
             this.tableList.push(table)
           })
         });
@@ -286,7 +305,7 @@ export default {
       this.activityGoodForm.providerRebateRatioC = this.rebateRatioData[0].providerRebateRatioC
       this.activityGoodForm.providerRebateRatioD = this.rebateRatioData[0].providerRebateRatioD
       this.activityGoodForm.providerRebateRatioE = this.rebateRatioData[0].providerRebateRatioE
-      this.activityGoodForm.providerRebateRatioEA = this.rebateRatioData[0].providerRebateRatioEA
+      this.activityGoodForm.providerRebateRatioEa = this.rebateRatioData[0].providerRebateRatioEa
       const integerReg = /^\+?[1-9][0-9]*$/;
 
       let marketingGoodsList = []
@@ -300,7 +319,7 @@ export default {
         table.providerRebateRatioC = this.activityGoodForm.providerRebateRatioC
         table.providerRebateRatioD = this.activityGoodForm.providerRebateRatioD
         table.providerRebateRatioE = this.activityGoodForm.providerRebateRatioE
-        table.providerRebateRatioEA = this.activityGoodForm.providerRebateRatioEA
+        table.providerRebateRatioEa = this.activityGoodForm.providerRebateRatioEa
         table.providerRebateRatioA = this.activityGoodForm.providerRebateRatioA
         table.goodActivityId = this.activity.id
         table.activityName = this.activity.activityName
@@ -371,8 +390,6 @@ export default {
               });
               return;
             }
-
-            sku.marketingStock = sku.stock
           }
         }
       }
@@ -401,7 +418,7 @@ export default {
         return
       }
 
-      if (this.checkRebateRatio(this.activityGoodForm.providerRebateRatioEA, "服务商EA比例输入错误", "服务商EA比例小数点后只能一位")) {
+      if (this.checkRebateRatio(this.activityGoodForm.providerRebateRatioEa, "服务商EA比例输入错误", "服务商EA比例小数点后只能一位")) {
         return
       }
 
@@ -421,7 +438,7 @@ export default {
       }
 
       this.loading = true
-      postMethod('/backend/goodActivity/marketingGoods', this.tableList).then(
+      postMethod('/backend/goodActivity/updateMarketingGoodsList', this.tableList).then(
         res => {
           this.loading = false
           if (res.code != 200) {
@@ -436,7 +453,7 @@ export default {
             type: 'success'
           })
 
-          this.$emit('hiddenSave')
+          this.$emit('hiddenUpdate')
         }
       ).catch(error => {
         this.loading = false
@@ -483,7 +500,7 @@ export default {
     },
 
     // 加载SKU表格的数据
-    loadTableList(skuPriceList, goodName, goodId) {
+    loadTableList(skuPriceList, goodName, goodId, id, userLimit) {
       let tempTableList = []
       let columnList = []
       for (let i = 0; i < skuPriceList.length; i++) {
@@ -539,8 +556,9 @@ export default {
 
       return {
         goodId: goodId,
+        id: id,
         goodName: goodName,
-        userLimit: 0,
+        userLimit: userLimit || 0,
         table: tempTableList,
         columnList: columnList
       }
@@ -568,7 +586,7 @@ export default {
     },
 
     backToMarketingGoodsList() {
-      this.$emit('hiddenSave')
+      this.$emit('hiddenUpdate')
     },
 
     checkIfPositiveFloat(input) {

@@ -69,7 +69,7 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click.native.prevent="save()">查看</el-button>
-              <el-button type="text" size="small" @click.native.prevent="update()">修改</el-button>
+              <el-button type="text" size="small" @click.native.prevent="update(scope.row.supplierId, scope.row.supplierName)">修改</el-button>
               <el-button type="text" size="small" @click.native.prevent="disable()">禁用</el-button>
             </template>
           </el-table-column>
@@ -81,8 +81,8 @@
       </div>
     </div>
 
-    <save v-if="showSave" :activity="activity" @hidden="hiddenSave()"></save>
-    <update v-if="showUpdate" :activity="activity" @hidden="hiddenUpdate()"></update>
+    <save v-if="showSave" :activity="activity" @hiddenSave="hiddenSave()"></save>
+    <update v-if="showUpdate" :activity="activity" @hiddenUpdate="hiddenUpdate()"></update>
   </div>
 </template>
 
@@ -166,9 +166,11 @@ export default {
       this.showSave = true
     },
 
-    update() {
+    update(supplierId, supplierName) {
       this.showActivityGoodList = false
       this.showUpdate = true
+      this.activity.supplierId = supplierId
+      this.activity.supplierName = supplierName
     },
 
     currentPage(pageNum) {
@@ -185,6 +187,8 @@ export default {
     hiddenUpdate() {
       this.showActivityGoodList = true
       this.showUpdate = false
+      this.activity.supplierId = null
+      this.activity.supplierName = supplierName
       this.loadList()
     },
 

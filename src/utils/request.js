@@ -32,6 +32,7 @@ requestBodyUrl.push("/backend/siteData/selectCashDoneDtl")
 requestBodyUrl.push("/backend/storeManage/updateEnable")
 requestBodyUrl.push("/backend/goodSalesDesc")
 requestBodyUrl.push("/backend/goodActivity/marketingGoods")
+requestBodyUrl.push("/backend/goodActivity/updateMarketingGoodsList")
 
 
 // create an axios instance
