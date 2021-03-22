@@ -130,6 +130,10 @@
         </el-row>
         <el-row :gutter="20" style="line-height:30px;font-size:16px">
           <el-col :span="20">商品名称：{{ this.detailData.goodName }} <el-divider></el-divider></el-col>
+          <el-col :span="20">
+            商品类型：<span v-if="this.detailData.isMarketing == 0">普通商品</span> <span v-if="this.detailData.isMarketing == 1">活动商品</span>
+            <el-divider></el-divider>
+          </el-col>
           <el-col :span="20">SKU属性：{{ this.detailData.skuInfo }} <el-divider></el-divider></el-col>
           <el-col :span="20">退货数量：{{ this.detailData.goodNum }} <el-divider></el-divider></el-col>
           <el-col :span="20">商品单价：{{ this.detailData.goodSinglePrice }} <el-divider></el-divider></el-col>

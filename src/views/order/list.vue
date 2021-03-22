@@ -394,6 +394,12 @@
               label="商品名称"
               width="288px"
             />
+            <el-table-column prop="isMarketing" label="商品类型">
+              <template slot-scope="scope">
+                <span v-if="scope.row.isMarketing == 0">普通商品</span>
+                <span v-if="scope.row.isMarketing == 1">活动商品</span>
+              </template>
+            </el-table-column>
             <el-table-column
               prop="goodSinglePrice"
               label="商品单价"

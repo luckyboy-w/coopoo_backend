@@ -6,6 +6,12 @@
           <el-form-item label="商品名称">
             <el-input v-model="dataForm.goodName" style="width:450px" :disabled="isDisabled"/>
           </el-form-item>
+          <el-form-item label="商品类型">
+            <el-select v-model="dataForm.isMarketing" :disabled="isDisabled">
+              <el-option label="普通商品" value="0"/>
+              <el-option label="活动商品" value="1"/>
+            </el-select>
+          </el-form-item>
           <el-form-item label="商品库存" v-show="false">
             <el-input v-model="dataForm.stockNum" style="width:260px" :disabled="isDisabled"/>
           </el-form-item>
@@ -373,6 +379,7 @@ export default {
         this.goodStyleList = this.editData.goodStyle.split(",")
         this.serviceRuleList = this.editData.serviceRule.split(",")
         this.dataForm = this.editData
+        this.dataForm.isMarketing = this.dataForm.isMarketing + ''
         if (this.dataForm.stockType == '1') {
           this.stockTypeText = '全局'
         } else {

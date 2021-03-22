@@ -76,6 +76,12 @@
               </template>
             </el-table-column>
             <el-table-column prop="goodName" label="商品名称" width="150px"/>
+            <el-table-column prop="isMarketing" label="商品类型" width="150px">
+              <template slot-scope="scope">
+                <span v-if="scope.row.isMarketing == 0">普通商品</span>
+                <span v-if="scope.row.isMarketing == 1">活动商品</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="goodMerit" label="商品分类" width="150px">
               <template slot-scope="scope">
                 {{ scope.row.typeName }} -> {{ scope.row.typeName2 }}
