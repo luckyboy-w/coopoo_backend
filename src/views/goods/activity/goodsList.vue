@@ -68,7 +68,7 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click.native.prevent="save()">查看</el-button>
+              <el-button type="text" size="small" @click.native.prevent="present(scope.row.supplierId, scope.row.supplierName)">查看</el-button>
               <el-button type="text" size="small" @click.native.prevent="update(scope.row.supplierId, scope.row.supplierName)">修改</el-button>
               <el-button type="text" size="small" @click.native.prevent="disable()">禁用</el-button>
             </template>
@@ -83,12 +83,14 @@
 
     <save v-if="showSave" :activity="activity" @hiddenSave="hiddenSave()"></save>
     <update v-if="showUpdate" :activity="activity" @hiddenUpdate="hiddenUpdate()"></update>
+    <present v-if="showPresent" :activity="activity" @hiddenUpdate="hiddenPresent()"></present>
   </div>
 </template>
 
 <script>
 import save from "./save";
 import update from "./update";
+import present from "./present";
 import { getMethod } from '@/api/request'
 import { formatDate } from "@/api/tools.js"
 
@@ -115,6 +117,7 @@ export default {
       showActivityGoodList: true,
       showSave: false,
       showUpdate: false,
+      showPresent: false,
       showPagination: false,
       activity: null,
       tableData: {
@@ -127,7 +130,7 @@ export default {
       }
     };
   },
-  components: { save, update },
+  components: {present, save, update },
   computed: {},
   beforeMount() {},
 
@@ -166,6 +169,13 @@ export default {
       this.showSave = true
     },
 
+    present(supplierId, supplierName) {
+      this.showActivityGoodList = false
+      this.showPresent = true
+      this.activity.supplierId = supplierId
+      this.activity.supplierName = supplierName
+    },
+
     update(supplierId, supplierName) {
       this.showActivityGoodList = false
       this.showUpdate = true
@@ -190,6 +200,13 @@ export default {
       this.activity.supplierId = null
       this.activity.supplierName = supplierName
       this.loadList()
+    },
+
+    hiddenPresent() {
+      this.showActivityGoodList = true
+      this.showPresent = false
+      this.activity.supplierId = null
+      this.activity.supplierName = supplierName
     },
 
     disable() {
