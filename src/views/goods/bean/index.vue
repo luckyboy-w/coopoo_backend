@@ -1,15 +1,117 @@
 <template>
   <div>
-    asdas
+    <div v-if="!showAddOrEdit" :loading="isLoading" class="ly-container">
+      <div class="ly-tool-panel">
+        <table>
+          <tr>
+            <td>商品名称:</td>
+            <td>
+              <el-input v-model="searchParam.goodsName" width="180px"/>
+            </td>
+            <td>
+              <el-button icon="el-icon-search" @click="search()">
+                搜索
+              </el-button>
+            </td>
+            <td>
+              <el-button icon="el-icon-search" @click="addOrEdit('add')">
+                新增
+              </el-button>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="ly-table-panel">
+        <div class="ly-data-list">
+          <el-table ref="mainTable" :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id"
+                    border :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+            <el-table-column prop="goodsName" label="商品名称" width="300px"/>
+            <el-table-column prop="needBeanQty" label="靠谱豆" width="150px"/>
+            <el-table-column prop="createTime" label="创建时间" width="150px"/>
+            <el-table-column prop="isSale" label="状态" width="150px">
+              <template slot-scope="scope">
+                <span v-if="scope.row.isSale == 0">下架</span>
+                <span v-if="scope.row.isSale == 1">上架</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="id" label="操作" width="200px">
+              <template slot-scope="scope">
+
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </div>
+    </div>
+
+    <saveOrEdit v-if="showAddOrEdit"
+                :edit-data="editData"
+                :oper="oper"
+                @showListPanel="showListPanel"/>
   </div>
 </template>
 
 <script>
+    import saveOrEdit from "./saveOrEdit";
+
     export default {
-        name: "index"
+      name: "index",
+      components: { saveOrEdit },
+      data() {
+        return {
+          showAddOrEdit: false,
+          isLoading: false,
+          oper: '',
+          editData: {},
+          searchParam: {
+
+          },
+          tableData: {
+            list: []
+          }
+        }
+      },
+      methods: {
+        search() {
+
+        },
+
+        loadList() {
+
+        },
+
+        showListPanel() {
+          this.showAddOrEdit = false;
+          this.loadList();
+        },
+
+        addOrEdit(oper, changeGoodsId) {
+          this.oper = oper
+          this.showAddOrEdit = true
+        }
+      }
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  .ly-container {
+    padding: 10px 20px;
+    font-size: 14px;
 
+    .ly-tool-panel {
+      div {
+        display: inline;
+      }
+
+      line-height: "60px";
+      height: "60px";
+      width: 100%;
+      padding: 10px 10px;
+
+      .ly-tool-btn {
+        padding-left: 20px;
+        display: inline;
+      }
+    }
+  }
 </style>
