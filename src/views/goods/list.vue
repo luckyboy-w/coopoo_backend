@@ -49,6 +49,14 @@
                 <el-option value="0" label="不推荐"/>
               </el-select>
             </td>
+            <td>商品类型:</td>
+            <td>
+              <el-select v-model="searchParam.isMarketing" placeholder="请选择">
+                <el-option value="" label="全部"/>
+                <el-option value="0" label="普通商品"/>
+                <el-option value="1" label="活动商品"/>
+              </el-select>
+            </td>
             <td>
               <el-button icon="el-icon-search" @click="search()">
                 搜索
@@ -127,7 +135,7 @@
                   <!--审核通过才能操作上架下架-->
                   <!--审核状态;10:待审核;20:已通过;30:被驳回-->
                   <!--5:在仓库;1:上架;2:下架;3:违规下架-->
-                  <el-button v-if="scope.row.verifyStatus == 20 && scope.row.isSale == 2" type="text" size="small"
+                  <el-button v-if="scope.row.verifyStatus == 20 && scope.row.isSale == 2 && scope.row.isMarketing == 0" type="text" size="small"
                              @click.native.prevent="onLine(scope.row)">
                     上架
                   </el-button>
