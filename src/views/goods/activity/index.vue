@@ -17,6 +17,7 @@
       </div>
       <div class="ly-table-panel" v-loading="isLoading">
         <el-table ref="mainTable" :data="tableData.list" row-key="id"
+                  :header-cell-style="{'text-align':'center'}" :cell-style="{'text-align':'center'}"
                   border :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
           <el-table-column prop="frontImage" label="活动图片" width="200px">
             <template slot-scope="scope">

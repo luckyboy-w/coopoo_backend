@@ -38,12 +38,13 @@
       </div>
       <div class="ly-table-panel" :loading="isLoading">
         <el-table ref="mainTable" :data="tableData.list" row-key="id"
+                  :header-cell-style="{'text-align':'center'}" :cell-style="{'text-align':'center'}"
                   border :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-table :data="props.row.goodSkuValList" style="width: 100%; margin-bottom: 20px;" border>
                 <el-table-column prop="skuText" label="sku属性"/>
-                <el-table-column prop="marketingStock" label="库存"/>
+                <el-table-column prop="marketingStock" label="活动库存"/>
                 <el-table-column prop="saleMemPrice" label="会员价"/>
                 <el-table-column prop="marketingPrice" label="活动价"/>
               </el-table>

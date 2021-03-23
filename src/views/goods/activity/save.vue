@@ -75,7 +75,7 @@
         </el-col>
         <el-col :span="19" >
           <div class="grid-content bg-purple-dark" style="height:150px">
-            <el-table :data="rebateRatioData" border>
+            <el-table :data="rebateRatioData" :header-cell-style="{'text-align':'center'}" :cell-style="{'text-align':'center'}" border>
               <el-table-column prop="id" label="A（%）">
                 <template slot-scope="scope">
                   <el-input placeholder="请输入..." v-model="scope.row.providerRebateRatioA"  />
