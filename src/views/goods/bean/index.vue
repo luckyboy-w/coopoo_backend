@@ -55,12 +55,16 @@
 </template>
 
 <script>
+    import { getMethod, postMethod, getUploadUrl } from '@/api/request-new'
     import saveOrEdit from "./saveOrEdit";
     import configuration from "./configuration";
 
     export default {
       name: "index",
       components: { saveOrEdit, configuration },
+      mounted() {
+        this.loadList()
+      },
       data() {
         return {
           showList: true,
@@ -83,7 +87,9 @@
         },
 
         loadList() {
-
+          getMethod("/exchange_goods/list", this.searchParam).then(res => {
+              console.info(res)
+          });
         },
 
         showListPanel() {
