@@ -38,6 +38,15 @@
                   <el-input v-model="scope.row.saleMemPrice" disabled="true"></el-input>
                 </template>
               </el-table-column>
+
+
+              <el-table-column prop="goodsCode" label="物料编码" width="150px">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.goodsCode" disabled="true"></el-input>
+                </template>
+              </el-table-column>
+
+
               <el-table-column prop="skuImg" label="SKU展示图" width="150px">
                 <template slot-scope="scope">
                   <img :src="scope.row.skuImg" width="60px" height="60px"
