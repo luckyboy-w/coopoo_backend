@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!showAddOrEdit" :loading="isLoading" class="ly-container">
+      <div v-if="showList" :loading="isLoading" class="ly-container">
       <div class="ly-tool-panel">
         <table>
           <tr>
@@ -16,6 +16,11 @@
             <td>
               <el-button icon="el-icon-search" @click="addOrEdit('add')">
                 新增
+              </el-button>
+            </td>
+            <td>
+              <el-button icon="el-icon-search" @click="configuration()">
+                活动配置
               </el-button>
             </td>
           </tr>
@@ -44,22 +49,23 @@
       </div>
     </div>
 
-    <saveOrEdit v-if="showAddOrEdit"
-                :edit-data="editData"
-                :oper="oper"
-                @showListPanel="showListPanel"/>
+    <saveOrEdit v-if="showAddOrEdit" :edit-data="editData" :oper="oper" @showListPanel="showListPanel"/>
+    <configuration v-if="showConfiguration" @showListPanel="showListPanel"/>
   </div>
 </template>
 
 <script>
     import saveOrEdit from "./saveOrEdit";
+    import configuration from "./configuration";
 
     export default {
       name: "index",
-      components: { saveOrEdit },
+      components: { saveOrEdit, configuration },
       data() {
         return {
+          showList: true,
           showAddOrEdit: false,
+          showConfiguration: false,
           isLoading: false,
           oper: '',
           editData: {},
@@ -81,13 +87,21 @@
         },
 
         showListPanel() {
-          this.showAddOrEdit = false;
+          this.showList = true;
+          this.showAddOrEdit = false
+          this.showConfiguration = false
           this.loadList();
         },
 
         addOrEdit(oper, changeGoodsId) {
           this.oper = oper
           this.showAddOrEdit = true
+          this.showList = false;
+        },
+
+        configuration() {
+          this.showConfiguration = true
+          this.showList = false;
         }
       }
     }
