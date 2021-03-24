@@ -27,7 +27,6 @@
           />
         </el-select>
       </el-form-item>
-
       <el-form-item label="封面图片">
         <div id="front-img">
           <el-input v-show="false" v-model="dataForm.frontImage"/>
@@ -72,8 +71,8 @@
       <el-form-item label="商品详情">
         <qEditor
           ref="refEditor"
-          :content="detail.detailContent"
-          module-name="detailContent"
+          :content="dataForm.goodsDetail"
+          module-name="goodsDetail"
           @changeContent="changeContent"
         />
       </el-form-item>
@@ -89,7 +88,8 @@
 </template>
 
 <script>
-  import { getMethod, postMethod, getUploadUrl } from '@/api/request'
+  import {putMethod as putMethodNew,  getMethod as getMethodNew} from '@/api/request-new'
+  import { getMethod, getUploadUrl } from '@/api/request'
   import qEditor from '@/components/RichText/quill-editor'
   import qEditor1 from '@/components/RichText/quill-editor_1'
   import qEditor2 from '@/components/RichText/quill-editor_2'
@@ -98,22 +98,37 @@
     name: "saveOrEdit",
     components: { qEditor, qEditor1, qEditor2 },
     props: {
-      editData: {
-        type: Object,
-        required: false
-      },
-      oper: {
-        type: String,
+      goodsId: {
+        type: Number,
         required: true
       }
     },
     mounted() {
-      const scope = this
-      this.buildFrontImageGroupId()
-      this.buildGoodsImageGroupId()
+      getMethodNew('/exchange_goods/detail', {"id" : this.goodsId}).then(res => {
+        if (res.code != 200) {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          })
+          return;
+        }
+
+        this.dataForm = res.data
+        this.uploadFrontImageList.push(res.data.frontImageInfo)
+        this.uploadGoodsImageList = res.data.goodsImageInfoList
+        this.dataForm.frontImage = res.data.frontImageInfo.groupId
+        this.dataForm.goodsImage = res.data.goodsImageInfoList[0].groupId
+        this.uploadGoodsImageUrl = getUploadUrl() + '?groupId=' + res.data.goodsImageInfoList[0].groupId
+        this.uploadFrontImageUrl = getUploadUrl() + '?groupId=' + res.data.frontImageInfo.groupId
+        if (res.data.goodsImageInfoList.length >= 10) {
+          this.hideGoodsImageUpload = true
+        }
+        this.hideFrontImageUpload = true;
+        this.$refs['refEditor'].setContent(res.data.goodsDetail)
+      })
 
       getMethod('/backend/goodBrand/findList', null).then(res => {
-        scope.brandList = res.data
+        this.brandList = res.data
       })
     },
     data() {
@@ -134,6 +149,7 @@
             if (isNaN(value) || Number(value) <= 0) {
               callback(new Error("零售价输入错误"));
             } else {
+              value += ""
               const bitPos = value.indexOf(".");
               if (bitPos == -1) {
                 callback()
@@ -160,7 +176,9 @@
           uploadGoodsImageList: [],
           imageUrl: '',
           dataForm: {
-            brandId: ''
+            brandId: '',
+            frontImage: '',
+            goodsImage: ''
           },
           detail: {
             detailContent: '',
@@ -307,7 +325,7 @@
       },
 
       changeContent(val) {
-        this.detail.detailContent = val
+        this.dataForm.goodsDetail = val
       },
 
       submit() {
@@ -323,8 +341,8 @@
               errorMsg = '请上传商品封面图'
             }
 
-            if (this.detail.detailContent == '') {
-              errorMsg = '请上传商品详情'
+            if (this.dataForm.goodsDetail == '') {
+              errorMsg = '请填写商品详情'
             }
 
             if (this.dataForm.brandId == '') {
@@ -335,6 +353,30 @@
               this.$message.warning(errorMsg)
               return
             }
+
+            let fileList = []
+            fileList = fileList.concat(this.uploadGoodsImageList)
+            fileList = fileList.concat(this.uploadFrontImageList)
+            this.dataForm.fileJsonStr = JSON.stringify(fileList)
+
+            let brand = this.brandList.filter(item => item.id == this.dataForm.brandId);
+            this.dataForm.brandName = brand[0].brandName
+            this.dataForm.detailStr = JSON.stringify(this.detail)
+            putMethodNew('/exchange_goods/update', this.dataForm).then(res => {
+                if (res.code != 200) {
+                  this.$message({
+                    message: res.message,
+                    type: 'warning'
+                  })
+                  return;
+                }
+                this.$message({
+                  message: '操作成功',
+                  type: 'success'
+                })
+                this.$emit('showListPanel', true)
+              }
+            )
           }
         });
       },

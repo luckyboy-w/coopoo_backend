@@ -14,7 +14,7 @@
               </el-button>
             </td>
             <td>
-              <el-button icon="el-icon-search" @click="addOrEdit('add')">
+              <el-button icon="el-icon-search" @click="save()">
                 新增
               </el-button>
             </td>
@@ -28,7 +28,7 @@
       </div>
       <div class="ly-table-panel">
         <div class="ly-data-list">
-          <el-table ref="mainTable" :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id"
+          <el-table ref="mainTable" :loading="isLoading" :data="tableData.records" style="width: 100%; margin-bottom: 20px;" row-key="id"
                     border :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
             <el-table-column prop="goodsName" label="商品名称" width="300px"/>
             <el-table-column prop="needBeanQty" label="靠谱豆" width="150px"/>
@@ -41,74 +41,161 @@
             </el-table-column>
             <el-table-column prop="id" label="操作" width="200px">
               <template slot-scope="scope">
-
+                <el-button type="text" size="small" @click.native.prevent="present(scope.row.goodsId)">查看</el-button>
+                <el-button type="text" size="small" @click.native.prevent="update(scope.row.goodsId)">修改</el-button>
+                <el-button type="text" v-if="scope.row.isSale == 1" size="small" @click.native.prevent="downShelve(scope.row.goodsId)">下架</el-button>
+                <el-button type="text" v-if="scope.row.isSale == 0" size="small" @click.native.prevent="upShelve(scope.row.goodsId)">上架</el-button>
               </template>
             </el-table-column>
           </el-table>
+          <div class="ly-data-pagination">
+            <el-pagination v-show="!showPagination" :total="tableData.pages" background layout="prev, pager, next"
+                           @current-change="currentPage" @prev-click="currentPage" @next-click="currentPage" />
+          </div>
         </div>
       </div>
     </div>
 
-    <saveOrEdit v-if="showAddOrEdit" :edit-data="editData" :oper="oper" @showListPanel="showListPanel"/>
+    <save v-if="showAdd" @showListPanel="showListPanel"/>
+    <update v-if="showUpdate" :goodsId="goodsId" @showListPanel="showListPanel"/>
+    <present v-if="showPresent" :goodsId="goodsId" @showListPanel="showListPanel"/>
     <configuration v-if="showConfiguration" @showListPanel="showListPanel"/>
   </div>
 </template>
 
 <script>
-    import { getMethod, postMethod, getUploadUrl } from '@/api/request-new'
-    import saveOrEdit from "./saveOrEdit";
+    import { getMethod, putMethod } from '@/api/request-new'
+    import save from "./save";
+    import update from "./update";
+    import present from "./present";
     import configuration from "./configuration";
 
     export default {
       name: "index",
-      components: { saveOrEdit, configuration },
+      components: { save, update, present, configuration },
       mounted() {
         this.loadList()
       },
       data() {
         return {
           showList: true,
-          showAddOrEdit: false,
+          showAdd: false,
+          showUpdate: false,
+          showPresent: false,
+          showPagination: false,
           showConfiguration: false,
           isLoading: false,
-          oper: '',
+          goodsId: null,
           editData: {},
           searchParam: {
-
+            pageSize: 10,
+            pageNum: 0
           },
           tableData: {
-            list: []
+            records: [],
+            hasNextPage: false,
+            hasPreviousPage: false
           }
         }
       },
       methods: {
         search() {
-
+          this.loadList()
         },
 
         loadList() {
+          this.loading = true
+
           getMethod("/exchange_goods/list", this.searchParam).then(res => {
-              console.info(res)
+            this.loading = false
+            if (res.code != 200) {
+              this.$message({
+                message: res.message,
+                type: 'warning'
+              })
+              return;
+            }
+            this.tableData = res.data
+            this.tableData.hasNextPage = false,
+            this.tableData.hasPreviousPage = false
+            this.showPagination = this.tableData.total == 0
           });
         },
 
         showListPanel() {
           this.showList = true;
-          this.showAddOrEdit = false
+          this.showAdd = false
+          this.showUpdate = false
+          this.showPresent = false
           this.showConfiguration = false
           this.loadList();
         },
 
-        addOrEdit(oper, changeGoodsId) {
-          this.oper = oper
-          this.showAddOrEdit = true
+        currentPage(pageNum) {
+          this.searchParam.pageNum = pageNum;
+          this.loadList();
+        },
+
+        save() {
+          this.showAdd = true
           this.showList = false;
+        },
+
+        update(goodsId) {
+          this.showList = false;
+          this.showUpdate = true;
+          this.goodsId = goodsId
+        },
+
+        present(goodsId) {
+          this.showList = false;
+          this.showPresent = true;
+          this.goodsId = goodsId
         },
 
         configuration() {
           this.showConfiguration = true
           this.showList = false;
+        },
+
+        upShelve(goodsId) {
+          this.loading = true
+          putMethod('/exchange_goods//up_shelves', {'id': goodsId}).then(res => {
+            this.loading = false
+            if (res.code != 200) {
+              this.$message({
+                message: res.message,
+                type: 'warning'
+              })
+              return;
+            }
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
+            this.loadList();
+          })
+        },
+
+        downShelve(goodsId) {
+          this.loading = true
+          putMethod('/exchange_goods/down_shelves', {'id': goodsId}).then(res => {
+            this.loading = false
+            if (res.code != 200) {
+              this.$message({
+                message: res.message,
+                type: 'warning'
+              })
+              return;
+            }
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
+            this.loadList();
+          })
         }
+
       }
     }
 </script>
