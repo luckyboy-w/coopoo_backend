@@ -16,7 +16,7 @@
             </td>
             <td>
                 <div class="grid-content bg-purple-light">
-                  <el-select placeholder="请输入选择" v-model="ruleType">
+                  <el-select placeholder="请输入选择" v-model="ruleType" @change="ruleTypeChangeEvent">
                     <el-option label="每周购买" value="1"></el-option>
                     <el-option label="每月购买" value="2"></el-option>
                     <el-option label="特殊规则" value="3"></el-option>
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-  import { postMethod } from '@/api/request'
+  import { postMethod, getMethod } from '@/api/request'
 
   export default {
     name: "configuration",
@@ -81,6 +81,35 @@
         dayList: [],
         description: ''
       }
+    },
+    mounted() {
+      let param = {
+        dataType: 'bean_mall_rule_config'
+      }
+      getMethod("/backend/lyConfig/findList", param).then(res => {
+        const configuration = JSON.parse(JSON.stringify(res.data))[0]
+        const config = JSON.parse(configuration.value)
+
+        if (config.ruleType == '1') {
+          this.ruleType = config.ruleType
+          this.weekList = config.weekList
+          this.startTime = config.startTime
+          this.endTime = config.endTime
+        }
+
+        if (config.ruleType == '2') {
+          this.ruleType = config.ruleType
+          this.dayList = config.dayList
+          this.startTime = config.startTime
+          this.endTime = config.endTime
+        }
+
+        if (config.ruleType == '3') {
+          this.ruleType = config.ruleType
+        }
+        this.description = config.description
+      }
+      );
     },
     methods: {
       submit() {
@@ -212,6 +241,12 @@
           this.backToList()
           }
         );
+      },
+
+      ruleTypeChangeEvent() {
+        this.startTime = null
+        this.endTime = null
+        this.description = null
       },
 
       backToList() {
