@@ -71,6 +71,7 @@
                   <el-table-column prop="stock" label="库存" width="150px"/>
                   <el-table-column prop="salePrice" label="零售价" width="150px"/>
                   <el-table-column prop="saleMemPrice" label="会员价" width="150px"/>
+                  <el-table-column prop="goodsCode" label="物料编码" width="150px"/>
                   <!-- <el-table-column prop="saleCount" label="销量" width="150px" ></el-table-column> -->
                 </el-table>
               </template>

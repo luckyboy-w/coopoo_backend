@@ -144,7 +144,7 @@
                   <el-table-column prop="skuInfo" label="规格" width="150px" ></el-table-column>
                   <el-table-column
                     prop="goodCode"
-                    label="商品货号"
+                    label="物料编码"
                     width="150px"
                   />
                 </el-table>
