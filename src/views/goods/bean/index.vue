@@ -50,6 +50,7 @@
           </el-table>
           <div class="ly-data-pagination">
             <el-pagination v-show="!showPagination" :total="tableData.pages" background layout="prev, pager, next"
+                           :page-size="this.searchParam.pageSize" :current-page="this.searchParam.pageNum"
                            @current-change="currentPage" @prev-click="currentPage" @next-click="currentPage" />
           </div>
         </div>
@@ -116,8 +117,7 @@
               return;
             }
             this.tableData = res.data
-            this.tableData.hasNextPage = false,
-            this.tableData.hasPreviousPage = false
+            this.tableData.total = res.data.pages
             this.showPagination = this.tableData.total == 0
           });
         },
