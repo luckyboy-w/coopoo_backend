@@ -1116,7 +1116,8 @@ export default {
     loadFriDtlList(row) {
       let scope = this
       let param = {
-        memId: row.memId
+        memId: row.memId,
+        phoneNo: row.mobileNo
       }
       postMethod("/backend/siteData/selectFriDtl", param).then(res => {
         scope.dtlFriList = res.data.list
