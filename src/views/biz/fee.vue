@@ -134,12 +134,12 @@
           <el-table-column prop="mobileNo" label="手机号" min-width="24%"/>
           <el-table-column prop="provinceRole" label="服务商类型" min-width="24%">
             <template slot-scope="scope">
-              {{ scope.row.provLevel == 1 ? 'A' : '' }}
-              {{ scope.row.provLevel == 2 ? 'B' : '' }}
-              {{ scope.row.provLevel == 3 ? 'C' : '' }}
-              {{ scope.row.provLevel == 4 ? 'D' : '' }}
-              {{ scope.row.provLevel == 5 ? 'E' : '' }}
-              {{ scope.row.provLevel == 6 ? 'EA' : '' }}
+              {{ scope.row.provinceRole == 1 ? 'A' : '' }}
+              {{ scope.row.provinceRole == 2 ? 'B' : '' }}
+              {{ scope.row.provinceRole == 3 ? 'C' : '' }}
+              {{ scope.row.provinceRole == 4 ? 'D' : '' }}
+              {{ scope.row.provinceRole == 5 ? 'E' : '' }}
+              {{ scope.row.provinceRole == 6 ? 'EA' : '' }}
             </template>
           </el-table-column>
           <el-table-column prop="cashNum" label="提现金额" min-width="24%">
@@ -202,7 +202,7 @@
           <el-table-column prop="memName" label="会员姓名" min-width="24%"/>
           <el-table-column prop="phoneNo" label="手机号" min-width="24%"/>
           <el-table-column prop="orderNo" label="订单编号" min-width="24%"/>
-          <el-table-column prop="ordPayPrice" label="订单金额(元)" min-width="24%">
+          <el-table-column prop="ordPayPrice" label="订单实付金额(元)" min-width="24%">
             <template slot-scope="scope">
               {{ scope.row.ordPayPrice | fmtFee }}
             </template>
@@ -295,12 +295,12 @@
           <el-table-column prop="mobileNo" label="手机号" min-width="24%"/>
           <el-table-column prop="provinceRole" label="服务商类型" min-width="24%">
             <template slot-scope="scope">
-              {{ scope.row.provLevel == 1 ? 'A' : '' }}
-              {{ scope.row.provLevel == 2 ? 'B' : '' }}
-              {{ scope.row.provLevel == 3 ? 'C' : '' }}
-              {{ scope.row.provLevel == 4 ? 'D' : '' }}
-              {{ scope.row.provLevel == 5 ? 'E' : '' }}
-              {{ scope.row.provLevel == 6 ? 'EA' : '' }}
+              {{ scope.row.provinceRole == 1 ? 'A' : '' }}
+              {{ scope.row.provinceRole == 2 ? 'B' : '' }}
+              {{ scope.row.provinceRole == 3 ? 'C' : '' }}
+              {{ scope.row.provinceRole == 4 ? 'D' : '' }}
+              {{ scope.row.provinceRole == 5 ? 'E' : '' }}
+              {{ scope.row.provinceRole == 6 ? 'EA' : '' }}
             </template>
           </el-table-column>
           <el-table-column prop="cashNum" label="提现金额" min-width="24%">
@@ -620,6 +620,8 @@ export default {
         providerName: '',
         provLevel: '',
         phoneNo: '',
+        pageNum: 0,
+        pageSize: 10
       },
       exportApplyFrm_: {
         applyStartTime: '',
@@ -630,6 +632,8 @@ export default {
         providerName: '',
         provLevel: '',
         phoneNo: '',
+        pageNum: 0,
+        pageSize: 10
       },
       //10:未结算;20:结算中;30:已结算
       searchParam: {
@@ -933,11 +937,11 @@ export default {
         phoneNo: this.exportApplyFrm.phoneNo,
         applyStartTime: this.exportApplyFrm.applyStartTime,
         applyEndTime: this.exportApplyFrm.applyEndTime,
+        pageNum: this.exportApplyFrm.pageNum,
+        pageSize: this.exportApplyFrm.pageSize,
         cashStatus: 1
       }).then(res => {
-        console.log(res)
         scope.feeProcessData = res.data // 返回的数据
-
       })
     },
     batchBill_() {
@@ -949,10 +953,13 @@ export default {
         phoneNo: this.exportApplyFrm_.phoneNo,
         applyStartTime: this.exportApplyFrm_.applyStartTime,
         applyEndTime: this.exportApplyFrm_.applyEndTime,
+        pageNum: this.exportApplyFrm_.pageNum,
+        pageSize: this.exportApplyFrm_.pageSize,
         cashStatus: 2
       }).then(res => {
         scope.feeEndData = res.data // 返回的数据
-
+        this.exportApplyFrm_.pageNum = res.data.pageNum
+        this.exportApplyFrm_.pageSize = res.data.pageSize
       })
     },
     // batchBill() {
@@ -1048,14 +1055,6 @@ export default {
       let param = this.searchParam
       param.cashStatus = 1
       postMethod("/backend/siteData/selectCashDone", param).then(res => {
-        let obj = res.data.list
-        for (let i = 0; i < obj.length; i++) {
-          this.types.forEach(e => {
-            if (e.title == obj[i].provinceRole) {
-              obj[i].provinceRole = e.value;
-            }
-          });
-        }
         scope.feeProcessData = res.data
       });
     },
@@ -1068,14 +1067,6 @@ export default {
       let param = this.searchParam
       param.cashStatus = 2
       postMethod("/backend/siteData/selectCashDone", param).then(res => {
-        let obj = res.data.list
-        for (let i = 0; i < obj.length; i++) {
-          this.types.forEach(e => {
-            if (e.title == obj[i].provinceRole) {
-              obj[i].provinceRole = e.value;
-            }
-          });
-        }
         scope.feeEndData = res.data
       });
     },
@@ -1116,7 +1107,8 @@ export default {
     loadFriDtlList(row) {
       let scope = this
       let param = {
-        memId: row.memId
+        memId: row.memId,
+        phoneNo: row.mobileNo
       }
       postMethod("/backend/siteData/selectFriDtl", param).then(res => {
         scope.dtlFriList = res.data.list
