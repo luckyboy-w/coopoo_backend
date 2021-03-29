@@ -26,14 +26,18 @@ const advertLocationList = [
   {id:"1",label:'首页头部'},
   {id:"2",label:'首页腰部'},
   {id:"3",label:'个人中心'},
-  {id:"4",label:'靠谱豆介绍'}
+  {id:"4",label:'靠谱豆介绍'},
+  {id:"5",label:'雷锋爆品'},
+  {id:"6",label:'靠谱豆商城'}
 ]
 
 const advertLocationMap = {
   "1":"首页头部",
   "2":"首页腰部",
   "3":"个人中心",
-  "4":"靠谱豆介绍"
+  "4":"靠谱豆介绍",
+  "5":"雷锋爆品",
+  "6":"靠谱豆商城"
 }
 
 const verifyProvinceMap = {

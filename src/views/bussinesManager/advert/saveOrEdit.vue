@@ -47,7 +47,6 @@
       <el-form-item label="跳转类型">
         <el-select
           v-model="dataForm.dataType"
-          filterable
           placeholder="请选择"
         >
           <el-option
@@ -69,6 +68,10 @@
           <el-option
             label="活动商品"
             value="5"
+          />
+          <el-option
+            label="无"
+            value="6"
           />
         </el-select>
       </el-form-item>
@@ -342,7 +345,6 @@
         let param = {
           isSale: 1,
           verifyStatus: '20',
-          pageSize: 30,
           pageNum: 0
         }
         getMethod("/backend/good/findPage", param).then(res => {
@@ -408,7 +410,11 @@
         }
       },
       validate() {
-        let notNvl = ["advertName", "advertUrl", "sort", "advertLocation"];
+        let notNvl = ["advertName", "sort", "advertLocation"];
+        if (this.dataForm.dataType != '6') {
+          notNvl.push("advertUrl")
+        }
+
         for (let i = 0; i < notNvl.length; i++) {
           if (this.dataForm[notNvl[i]] == "") {
             this.$message({
