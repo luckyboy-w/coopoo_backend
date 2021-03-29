@@ -48,6 +48,10 @@
           <el-option :value="2" label="公司"></el-option>
         </el-select>
       </el-form-item>
+
+      <el-form-item label="身份证号" prop="idCard">
+        <el-input v-model="dataForm.idCard" :disabled="!viewSubmit" />
+      </el-form-item>
       <el-form-item  v-if="dataForm.provinceRole=='6'" label="身份证正面照片">
       <img style="width: 150px;height: 150px;" :src="this.dataForm.personFrontImg" alt>
       </el-form-item>
@@ -326,6 +330,7 @@
         imageUrl: '',
         fileList: [],
         dataForm: {
+          idCard:'',
           provinceName: '',
           provinceNo: '',
           owerName: '',
