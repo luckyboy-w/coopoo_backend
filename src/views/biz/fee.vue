@@ -94,7 +94,7 @@
             <td style="padding-left: 20px;">服务商类型</td>
             <td>
               <el-select v-model="exportApplyFrm.provLevel" placeholder="请选择服务商">
-                <el-option v-for="item in providerList" :label="item.provinceName" :value="item.id"/>
+                <el-option v-for="item in providerList" :label="item.provinceName" :value="item.id" :key="item.id"/>
               </el-select>
             </td>
             <td>
@@ -253,7 +253,7 @@
             <td style="padding-left: 20px;">服务商类型</td>
             <td>
               <el-select v-model="exportApplyFrm_.provLevel" placeholder="请选择服务商">
-                <el-option v-for="item in providerList" :label="item.provinceName" :value="item.id"/>
+                <el-option v-for="item in providerList" :label="item.provinceName" :value="item.id" :key="item.id"/>
               </el-select>
             </td>
             <td>
