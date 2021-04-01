@@ -99,14 +99,6 @@
                   label="普通订单"
                 />
                 <el-option
-                  value="2"
-                  label="礼品订单"
-                />
-                <el-option
-                  value="3"
-                  label="礼券订单"
-                />
-                <el-option
                   value="4"
                   label="定制订单"
                 />
@@ -266,6 +258,12 @@
               width="250px"
             >
               <template slot-scope="scope">
+                <el-link
+                  v-if="scope.row.orderType == 6 && scope.row.status == 10"
+                  type="primary"
+                  @click="sendOrd(scope.row)"
+                >发货
+                </el-link>
                 <el-link
                   v-if="false && scope.row.status == 60"
                   type="primary"
@@ -693,6 +691,44 @@
       </div>
     </div>
 
+
+    <el-dialog title="线下发货" :visible.sync="sendOrder" v-if="sendOrder" @close="closeSendOrderDialog">
+      <el-form ref="form" :rules="rules" :model="sendOrderFrm" label-width="80px">
+        <el-form-item label="订单编号">
+          <el-input v-model="sendOrderFrm.orderNo" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="物流公司" prop="expressId">
+          <el-select v-model="sendOrderFrm.expressId" placeholder="请选择">
+            <el-option
+              v-for="item in expressList"
+              :key="item.id"
+              :label="item.text"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="发货地址" prop="sendAddress">
+          <el-input v-model="sendOrderFrm.sendAddress" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="物流单号" prop="expressNo">
+          <el-input v-model="sendOrderFrm.expressNo"></el-input>
+        </el-form-item>
+        <el-form-item label="操作说明">
+          <el-input
+            type="textarea"
+            :rows="4"
+            placeholder="请输入内容"
+            v-model="sendOrderFrm.opContent"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitSend()">立即发货</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
     <br>
   </div>
 </template>
@@ -776,14 +812,31 @@ export default {
         return '定制订单'
       } else if (verifyStatus == 3) {
         return '礼券订单'
-      }else if (verifyStatus == 5) {
+      } else if (verifyStatus == 5) {
         return '会员订单'
-      }else if (verifyStatus == 6) {
+      } else if (verifyStatus == 6) {
         return '靠谱豆订单'
       }
     }
   },
   data() {
+
+    let quantityCheck = (rule, value, callback) => {
+      if (value <= 0 || value > 300) {
+        callback(new Error('包裹数量输入错误，只能1~300'))
+      } else {
+        callback()
+      }
+    }
+    let expressCompanyCheck = (rule, value, callback) => {
+      if (this.logisticsCompany == null) {
+        callback(new Error('请选择物流公司'))
+      } else if (this.logisticsCompanyTypeId == null) {
+        callback(new Error('请选择物流公司业务类型'))
+      } else {
+        callback()
+      }
+    }
     return {
       loading: true,
       supplyList: [],
@@ -810,6 +863,7 @@ export default {
       },
       sendOrderFrm: {
         orderNo: '',
+        expressId: '',
         expressName: '',
         sendAddress: '',
         expressNo: '',
@@ -824,14 +878,9 @@ export default {
           dtlList: []
         }]
       },
-      expressList: [{
-        id: 'sf',
-        text: '顺丰'
-      }],
       sendOrder: false,
       pushStockBatch: false,
       pushStock: false,
-      typeIdList: [],
       typeId2List: [],
       typeIdList: [],
       orderId_: '',
@@ -859,7 +908,29 @@ export default {
       tableData: {
         list: []
       },
-      dataList: []
+      dataList: [],
+
+      // 线下发货所需数据
+      expressList: [
+        {id: 'SF', text: '顺丰速运'},
+        {id: 'YZBK', text: '邮政国内标快'},
+        {id: 'YZPY', text: '邮政快递包裹'},
+        {id: 'STO', text: '申通快递'},
+        {id: 'DBL', text: '德邦快递'},
+        {id: 'JD', text: '京东快递'},
+        {id: 'HHTT', text: '天天快递'},
+        {id: 'JTSD', text: '极兔速递'},
+        {id: 'SNWL', text: '苏宁物流'},
+        {id: 'ZTO', text: '中通快递'},
+        {id: 'YD', text: '韵达速递'},
+        {id: 'HTKY', text: '百世快递'},
+        {id: 'YTO', text: '圆通速递'}
+      ],
+      rules: {
+        expressId: [{required: true, message: '请选择物流公司', trigger: 'change'}],
+        sendAddress: [{required: true, message: '请选择发货地址', trigger: 'blur'}],
+        expressNo: [{required: true, message: '请输入物流单号', trigger: 'blur'}]
+      },
     }
   },
   computed: {},
@@ -879,6 +950,16 @@ export default {
 
   },
   methods: {
+    closeSendOrderDialog() {
+      this.logisticsCompanyTypeId = null
+      this.addrId = null
+      this.offlineExpressId = null
+      this.offlineSendAddrId = null
+      this.sendOrderFrm.expressNo = ''
+      this.sendOrderFrm.opContent = ''
+      this.sendOrderFrm.addrId = null
+      this.sendOrderFrm.expressId = null
+    },
     showOrdDtlClos() {
       this.showOrdDtl = false
       this.ptStep = false
@@ -1073,34 +1154,55 @@ export default {
       })
     },
     submitSend() {
-      let scope = this
-      if (this.sendOrderFrm.expressNo == '') {
-        this.$message({
-          message: '运单号不能为空',
-          type: 'warring'
-        })
-        return
-      }
-
-      if (this.sendOrderFrm.expressName == '') {
-        this.$message({
-          message: '物流公司不能为空',
-          type: 'warring'
-        })
-        return
-      }
-
-      postMethod('/bc/order/sendOrder', this.sendOrderFrm).then(res => {
-        scope.loadList()
-        this.$message({
-          message: '发货成功',
-          type: 'success'
-        })
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          let scope = this
+          let express = this.expressList.find(item => item.id == this.sendOrderFrm.expressId)
+          this.sendOrderFrm.expressName = express.text
+          let loading = this.$loading({
+            lock: true,
+            text: '正在发货中...',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          })
+          postMethod('/backend/order/offlineSendOrder', this.sendOrderFrm).then(res => {
+            if (res.code != 200) {
+              this.$message.error(res.message)
+              return
+            }
+            this.$message({
+              message: '发货成功',
+              type: 'success'
+            })
+            this.sendOrder = false
+            scope.loadList()
+            this.closeSendOrderDialog()
+            loading.close()
+          }).catch(err => {
+            loading.close()
+          })
+        }
       })
     },
-    sendOrd(rowObj) {
+    async sendOrd(rowObj) {
+      await this.loadAddress();
+
       this.sendOrder = true
       this.sendOrderFrm.orderNo = rowObj.orderNo
+      let param = {
+        orderId: rowObj.orderId
+      }
+      postMethod('/backend/order/getOrdDtl', param).then(res => {
+        if (res.code != 200) {
+          this.$message.error(res.message)
+          return
+        }
+        this.onlineOrderDtl = res.data
+      })
+    },
+    async loadAddress() {
+      const {data} = await getMethod("/backend/lyConfig/findList?dataType=send_address_config")
+        this.sendOrderFrm.sendAddress = data[0] && data[0].value
     },
     cancelStock() {
       this.pushStockBatch = false
