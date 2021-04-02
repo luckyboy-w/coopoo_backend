@@ -7,7 +7,7 @@
             <el-input v-model="dataForm.goodName" style="width:450px" :disabled="isDisabled"/>
           </el-form-item>
           <el-form-item label="商品类型">
-            <el-select v-model="dataForm.isMarketing" :disabled="isDisabled">
+            <el-select v-model="dataForm.isMarketing" :disabled="isDisabled" disabled>
               <el-option label="普通商品" value="0"/>
               <el-option label="活动商品" value="1"/>
             </el-select>
@@ -69,6 +69,19 @@
           </el-form-item>
           <el-form-item label="所属品牌">
             <el-input v-model="dataForm.brandName" style="width:260px" :disabled="isDisabled"/>
+          </el-form-item>
+          <el-form-item label="视频">
+            <el-input v-show="false" v-model="dataForm.goodsVideo" :disabled="isDisabled" />
+            <el-upload list-type="picture-card" v-bind:show-file-list="false"
+                       :disabled="isDisabled" >
+              <video v-if="dataForm.goodsVideo !='' && !videoFlag" v-bind:src="dataForm.goodsVideo" class="video-avatar" style="height: inherit;min-width: -webkit-fill-available;"
+                     controls="controls">
+                您的浏览器不支持视频播放
+              </video>
+            </el-upload>
+            <el-dialog>
+              <img width="100%" :src="imageUrl" alt>
+            </el-dialog>
           </el-form-item>
           <el-form-item label="封面图片">
             <div id="front-img">
@@ -192,12 +205,6 @@
           <el-form-item v-if="dataForm.isMarketing == 0" label="是否定制">
             <el-switch v-model="dataForm.custom" inactive-value="0" active-value="1" :disabled="isDisabled"/>
           </el-form-item>
-          <el-form-item label="商品风格专场">
-            <el-checkbox-group v-model="goodStyleList" @change="changeStyle" :disabled="isDisabled">
-              <el-checkbox v-for="styleText in styleList" :label="styleText" :key="styleText">{{ styleText }}
-              </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
           <el-form-item label="商家承偌服务">
             <el-checkbox-group v-model="serviceRuleList" :disabled="isDisabled">
               <el-checkbox v-for="obj in buServiceList" :label="obj" :key="obj">{{ obj }}</el-checkbox>
@@ -304,6 +311,7 @@ export default {
       goodSaleDescImgUrl: '',
       goodSaleDescList: [],
       dialogVisible: false,
+      videoFlag: false,
       dialogImageUrl: '',
       isEdit: false,
       dialogVerify: false,
@@ -385,7 +393,6 @@ export default {
     this.loadGoodSaleDescList()
     this.$nextTick(function () {
       if (this.editData.id) {
-        this.goodStyleList = this.editData.goodStyle.split(",")
         this.serviceRuleList = this.editData.serviceRule.split(",")
         this.dataForm = this.editData
         this.dataForm.isMarketing = this.dataForm.isMarketing + ''
