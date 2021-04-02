@@ -1033,16 +1033,7 @@ export default {
     loadList() {
       let scope = this
       let param1 = this.searchParam
-      console.log(param1)
       getMethod("/backend/siteData/selectAllCash", param1).then(res => {
-        let obj = res.data.list
-        for (let i = 0; i < obj.length; i++) {
-          this.types.forEach(e => {
-            if (e.title == obj[i].provLevel) {
-              obj[i].provLevel = e.value;
-            }
-          });
-        }
         scope.allFeeData = res.data
       });
     },
