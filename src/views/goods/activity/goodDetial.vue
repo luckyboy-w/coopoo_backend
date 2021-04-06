@@ -175,12 +175,6 @@
           <el-form-item label="是否定制">
             <el-switch v-model="dataForm.custom" inactive-value="0" active-value="1"/>
           </el-form-item>
-          <el-form-item label="商品风格专场">
-            <el-checkbox-group v-model="goodStyleList" @change="changeStyle">
-              <el-checkbox v-for="styleText in styleList" :label="styleText" :key="styleText">{{ styleText }}
-              </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
           <el-form-item label="商家承偌服务">
             <el-checkbox-group v-model="serviceRuleList">
               <el-checkbox v-for="obj in buServiceList" :label="obj" :key="obj">{{ obj }}</el-checkbox>
@@ -354,7 +348,6 @@
       this.loadGoodSaleDescList()
       this.$nextTick(function () {
         if (this.editData.id) {
-          this.goodStyleList = this.editData.goodStyle.split(",")
           this.serviceRuleList = this.editData.serviceRule.split(",")
           this.dataForm = this.editData
           if (this.dataForm.stockType == '1') {
