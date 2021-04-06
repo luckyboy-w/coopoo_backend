@@ -26,7 +26,7 @@
       <el-scrollbar>
         <div style="height: 100px;width: 100%" @click.stop>
           <el-checkbox-group v-model="checkedGood" @change="handleCheckedGoodChange">
-            <el-checkbox v-for="good in goodList" :label="good.id" :key="good.id">
+            <el-checkbox :class="{ 'active': good.selected != undefined }" v-for="good in goodList" :label="good.id" :key="good.id">
               <span @click.prevent="showGoodDetail(good.id)">{{good.goodName}}</span>
             </el-checkbox>
           </el-checkbox-group>
