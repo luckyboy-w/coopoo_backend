@@ -345,16 +345,19 @@
         let param = {
           isSale: 1,
           verifyStatus: '20',
-          pageNum: 0
+          pageNum: 0,
+          pageSize: 10
         }
         getMethod("/backend/good/findPage", param).then(res => {
           scope.goodList = res.data.list
         });
       },
       loadGoodActivity() {
+        let scope = this
         getMethod("/backend/goodActivity/findAll").then(res => {
           res.data.map(item => item.id + "");
-          this.goodActivityList = res.data.map(item => {
+          console.log(JSON.stringify(res.data))
+          scope.goodActivityList = res.data.map(item => {
             item.id += ""
             return item
           })
