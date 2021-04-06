@@ -356,7 +356,6 @@
         let scope = this
         getMethod("/backend/goodActivity/findAll").then(res => {
           res.data.map(item => item.id + "");
-          console.log(JSON.stringify(res.data))
           scope.goodActivityList = res.data.map(item => {
             item.id += ""
             return item
