@@ -21,14 +21,6 @@
                 />
               </el-select>
             </td>
-            <td>活动有效期</td>
-            <td>
-              <el-date-picker v-model="searchParam.activityStartTime" value-format="yyyy-MM-dd" type="date" placeholder="选择开始日期"/>
-            </td>
-            <td style="text-align: center;">-</td>
-            <td>
-              <el-date-picker v-model="searchParam.activityEndTime" value-format="yyyy-MM-dd" type="date" placeholder="选择结束日期"/>
-            </td>
             <td>
               <el-button icon="el-icon-search" @click="search()">查询</el-button>
               <el-button plain type="primary" @click="save('add')" icon="el-icon-document-add">新增</el-button>
@@ -276,9 +268,6 @@ export default {
     font-size: 14px;
 
     .ly-tool-panel {
-      div {
-        display: inline;
-      }
 
       line-height: "60px";
       height: "60px";

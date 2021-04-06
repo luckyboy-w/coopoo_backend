@@ -8,6 +8,18 @@
             <td>
               <el-input v-model="searchParam.activityName" width="180px"></el-input>
             </td>
+            <td>活动有效期</td>
+            <td>
+              <el-date-picker v-model="searchParam.activityStartTime" value-format="yyyy-MM-dd HH:mm:ss" type="date"
+                              placeholder="选择开始日期"
+              />
+            </td>
+            <td style="text-align: center;">-</td>
+            <td>
+              <el-date-picker v-model="searchParam.activityEndTime" value-format="yyyy-MM-dd HH:mm:ss" type="date"
+                              placeholder="选择结束日期"
+              />
+            </td>
             <td>
               <el-button icon="el-icon-search" @click="search()">查询</el-button>
               <el-button plain type="primary" @click="addOrEdit('add')" icon="el-icon-document-add">新增</el-button>
@@ -18,7 +30,8 @@
       <div class="ly-table-panel" v-loading="isLoading">
         <el-table ref="mainTable" :data="tableData.list" row-key="id"
                   :header-cell-style="{'text-align':'center'}" :cell-style="{'text-align':'center'}"
-                  border :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+                  border :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+        >
           <el-table-column prop="frontImage" label="活动图片" width="200px">
             <template slot-scope="scope">
               <img style="width:100%;height: 70px" :src="scope.row.frontImage"/>
@@ -33,12 +46,12 @@
           </el-table-column>
           <el-table-column prop="frontImage" label="预热有效期" width="400px">
             <template slot-scope="scope">
-              {{ scope.row.preheatStartTime | _formateDate}} 至 {{scope.row.preheatEndTime | _formateDate }}
+              {{ scope.row.preheatStartTime | _formateDate }} 至 {{ scope.row.preheatEndTime | _formateDate }}
             </template>
           </el-table-column>
           <el-table-column prop="frontImage" label="活动有效期" width="400px">
             <template slot-scope="scope">
-              {{ scope.row.startTime | _formateDate}} 至 {{scope.row.endTime | _formateDate }}
+              {{ scope.row.startTime | _formateDate }} 至 {{ scope.row.endTime | _formateDate }}
             </template>
           </el-table-column>
           <el-table-column label="操作" width="200px">
@@ -50,17 +63,24 @@
         </el-table>
         <div class="ly-data-pagination">
           <el-pagination v-show="!showPagination" :total="tableData.total" background layout="prev, pager, next"
-                         @current-change="currentPage" @prev-click="currentPage" @next-click="currentPage" />
+                         @current-change="currentPage" @prev-click="currentPage" @next-click="currentPage"
+          />
         </div>
       </div>
     </div>
-    <el-dialog :visible.sync="isShowActivityDialog" v-if="isShowActivityDialog" @close="closeActivityDialog" width="30%">
-      <el-form class="update-form-panel" ref="activityForm" :rules="activityFormRules" :model="activityForm" label-width="100px" style="width:80%">
+    <el-dialog :visible.sync="isShowActivityDialog" v-if="isShowActivityDialog" @close="closeActivityDialog"
+               width="30%"
+    >
+      <el-form class="update-form-panel" ref="activityForm" :rules="activityFormRules" :model="activityForm"
+               label-width="100px" style="width:80%"
+      >
         <el-form-item label="活动类型" prop="activityType">
-          <el-select ref="select" v-model="activityForm.activityType" placeholder="请选择活动类型" :disabled="activityTypeDisable">
-            <el-option label="请选择..." value="" />
-            <el-option label="普通活动" value="1" />
-            <el-option label="雷锋爆品" value="2" />
+          <el-select ref="select" v-model="activityForm.activityType" placeholder="请选择活动类型"
+                     :disabled="activityTypeDisable"
+          >
+            <el-option label="请选择..." value=""/>
+            <el-option label="普通活动" value="1"/>
+            <el-option label="雷锋爆品" value="2"/>
           </el-select>
         </el-form-item>
         <el-form-item label="活动名称" prop="activityName">
@@ -88,7 +108,8 @@
             @change="activityPreheatDateTimeChange"
             value-format="yyyy-MM-dd HH:mm:ss"
             :picker-options="preheatDateTimePickerOptions"
-            :default-time="['00:00:00', '00:00:00']">
+            :default-time="['00:00:00', '00:00:00']"
+          >
             style="width:80%"
           </el-date-picker>
         </el-form-item>
@@ -101,7 +122,8 @@
             @change="activityDateTimeChange"
             :picker-options="startDateTimePickerOptions"
             value-format="yyyy-MM-dd HH:mm:ss"
-            :default-time="['00:00:00', '00:00:00']">
+            :default-time="['00:00:00', '00:00:00']"
+          >
             style="width:80%"
           </el-date-picker>
         </el-form-item>
@@ -118,8 +140,8 @@
 
 <script>
 import goodsList from "./goodsList";
-import { getUploadUrl, postMethod, getMethod  } from "@/api/request";
-import { formatDate } from "@/api/tools.js"
+import {getUploadUrl, postMethod, getMethod} from "@/api/request";
+import {formatDate} from "@/api/tools.js"
 
 export default {
   filters: {
@@ -131,9 +153,9 @@ export default {
       return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
     }
   },
-  name:'',
-  props:[''],
-  data () {
+  name: '',
+  props: [''],
+  data() {
     const validateFrontImage = (rule, value, callback) => {
       if (this.activityForm.frontImage === undefined || this.activityForm.frontImage === null || this.activityForm.frontImage === '') {
         callback(new Error('请上传活动封面'))
@@ -174,12 +196,12 @@ export default {
       activityDateTimePeriod: null,
       activityPreheatDateTimePeriod: null,
       preheatDateTimePickerOptions: {
-        disabledDate (time) {
+        disabledDate(time) {
           return time.getTime() <= Date.now()
         }
       },
       startDateTimePickerOptions: {
-        disabledDate (time) {
+        disabledDate(time) {
           return time.getTime() <= Date.now()
         }
       },
@@ -187,11 +209,11 @@ export default {
         list: []
       },
       activityFormRules: {
-        activityName: [{ required: true, message: '请输入活动名称', trigger: 'blur'}],
-        activityType: [{ required: true, validator: validateActivityType, trigger: 'change'}],
-        frontImage: [{ required: true, validator: validateFrontImage, trigger: "blur"}],
-        activityDateTimePeriod: [{ required: true, validator: validateActivityDateTimePeriod}],
-        activityPreheatDateTimePeriod: [{ required: true, validator: validateActivityPreheatDateTimePeriod}],
+        activityName: [{required: true, message: '请输入活动名称', trigger: 'blur'}],
+        activityType: [{required: true, validator: validateActivityType, trigger: 'change'}],
+        frontImage: [{required: true, validator: validateFrontImage, trigger: "blur"}],
+        activityDateTimePeriod: [{required: true, validator: validateActivityDateTimePeriod}],
+        activityPreheatDateTimePeriod: [{required: true, validator: validateActivityPreheatDateTimePeriod}],
       },
       activityData: null,
       activityTypeDisable: false,
@@ -206,7 +228,8 @@ export default {
     };
   },
   components: {goodsList},
-  beforeMount() {},
+  beforeMount() {
+  },
 
   mounted() {
     this.loadList()
@@ -264,7 +287,7 @@ export default {
       this.loadList();
     },
 
-    addOrEdit (oper, activity) {
+    addOrEdit(oper, activity) {
       this.activityTypeDisable = oper == "edit"
       if (oper == "edit") {
         this.activityForm = JSON.parse(JSON.stringify(activity))
@@ -351,25 +374,22 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-  .ly-container {
-    padding: 10px 20px;
-    font-size: 14px;
+.ly-container {
+  padding: 10px 20px;
+  font-size: 14px;
 
-    .ly-tool-panel {
-      div {
-        display: inline;
-      }
+  .ly-tool-panel {
 
-      line-height: "60px";
-      height: "60px";
-      width: 100%;
-      padding: 10px 10px;
+    line-height: "60px";
+    height: "60px";
+    width: 100%;
+    padding: 10px 10px;
 
-      .ly-tool-btn {
-        padding-left: 20px;
-        display: inline;
-      }
+    .ly-tool-btn {
+      padding-left: 20px;
+      display: inline;
     }
   }
+}
 </style>
 
