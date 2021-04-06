@@ -57,7 +57,7 @@
     <el-dialog :visible.sync="isShowActivityDialog" v-if="isShowActivityDialog" @close="closeActivityDialog" width="30%">
       <el-form class="update-form-panel" ref="activityForm" :rules="activityFormRules" :model="activityForm" label-width="100px" style="width:80%">
         <el-form-item label="活动类型" prop="activityType">
-          <el-select ref="select" v-model="activityForm.activityType" placeholder="请选择活动类型">
+          <el-select ref="select" v-model="activityForm.activityType" placeholder="请选择活动类型" :disabled="activityTypeDisable">
             <el-option label="请选择..." value="" />
             <el-option label="普通活动" value="1" />
             <el-option label="雷锋爆品" value="2" />
@@ -194,6 +194,7 @@ export default {
         activityPreheatDateTimePeriod: [{ required: true, validator: validateActivityPreheatDateTimePeriod}],
       },
       activityData: null,
+      activityTypeDisable: false,
       uploadActivityFrontImageUrl: getUploadUrl(),
       activityForm: {
         activityType: ""
@@ -264,6 +265,7 @@ export default {
     },
 
     addOrEdit (oper, activity) {
+      this.activityTypeDisable = oper == "edit"
       if (oper == "edit") {
         this.activityForm = JSON.parse(JSON.stringify(activity))
         this.activityDateTimePeriod = [new Date(activity.startTime), new Date(activity.endTime)]
@@ -271,6 +273,7 @@ export default {
         let imgObj = {url: activity.frontImage}
         this.uploadActivityFrontImageList.push(imgObj)
         this.hideActivityFrontImageUpload = true
+        this.activityForm.activityType = activity.activityType + ""
         this.activityForm.startTime = formatDate(new Date(activity.startTime), 'yyyy-MM-dd hh:mm:ss')
         this.activityForm.endTime = formatDate(new Date(activity.endTime), 'yyyy-MM-dd hh:mm:ss')
         this.activityForm.preheatStartTime = formatDate(new Date(activity.preheatStartTime), 'yyyy-MM-dd hh:mm:ss')
