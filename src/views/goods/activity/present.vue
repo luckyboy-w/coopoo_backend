@@ -1,8 +1,10 @@
 <template>
   <div class="ly-container">
-    <el-button style="margin-bottom: 10px" @click="backToMarketingGoodsList()" plain icon="el-icon-back">返回列表</el-button>
+    <el-button style="margin-bottom: 10px" @click="backToMarketingGoodsList()" plain icon="el-icon-back">返回列表
+    </el-button>
     <el-form class="update-form-panel" ref="activityGoodForm" :rules="activityFormRules" :model="activityGoodForm"
-             label-width="120px" style="width:80%">
+             label-width="120px" style="width:80%"
+    >
       <el-divider content-position="left"/>
       <el-form-item label="活动名称:">
         {{ activity.activityName }}
@@ -21,14 +23,14 @@
       <el-divider content-position="left"/>
       <div v-for="(table,index) in tableList" :key="table.goodId" style="margin-top: 20px">
         <p>{{ table.goodName }}</p>
-        <span>用户限购&nbsp;&nbsp;&nbsp;&nbsp;</span> <el-input v-model="table.userLimit" style="width: 200px"></el-input>
+        <span>用户限购&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <el-input v-model="table.userLimit" style="width: 200px"></el-input>
         <el-table style="margin-top: 10px" :data="table.table" :span-method="objectSpanMethod" border>
           <el-table-column
             align="center"
             v-for="(item,index) in table.columnList"
             :key="index"
             :label="item"
-            width=""
           >
             <template slot-scope="scope">
               {{ scope.row.tdList[index].value }}
@@ -51,20 +53,26 @@
       <el-row align="middle">
         <el-col :span="4">
           <div style="height:130px;display: table-cell;vertical-align:middle" class="grid-content bg-purple-dark">
-            <span>供应商比例:</span><el-input placeholder="请输入..." style="width: 180px" v-model="activityGoodForm.supplierRebateRatio"/>%
+            <span>供应商比例:</span>
+            <el-input placeholder="请输入..." style="width: 180px" v-model="activityGoodForm.supplierRebateRatio"/>
+            %
           </div>
         </el-col>
         <el-col :span="1">
-          <div style="height:130px;display: table-cell;vertical-align:middle;margin-right: 10px;" class="grid-content bg-purple-dark">
+          <div style="height:130px;display: table-cell;vertical-align:middle;margin-right: 10px;"
+               class="grid-content bg-purple-dark"
+          >
             <span>服务商比例:</span>
           </div>
         </el-col>
-        <el-col :span="19" >
+        <el-col :span="19">
           <div class="grid-content bg-purple-dark" style="height:150px">
-            <el-table :data="rebateRatioData" :header-cell-style="{'text-align':'center'}" :cell-style="{'text-align':'center'}" border>
+            <el-table :data="rebateRatioData" :header-cell-style="{'text-align':'center'}"
+                      :cell-style="{'text-align':'center'}" border
+            >
               <el-table-column prop="id" label="A（%）">
                 <template slot-scope="scope">
-                  <el-input placeholder="请输入..." v-model="scope.row.providerRebateRatioA"  />
+                  <el-input placeholder="请输入..." v-model="scope.row.providerRebateRatioA"/>
                 </template>
               </el-table-column>
               <el-table-column prop="id" label="B（%）">
@@ -104,7 +112,8 @@
           range-separator="至"
           disabled
           start-placeholder="开始日期"
-          end-placeholder="结束日期">
+          end-placeholder="结束日期"
+        >
         </el-date-picker>
       </el-form-item>
       <el-divider content-position="left"/>
@@ -115,7 +124,8 @@
           range-separator="至"
           disabled
           start-placeholder="开始日期"
-          end-placeholder="结束日期">
+          end-placeholder="结束日期"
+        >
         </el-date-picker>
       </el-form-item>
       <el-divider content-position="left"/>
@@ -128,12 +138,12 @@
 </template>
 
 <script>
-import { getMethod, postMethod } from '@/api/request'
+import {getMethod, postMethod} from '@/api/request'
 import showGoodDetail from "./goodDetial.vue";
-import { deepCopy } from '@/utils/util'
+import {deepCopy} from '@/utils/util'
 
 export default {
-  name:'',
+  name: '',
   props: {
     activityGoodData: {
       type: Object,
@@ -144,8 +154,8 @@ export default {
       required: false
     }
   },
-  components: { showGoodDetail },
-  data () {
+  components: {showGoodDetail},
+  data() {
     return {
       isShowGoodDetail: false,
       isEditGood: false,
@@ -172,19 +182,21 @@ export default {
         supplierId: '',
         supplierRebateRatio: 90
       },
-      activityFormRules: {
-
-      }
+      activityFormRules: {}
     };
   },
   computed: {},
-  beforeMount() {},
+  beforeMount() {
+  },
 
   mounted() {
     this.activityGoodForm.activityTimePeriod = [new Date(this.activity.startTime), new Date(this.activity.endTime)]
     this.activityGoodForm.preheatTimePeriod = [new Date(this.activity.preheatStartTime), new Date(this.activity.preheatEndTime)]
     this.initSupplyList()
-    getMethod('/backend/goodActivity/findActivityMarketingGoodList', {"goodActivityId" : this.activity.id, "supplierId": this.activity.supplierId}).then(res => {
+    getMethod('/backend/goodActivity/findActivityMarketingGoodList', {
+      "goodActivityId": this.activity.id,
+      "supplierId": this.activity.supplierId
+    }).then(res => {
       this.activityGoodForm.supplierRebateRatio = res.data[0].supplierRebateRatio
       this.rebateRatioData[0].providerRebateRatioA = res.data[0].providerRebateRatioA
       this.rebateRatioData[0].providerRebateRatioB = res.data[0].providerRebateRatioB
@@ -196,7 +208,7 @@ export default {
       for (let i = 0; i < res.data.length; i++) {
         let marketingGoods = res.data[i]
         let goodSkuValList = marketingGoods.goodSkuValList
-        for(let j = 0; j < goodSkuValList.length; j++) {
+        for (let j = 0; j < goodSkuValList.length; j++) {
           goodSkuValList[j].stock = goodSkuValList[j].marketingStock
         }
         let table = this.loadTableList(marketingGoods.goodSkuValList, marketingGoods.goodName, marketingGoods.goodId, marketingGoods.id, marketingGoods.userLimit)
@@ -225,20 +237,7 @@ export default {
     },
 
     // 控制合并表格的行和列
-    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 0) {
-          if (rowIndex === 0){
-            return {
-              rowspan: 999999,
-              colspan: 1
-            };
-          }else{
-            return {
-              rowspan: 0,
-              colspan: 1
-            };
-          }
-      }
+    objectSpanMethod({row, column, rowIndex, columnIndex}) {
 
       if (row.tdList[columnIndex] === undefined) {
         // 超出了 tdList 的长度 不属于动态列的范围 正常显示
@@ -344,50 +343,51 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-  .ly-container {
-    padding: 10px 20px;
-    font-size: 14px;
+.ly-container {
+  padding: 10px 20px;
+  font-size: 14px;
 
-    .ly-tool-panel {
-      div {
-        display: inline;
-      }
+  .ly-tool-panel {
+    div {
+      display: inline;
+    }
 
-      line-height: "60px";
-      height: "60px";
-      width: 100%;
-      padding: 10px 10px;
+    line-height: "60px";
+    height: "60px";
+    width: 100%;
+    padding: 10px 10px;
 
-      .ly-tool-btn {
-        padding-left: 20px;
-        display: inline;
-      }
+    .ly-tool-btn {
+      padding-left: 20px;
+      display: inline;
     }
   }
+}
 
-  .text {
-    font-size: 14px;
-  }
+.text {
+  font-size: 14px;
+}
 
-  .item {
-    margin-bottom: 18px;
-  }
+.item {
+  margin-bottom: 18px;
+}
 
-  .clearfix:before,
-  .clearfix:after {
-    display: table;
-    content: "";
-  }
-  .clearfix:after {
-    clear: both
-  }
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
 
-  .box-card {
-    height: 480px;
-    width: 480px;
-  }
+.clearfix:after {
+  clear: both
+}
 
-  .active {
-    color: red;
-  }
+.box-card {
+  height: 480px;
+  width: 480px;
+}
+
+.active {
+  color: red;
+}
 </style>

@@ -462,19 +462,19 @@ export default {
 
     // 控制合并表格的行和列
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 0) {
-          if (rowIndex === 0){
-            return {
-              rowspan: 999999,
-              colspan: 1
-            };
-          }else{
-            return {
-              rowspan: 0,
-              colspan: 1
-            };
-          }
-      }
+      // if (columnIndex === 0) {
+      //     if (rowIndex === 0){
+      //       return {
+      //         rowspan: 999999,
+      //         colspan: 1
+      //       };
+      //     }else{
+      //       return {
+      //         rowspan: 0,
+      //         colspan: 1
+      //       };
+      //     }
+      // }
 
       if (row.tdList[columnIndex] === undefined) {
         // 超出了 tdList 的长度 不属于动态列的范围 正常显示
