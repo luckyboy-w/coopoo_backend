@@ -11,7 +11,7 @@
             </td>
             <td>供应商名称：</td>
             <td>
-              <el-select v-model="searchParam.tenantId" placeholder="请选择">
+              <el-select v-model="searchParam.supplierId" placeholder="请选择">
                 <el-option value="" label="全部"/>
                 <el-option
                   v-for="item in supplyList"
@@ -121,7 +121,7 @@ export default {
       supplyList: [],
       searchParam:{
         goodActivityId: null,
-        tenantId: null
+        supplierId: null
       }
     };
   },
@@ -269,8 +269,6 @@ export default {
 
     .ly-tool-panel {
 
-      line-height: "60px";
-      height: "60px";
       width: 100%;
       padding: 10px 10px;
 
