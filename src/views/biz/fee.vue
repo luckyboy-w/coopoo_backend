@@ -69,7 +69,8 @@
         </el-table>
         <el-pagination v-if="allFeeDataShow" :total="allFeeData.total" background layout="prev, pager, next"
                        @current-change="currentAllFeePage" @prev-click="currentAllFeePage"
-                       @next-click="currentAllFeePage"/>
+                       @next-click="currentAllFeePage"
+        />
       </el-tab-pane>
 
 
@@ -117,17 +118,20 @@
             <td>
               <el-date-picker v-model="exportApplyFrm.applyStartTime" value-format="yyyy-MM-dd" type="date"
                               width="120px"
-                              placeholder="选择开始日期"/>
+                              placeholder="选择开始日期"
+              />
             </td>
             <td style="text-align: center;">至</td>
             <td>
               <el-date-picker v-model="exportApplyFrm.applyEndTime" value-format="yyyy-MM-dd" type="date" width="120px"
-                              placeholder="选择结束日期"/>
+                              placeholder="选择结束日期"
+              />
             </td>
           </tr>
         </table>
         <el-table v-if="det" ref="feeProcessData" :data="feeProcessData.list" style="width: 100%; margin-bottom: 20px;"
-                  row-key="id">
+                  row-key="id"
+        >
           <el-table-column type="index" width="50" label="序号"/>
           <el-table-column prop="cashNo" label="申请单号" min-width="24%"/>
           <el-table-column prop="provinceName" label="申请服务商" min-width="24%"/>
@@ -177,12 +181,14 @@
             <td>
               <el-date-picker v-model="searchParamsOne.applyStartTime" value-format="yyyy-MM-dd" type="date"
                               width="120px"
-                              placeholder="选择开始日期"/>
+                              placeholder="选择开始日期"
+              />
             </td>
             <td style="text-align: center;">至</td>
             <td>
               <el-date-picker v-model="searchParamsOne.applyEndTime" value-format="yyyy-MM-dd" type="date" width="120px"
-                              placeholder="选择结束日期"/>
+                              placeholder="选择结束日期"
+              />
             </td>
             <td>
               <el-button type="primary" @click="TosearchOne()">
@@ -228,7 +234,8 @@
 
         <el-pagination v-show="det" :total="feeProcessData.total" background layout="prev, pager, next"
                        @current-change="currentProcessPage"
-                       @prev-click="currentProcessPage" @next-click="currentProcessPage"/>
+                       @prev-click="currentProcessPage" @next-click="currentProcessPage"
+        />
       </el-tab-pane>
 
 
@@ -276,19 +283,22 @@
             <td>
               <el-date-picker v-model="exportApplyFrm_.applyStartTime" value-format="yyyy-MM-dd" type="date"
                               width="120px"
-                              placeholder="选择开始日期"/>
+                              placeholder="选择开始日期"
+              />
             </td>
             <td style="text-align: center;">至</td>
             <td>
               <el-date-picker v-model="exportApplyFrm_.applyEndTime" value-format="yyyy-MM-dd" type="date" width="120px"
-                              placeholder="选择结束日期"/>
+                              placeholder="选择结束日期"
+              />
             </td>
           </tr>
         </table>
 
 
         <el-table v-if="def_" ref="feeEnd" :data="feeEndData.list" style="width: 100%; margin-bottom: 20px;"
-                  row-key="id">
+                  row-key="id"
+        >
           <el-table-column type="index" width="50" label="序号"/>
           <el-table-column prop="cashNo" label="申请单号" min-width="24%"/>
           <el-table-column prop="provinceName" label="提现服务商" min-width="24%"/>
@@ -336,12 +346,14 @@
             <td>
               <el-date-picker v-model="searchParamsTwo.applyStartTime" value-format="yyyy-MM-dd" type="date"
                               width="120px"
-                              placeholder="选择开始日期"/>
+                              placeholder="选择开始日期"
+              />
             </td>
             <td style="text-align: center;">至</td>
             <td>
               <el-date-picker v-model="searchParamsTwo.applyEndTime" value-format="yyyy-MM-dd" type="date" width="120px"
-                              placeholder="选择结束日期"/>
+                              placeholder="选择结束日期"
+              />
             </td>
             <td>
               <el-button type="primary" @click="TosearchTwo()">
@@ -386,7 +398,8 @@
 
         <el-pagination v-if="def_" :total="feeEndData.total" background layout="prev, pager, next"
                        @current-change="currentEndPage"
-                       @prev-click="currentEndPage" @next-click="currentEndPage"/>
+                       @prev-click="currentEndPage" @next-click="currentEndPage"
+        />
       </el-tab-pane>
 
 
@@ -416,7 +429,8 @@
           </tr>
         </table>
         <el-table v-show="allFeeDtlFee" ref="dtlFeeRef" :data="dtlFeeList" style="width: 100%; margin-bottom: 20px;"
-                  row-key="id">
+                  row-key="id"
+        >
           <el-table-column type="index" width="50" label="序号"/>
           <el-table-column prop="nickName" label="会员姓名" min-width="24%"/>
           <el-table-column prop="phoneNo" label="手机号码" min-width="24%"/>
@@ -447,7 +461,8 @@
         </el-row>
 
         <el-table v-show="allFriDtlFee" ref="dtlFriRef" :data="dtlFriList" style="width: 100%; margin-bottom: 20px;"
-                  row-key="id">
+                  row-key="id"
+        >
           <el-table-column type="index" width="50" label="序号"/>
           <el-table-column prop="friName" label="会员昵称" min-width="24%"/>
           <el-table-column prop="friPhone" label="手机号码" min-width="24%"/>
@@ -924,8 +939,8 @@ export default {
     loadFriDtl() {
       let scope = this
       let param = this.searchParam
-      postMethod("/backend/siteData/selectCashDtl", param).then(res => {
-        scope.feeDtlData = res.data
+      postMethod("/backend/siteData/selectFriDtl", param).then(res => {
+        scope.friDtlData = res.data
       });
     },
     batchBill() {
@@ -1116,13 +1131,7 @@ export default {
       this.searchParam.pageNum = pageNum
       this.loadFeeDtl()
     },
-    loadFriDtl() {
-      let scope = this
-      let param = this.searchParam
-      postMethod("/backend/siteData/selectFriDtl", param).then(res => {
-        scope.friDtlData = res.data
-      });
-    },
+
     currentFriPage(pageNum) {
       this.searchParam.pageNum = pageNum
       this.loadFriDtl()
