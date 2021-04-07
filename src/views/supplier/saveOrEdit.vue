@@ -383,7 +383,6 @@ export default {
         ],
         phoneNo: [
           { required: true, message: "请输入联系电话", trigger: "blur"},
-          { validator: isMobileNumber, trigger: "blur" }
         ],
         taxNo: [
           { required: true, message: '请输入税务代码', trigger: 'blur' },
