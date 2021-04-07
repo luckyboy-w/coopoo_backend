@@ -255,7 +255,7 @@
             </td>
             <td style="padding-left: 20px;">提现服务商</td>
             <td>
-              <el-input v-model="exportApplyFrm_.provPhone" style="width:220px" placeholder=""/>
+              <el-input v-model="exportApplyFrm_.providerName" style="width:220px" placeholder=""/>
             </td>
             <td style="padding-left: 20px;">服务商类型</td>
             <td>
@@ -277,7 +277,7 @@
           <tr>
             <td style="padding-left: 20px;">手机号</td>
             <td>
-              <el-input v-model="exportApplyFrm_.provPhone" style="width:180px" placeholder=""/>
+              <el-input v-model="exportApplyFrm_.phoneNo" style="width:180px" placeholder=""/>
             </td>
             <td style="padding-left: 20px;">提现时间</td>
             <td>
