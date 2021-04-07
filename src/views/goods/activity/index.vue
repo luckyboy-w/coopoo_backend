@@ -78,8 +78,6 @@
           <el-select ref="select" v-model="activityForm.activityType" placeholder="请选择活动类型"
                      :disabled="activityTypeDisable"
           >
-            <el-option label="请选择..." value=""/>
-            <el-option label="普通活动" value="1"/>
             <el-option label="雷锋爆品" value="2"/>
           </el-select>
         </el-form-item>
@@ -219,7 +217,7 @@ export default {
       activityTypeDisable: false,
       uploadActivityFrontImageUrl: getUploadUrl(),
       activityForm: {
-        activityType: ""
+        activityType: "2"
       },
       searchParam: {
         pageSize: 10,
