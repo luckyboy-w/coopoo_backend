@@ -44,18 +44,18 @@
           </el-table-column>
           <el-table-column prop="goodName" label="商品名称"/>
           <el-table-column prop="activityName" label="活动名称"/>
-          <el-table-column prop="supplierName" label="供应商名称" width="400px"/>
-          <el-table-column prop="supplierRebateRatio" label="供应商比例" width="400px">
+          <el-table-column prop="supplierName" label="供应商名称" />
+          <el-table-column prop="supplierRebateRatio" label="供应商比例" >
             <template slot-scope="scope">
               {{ scope.row.supplierRebateRatio}}%
             </template>
           </el-table-column>
-          <el-table-column prop="providerRebateRatioE" label="E类服务商比例" width="400px">
+          <el-table-column prop="providerRebateRatioE" label="E类服务商比例" >
             <template slot-scope="scope">
               {{ scope.row.providerRebateRatioE}}%
             </template>
           </el-table-column>
-          <el-table-column label="活动有效期" width="400px">
+          <el-table-column label="活动有效期" >
             <template slot-scope="scope">
               {{ scope.row.activityStartTime | _formateDate}} 至 {{scope.row.activityEndTime | _formateDate }}
             </template>
