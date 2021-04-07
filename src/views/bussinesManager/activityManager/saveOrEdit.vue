@@ -163,13 +163,17 @@ export default {
 				this.dataForm.fileJsonStr = JSON.stringify(fileList);
 				this.dataForm.files = [];
 
+        if (!this.dataForm.startTime || !this.dataForm.endTime) {
+          this.$message.warning("起止时间不能为空");
+          return
+        }
+
 				this.dataForm.endTime = new Date(this.dataForm.endTime).Format(
 					"yyyy-MM-dd hh:mm:ss"
 				);
 				this.dataForm.startTime =  new Date(this.dataForm.startTime).Format(
 					"yyyy-MM-dd hh:mm:ss"
 				);
-
 				postMethod(
 					"/backend/activityManager/update",
 					this.dataForm
