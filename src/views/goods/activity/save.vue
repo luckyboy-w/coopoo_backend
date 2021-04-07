@@ -1,13 +1,18 @@
 <template>
   <div class="ly-container">
-    <el-button style="margin-bottom: 10px" @click="backToMarketingGoodsList()" plain icon="el-icon-back">返回列表</el-button>
-    <el-form class="update-form-panel" ref="activityGoodForm" :rules="activityFormRules" :model="activityGoodForm"
-             label-width="120px" style="width:80%">
-      <el-divider content-position="left"/>
+    <el-button style="margin-bottom: 10px" @click="backToMarketingGoodsList()" plain icon="el-icon-back">返回列表
+    </el-button>
+    <el-form
+      class="update-form-panel"
+      ref="activityGoodForm"
+      :rules="activityFormRules"
+      :model="activityGoodForm"
+    >
+      <el-divider/>
       <el-form-item label="活动名称:">
         {{ activity.activityName }}
       </el-form-item>
-      <el-divider content-position="left"/>
+      <el-divider/>
       <el-form-item label="供应商名名称:" prop="supplierId">
         <el-select v-model="activityGoodForm.supplierId" @change="changeSupplierEvent" placeholder="请选择">
           <el-option value="" label="全部"/>
@@ -19,23 +24,26 @@
           />
         </el-select>
       </el-form-item>
-      <el-divider content-position="left"/>
+      <el-divider/>
       <el-form-item label="商品名称:" prop="supplierId" width="180px">
         <el-input @input="goodInputEvent" style="width: 180px" v-model="goodName"/>
       </el-form-item>
       <el-scrollbar>
         <div style="height: 100px;width: 100%" @click.stop>
           <el-checkbox-group v-model="checkedGood" @change="handleCheckedGoodChange">
-            <el-checkbox :class="{ 'active': good.selected != undefined }" v-for="good in goodList" :label="good.id" :key="good.id">
-              <span @click.prevent="showGoodDetail(good.id)">{{good.goodName}}</span>
+            <el-checkbox :class="{ 'active': good.selected != undefined }" v-for="good in goodList" :label="good.id"
+                         :key="good.id"
+            >
+              <span @click.prevent="showGoodDetail(good.id)">{{ good.goodName }}</span>
             </el-checkbox>
           </el-checkbox-group>
         </div>
       </el-scrollbar>
-      <el-divider content-position="left"/>
+      <el-divider/>
       <div v-for="(table,index) in tableList" :key="table.goodId" style="margin-top: 20px">
         <p>{{ table.goodName }}</p>
-        <span>用户限购&nbsp;&nbsp;&nbsp;&nbsp;</span> <el-input v-model="table.userLimit" style="width: 200px"></el-input>
+        <span>用户限购&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <el-input v-model="table.userLimit" style="width: 200px"></el-input>
         <el-table style="margin-top: 10px" :data="table.table" :span-method="objectSpanMethod" border>
           <el-table-column
             align="center"
@@ -61,24 +69,30 @@
           </el-table-column>
         </el-table>
       </div>
-      <el-divider content-position="left"/>
+      <el-divider/>
       <el-row align="middle">
-        <el-col :span="4">
+        <el-col :span="3">
           <div style="height:130px;display: table-cell;vertical-align:middle" class="grid-content bg-purple-dark">
-            <span>供应商比例:</span><el-input placeholder="请输入..." style="width: 180px" v-model="activityGoodForm.supplierRebateRatio"/>%
+            <span>供应商比例:</span>
+            <el-input placeholder="请输入..." style="width: 100px" v-model="activityGoodForm.supplierRebateRatio"/>
+            %
           </div>
         </el-col>
-        <el-col :span="1">
-          <div style="height:130px;display: table-cell;vertical-align:middle;margin-right: 10px;" class="grid-content bg-purple-dark">
+        <el-col :span="2">
+          <div style="height:130px;display: table-cell;vertical-align:middle;margin-right: 10px;"
+               class="grid-content bg-purple-dark"
+          >
             <span>服务商比例:</span>
           </div>
         </el-col>
-        <el-col :span="19" >
+        <el-col :span="19">
           <div class="grid-content bg-purple-dark" style="height:150px">
-            <el-table :data="rebateRatioData" :header-cell-style="{'text-align':'center'}" :cell-style="{'text-align':'center'}" border>
+            <el-table :data="rebateRatioData" :header-cell-style="{'text-align':'center'}"
+                      :cell-style="{'text-align':'center'}" border
+            >
               <el-table-column prop="id" label="A（%）">
                 <template slot-scope="scope">
-                  <el-input placeholder="请输入..." v-model="scope.row.providerRebateRatioA"  />
+                  <el-input placeholder="请输入..." v-model="scope.row.providerRebateRatioA"/>
                 </template>
               </el-table-column>
               <el-table-column prop="id" label="B（%）">
@@ -111,44 +125,46 @@
         </el-col>
       </el-row>
       <el-divider content-position="left"/>
-      <el-form-item prop="preheatTimePeriod" label="预热时间:">
+      <el-form-item prop="preheatTimePeriod" label="预热时间:" >
         <el-date-picker
           v-model="activityGoodForm.preheatTimePeriod"
           type="datetimerange"
           range-separator="至"
           disabled
           start-placeholder="开始日期"
-          end-placeholder="结束日期">
+          end-placeholder="结束日期"
+        >
         </el-date-picker>
       </el-form-item>
       <el-divider content-position="left"/>
-      <el-form-item prop="activityTimePeriod" label="活动有效期:">
+      <el-form-item prop="activityTimePeriod" label="活动有效期:" >
         <el-date-picker
           v-model="activityGoodForm.activityTimePeriod"
           type="datetimerange"
           range-separator="至"
           disabled
           start-placeholder="开始日期"
-          end-placeholder="结束日期">
+          end-placeholder="结束日期"
+        >
         </el-date-picker>
       </el-form-item>
       <el-divider content-position="left"/>
       <el-button @click="submit" :loading="loading" style="display:block;margin:0 auto" type="primary">提交</el-button>
     </el-form>
 
-    <el-dialog :visible.sync="isShowGoodDetail" width="80%" append-to-body>
+    <el-dialog :visible.sync="isShowGoodDetail" append-to-body>
       <showGoodDetail :is-gift="isGift" :edit-data="goodInfo" :is-edit-good="isEditGood"/>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getMethod, postMethod } from '@/api/request'
+import {getMethod, postMethod} from '@/api/request'
 import showGoodDetail from "./goodDetial.vue";
-import { deepCopy } from '@/utils/util'
+import {deepCopy} from '@/utils/util'
 
 export default {
-  name:'',
+  name: '',
   props: {
     activityGoodData: {
       type: Object,
@@ -159,8 +175,8 @@ export default {
       required: false
     }
   },
-  components: { showGoodDetail },
-  data () {
+  components: {showGoodDetail},
+  data() {
     return {
       isShowGoodDetail: false,
       isEditGood: false,
@@ -187,13 +203,12 @@ export default {
         supplierId: '',
         supplierRebateRatio: 90
       },
-      activityFormRules: {
-
-      }
+      activityFormRules: {}
     };
   },
   computed: {},
-  beforeMount() {},
+  beforeMount() {
+  },
 
   mounted() {
     this.activityGoodForm.activityTimePeriod = [new Date(this.activity.startTime), new Date(this.activity.endTime)]
@@ -408,10 +423,10 @@ export default {
       let supplierRebateRatioFloat = parseFloat(this.activityGoodForm.supplierRebateRatio);
 
       if (supplierRebateRatioFloat + parseFloat(this.activityGoodForm.providerRebateRatioA) > 100 ||
-          supplierRebateRatioFloat + parseFloat(this.activityGoodForm.providerRebateRatioB) > 100 ||
-          supplierRebateRatioFloat + parseFloat(this.activityGoodForm.providerRebateRatioC) > 100 ||
-          supplierRebateRatioFloat + parseFloat(this.activityGoodForm.providerRebateRatioD) > 100 ||
-          supplierRebateRatioFloat + parseFloat(this.activityGoodForm.providerRebateRatioE) > 100) {
+        supplierRebateRatioFloat + parseFloat(this.activityGoodForm.providerRebateRatioB) > 100 ||
+        supplierRebateRatioFloat + parseFloat(this.activityGoodForm.providerRebateRatioC) > 100 ||
+        supplierRebateRatioFloat + parseFloat(this.activityGoodForm.providerRebateRatioD) > 100 ||
+        supplierRebateRatioFloat + parseFloat(this.activityGoodForm.providerRebateRatioE) > 100) {
         this.$message({
           message: "供应商比例+服务商比例只能小于等于100%",
           type: 'warning'
@@ -444,19 +459,19 @@ export default {
     },
 
     // 控制合并表格的行和列
-    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+    objectSpanMethod({row, column, rowIndex, columnIndex}) {
       if (columnIndex === 0) {
-          if (rowIndex === 0){
-            return {
-              rowspan: 999999,
-              colspan: 1
-            };
-          }else{
-            return {
-              rowspan: 0,
-              colspan: 1
-            };
-          }
+        if (rowIndex === 0) {
+          return {
+            rowspan: 999999,
+            colspan: 1
+          };
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 1
+          };
+        }
       }
 
       if (row.tdList[columnIndex] === undefined) {
@@ -593,50 +608,49 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-  .ly-container {
-    padding: 10px 20px;
-    font-size: 14px;
+.ly-container {
+  padding: 10px 20px;
+  font-size: 14px;
 
-    .ly-tool-panel {
-      div {
-        display: inline;
-      }
+  .ly-tool-panel {
+    div {
+      display: inline;
+    }
 
-      line-height: "60px";
-      height: "60px";
-      width: 100%;
-      padding: 10px 10px;
+    width: 100%;
+    padding: 10px 10px;
 
-      .ly-tool-btn {
-        padding-left: 20px;
-        display: inline;
-      }
+    .ly-tool-btn {
+      padding-left: 20px;
+      display: inline;
     }
   }
+}
 
-  .text {
-    font-size: 14px;
-  }
+.text {
+  font-size: 14px;
+}
 
-  .item {
-    margin-bottom: 18px;
-  }
+.item {
+  margin-bottom: 18px;
+}
 
-  .clearfix:before,
-  .clearfix:after {
-    display: table;
-    content: "";
-  }
-  .clearfix:after {
-    clear: both
-  }
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
 
-  .box-card {
-    height: 480px;
-    width: 480px;
-  }
+.clearfix:after {
+  clear: both
+}
 
-  .active {
-    color: red;
-  }
+.box-card {
+  height: 480px;
+  width: 480px;
+}
+
+.active {
+  color: red;
+}
 </style>

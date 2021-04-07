@@ -1,8 +1,8 @@
 import axios from 'axios'
 import Qs from 'qs'
-import { MessageBox, Message } from 'element-ui'
+import {MessageBox, Message} from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import {getToken} from '@/utils/auth'
 
 let requestBodyUrl = []
 requestBodyUrl.push("/backend/user/addUser")
@@ -56,12 +56,12 @@ service.interceptors.request.use(
     config.headers['Web-Site'] = 'Backend-Plat'
     config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 
-    if (config['method'] != 'get' ) {
+    if (config['method'] != 'get') {
 
-      if(requestBodyUrl.indexOf(config.url) != -1){
+      if (requestBodyUrl.indexOf(config.url) != -1) {
         config.headers['Content-Type'] = 'application/json;charset=UTF-8'
-      }else{
-        config.transformRequest = [function(data) {
+      } else {
+        config.transformRequest = [function (data) {
           // 在请求之前对data传参进行格式转换
           data = Qs.stringify(data)
           return data
@@ -82,7 +82,7 @@ service.interceptors.response.use(
   /**
    * If you want to get http information such as headers or status
    * Please return  response => response
-  */
+   */
 
   /**
    * Determine the request status by custom code
@@ -91,8 +91,13 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
+    if (res.msg){
+      res.message = res.msg
+    }
+
     // if the custom code is not 20000, it is judged as an error.
     if (res.code != '200') {
+      if (res.message === undefined) res.message = '未知错误'
       /*Message({
         message: res.msg || 'Error',
         type: 'error',
@@ -107,7 +112,7 @@ service.interceptors.response.use(
         })
       }
 
-      if(res.code == 1000){
+      if (res.code == 1000) {
         Message({
           message: '登录超时，请重新登录',
           type: 'error',
@@ -116,7 +121,7 @@ service.interceptors.response.use(
         location.href = process.env.NODE_ENV === 'production' ? '/' : '/backend';
       }
 
-      if(res.msg == '登录超时，请重新登录'){
+      if (res.msg == '登录超时，请重新登录') {
         Message({
           message: '登录超时，请重新登录',
           type: 'error',
@@ -124,15 +129,15 @@ service.interceptors.response.use(
         });
         location.href = process.env.NODE_ENV === 'production' ? '/' : '/backend';
       }
-      if(res.code == 1100){
+      if (res.code == 1100) {
         Message({
-          message: res.msg,
+          message: res.message,
           type: 'error',
           duration: 2 * 1000
         })
       }
 
-      if(res.message == 'pwd.fail'){
+      if (res.message == 'pwd.fail') {
         Message({
           message: '密码错误，请重新输入',
           type: 'error',
@@ -140,7 +145,7 @@ service.interceptors.response.use(
         })
       }
 
-      if(res.message == 'no_disabled'){
+      if (res.message == 'no_disabled') {
         Message({
           message: '账号被禁用',
           type: 'error',
@@ -155,7 +160,6 @@ service.interceptors.response.use(
           duration: 3000
         })
       }
-
 
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
