@@ -937,6 +937,7 @@ export default {
   mounted() {
     if (this.$route.query.dt != undefined) {
       this.searchParam.dataType = this.$route.query.dt
+      this.searchParam.isOverDuePayment = "1"
     }
     if (this.$route.query.orderId) {
       this.orderId_ = this.$route.query.orderId
@@ -1202,7 +1203,7 @@ export default {
     },
     async loadAddress() {
       const {data} = await getMethod("/backend/lyConfig/findList?dataType=send_address_config")
-        this.sendOrderFrm.sendAddress = data[0] && data[0].value
+      this.sendOrderFrm.sendAddress = data[0] && data[0].value
     },
     cancelStock() {
       this.pushStockBatch = false
