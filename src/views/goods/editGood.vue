@@ -71,13 +71,26 @@
             <el-input v-model="dataForm.brandName" style="width:260px" :disabled="isDisabled"/>
           </el-form-item>
           <el-form-item label="视频">
-            <el-input v-show="false" v-model="dataForm.goodsVideo" :disabled="isDisabled" />
-            <el-upload list-type="picture-card" v-bind:show-file-list="false"
-                       :disabled="isDisabled" >
-              <video v-if="dataForm.goodsVideo !='' && !videoFlag" v-bind:src="dataForm.goodsVideo" class="video-avatar" style="height: inherit;min-width: -webkit-fill-available;"
-                     controls="controls">
+            <el-input v-show="false" v-model="dataForm.goodsVideo" :disabled="isDisabled"/>
+            <el-upload :class="{hide:hideGoodVideoUpload}" :action="uploadVideoUrl" list-type="picture-card"
+                       v-bind:on-progress="uploadVideoProcess"
+                       v-bind:on-success="handleVideoSuccess" v-bind:before-upload="beforeUploadVideo"
+                       v-bind:show-file-list="false"
+                       :disabled="isDisabled"
+            >
+              <video v-if="dataForm.goodsVideo !='' && !videoFlag" v-bind:src="dataForm.goodsVideo" class="video-avatar"
+                     style="height: inherit;min-width: -webkit-fill-available;"
+                     controls="controls"
+              >
                 您的浏览器不支持视频播放
               </video>
+              <i v-else-if="dataForm.goodsVideo =='' && !videoFlag" class="el-icon-plus"></i>
+              <i v-if="dataForm.goodsVideo !='' && !videoFlag && !isDisabled" @click="handleGoodVideoRemove" class="el-icon-error"
+                 style="position: absolute;top: 0;display: flex;"
+              ></i>
+              <el-progress v-if="videoFlag == true" type="circle" v-bind:percentage="videoUploadPercent"
+                           style="margin-top:7px;"
+              ></el-progress>
             </el-upload>
             <el-dialog>
               <img width="100%" :src="imageUrl" alt>
@@ -268,8 +281,8 @@
     </el-dialog>
 
     <el-footer style="padding:0px 100px">
-      <el-button type="primary" @click="submitFee()" v-if="!isEditGood" :disabled="isDisabled">审核通过</el-button>
-      <el-button @click="rejectSubmit()" v-if="!isEditGood" :disabled="isDisabled">驳回提交</el-button>
+      <el-button type="primary" @click="submitFee()" v-if="!isEditGood">审核通过</el-button>
+      <el-button @click="rejectSubmit()" v-if="!isEditGood">驳回提交</el-button>
       <el-button @click="saveSubmit()" v-if="isEditGood" :disabled="isDisabled">保存编辑</el-button>
       <el-button @click="backToList()">返回列表</el-button>
     </el-footer>
@@ -312,6 +325,11 @@ export default {
       goodSaleDescList: [],
       dialogVisible: false,
       videoFlag: false,
+      videoUploadPercent: '',
+      uploadVideoUrl: getUploadUrl(),
+      hideGoodVideoUpload: false,
+      //进度条的进度，
+      isShowUploadVideo: false,
       dialogImageUrl: '',
       isEdit: false,
       dialogVerify: false,
@@ -766,6 +784,47 @@ export default {
           this.detail = {};
           this.$emit("showListPanel", true);
         });
+      }
+    },
+    beforeUploadVideo(file) {
+      var fileSize = file.size / 1024 / 1024 < 50
+      // , 'video/ogg', 'video/flv', 'video/avi', 'video/wmv', 'video/rmvb', 'video/mov'
+      if (['video/mp4'].indexOf(file.type) == -1) {
+        this.$message({
+          message: '请上传正确的视频格式',
+          type: 'warning'
+        })
+        return false
+      }
+      if (!fileSize) {
+        this.$message({
+          message: '视频大小不能超过50MB',
+          type: 'warning'
+        })
+        return false
+      }
+      this.isShowUploadVideo = false
+    },
+    handleGoodVideoRemove(res) {
+      this.dataForm.goodsVideo = ''
+    },
+    uploadVideoProcess(event, file, fileList) {
+      this.videoFlag = true
+      this.videoUploadPercent = file.percentage.toFixed(0) * 1
+    },
+    handleVideoSuccess(res, file) {
+      this.isShowUploadVideo = true
+      this.videoFlag = false
+      this.videoUploadPercent = 0
+      console.log(res, 'res')
+      //后台上传地址
+      if (res.code == 200) {
+        this.dataForm.goodsVideo = res.data.url
+      } else {
+        this.$message({
+          message: res.message,
+          type: 'warning'
+        })
       }
     },
     validate() {
