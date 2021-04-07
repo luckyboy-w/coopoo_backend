@@ -67,9 +67,16 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination v-if="allFeeDataShow" :total="allFeeData.total" background layout="prev, pager, next"
-                       @current-change="currentAllFeePage" @prev-click="currentAllFeePage"
-                       @next-click="currentAllFeePage"
+        <el-pagination
+          v-if="allFeeDataShow"
+          :total="allFeeData.total"
+          background
+          layout="prev, pager, next"
+          @current-change="currentAllFeePage"
+          @prev-click="currentAllFeePage"
+          @next-click="currentAllFeePage"
+          :page-size="this.searchParams.pageSize"
+          :current-page="this.searchParams.pageNum"
         />
       </el-tab-pane>
 
@@ -235,6 +242,8 @@
         <el-pagination v-show="det" :total="feeProcessData.total" background layout="prev, pager, next"
                        @current-change="currentProcessPage"
                        @prev-click="currentProcessPage" @next-click="currentProcessPage"
+                       :page-size="this.exportApplyFrm.pageSize"
+                       :current-page="this.exportApplyFrm.pageNum"
         />
       </el-tab-pane>
 
@@ -399,6 +408,8 @@
         <el-pagination v-if="def_" :total="feeEndData.total" background layout="prev, pager, next"
                        @current-change="currentEndPage"
                        @prev-click="currentEndPage" @next-click="currentEndPage"
+                       :page-size="this.exportApplyFrm_.pageSize"
+                       :current-page="this.exportApplyFrm_.pageNum"
         />
       </el-tab-pane>
 
@@ -651,7 +662,9 @@ export default {
         pageSize: 10
       },
       //10:未结算;20:结算中;30:已结算
-      searchParam: {
+      searchParams: {
+        providerName: '',
+        provPhone: '',
         billType: '10',
         billNo: "",
         orderNo: "",
@@ -661,18 +674,18 @@ export default {
         allApplyFee: '',
         allPerFee: '',
       },
-      searchParams: {
-        providerName: '',
-        provPhone: '',
-      },
       searchParams_: {
         memName: '',
         phoneNo: '',
+        pageSize: 10,
+        pageNum: 1,
       },
       searchParamsOne: {
         applyStartTime: '',
         applyEndTime: '',
         memName: '',
+        pageSize: 10,
+        pageNum: 1,
         phoneNo: '',
       },
       searchParamsTwo: {
@@ -680,6 +693,8 @@ export default {
         applyEndTime: '',
         memName: '',
         phoneNo: '',
+        pageSize: 10,
+        pageNum: 1,
       },
       feeProcessParams: {},
       activeName: 'allFee',
@@ -706,7 +721,7 @@ export default {
     };
   },
   mounted() {
-    this.loadList();
+    this.loadList(this.searchParams);
     // this.loadFeeProcess();
     // this.loadProviderList();
     this.loadPlatFee()
@@ -842,7 +857,9 @@ export default {
       let that = this
       let param = {
         providerName: that.searchParams.providerName,
-        provPhone: that.searchParams.provPhone
+        provPhone: that.searchParams.provPhone,
+        pageNum:that.searchParams.pageNum,
+        pageSize:that.searchParams.pageSize
       }
       getMethod("/backend/siteData/selectAllCash", param).then(res => {
         that.allFeeData = res.data // 返回的数据
@@ -1022,7 +1039,7 @@ export default {
       this.cashNo = ''
       this.tabIndex = tab.index
       if (tab.index == 0) {
-        this.loadList();
+        this.loadList(this.searchParams);
         this.feeDtl_ = false
         this.friDtl_ = false
       } else if (tab.index == 1) {
@@ -1041,43 +1058,38 @@ export default {
       }
 
     },
-    currentPage(pageNum) {
-      this.searchParam.pageNum = pageNum;
-      this.loadList();
-    },
-    loadList() {
+    loadList(searchParam) {
       let scope = this
-      let param1 = this.searchParam
-      getMethod("/backend/siteData/selectAllCash", param1).then(res => {
+      getMethod("/backend/siteData/selectAllCash", searchParam).then(res => {
         scope.allFeeData = res.data
       });
     },
     currentAllFeePage(pageNum) {
-      this.searchParam.pageNum = pageNum
-      this.loadList()
+      this.searchParams.pageNum = pageNum
+      this.loadList(this.searchParams)
     },
     loadFeeProcess() {
       let scope = this
-      let param = this.searchParam
+      let param = this.exportApplyFrm
       param.cashStatus = 1
       postMethod("/backend/siteData/selectCashDone", param).then(res => {
         scope.feeProcessData = res.data
       });
     },
     currentProcessPage(pageNum) {
-      this.searchParam.pageNum = pageNum
+      this.exportApplyFrm.pageNum = pageNum
       this.loadFeeProcess()
     },
     loadFeeEnd() {
       let scope = this
-      let param = this.searchParam
+      let param = this.exportApplyFrm_
       param.cashStatus = 2
       postMethod("/backend/siteData/selectCashDone", param).then(res => {
         scope.feeEndData = res.data
       });
     },
     currentEndPage(pageNum) {
-      this.searchParam.pageNum = pageNum
+      this.exportApplyFrm_.pageNum = pageNum
       this.loadFeeEnd()
     },
     loadFeeDtlList(row) {
