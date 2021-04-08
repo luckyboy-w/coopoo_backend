@@ -591,6 +591,7 @@
       </div>
 
       <div
+        v-if="ordDtl.orderType != 6"
         style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);padding:10px;margin:10px 0px 10px 0;"
       >
         <el-row
@@ -756,12 +757,25 @@ export default {
       return formatDate(date, 'yyyy-MM-dd hh:mm')
     },
     pay2Text(pay) {
-      if (pay == 1) {
-        return '阿里支付'
-      } else {
-        return '微信支付'
+      let string = ''
+      switch (pay) {
+        case '1':
+          string = '阿里支付';
+          break;
+        case '2':
+          string = '微信支付';
+          break;
+        case '3':
+          string = '小程序支付';
+          break;
+        case '4':
+          string = '靠谱豆支付';
+          break;
+        default:
+          string = '未支付';
+          break
       }
-      return '未支付'
+      return string
     },
     fmtPrice(row) {
       if (row.orderType != 4) {
