@@ -44,7 +44,7 @@
             <el-table-column prop="id" label="操作" width="200px">
               <template slot-scope="scope">
                 <el-button type="text" size="small" @click.native.prevent="present(scope.row.goodsId)">查看</el-button>
-                <el-button type="text" size="small" @click.native.prevent="update(scope.row.goodsId)">修改</el-button>
+                <el-button type="text" v-if="scope.row.isSale == 0" size="small" @click.native.prevent="update(scope.row.goodsId)">修改</el-button>
                 <el-button type="text" v-if="scope.row.isSale == 1" size="small"
                            @click.native.prevent="downShelve(scope.row.goodsId)"
                 >下架
