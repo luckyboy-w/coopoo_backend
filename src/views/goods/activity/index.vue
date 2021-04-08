@@ -84,7 +84,7 @@
         <el-form-item label="活动名称" prop="activityName">
           <el-input v-model="activityForm.activityName"/>
         </el-form-item>
-        <el-form-item label="活动封面" prop="frontImage">
+        <el-form-item label="活动标签" prop="frontImage">
           <el-upload
             :action="uploadActivityFrontImageUrl"
             list-type="picture-card"
@@ -95,6 +95,7 @@
             :on-remove="handleActivityFrontImageRemove"
           >
             <i class="el-icon-plus"></i>
+            <div slot="tip" class="el-upload__tip">推荐图片尺寸: 120 * 40</div>
           </el-upload>
         </el-form-item>
         <el-form-item label="预热有效期" prop="activityPreheatDateTimePeriod">
