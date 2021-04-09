@@ -23,6 +23,7 @@
           :before-upload="beforeStoreImgUpload" :on-success="handleStoreImgSuccess" :class="{hide:hideStoreImgUpload}"
           :file-list="uploadStoreImgList" :on-remove="handleStoreImgRemove">
           <i class="el-icon-plus" />
+          <div slot="tip" class="el-upload__tip">推荐图片尺寸: 1200 * 636</div>
         </el-upload>
       </el-form-item>
 
@@ -32,6 +33,7 @@
           :before-upload="beforeStoreImgDtlUpload" :on-success="handleStoreImgDtlSuccess" :class="{hide:hideStoreImgDtlUpload}"
           :file-list="uploadStoreImgDtlList" :on-remove="handleStoreImgDtlRemove">
           <i class="el-icon-plus" />
+          <div slot="tip" class="el-upload__tip">推荐图片尺寸: 1200 * 636</div>
         </el-upload>
       </el-form-item>
 

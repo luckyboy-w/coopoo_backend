@@ -56,7 +56,8 @@
               <el-table-column prop="skuImg" label="SKU展示图" width="150px">
                 <template slot-scope="scope">
                   <img :src="scope.row.skuImg" width="60px" height="60px"
-                       onerror="this.src='https://bluemobi-lanyu.oss-cn-shanghai.aliyuncs.com/static/black_bg.png' "/>
+                       onerror="this.src='https://bluemobi-lanyu.oss-cn-shanghai.aliyuncs.com/static/black_bg.png' "
+                  />
                 </template>
               </el-table-column>
             </el-table>
@@ -85,7 +86,8 @@
                 您的浏览器不支持视频播放
               </video>
               <i v-else-if="dataForm.goodsVideo =='' && !videoFlag" class="el-icon-plus"></i>
-              <i v-if="dataForm.goodsVideo !='' && !videoFlag && !isDisabled" @click="handleGoodVideoRemove" class="el-icon-error"
+              <i v-if="dataForm.goodsVideo !='' && !videoFlag && !isDisabled" @click="handleGoodVideoRemove"
+                 class="el-icon-error"
                  style="position: absolute;top: 0;display: flex;"
               ></i>
               <el-progress v-if="videoFlag == true" type="circle" v-bind:percentage="videoUploadPercent"
@@ -108,8 +110,13 @@
                 :on-success="handleGoodFrontImageSuccess"
                 :class="{hide:hideGoodFrontImageUpload}"
                 :file-list="uploadGoodFrontImageList"
-                :on-remove="handleGoodFrontImageRemove">
+                :on-remove="handleGoodFrontImageRemove"
+              >
                 <i :class="addFrontCls"></i>
+
+                <div slot="tip" class="el-upload__tip">推荐图片尺寸:
+                  {{ dataForm.isMarketing == 0 ? '800 * 800' : '1200 * 636' }}
+                </div>
               </el-upload>
               <el-dialog>
                 <img width="100%" :src="imageUrl" alt/>
@@ -127,8 +134,10 @@
               :on-success="handleGoodImageSuccess"
               :class="{hide:hideGoodImageUpload}"
               :file-list="uploadGoodImageList"
-              :on-remove="handleGoodImageRemove">
+              :on-remove="handleGoodImageRemove"
+            >
               <i class="el-icon-plus"/>
+              <div slot="tip" class="el-upload__tip">推荐图片尺寸: 800 * 800</div>
             </el-upload>
             <el-dialog>
               <img width="100%" :src="imageUrl" alt/>
@@ -270,7 +279,8 @@
             v-model="verifyForm.recContent"
             type="textarea"
             :rows="5"
-            placeholder="请输入内容">
+            placeholder="请输入内容"
+          >
           </el-input>
         </el-form-item>
         <el-form-item>

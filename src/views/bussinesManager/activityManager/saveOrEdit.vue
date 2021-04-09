@@ -20,6 +20,7 @@
 					:on-remove="handleActivityImageRemove"
 				>
 					<i class="el-icon-plus"></i>
+          <div slot="tip" class="el-upload__tip">推荐图片尺寸: 1200 * 636</div>
 				</el-upload>
 				<el-dialog>
 					<img width="100%" :src="imageUrl" alt />
