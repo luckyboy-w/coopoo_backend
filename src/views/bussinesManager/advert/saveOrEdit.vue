@@ -82,6 +82,11 @@
           v-model="dataForm.advertUrl"
           filterable
           placeholder="请选择"
+          multiple
+          remote
+          reserve-keyword
+          :remote-method="remoteMethod"
+          :loading="loading"
         >
           <el-option
             v-for="item in goodList"
@@ -231,6 +236,7 @@ export default {
       key_: '-1',
       item1: '',
       item2: '',
+      loading: false,
       dataForm: {
         // typeId2: '',
         // typeId: '',
@@ -274,6 +280,18 @@ export default {
   created() {
   },
   methods: {
+    async remoteMethod(query) {
+      let param = {
+        isSale: 1,
+        verifyStatus: '20',
+        pageNum: 0,
+        pageSize: 10,
+        goodName: query,
+      }
+      const {data} = await getMethod("/backend/good/findPage", param)
+      this.goodList = data.list
+      this.loading = false
+    },
     loadtypeIdList() {
       const scope = this;
       const param = {
