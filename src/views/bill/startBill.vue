@@ -145,6 +145,7 @@
 import { getMethod, postMethod } from "@/api/request";
 import { formatDate } from "@/api/tools.js"
 import billDetail from './billDtl'
+import {getToken} from '@/utils/auth'
 
   export default {
     components: { billDetail },
@@ -210,7 +211,7 @@ import billDetail from './billDtl'
 		  for (let key in param) {
 		    exportParam.push(key + "=" + param[key]);
 		  }
-      console.log(exportParam,'传的参')
+      exportParam.push("token=" + getToken())
 		  window.open(process.env.VUE_APP_BASE_API + "/backend/orderBill/export?" + exportParam.join("&"));
 		},
       search() {

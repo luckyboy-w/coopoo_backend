@@ -90,6 +90,7 @@
   import {
     formatDate
   } from "@/api/tools.js"
+  import {getToken} from '@/utils/auth'
 
   export default {
     filters: {
@@ -197,6 +198,7 @@
         for (let key in param) {
           exportParam.push(key + "=" + param[key]);
         }
+        exportParam.push("token=" + getToken())
         window.open(process.env.VUE_APP_BASE_API + "/backend/orderBill/exportDtl?" + exportParam.join("&"));
       },
       exportData_() {
@@ -217,6 +219,7 @@
         for (let key in param) {
           exportParam.push(key + "=" + param[key]);
         }
+        exportParam.push("token=" + getToken())
         window.open(process.env.VUE_APP_BASE_API + "/backend/orderBill/exportWaitingDtl?" + exportParam.join("&"));
       },
       backToList() {
