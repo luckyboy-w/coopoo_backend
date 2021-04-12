@@ -4,6 +4,7 @@
       <el-form-item label="邀请后注册购买">
         <el-input v-model="dataForm.inviteFri" style="width:260px"></el-input>
       </el-form-item>
+<!--      产品经理要求的-->
 <!--      <el-form-item label="完善会员信息">-->
 <!--        <el-input v-model="dataForm.finishInfo" style="width:260px"></el-input>-->
 <!--      </el-form-item>-->
