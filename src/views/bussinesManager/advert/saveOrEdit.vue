@@ -82,7 +82,6 @@
           v-model="dataForm.advertUrl"
           filterable
           placeholder="请选择"
-          multiple
           remote
           reserve-keyword
           :remote-method="remoteMethod"
