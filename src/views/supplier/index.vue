@@ -137,6 +137,7 @@
 <script>
 import saveOrEdit from "./saveOrEdit";
 import {getMethod, postMethod} from "@/api/request";
+import {getToken} from '@/utils/auth'
 
 export default {
   computed: {},
@@ -179,6 +180,7 @@ export default {
       for (let key in this.searchParam) {
         exportParam.push(key + "=" + this.searchParam[key]);
       }
+      exportParam.push("token=" + getToken())
       window.open(process.env.VUE_APP_BASE_API + "/backend/supplier/export?" + exportParam.join("&"));
     },
     showResetPwd(row) {
