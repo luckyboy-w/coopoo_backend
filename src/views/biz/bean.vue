@@ -105,6 +105,12 @@
             >
               <el-button
                 type="primary"
+                @click="resetMain()"
+              >
+                重置
+              </el-button>
+              <el-button
+                type="primary"
                 @click="search()"
               >
                 搜索
@@ -244,12 +250,12 @@
             >
               入账时间
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <el-date-picker
                 v-model="searchParams_.startCreateTime"
                 value-format="yyyy-MM-dd"
                 type="date"
-                width="80px"
+                width="60px"
                 placeholder="选择开始日期"
               />
               -
@@ -257,7 +263,7 @@
                 v-model="searchParams_.endCreateTime"
                 value-format="yyyy-MM-dd"
                 type="date"
-                width="80px"
+                width="60px"
                 placeholder="选择结束日期"
               />
             </el-col>
@@ -265,6 +271,12 @@
               :span="4"
               style="padding-left:10px"
             >
+              <el-button
+                type="primary"
+                @click="reset()"
+              >
+                重置
+              </el-button>
               <el-button
                 type="primary"
                 @click="search_()"
@@ -344,6 +356,7 @@
                 <span v-if="scope.row.type == '6'">赠送好友</span>
                 <span v-if="scope.row.type == '7'">好友赠予</span>
                 <span v-if="scope.row.type == '8'">参加活动</span>
+                <span v-if="scope.row.type == '9'">购买商品</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -400,301 +413,314 @@
   </div>
 </template>
 <script>
-  import {
-    getMethod,
-    postMethod
-  } from "@/api/request";
-  import {
-    formatDate
-  } from "@/api/tools.js"
+import {
+  getMethod,
+  postMethod
+} from "@/api/request";
+import {
+  formatDate
+} from "@/api/tools.js"
 
-  export default {
-    components: {},
-    filters: {
-      _formateDate(time) {
-        if (time == undefined) {
-          return '';
-        }
-        let date = new Date(time);
-        return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
+export default {
+  components: {},
+  filters: {
+    _formateDate(time) {
+      if (time == undefined) {
+        return '';
       }
-    },
-    props: {
-
-    },
-    data() {
-      return {
-        tabIndex: 0,
-        showList: true,
-        allFeeDataShow: true,
-        def: true,
-        det: false,
-        memId: '',
-        detailList: [],
-        titleList: [],
-        storeList: [],
-        providerList: [{
-            id: 1,
-            provinceName: 'A类'
-          },
-          {
-            id: 2,
-            provinceName: 'B类'
-          },
-          {
-            id: 3,
-            provinceName: 'C类'
-          },
-          {
-            id: 4,
-            provinceName: 'D类'
-          },
-          {
-            id: 5,
-            provinceName: 'E类'
-          },
-          {
-            id: 6,
-            provinceName: 'EA类'
-          },
-        ],
-        typeList: [{
-            id: 1,
-            typeName: '购买会员'
-          },
-          {
-            id: 2,
-            typeName: '邀请好友购买'
-          },
-          {
-            id: 3,
-            typeName: '购买门店服务'
-          },
-          {
-            id: 4,
-            typeName: '退门店服务'
-          },
-          {
-            id: 5,
-            typeName: '服务商门店所得'
-          },
-          {
-            id: 6,
-            typeName: '赠送好友'
-          },
-          {
-            id: 7,
-            typeName: '好友赠予'
-          },
-          {
-            id: 8,
-            typeName: '参加活动'
-          }
-        ],
-        opTypeList: [{
-          id: 1,
-          opTypeName: '新增'
-        }, {
+      let date = new Date(time);
+      return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
+    }
+  },
+  props: {},
+  data() {
+    return {
+      tabIndex: 0,
+      showList: true,
+      allFeeDataShow: true,
+      def: true,
+      det: false,
+      memId: '',
+      detailList: [],
+      titleList: [],
+      storeList: [],
+      providerList: [{
+        id: 1,
+        provinceName: 'A类'
+      },
+        {
           id: 2,
-          opTypeName: '减少'
-        }],
-        searchParams: {
-          memName: '',
-          phoneNo: '',
-          memberType: '',
+          provinceName: 'B类'
         },
-        searchParams_: {
-          type: '',
-          opType: '',
-          startCreateTime: '',
-          endCreateTime: '',
+        {
+          id: 3,
+          provinceName: 'C类'
         },
-        allBean: '',
-        returnBean: '',
-        memberBean: '',
-        storeBean: '',
+        {
+          id: 4,
+          provinceName: 'D类'
+        },
+        {
+          id: 5,
+          provinceName: 'E类'
+        },
+        {
+          id: 6,
+          provinceName: 'EA类'
+        },
+      ],
+      typeList: [{
+        id: 1,
+        typeName: '购买会员'
+      },
+        {
+          id: 2,
+          typeName: '邀请好友购买'
+        },
+        {
+          id: 3,
+          typeName: '购买门店服务'
+        },
+        {
+          id: 4,
+          typeName: '退门店服务'
+        },
+        {
+          id: 5,
+          typeName: '服务商门店所得'
+        },
+        {
+          id: 6,
+          typeName: '赠送好友'
+        },
+        {
+          id: 7,
+          typeName: '好友赠予'
+        },
+        {
+          id: 8,
+          typeName: '参加活动'
+        }
+      ],
+      opTypeList: [{
+        id: 1,
+        opTypeName: '新增'
+      }, {
+        id: 2,
+        opTypeName: '减少'
+      }],
+      searchParams: {
         memName: '',
-        availableBean: '',
-        incomeBean: '',
-        consumeBean: '',
-        //10:未结算;20:结算中;30:已结算
-        searchParam: {
-          billType: '10',
-          billNo: "",
-          dataType: '',
-          orderNo: "",
-          pageSize: 10,
-          pageNum: 1
-        },
-        noBillData: {
-          list: [],
-          total: 0
-        },
-        detailsListData: {
-          list: [],
-          total: 0
-        },
-        activeName: 'noBill'
-      };
+        phoneNo: '',
+        memberType: '',
+      },
+      searchParams_: {
+        type: '',
+        opType: '',
+        startCreateTime: '',
+        endCreateTime: '',
+      },
+      allBean: '',
+      returnBean: '',
+      memberBean: '',
+      storeBean: '',
+      memName: '',
+      availableBean: '',
+      incomeBean: '',
+      consumeBean: '',
+      //10:未结算;20:结算中;30:已结算
+      searchParam: {
+        billType: '10',
+        billNo: "",
+        dataType: '',
+        orderNo: "",
+        pageSize: 10,
+        pageNum: 1
+      },
+      noBillData: {
+        list: [],
+        total: 0
+      },
+      detailsListData: {
+        list: [],
+        total: 0
+      },
+      activeName: 'noBill'
+    };
+  },
+  mounted() {
+    if (this.$route.query.dt != undefined) {
+      this.searchParam.dataType = this.$route.query.dt
+    }
+    this.loadList();
+    // this.loadRecTitle();
+    this.loadPlatFee()
+  },
+
+  methods: {
+    backToList() {
+      this.showList = true
     },
-    mounted() {
-      if (this.$route.query.dt != undefined) {
-        this.searchParam.dataType = this.$route.query.dt
+    backToAllFee() {
+      this.allFeeDataShow = true
+      this.def = true,
+        this.det = false,
+        this.loadList();
+    },
+    transdetails(row) {
+      this.memId = row.memId
+      this.memName = row.nickname
+      this.allFeeDataShow = false
+      this.def = false,
+        this.det = true
+      this.loadDetailsList(row)
+      this.loadPlatFee_()
+    },
+    loadDetailsList(row) {
+      let scope = this
+      let param = {
+        memId: this.memId,
+        pageSize: this.searchParam.pageSize,
+        pageNum: this.searchParam.pageNum
+      }
+      getMethod("/backend/siteData/memberBeanDetailList", param).then(res => {
+        scope.detailsListData = res.data
+      });
+    },
+    loadPlatFee() {
+      let scope = this
+      getMethod('/backend/siteData/beanStatistics', {}).then(res => {
+        let platData = res.data
+        scope.allBean = platData.allBean
+        scope.returnBean = platData.returnBean
+        scope.memberBean = platData.memberBean
+        scope.storeBean = platData.storeBean
+      })
+    },
+    loadPlatFee_() {
+      let scope = this
+      getMethod('/backend/siteData/memberBeanStatistics', {
+        memId: this.memId
+      }).then(res => {
+        let platData = res.data
+        scope.availableBean = platData.availableBean
+        scope.incomeBean = platData.incomeBean
+        scope.consumeBean = platData.consumeBean
+      })
+    },
+    // batchBill(){
+    //     let selData = this.$refs.noBillData.selection
+    //     let id = [];
+    //     selData.forEach(data=>{
+    //         id.push(data.pkBillId)
+    //     });
+    //     this.billOrd(id.join(","))
+    //   },
+    //   singleBill(row){
+    //     this.billOrd(row.pkBillId)
+    //   },
+    // findBillDtl(row){
+    //   let scope = this
+    //   let param = {
+    //       billIds:row.pkBillIds
+    //   }
+    //   getMethod("/backend/orderBill/findBillDtl", param).then(res => {
+    //       scope.showList = false
+    //       scope.detailList = res.data
+    //   });
+    // },
+    handleClick(tab, event) {
+      this.tabIndex = tab.index
+      if (tab.index == 0) {
+        this.searchParam.billType = "10"
+      } else if (tab.index == 1) {
+        this.searchParam.billType = "20"
+      } else {
+        this.searchParam.billType = "30"
       }
       this.loadList();
-      // this.loadRecTitle();
-      this.loadPlatFee()
     },
-
-    methods: {
-      backToList() {
-        this.showList = true
-      },
-      backToAllFee() {
-        this.allFeeDataShow = true
-        this.def = true,
-          this.det = false,
-          this.loadList();
-      },
-      transdetails(row) {
-        this.memId = row.memId
-        this.memName = row.nickname
-        this.allFeeDataShow = false
-        this.def = false,
-          this.det = true
-        this.loadDetailsList(row)
-        this.loadPlatFee_()
-      },
-      loadDetailsList(row) {
-        let scope = this
-        let param = {
-          memId: this.memId,
-          pageSize: this.searchParam.pageSize,
-          pageNum: this.searchParam.pageNum
-        }
-        getMethod("/backend/siteData/memberBeanDetailList", param).then(res => {
-          scope.detailsListData = res.data
-        });
-      },
-      loadPlatFee() {
-        let scope = this
-        getMethod('/backend/siteData/beanStatistics', {}).then(res => {
-          let platData = res.data
-          scope.allBean = platData.allBean
-          scope.returnBean = platData.returnBean
-          scope.memberBean = platData.memberBean
-          scope.storeBean = platData.storeBean
-        })
-      },
-      loadPlatFee_() {
-        let scope = this
-        getMethod('/backend/siteData/memberBeanStatistics', {
-          memId: this.memId
-        }).then(res => {
-          let platData = res.data
-          scope.availableBean = platData.availableBean
-          scope.incomeBean = platData.incomeBean
-          scope.consumeBean = platData.consumeBean
-        })
-      },
-      // batchBill(){
-      //     let selData = this.$refs.noBillData.selection
-      //     let id = [];
-      //     selData.forEach(data=>{
-      //         id.push(data.pkBillId)
-      //     });
-      //     this.billOrd(id.join(","))
-      //   },
-      //   singleBill(row){
-      //     this.billOrd(row.pkBillId)
-      //   },
-      // findBillDtl(row){
-      //   let scope = this
-      //   let param = {
-      //       billIds:row.pkBillIds
-      //   }
-      //   getMethod("/backend/orderBill/findBillDtl", param).then(res => {
-      //       scope.showList = false
-      //       scope.detailList = res.data
-      //   });
-      // },
-      handleClick(tab, event) {
-        this.tabIndex = tab.index
-        if (tab.index == 0) {
-          this.searchParam.billType = "10"
-        } else if (tab.index == 1) {
-          this.searchParam.billType = "20"
-        } else {
-          this.searchParam.billType = "30"
-        }
-        this.loadList();
-      },
-      currentPage(pageNum) {
-        this.searchParam.pageNum = pageNum;
-        this.loadList();
-      },
-      currentPage_(pageNum) {
-        this.searchParam.pageNum = pageNum;
-        this.loadDetailsList();
-      },
-      search() {
-        let that = this
-        let param = {
-          pageSize: 10,
-          pageNum: 1,
-          memName: that.searchParams.memName,
-          phoneNo: that.searchParams.phoneNo,
-          memberType: that.searchParams.memberType
-        }
-        getMethod("/backend/siteData/memberBeanList", param).then(res => {
-          let obj=res.data.list
-          for(let i = 0; i < obj.length; i++){
-            if(obj[i].beanNum!=undefined&&obj[i].consumeBean!=undefined){
-              obj[i].beanNum=obj[i].beanNum-obj[i].consumeBean
-            }
-          }
-          that.noBillData = res.data // 返回的数据
-
-        })
-      },
-      search_() {
-        let that = this
-        let param = {
-          type: that.searchParams_.type,
-          opType: that.searchParams_.opType,
-          startCreateTime: that.searchParams_.startCreateTime,
-          endCreateTime: that.searchParams_.endCreateTime,
-          memId: this.memId
-        }
-        getMethod("/backend/siteData/memberBeanDetailList", param).then(res => {
-          that.detailsListData = res.data // 返回的数据
-        })
-      },
-      loadList() {
-        let scope = this
-        let param = this.searchParam
-        param.billType = 10
-        getMethod("/backend/siteData/memberBeanList", param).then(res => {
-          let obj=res.data.list
-          for(let i = 0; i < obj.length; i++){
-            if(obj[i].beanNum!=undefined&&obj[i].consumeBean!=undefined){
-              obj[i].beanNum=obj[i].beanNum-obj[i].consumeBean
-            }
-          }
-          scope.noBillData = res.data
-        });
-      },
-      loadRecTitle() {
-        let scope = this
-        let param = this.searchParam
-        getMethod("/backend/siteData/findRecTypeList", param).then(res => {
-          scope.titleList = res.data
-        });
-
-        getMethod("/backend/storeManage/findList", param).then(res => {
-          scope.storeList = res.data
-        });
+    currentPage(pageNum) {
+      this.searchParam.pageNum = pageNum;
+      this.loadList();
+    },
+    currentPage_(pageNum) {
+      this.searchParam.pageNum = pageNum;
+      this.loadDetailsList();
+    },
+    resetMain(){
+      this.searchParams = {
+        memName: '',
+        phoneNo: '',
+        memberType: '',
       }
+    },
+    search() {
+      let that = this
+      let param = {
+        pageSize: 10,
+        pageNum: 1,
+        memName: that.searchParams.memName,
+        phoneNo: that.searchParams.phoneNo,
+        memberType: that.searchParams.memberType
+      }
+      getMethod("/backend/siteData/memberBeanList", param).then(res => {
+        let obj = res.data.list
+        for (let i = 0; i < obj.length; i++) {
+          if (obj[i].beanNum != undefined && obj[i].consumeBean != undefined) {
+            obj[i].beanNum = obj[i].beanNum - obj[i].consumeBean
+          }
+        }
+        that.noBillData = res.data // 返回的数据
+
+      })
+    },
+    reset() {
+      this.searchParams_ = {
+        type: '',
+        opType: '',
+        startCreateTime: '',
+        endCreateTime: '',
+      }
+    },
+    search_() {
+      let that = this
+      let param = {
+        type: that.searchParams_.type,
+        opType: that.searchParams_.opType,
+        startCreateTime: that.searchParams_.startCreateTime,
+        endCreateTime: that.searchParams_.endCreateTime,
+        memId: this.memId
+      }
+      getMethod("/backend/siteData/memberBeanDetailList", param).then(res => {
+        that.detailsListData = res.data // 返回的数据
+      })
+    },
+    loadList() {
+      let scope = this
+      let param = this.searchParam
+      param.billType = 10
+      getMethod("/backend/siteData/memberBeanList", param).then(res => {
+        let obj = res.data.list
+        for (let i = 0; i < obj.length; i++) {
+          if (obj[i].beanNum != undefined && obj[i].consumeBean != undefined) {
+            obj[i].beanNum = obj[i].beanNum - obj[i].consumeBean
+          }
+        }
+        scope.noBillData = res.data
+      });
+    },
+    loadRecTitle() {
+      let scope = this
+      let param = this.searchParam
+      getMethod("/backend/siteData/findRecTypeList", param).then(res => {
+        scope.titleList = res.data
+      });
+
+      getMethod("/backend/storeManage/findList", param).then(res => {
+        scope.storeList = res.data
+      });
     }
-  };
+  }
+};
 </script>
