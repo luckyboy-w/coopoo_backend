@@ -983,15 +983,14 @@ export default {
       this.dzStep = false
     },
     exportData() {
-      let param = {
-        orderNo: this.searchParam.orderNo,
-        recUname: this.searchParam.recUname,
-        status: this.searchParam.status,
-        tenantId: this.searchParam.tenantId
-      }
       let exportParam = [];
-      for (let key in this.param) {
-        exportParam.push(key + "=" + this.param[key]);
+
+      let param = JSON.parse(JSON.stringify(this.searchParam));
+      delete param.pageSize
+      delete param.pageNum
+
+      for (let key in param) {
+        exportParam.push(key + "=" + param[key]);
       }
       exportParam.push("token=" + getToken())
       window.open(process.env.VUE_APP_BASE_API + "/backend/order/export?" + exportParam.join("&"));
