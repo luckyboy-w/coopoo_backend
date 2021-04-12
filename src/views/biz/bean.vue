@@ -105,6 +105,12 @@
             >
               <el-button
                 type="primary"
+                @click="resetMain()"
+              >
+                重置
+              </el-button>
+              <el-button
+                type="primary"
                 @click="search()"
               >
                 搜索
@@ -641,6 +647,13 @@ export default {
     currentPage_(pageNum) {
       this.searchParam.pageNum = pageNum;
       this.loadDetailsList();
+    },
+    resetMain(){
+      this.searchParams = {
+        memName: '',
+        phoneNo: '',
+        memberType: '',
+      }
     },
     search() {
       let that = this
