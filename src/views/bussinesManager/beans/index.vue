@@ -4,18 +4,18 @@
       <el-form-item label="邀请后注册购买">
         <el-input v-model="dataForm.inviteFri" style="width:260px"></el-input>
       </el-form-item>
-      <el-form-item label="完善会员信息">
-        <el-input v-model="dataForm.finishInfo" style="width:260px"></el-input>
-      </el-form-item>
-      <!-- <el-form-item label="分享已购买商品">
-        <el-input v-model="dataForm.shareGood" style="width:260px"></el-input>
-      </el-form-item> -->
-      <el-form-item label="评价">
-        <el-input v-model="dataForm.evalGood" style="width:260px"></el-input>
-      </el-form-item>
-      <el-form-item label="新手购买赠送">
-        <el-input v-model="dataForm.firstPay" style="width:260px"></el-input>
-      </el-form-item>
+<!--      <el-form-item label="完善会员信息">-->
+<!--        <el-input v-model="dataForm.finishInfo" style="width:260px"></el-input>-->
+<!--      </el-form-item>-->
+<!--      &lt;!&ndash; <el-form-item label="分享已购买商品">-->
+<!--        <el-input v-model="dataForm.shareGood" style="width:260px"></el-input>-->
+<!--      </el-form-item> &ndash;&gt;-->
+<!--      <el-form-item label="评价">-->
+<!--        <el-input v-model="dataForm.evalGood" style="width:260px"></el-input>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="新手购买赠送">-->
+<!--        <el-input v-model="dataForm.firstPay" style="width:260px"></el-input>-->
+<!--      </el-form-item>-->
       <el-form-item label="规则介绍">
         <qEditor
           :content="dataForm.content"
