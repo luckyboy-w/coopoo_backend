@@ -196,6 +196,7 @@ import saveOrEdit from './saveOrEdit'
 import addStoreService from './addStoreService'
 import empIndex from './emp/index'
 import { getMethod, postMethod } from '@/api/request'
+import {getToken} from '@/utils/auth'
 
 export default {
   components: { saveOrEdit, empIndex, addStoreService },
@@ -248,7 +249,7 @@ export default {
       postMethod('/backend/storeManage/updateEnable', param).then(res => {})
     },
     downQrcode(rowObj){
-      window.open( process.env.VUE_APP_BASE_API+'/backend/storeManage/storeQr?id='+rowObj.id+'&storeName='+rowObj.storeName)
+      window.open( process.env.VUE_APP_BASE_API+'/backend/storeManage/storeQr?id='+rowObj.id+'&storeName='+rowObj.storeName+'&token='+ getToken())
     },
     deleteRow(rowIndex, data) {
       const param = {
