@@ -216,7 +216,7 @@
         <el-input v-model="dataForm.bankCardNo"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitUpdate">添加</el-button>
+        <el-button :loading="submitLoading" type="primary" @click="submitUpdate">添加</el-button>
         <el-button @click="cancelUpdate">取消</el-button>
       </el-form-item>
     </el-form>
@@ -336,6 +336,7 @@ export default {
         value: 0.4,
         label: '40%'
       }],
+      submitLoading: false,
       disabledLoginNo: false,
       disabledSupplierNo: false,
       goodTypeList: [],
@@ -767,6 +768,7 @@ export default {
       }
     },
     saveObject() {
+      this.submitLoading = true
       let scope = this;
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
@@ -788,13 +790,17 @@ export default {
                 message: "操作成功",
                 type: "success"
               });
+              scope.submitLoading = false
               this.$emit("showListPanel", true);
             }
-          );
+          ).catch(error => {
+            this.submitLoading = false
+          });;;
         } else {
+          scope.submitLoading = false
           return false;
         }
-      });
+      })
     },
     cancelUpdate() {
       this.$emit("showListPanel", true);
