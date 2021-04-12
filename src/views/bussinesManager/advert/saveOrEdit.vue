@@ -376,6 +376,11 @@ export default {
         pageNum: 0,
         pageSize: 10
       }
+
+      if (this.editData.advertUrl){
+        param.id = this.editData.advertUrl
+      }
+
       getMethod("/backend/good/findPage", param).then(res => {
         scope.goodList = res.data.list
       });
