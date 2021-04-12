@@ -180,6 +180,7 @@ import {
   formatDate
 } from "@/api/request";
 import saveOrEdit from "./editGood";
+import {getToken} from '@/utils/auth'
 
 export default {
   components: {
@@ -269,6 +270,7 @@ export default {
           exportParam.push(key + "=" + this.searchParam[key]);
         }
       }
+      exportParam.push("token=" + getToken())
       window.open(process.env.VUE_APP_BASE_API + '/backend/good/export?' + exportParam.join("&"))
     },
     editGood(row, disabled) {
