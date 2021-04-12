@@ -23,7 +23,7 @@
         <el-input @input="goodInputEvent" style="width: 180px" v-model="goodName"/>
       </el-form-item>
       <el-scrollbar>
-        <div style="height: 100px;width: 100%" @click.stop>
+        <div style="height: 100px;width: 100%" @click.stop v-loading="loadingCheckMarketingGoods">
           <el-checkbox-group v-model="checkedGood" @change="handleCheckedGoodChange">
             <el-checkbox :class="{ 'active': good.selected != undefined }" v-for="good in goodList" :label="good.id" :key="good.id">
               <span @click.prevent="showGoodDetail(good.id)">{{good.goodName}}</span>
@@ -164,8 +164,10 @@ export default {
       isShowGoodDetail: false,
       isEditGood: false,
       loading: false,
+      loadingCheckMarketingGoods: false,
       goodInfo: null,
       isGift: '1',
+      existGood: [],
       checkedGood: [],
       goodName: null,
       supplyList: [],
@@ -206,7 +208,6 @@ export default {
       this.rebateRatioData[0].providerRebateRatioD = res.data[0].providerRebateRatioD
       this.rebateRatioData[0].providerRebateRatioE = res.data[0].providerRebateRatioE
       this.rebateRatioData[0].providerRebateRatioEa = res.data[0].providerRebateRatioEa
-
       for (let i = 0; i < res.data.length; i++) {
         let marketingGoods = res.data[i]
         let goodSkuValList = marketingGoods.goodSkuValList
@@ -216,6 +217,7 @@ export default {
         let table = this.loadTableList(marketingGoods.goodSkuValList, marketingGoods.goodName, marketingGoods.goodId, marketingGoods.id, marketingGoods.userLimit)
         this.checkedGood.push(marketingGoods.goodId)
         this.tableList.push(table)
+        this.existGood.push(table)
       }
 
     })
@@ -239,6 +241,7 @@ export default {
     },
 
     handleCheckedGoodChange(checkedGood) {
+      this.loadingCheckMarketingGoods = true
       let newGoodArray = this.tableList.filter(good => checkedGood.some(goodId => goodId === good.goodId));
 
       if (this.tableList.length > checkedGood.length) {
@@ -250,6 +253,7 @@ export default {
             this.tableList.push(newGoodArray[i])
           }
         }
+        this.loadingCheckMarketingGoods = false
       } else if (this.tableList.length < checkedGood.length) {
         let checkedGoodId = checkedGood[checkedGood.length - 1]
         let good = this.goodList.filter(item => item.id == checkedGoodId)
@@ -259,8 +263,15 @@ export default {
 
         getMethod("/backend/good/findById", param).then(res => {
           this.$nextTick(() => {
-            let table = this.loadTableList(res.data.skuPriceList, good[0].goodName, good[0].id, null, 0)
+            let marketingGoods = this.existGood.filter(item => item.goodId == res.data.id)
+            let table
+            if (marketingGoods.length != 0) {
+              table = marketingGoods[0]
+            } else {
+              table = this.loadTableList(res.data.skuPriceList, good[0].goodName, good[0].id, null, 0)
+            }
             this.tableList.push(table)
+            this.loadingCheckMarketingGoods = false
           })
         });
       }
@@ -437,8 +448,22 @@ export default {
         return
       }
 
+      let submitTableList = JSON.parse(JSON.stringify(this.tableList))
+
+      // 找出被删除的元素
+      for (let i = 0; i < this.existGood.length; i++) {
+        let isDelete = this.tableList.some(item => item.id == this.existGood[i].id)
+
+        if (!isDelete) {
+          this.existGood[i].goodId = -1
+
+          this.existGood[i].goodSkuValList = this.existGood[i].table
+          submitTableList.push(this.existGood[i])
+        }
+      }
+
       this.loading = true
-      postMethod('/backend/goodActivity/updateMarketingGoodsList', this.tableList).then(
+      postMethod('/backend/goodActivity/updateMarketingGoodsList', submitTableList).then(
         res => {
           this.loading = false
           if (res.code != 200) {

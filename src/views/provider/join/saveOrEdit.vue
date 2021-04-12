@@ -145,7 +145,7 @@
         <el-input v-model="dataForm.address" />
       </el-form-item>
       <el-form-item>
-        <el-button v-show="viewSubmit" type="primary" @click="submitUpdate">
+        <el-button v-show="viewSubmit" :loading="submitLoading" type="primary" @click="submitUpdate">
           添加
         </el-button>
         <el-button v-show="viewSubmit" @click="cancelUpdate">
@@ -293,6 +293,7 @@
         E_: '',
         len: '',
         radio: '',
+        submitLoading: false,
         dialogVisible: false,
         dialogImageUrl: '',
         viewSubmit: true,
@@ -864,6 +865,7 @@
         return fileTypeVerify && isLt2M
       },
       saveObject() {
+        this.submitLoading = true
         let scope = this;
         this.$refs["dataForm"].validate((valid) => {
           if (valid) {
@@ -890,6 +892,7 @@
                   message: '公司名不能为空',
                   type: 'warning'
                 })
+                this.submitLoading = false
                 return;
               }
               if (this.dataForm.taxNo == '' || this.dataForm.taxNo == undefined) {
@@ -897,6 +900,7 @@
                   message: '税务代码不能为空',
                   type: 'warning'
                 })
+                this.submitLoading = false
                 return;
               }
               if (this.len < '5') {
@@ -904,11 +908,13 @@
                   message: '照片或文件未满足所需',
                   type: 'warning'
                 })
+                this.submitLoading = false
                 return;
               }
             }
             postMethod('/backend/lyProvider/update', this.dataForm).then(
               res => {
+                scope.submitLoading = false
                 if (res.code != 200) {
                   this.$message({
                     message: res.message,
@@ -923,11 +929,14 @@
                 })
                 this.$emit('showListPanel', true)
               }
-            )
+            ).catch(error => {
+              this.submitLoading = false
+            });
           } else {
+            scope.submitLoading = false
             return false;
           }
-        });
+        })
       },
       cancelUpdate() {
         this.$emit('showListPanel', true)
