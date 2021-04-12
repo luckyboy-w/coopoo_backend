@@ -540,7 +540,8 @@ import {
 import {
   formatDate
 } from "@/api/tools.js"
-// import $ from 'jquery'
+import {getToken} from '@/utils/auth'
+
 export default {
   filters: {
     _formateDate(time) {
@@ -761,12 +762,11 @@ export default {
         applyEndTime: this.exportApplyFrm.applyEndTime,
         cashStatus: 1
       }
-      console.log(param, 'param')
       let exportParam = [];
       for (let key in param) {
         exportParam.push(key + "=" + param[key]);
       }
-      console.log(exportParam, 'exportParam')
+      exportParam.push("token=" + getToken())
       window.open(process.env.VUE_APP_BASE_API + "/backend/siteData/exportCash?" + exportParam.join("&"));
     },
     /*
@@ -794,6 +794,7 @@ export default {
         exportParam.push(key + "=" + param[key]);
       }
       console.log(exportParam, 'exportParam')
+      exportParam.push("token=" + getToken())
       window.open(process.env.VUE_APP_BASE_API + "/backend/siteData/exportCashDtl?" + exportParam.join("&"));
     },
     /*
@@ -821,6 +822,7 @@ export default {
         exportParam.push(key + "=" + param[key]);
       }
       console.log(exportParam, 'exportParam')
+      exportParam.push("token=" + getToken())
       window.open(process.env.VUE_APP_BASE_API + "/backend/siteData/exportCash?" + exportParam.join("&"));
     },
     /*
@@ -847,6 +849,7 @@ export default {
       for (let key in param) {
         exportParam.push(key + "=" + param[key]);
       }
+      exportParam.push("token=" + getToken())
       console.log(exportParam, 'exportParam')
       window.open(process.env.VUE_APP_BASE_API + "/backend/siteData/exportCashDtl?" + exportParam.join("&"));
     },

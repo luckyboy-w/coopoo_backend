@@ -108,6 +108,7 @@
 <script>
 import saveOrEdit from '../verify/view'
 import { getMethod, postMethod, formatDate } from '@/api/request'
+import {getToken} from '@/utils/auth'
 
 export default {
   components: { saveOrEdit },
@@ -162,6 +163,7 @@ export default {
           exportParam.push(key+"="+this.searchParam[key]);
       }
       //window.open( process.env.VUE_APP_BASE_API+'/backend/lyProvider/exportData?'+exportParam.join("&"))
+      exportParam.push("token=" + getToken())
       window.open( process.env.VUE_APP_BASE_API+'/backend/lyProvider/exportData?'+exportParam.join("&"))
     },
     enable(row, v, a, c) {
