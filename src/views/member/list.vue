@@ -184,6 +184,7 @@
     postMethod,
     formatDate
   } from "@/api/request";
+  import {getToken} from '@/utils/auth'
 
   export default {
     components: {},
@@ -303,6 +304,7 @@
           exportParam.push(key + "=" + this.searchParam[key]);
         }
         // window.open( process.env.VUE_APP_BASE_API+'/backend/member/export?'+exportParam.join("&"))
+        exportParam.push("token=" + getToken())
         window.open(process.env.VUE_APP_BASE_API + '/backend/member/export?' + exportParam.join("&"))
       },
       loadgoodTypeList() {

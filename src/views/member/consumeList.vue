@@ -53,7 +53,7 @@
 					></el-pagination>
 				</div>
 			</div>
-			
+
 			<div class="ly-tool-panel" v-if="!showDtl">
 				<table>
 					<tr>
@@ -95,6 +95,7 @@
 <script>
 import saveOrEdit from "./detail";
 import { getMethod, postMethod, formatDate} from "@/api/request";
+import {getToken} from '@/utils/auth'
 
 export default {
 	computed: {},
@@ -146,6 +147,7 @@ export default {
 					exportParam.push(key+"="+this.searchParam[key]);
 				}
 			}
+      exportParam.push("token=" + getToken())
 			window.open( process.env.VUE_APP_BASE_API+'/backend/analysis/consume/export?'+exportParam.join("&"))
 		},
         consumeDtl(row){
