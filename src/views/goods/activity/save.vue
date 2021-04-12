@@ -29,7 +29,7 @@
         <el-input @input="goodInputEvent" style="width: 180px" v-model="goodName"/>
       </el-form-item>
       <el-scrollbar>
-        <div style="height: 100px;width: 100%" @click.stop>
+        <div style="height: 100px;width: 100%" @click.stop v-loading="loadingCheckMarketingGoods">
           <el-checkbox-group v-model="checkedGood" @change="handleCheckedGoodChange">
             <el-checkbox :class="{ 'active': good.selected != undefined }" v-for="good in goodList" :label="good.id"
                          :key="good.id"
@@ -181,6 +181,7 @@ export default {
       isShowGoodDetail: false,
       isEditGood: false,
       loading: false,
+      loadingCheckMarketingGoods: false,
       goodInfo: null,
       isGift: '1',
       checkedGood: [],
@@ -235,6 +236,8 @@ export default {
     },
 
     handleCheckedGoodChange(checkedGood) {
+      this.loadingCheckMarketingGoods = true
+
       let newGoodArray = this.tableList.filter(good => checkedGood.some(goodId => goodId === good.goodId));
 
       if (this.tableList.length > checkedGood.length) {
@@ -246,6 +249,7 @@ export default {
             this.tableList.push(newGoodArray[i])
           }
         }
+        this.loadingCheckMarketingGoods = false
       } else if (this.tableList.length < checkedGood.length) {
         let checkedGoodId = checkedGood[checkedGood.length - 1]
         let good = this.goodList.filter(item => item.id == checkedGoodId)
@@ -258,6 +262,7 @@ export default {
             let table = this.loadTableList(res.data.skuPriceList, good[0].goodName, good[0].id)
             this.tableList.push(table)
           })
+          this.loadingCheckMarketingGoods = false
         });
       }
     },
