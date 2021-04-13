@@ -94,6 +94,7 @@
               >
                 <el-option
                   v-for="item in providerList"
+                  :key="item.id"
                   :label="item.provinceName"
                   :value="item.id"
                 />
@@ -221,6 +222,7 @@
               >
                 <el-option
                   v-for="item in typeList"
+                  :key="item.id"
                   :label="item.typeName"
                   :value="item.id"
                 />
@@ -239,6 +241,7 @@
               >
                 <el-option
                   v-for="item in opTypeList"
+                  :key="item.id"
                   :label="item.opTypeName"
                   :value="item.id"
                 />
@@ -393,6 +396,8 @@
             v-if="def"
             :total="noBillData.total"
             background
+            :page-size="searchParams.pageSize"
+            :current-page="searchParams.pageNum"
             layout="prev, pager, next"
             @current-change="currentPage"
             @prev-click="currentPage"
@@ -469,10 +474,11 @@ export default {
           provinceName: 'EA类'
         },
       ],
-      typeList: [{
-        id: 1,
-        typeName: '购买会员'
-      },
+      typeList: [
+        {
+          id: 1,
+          typeName: '购买会员'
+        },
         {
           id: 2,
           typeName: '邀请好友购买'
@@ -500,6 +506,10 @@ export default {
         {
           id: 8,
           typeName: '参加活动'
+        },
+        {
+          id: 9,
+          typeName: '购买商品'
         }
       ],
       opTypeList: [{
@@ -510,6 +520,8 @@ export default {
         opTypeName: '减少'
       }],
       searchParams: {
+        pageSize: 10,
+        pageNum: 1,
         memName: '',
         phoneNo: '',
         memberType: '',
@@ -641,30 +653,26 @@ export default {
       this.loadList();
     },
     currentPage(pageNum) {
-      this.searchParam.pageNum = pageNum;
+      this.searchParams.pageNum = pageNum;
       this.loadList();
     },
     currentPage_(pageNum) {
       this.searchParam.pageNum = pageNum;
       this.loadDetailsList();
     },
-    resetMain(){
+    resetMain() {
       this.searchParams = {
         memName: '',
         phoneNo: '',
         memberType: '',
+        pageSize: 10,
+        pageNum: 1
       }
     },
     search() {
       let that = this
-      let param = {
-        pageSize: 10,
-        pageNum: 1,
-        memName: that.searchParams.memName,
-        phoneNo: that.searchParams.phoneNo,
-        memberType: that.searchParams.memberType
-      }
-      getMethod("/backend/siteData/memberBeanList", param).then(res => {
+
+      getMethod("/backend/siteData/memberBeanList", this.searchParams).then(res => {
         let obj = res.data.list
         for (let i = 0; i < obj.length; i++) {
           if (obj[i].beanNum != undefined && obj[i].consumeBean != undefined) {
@@ -698,7 +706,7 @@ export default {
     },
     loadList() {
       let scope = this
-      let param = this.searchParam
+      let param = this.searchParams
       param.billType = 10
       getMethod("/backend/siteData/memberBeanList", param).then(res => {
         let obj = res.data.list
