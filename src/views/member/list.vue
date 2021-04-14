@@ -365,6 +365,8 @@
       },
       search() {
         this.searchParam.dataType = ''
+        this.searchParam.pageSize = 10
+        this.searchParam.pageNum = 0
         this.loadList();
       },
       addOrEdit(oper, rowIndex, data) {
