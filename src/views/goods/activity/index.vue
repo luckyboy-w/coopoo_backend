@@ -391,4 +391,8 @@ export default {
   }
 }
 </style>
-
+<style lang="scss">
+  .hide .el-upload--picture-card {
+    display: none;
+  }
+</style>
