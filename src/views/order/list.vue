@@ -112,6 +112,14 @@
                 />
               </el-select>
             </td>
+            <td>支付方式：</td>
+            <td>
+              <el-select v-model="searchParam.test" placeholder="请选择">
+                <el-option value="" label="全部"></el-option>
+                <el-option value="1" label="微信"></el-option>
+                <el-option value="0" label="支付宝"></el-option>
+              </el-select>
+            </td>
             <td colspan="2">
               <el-button
                 icon="el-icon-search"
@@ -204,6 +212,12 @@
               <template slot-scope="scope">
                 {{ scope.row | fmtPayPrice }}
               </template>
+            </el-table-column>
+            <el-table-column
+              prop="test"
+              label="支付方式"
+              width="150px"
+            >
             </el-table-column>
             <el-table-column
               prop="recUname"
@@ -403,11 +417,10 @@
           </el-steps>
         </el-col>
       </el-row>
-
+		<div style="font-size: 20px;padding-top: 20px;font-weight: 600;">供应商：蓝丝羽</div>
       <div style="padding:10px;margin:10px 0px 10px 0;">
         <el-row
           :gutter="20"
-          style="padding-top:20px;"
         >
           <el-table
             :data="ordDtl.supplierList[0].dtlList"
@@ -566,7 +579,7 @@
           <el-col :span="6"/>
         </el-row>
       </div>
-      <div style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);padding:10px;margin:10px 0px;">
+      <!-- <div style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);padding:10px;margin:10px 0px;">
         <el-row
           :gutter="20"
           style="line-height:40px"
@@ -588,7 +601,7 @@
           </el-col>
           <el-col :span="6"/>
         </el-row>
-      </div>
+      </div> -->
 
       <div
         v-if="ordDtl.orderType != 6"
@@ -679,7 +692,78 @@
           </el-col>
         </el-row>
       </div>
+      <div
+        style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+       padding:10px;margin:10px 0px 10px 0;"
+      >
+        <el-row
+          :gutter="20"
+          style="line-height:40px"
+          class="main-title"
+        >
+          <el-col :span="24">
+            物流信息
+          </el-col>
+        </el-row>
+        <el-row
+          :gutter="20"
+          style="line-height:40px;font-size:12px"
+        >
+          <el-col :span="6">
+            物流公司：{{ ordDtl.expressName }}
+          </el-col>
+          <el-col :span="6">
+            快递单号：{{ ordDtl.expressNo }}
+          </el-col>
+          <el-col :span="6"/>
+        </el-row>
+        <div>
+          <!-- <el-timeline>
+              <el-timeline-item
+                v-for="(activity, index) in activities"
+                :key="index"
+                :timestamp="activity.timestamp">
+                {{activity.content}}
+              </el-timeline-item>
+            </el-timeline> -->
+            <div class="steps-view">
+                    <div  style="display: flex;height: 80px;">
+                      <div style="width: 100px;text-align: right;">
+                        <div>2020-12-31</div>
+                        <div>2020-12-31</div>
+                      </div>
+                      <div style="background-color: #d8d8d8;width: 18px;border-radius: 25px;height: 18px;margin: 0 30px 0 10px;"></div>
+                      <div >
+                        <div>上海仓已收</div>
+                        <div>快递员正在派件中</div>
+                      </div>
+                    </div>
+                    <div  style="display: flex;height: 80px;">
+                      <div style="width: 100px;text-align: right;">
+                        <div>2020-12-31</div>
+                        <div>2020-12-31</div>
+                      </div>
+                      <div style="background-color: #d8d8d8;width: 18px;border-radius: 25px;height: 18px;margin: 0 30px 0 10px;"></div>
+                      <div >
+                        <div>上海仓已收</div>
+                        <div>快递员正在派件中</div>
+                      </div>
+                    </div>
+                    <div  style="display: flex;height: 80px;">
+                      <div style="width: 100px;text-align: right;">
+                        <div>2020-12-31</div>
+                        <div>2020-12-31</div>
+                      </div>
+                      <div style="background-color: #d8d8d8;width: 18px;border-radius: 25px;height: 18px;margin: 0 30px 0 10px;"></div>
+                      <div >
+                        <div>上海仓已收</div>
+                        <div>快递员正在派件中</div>
+                      </div>
+                    </div>
+            </div>
 
+        </div>
+      </div>
       <div style="line-height:400px;height:20px">
         <el-row
           :gutter="24"
@@ -868,6 +952,16 @@ export default {
         orderId: '',
         ordPrice: ''
       },
+      activities: [{
+                content: '活动按期开始',
+                timestamp: '2018-04-15'
+              }, {
+                content: '通过审核',
+                timestamp: '2018-04-13'
+              }, {
+                content: '创建成功',
+                timestamp: '2018-04-11'
+              }],
       //订单状态;0:订单被取消;10:已提交,待发货20;已付款,待发货;30:已收货;待支付;40:退货/售后;50:交易完成/未评价;51:交易完成/已评价
       ordMarks: {
         10: '待发货',
@@ -907,6 +1001,7 @@ export default {
         stockNum: ''
       },
       searchParam: {
+        test:'',
         status: '',
         tenantId: '',
         isRisk: 0,
@@ -1369,4 +1464,20 @@ export default {
 .sub-title {
   font-size: 12px;
 }
+.steps-view{
+    padding: 0 20px;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
+}
+.steps-view::before{
+  content: "";
+    position: absolute;
+    width: 2px;
+    background-color: #d8d8d8;
+    height: calc(100% - 0px);
+    left: 138px;
+    z-index: 2;
+}
+
 </style>
