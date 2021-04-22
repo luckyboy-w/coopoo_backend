@@ -115,6 +115,11 @@
                 导出
               </el-button>
             </td>
+            <td>
+              <el-button type="primary" plain  @click="settlement()">
+                批量结算
+              </el-button>
+            </td>
           </tr>
           <tr>
             <td style="padding-left: 20px;">手机号</td>
@@ -136,10 +141,15 @@
             </td>
           </tr>
         </table>
-        <el-table v-if="det" ref="feeProcessData" :data="feeProcessData.list" style="width: 100%; margin-bottom: 20px;"
+        <el-table v-if="det" ref="feeProcessData" :data="feeProcessData.list" border style="width: 100%; margin-bottom: 20px;"
                   row-key="id"
         >
-          <el-table-column type="index" width="50" label="序号"/>
+        <!-- <el-table v-show="def" ref="mainTable"
+        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+        default-expand-all :data="detList"
+        style="width: 100%; margin-bottom: 20px;" row-key="id" border> -->
+          <el-table-column type="selection" width="55"></el-table-column>
+          <!-- <el-table-column type="index" width="50" label="序号"/> -->
           <el-table-column prop="cashNo" label="申请单号" min-width="24%"/>
           <el-table-column prop="provinceName" label="申请服务商" min-width="24%"/>
           <el-table-column prop="mobileNo" label="手机号" min-width="24%"/>
@@ -788,12 +798,10 @@ export default {
         cashNo: this.cashNo,
         friName: '提现中明细'
       }
-      console.log(param, 'param')
       let exportParam = [];
       for (let key in param) {
         exportParam.push(key + "=" + param[key]);
       }
-      console.log(exportParam, 'exportParam')
       exportParam.push("token=" + getToken())
       window.open(process.env.VUE_APP_BASE_API + "/backend/siteData/exportCashDtl?" + exportParam.join("&"));
     },
@@ -816,12 +824,10 @@ export default {
         applyEndTime: this.exportApplyFrm_.applyEndTime,
         cashStatus: 2
       }
-      console.log(param, 'param')
       let exportParam = [];
       for (let key in param) {
         exportParam.push(key + "=" + param[key]);
       }
-      console.log(exportParam, 'exportParam')
       exportParam.push("token=" + getToken())
       window.open(process.env.VUE_APP_BASE_API + "/backend/siteData/exportCash?" + exportParam.join("&"));
     },
@@ -844,18 +850,13 @@ export default {
         cashNo: this.cashNos,
         friName: '已提现明细'
       }
-      console.log(param, 'param')
       let exportParam = [];
       for (let key in param) {
         exportParam.push(key + "=" + param[key]);
       }
       exportParam.push("token=" + getToken())
-      console.log(exportParam, 'exportParam')
       window.open(process.env.VUE_APP_BASE_API + "/backend/siteData/exportCashDtl?" + exportParam.join("&"));
     },
-    /**
-     * 搜索 2020 11 27 wyw
-     */
     Tosearch() {
       let that = this
       let param = {
@@ -887,7 +888,6 @@ export default {
         phoneNo: that.searchParamsOne.phoneNo,
         cashNo: this.cashNo,
       }).then(res => {
-        console.log(res)
         that.detList = res.data.list // 返回的数据
 
       })
@@ -901,6 +901,42 @@ export default {
       }).then(res => {
         that.det_List = res.data.list // 返回的数据
 
+      })
+    },
+    //提现中批量结算
+    settlement(){
+      let that = this
+      let selectList = that.$refs.feeProcessData.selection;
+      let idArr = [];
+      if(selectList.length<=0){
+        that.$message('您未选择结算单号 ')
+        return;
+      }
+      for (let i = 0; i < selectList.length; i++) {
+      	idArr.push(selectList[i].cashNo);
+      }
+      const loading = that.$loading({
+            lock: true,
+            text: '正在批量结算中',
+            spinner: 'el-icon-loading',
+           });
+      postMethod("/backend/siteData/batchRebate", idArr).then(res => {
+       if (res.code==200) {
+          loading.close();
+          that.$message({
+               message: '结算成功',
+               type: 'success'
+            });
+          that.loadFeeProcess()
+          that.loadPlatFee()
+       }else{
+         that.$message.error('结算出错');
+         loading.close();
+       }
+      })
+      .catch(err=>{
+        that.$message.error('结算出错');
+        loading.close()
       })
     },
     backToAllFee() {
@@ -1038,7 +1074,6 @@ export default {
 
     },
     handleClick(tab, event) {
-      console.log(tab.index)
       this.cashNo = ''
       this.tabIndex = tab.index
       if (tab.index == 0) {

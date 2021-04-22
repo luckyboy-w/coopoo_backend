@@ -33,6 +33,7 @@ requestBodyUrl.push("/backend/storeManage/updateEnable")
 requestBodyUrl.push("/backend/goodSalesDesc")
 requestBodyUrl.push("/backend/goodActivity/marketingGoods")
 requestBodyUrl.push("/backend/goodActivity/updateMarketingGoodsList")
+requestBodyUrl.push("/backend/siteData/batchRebate")
 
 
 // create an axios instance
