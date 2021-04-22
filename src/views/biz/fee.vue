@@ -906,15 +906,16 @@ export default {
     //提现中批量结算
     settlement(){
       let that = this
-      let selectList = this.$refs.feeProcessData.selection;
+      let selectList = that.$refs.feeProcessData.selection;
       let idArr = [];
       if(selectList.length<=0){
-        this.$message('您未选择结算单号 ');
+        that.$message('您未选择结算单号 ')
+        return;
       }
       for (let i = 0; i < selectList.length; i++) {
       	idArr.push(selectList[i].cashNo);
       }
-      const loading = this.$loading({
+      const loading = that.$loading({
             lock: true,
             text: '正在批量结算中',
             spinner: 'el-icon-loading',
@@ -922,10 +923,19 @@ export default {
       postMethod("/backend/siteData/batchRebate", idArr).then(res => {
        if (res.code==200) {
           loading.close();
+          that.$message({
+               message: '结算成功',
+               type: 'success'
+            });
+          that.loadFeeProcess()
+          that.loadPlatFee()
        }else{
-         this.$message.error('结算出错');
+         that.$message.error('结算出错');
          loading.close();
        }
+      })
+      .catch(err=>{
+        that.$message.error('结算出错');
       })
     },
     backToAllFee() {
