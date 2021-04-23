@@ -22,6 +22,13 @@
                 width="180px"
               />
             </td>
+            <!-- <td>买家手机号:</td>
+            <td>
+              <el-input
+                v-model="searchParam.orderNo"
+                width="180px"
+              />
+            </td> -->
             <td>商家：</td>
             <td>
               <el-select
@@ -106,10 +113,10 @@
             </td>
             <td>支付方式：</td>
             <td>
-              <el-select v-model="searchParam.test" placeholder="请选择">
+              <el-select v-model="searchParam.payType" placeholder="请选择">
                 <el-option value="" label="全部"></el-option>
-                <el-option value="1" label="微信"></el-option>
-                <el-option value="0" label="支付宝"></el-option>
+                <el-option value="2" label="微信"></el-option>
+                <el-option value="1" label="支付宝"></el-option>
               </el-select>
             </td>
             <td colspan="2">
@@ -206,21 +213,25 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="test"
+              prop="payType"
               label="支付方式"
               width="150px"
             >
+            <template slot-scope="scope">
+              <span v-if="scope.row.payType == 1">支付宝</span>
+              <span v-if="scope.row.payType == 2 || scope.row.payType == 3">微信</span>
+            </template>
             </el-table-column>
             <el-table-column
               prop="recUname"
               label="买家姓名"
               width="120px"
             />
-            <el-table-column
+            <!-- <el-table-column
               prop="recPhone"
               label="买家手机号码"
               width="150px"
-            />
+            /> -->
             <el-table-column
               prop="orderNo"
               label="供应商名称"
@@ -409,7 +420,7 @@
           </el-steps>
         </el-col>
       </el-row>
-		<div style="font-size: 20px;padding-top: 20px;font-weight: 600;">供应商：蓝丝羽</div>
+		<div style="font-size: 20px;padding-top: 20px;font-weight: 600;">供应商：{{ordDtl.tenantName}}</div>
       <div style="padding:10px;margin:10px 0px 10px 0;">
         <el-row
           :gutter="20"
@@ -913,16 +924,6 @@ export default {
         orderId: '',
         ordPrice: ''
       },
-      activities: [{
-                content: '活动按期开始',
-                timestamp: '2018-04-15'
-              }, {
-                content: '通过审核',
-                timestamp: '2018-04-13'
-              }, {
-                content: '创建成功',
-                timestamp: '2018-04-11'
-              }],
       //订单状态;0:订单被取消;10:已提交,待发货20;已付款,待发货;30:已收货;待支付;40:退货/售后;50:交易完成/未评价;51:交易完成/已评价
       ordMarks: {
         10: '待发货',
@@ -962,7 +963,7 @@ export default {
         stockNum: ''
       },
       searchParam: {
-        test:'',
+        payType:'',
         status: '',
         tenantId: '',
         isRisk: 0,
