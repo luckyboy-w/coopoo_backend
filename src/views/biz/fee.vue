@@ -936,6 +936,7 @@ export default {
       })
       .catch(err=>{
         that.$message.error('结算出错');
+        loading.close()
       })
     },
     backToAllFee() {
