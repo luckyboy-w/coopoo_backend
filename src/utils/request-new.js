@@ -59,16 +59,16 @@ service.interceptors.request.use(
     config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 
     if (config['method'] != 'get' ) {
-
-      if(requestBodyUrl.indexOf(config.url) != -1){
-        config.headers['Content-Type'] = 'application/json;charset=UTF-8'
-      }else{
-        config.transformRequest = [function(data) {
-          // 在请求之前对data传参进行格式转换
-          data = Qs.stringify(data)
-          return data
-        }]
-      }
+      config.headers['Content-Type'] = 'application/json;charset=UTF-8'
+      // if(requestBodyUrl.indexOf(config.url) != -1){
+      //   config.headers['Content-Type'] = 'application/json;charset=UTF-8'
+      // }else{
+      //   config.transformRequest = [function(data) {
+      //     // 在请求之前对data传参进行格式转换
+      //     data = Qs.stringify(data)
+      //     return data
+      //   }]
+      // }
 
     }
     return config
