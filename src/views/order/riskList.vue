@@ -269,7 +269,7 @@
 
 <script>
 import {getMethod, postMethod} from '@/api/request'
-import {getMethod as getMethodNew} from '@/api/request-new'
+import {getMethod as getMethodNew, postMethod as postMethodNew} from '@/api/request-new'
 import {formatDate} from '@/api/tools.js'
 
 export default {
@@ -489,7 +489,7 @@ export default {
         orderId: row.orderId
       }
 
-      postMethod('/backend/order/getOrdDtl', param).then(res => {
+      postMethodNew('/order/getOrdDtl', param).then(res => {
         scope.showOrdDtl = true
         scope.ordDtl = res.data
         scope.ptStep = false

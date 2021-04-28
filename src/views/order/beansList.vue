@@ -651,7 +651,8 @@ import {
 } from '@/api/request'
 
 import {
-  getMethod as getMethodNew
+  getMethod as getMethodNew,
+  postMethod as postMethodNew
 } from '@/api/request-new'
 
 import {
@@ -956,7 +957,7 @@ export default {
     },
     getOrdDtl_() {
       let scope = this
-      postMethod('/backend/order/getOrdDtl', {
+      postMethodNew('/order/getOrdDtl', {
         orderId: this.orderId_
       }).then(res => {
         scope.showOrdDtl = true
@@ -1018,7 +1019,7 @@ export default {
         orderId: row.orderId
       }
 
-      postMethod('/backend/order/getOrdDtl', param).then(res => {
+      postMethodNew('/order/getOrdDtl', param).then(res => {
         scope.showOrdDtl = true
         scope.ordDtl = res.data
         scope.ptStep = false
@@ -1127,7 +1128,7 @@ export default {
       let param = {
         orderId: rowObj.orderId
       }
-      postMethod('/backend/order/getOrdDtl', param).then(res => {
+      postMethodNew('/order/getOrdDtl', param).then(res => {
         if (res.code != 200) {
           this.$message.error(res.message)
           return
