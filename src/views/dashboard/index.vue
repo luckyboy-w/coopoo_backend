@@ -468,7 +468,7 @@ export default {
     },
     initMonthData() {
       let scope = this;
-      getMethod("/backend/siteData/findMonData", {}).then(res => {
+      getMethodNew("/statistic/findMonData", {}).then(res => {
         let resData = res.data
         scope.monthData = resData
       });
