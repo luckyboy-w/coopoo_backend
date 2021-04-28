@@ -1286,7 +1286,7 @@ export default {
       })
     },
     async loadAddress() {
-      const {data} = await getMethod("/backend/lyConfig/findList?dataType=send_address_config")
+      const {data} = await getMethodNew("/config/findList?dataType=send_address_config")
       this.sendOrderFrm.sendAddress = data[0] && data[0].value
     },
     cancelStock() {

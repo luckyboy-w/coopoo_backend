@@ -63,6 +63,10 @@
 
 <script>
 import { getMethod, postMethod, getUploadUrl } from "@/api/request";
+import {
+  getMethod as getMethodNew,
+  postMethod as postMethodNew,
+} from "@/api/request-new";
 import { isInteger } from "@/utils/validate"
 import qEditor from "@/components/RichText/quill-editor"
 
@@ -152,14 +156,14 @@ export default {
         let param = {
           dataType:'pay_cfg'
         }
-        getMethod("/backend/lyConfig/findList", param).then(res => {
+        getMethodNew("/config/findList", param).then(res => {
           scope.list = res.data
         });
 
         param = {
           dataType:'payCfg'
         }
-        getMethod("/backend/lyConfig/findList", param).then(res => {
+        getMethodNew("/config/findList", param).then(res => {
           let cfgList = res.data
           for(let i = 0 ; i < cfgList.length ; i++){
             scope.dataForm[cfgList[i].title] = cfgList[i].value

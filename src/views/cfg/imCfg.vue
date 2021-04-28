@@ -19,6 +19,10 @@
 
 <script>
 import { getMethod, postMethod, getUploadUrl } from "@/api/request";
+import {
+  getMethod as getMethodNew,
+  postMethod as postMethodNew,
+} from "@/api/request-new";
 import { isInteger } from "@/utils/validate"
 
 
@@ -53,7 +57,7 @@ export default {
         typeName:'platHxNo'
       }
       let scope = this
-      getMethod("/backend/lyConfig/findList", param).then(
+      getMethodNew("/config/findList", param).then(
         res => {
           let dataList = res.data
           for(let i = 0 ; i < dataList.length ; i++){

@@ -63,7 +63,10 @@
 
 <script>
   import { postMethod, getMethod } from '@/api/request'
-
+  import {
+    getMethod as getMethodNew,
+    postMethod as postMethodNew,
+  } from "@/api/request-new";
   export default {
     name: "configuration",
     data() {
@@ -86,7 +89,7 @@
       let param = {
         dataType: 'bean_mall_rule_config'
       }
-      getMethod("/backend/lyConfig/findList", param).then(res => {
+      getMethodNew("/config/findList", param).then(res => {
         const configuration = JSON.parse(JSON.stringify(res.data))[0]
         const config = JSON.parse(configuration.value)
 
