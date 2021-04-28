@@ -1101,7 +1101,7 @@ export default {
             spinner: 'el-icon-loading',
             background: 'rgba(0, 0, 0, 0.7)'
           })
-          postMethod('/backend/order/offlineSendOrder', this.sendOrderFrm).then(res => {
+          postMethodNew('/order/offlineSendOrder', this.sendOrderFrm).then(res => {
             if (res.code != 200) {
               this.$message.error(res.message)
               return
