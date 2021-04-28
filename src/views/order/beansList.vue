@@ -287,7 +287,7 @@
           </el-steps>
         </el-col>
       </el-row>
-		<div style="font-size: 20px;padding-top: 20px;font-weight: 600;">供应商：{{ordDtl.tenantName}}</div>
+      <div style="font-size: 20px;padding-top: 20px;font-weight: 600;">供应商：{{ ordDtl.tenantName }}</div>
       <div style="padding:10px;margin:10px 0px 10px 0;">
         <el-row
           :gutter="20"
@@ -403,13 +403,14 @@
             <el-popover
               placement="right"
               width="400"
-              trigger="click">
+              trigger="click"
+            >
               <el-table>
                 <el-table-column width="150" property="date" label="日期"></el-table-column>
                 <el-table-column width="100" property="name" label="姓名"></el-table-column>
                 <el-table-column width="300" property="address" label="地址"></el-table-column>
               </el-table>
-              <el-button  style="color:red" slot="reference">修改收货地址</el-button>
+              <el-button style="color:red" slot="reference">修改收货地址</el-button>
             </el-popover>
           </el-col>
         </el-row>
@@ -572,19 +573,19 @@
         </el-row>
         <div>
           <div>
-              <div class="steps-view">
-                <div class="steps" v-for="item in logisticsList" :key="item.key">
-                  <div style="min-width: 100px;text-align: right;">
-                     <div>{{item.time1}}</div>
-                     <div>{{item.time2}}</div>
-                  </div>
-                  <div class="steps-node"></div>
-                  <div >
-                    <div>{{item.text}}</div>
-                    <div>{{item.acceptStation}}</div>
-                  </div>
+            <div class="steps-view">
+              <div class="steps" v-for="item in logisticsList" :key="item.key">
+                <div style="min-width: 100px;text-align: right;">
+                  <div>{{ item.time1 }}</div>
+                  <div>{{ item.time2 }}</div>
+                </div>
+                <div class="steps-node"></div>
+                <div>
+                  <div>{{ item.text }}</div>
+                  <div>{{ item.acceptStation }}</div>
                 </div>
               </div>
+            </div>
           </div>
         </div>
       </div>
@@ -639,7 +640,6 @@
     </el-dialog>
 
 
-
     <br>
   </div>
 </template>
@@ -649,6 +649,11 @@ import {
   getMethod,
   postMethod
 } from '@/api/request'
+
+import {
+  getMethod as getMethodNew
+} from '@/api/request-new'
+
 import {
   formatDate
 } from '@/api/tools.js'
@@ -779,7 +784,7 @@ export default {
         ordPrice: ''
       },
       //物流轨迹信息数组
-      logisticsList:[],
+      logisticsList: [],
       //订单状态;0:订单被取消;10:已提交,待发货20;已付款,待发货;30:已收货;待支付;40:退货/售后;50:交易完成/未评价;51:交易完成/已评价
       ordMarks: {
         10: '待发货',
@@ -819,7 +824,7 @@ export default {
         stockNum: ''
       },
       searchParam: {
-        test:'',
+        test: '',
         status: '',
         tenantId: '',
         isRisk: 0,
@@ -1065,7 +1070,7 @@ export default {
           }
         }
 
-       scope.getLogistics()
+        scope.getLogistics()
       })
     },
     cancelOrd(row) {
@@ -1243,7 +1248,7 @@ export default {
         expressNo: '',
         opContent: ''
       },
-        getMethod('/backend/order/findPage', this.searchParam).then(res => {
+        getMethodNew('/backend/order/findPage', this.searchParam).then(res => {
           scope.tableData = res.data
           scope.sendOrder = false
           scope.showPagination = scope.tableData.total == 0
@@ -1252,86 +1257,86 @@ export default {
     },
     // 获取物流轨迹
     getLogistics() {
-        let that = this
-        let params = {
-          recPhone: that.ordDtl.recPhone,
-          orderNo:that.ordDtl.orderNo
-        }
-        if (that.ordDtl.expressNo&&that.ordDtl.expressNo!='') {
-          params.logisticCode=that.ordDtl.expressNo
-        }
-        if (that.ordDtl.expressId&&that.ordDtl.expressId!='') {
-          params.shipperCode=that.ordDtl.expressId
-        }
-        console.log(params)
-        getMethod('/backend/order/getLogisticsInfo', params)
-          .then(res => {
-            console.log(res)
-            if (res.code == 200) {
-              let result = res.data
-              let arr = []
-              let text = ''
-              let title = ''
-              result.map(item => {
-                if (item.acceptTime) {
-                  arr = item.acceptTime.split(" ")
-                }
-                item.time1 = arr[0].substring(0, 10)
-                item.time2 = arr[1].substring(0, 8)
-              })
-              let status
-              for (let i = 0; i < result.length; i++) {
-                status =result[i].action
-              if (status==0) {
+      let that = this
+      let params = {
+        recPhone: that.ordDtl.recPhone,
+        orderNo: that.ordDtl.orderNo
+      }
+      if (that.ordDtl.expressNo && that.ordDtl.expressNo != '') {
+        params.logisticCode = that.ordDtl.expressNo
+      }
+      if (that.ordDtl.expressId && that.ordDtl.expressId != '') {
+        params.shipperCode = that.ordDtl.expressId
+      }
+      console.log(params)
+      getMethod('/backend/order/getLogisticsInfo', params)
+        .then(res => {
+          console.log(res)
+          if (res.code == 200) {
+            let result = res.data
+            let arr = []
+            let text = ''
+            let title = ''
+            result.map(item => {
+              if (item.acceptTime) {
+                arr = item.acceptTime.split(" ")
+              }
+              item.time1 = arr[0].substring(0, 10)
+              item.time2 = arr[1].substring(0, 8)
+            })
+            let status
+            for (let i = 0; i < result.length; i++) {
+              status = result[i].action
+              if (status == 0) {
                 result[i].text = '暂无轨迹信息';
-              } else if(status=='1'){
+              } else if (status == '1') {
                 result[i].text = '已揽收';
-              } else if(status=='2'){
+              } else if (status == '2') {
                 result[i].text = '运输中';
-              } else if(status==201){
+              } else if (status == 201) {
                 result[i].text = '到达派件城市';
-              } else if(status==202){
+              } else if (status == 202) {
                 result[i].text = '派件中';
-              } else if(status==211){
+              } else if (status == 211) {
                 result[i].text = '已放入快递柜或驿站';
-              } else if(status==3){
+              } else if (status == 3) {
                 result[i].text = '已签收';
-              } else if(status==301){
+              } else if (status == 301) {
                 result[i].text = '已签收';
-              } else if(status==302){
+              } else if (status == 302) {
                 result[i].text = '派件异常后最终签收';
-              } else if(status==304){
+              } else if (status == 304) {
                 result[i].text = '代收签收';
-              } else if(status==311){
+              } else if (status == 311) {
                 result[i].text = '快递柜或驿站签收';
-              } else if(status==4){
+              } else if (status == 4) {
                 result[i].text = '问题件';
-              } else if(status==401){
+              } else if (status == 401) {
                 result[i].text = '发货无信息';
-              } else if(status==402){
+              } else if (status == 402) {
                 result[i].text = '超时未签收';
-              } else if(status==403){
+              } else if (status == 403) {
                 result[i].text = '超时未更新';
-              }else if(status==404){
+              } else if (status == 404) {
                 result[i].text = '拒收（退件）';
-              } else if(status==405){
+              } else if (status == 405) {
                 result[i].text = '派件异常';
-              } else if(status==406){
+              } else if (status == 406) {
                 result[i].text = '退货签收';
-              }else if(status==407){
+              } else if (status == 407) {
                 result[i].text = '退货未签收';
-              } else if(status==412){
+              } else if (status == 412) {
                 result[i].text = '快递柜或驿站超时未取';
-              } else if(status== '001'){
+              } else if (status == '001') {
                 result[i].text = '已下单';
-              }else if(status=='002'){
+              } else if (status == '002') {
                 result[i].text = '已发货';
               }
             }
-            that.logisticsList=result
+            that.logisticsList = result
           }
-          })
-      }
+        })
+    }
   }
 }
 </script>
@@ -1365,22 +1370,25 @@ export default {
 .sub-title {
   font-size: 12px;
 }
-.steps-view{
-    padding: 0 20px;
-    margin-top: 20px;
-    position: relative;
-    z-index: 1;
+
+.steps-view {
+  padding: 0 20px;
+  margin-top: 20px;
+  position: relative;
+  z-index: 1;
 }
-.steps-view::before{
+
+.steps-view::before {
   content: "";
-    position: absolute;
-    width: 2px;
-    background-color: #d8d8d8;
-    height: calc(100% - 0px);
-    left: 138px;
-    z-index: 2;
+  position: absolute;
+  width: 2px;
+  background-color: #d8d8d8;
+  height: calc(100% - 0px);
+  left: 138px;
+  z-index: 2;
 }
-.steps{
+
+.steps {
   display: flex;
   min-height: 60px;
   font-size: 15px;
@@ -1388,7 +1396,8 @@ export default {
   margin-bottom: 20px;
   height: auto;
 }
-.steps-node{
+
+.steps-node {
   background-color: #d8d8d8;
   min-width: 18px;
   border-radius: 25px;

@@ -1,13 +1,14 @@
 <template>
   <div>
     <div v-if="!showOrdDtl"
-      v-loading="loading"
-      class="ly-container">
+         v-loading="loading"
+         class="ly-container"
+    >
       <div class="dataTitle">
-          <div class="item">上次统计时间：2021-2-1</div>
-          <div class="item" >订单总额（元）：9999</div>
-          <div class="item">微信总额（元）：999</div>
-          <div class="item">支付宝总额（元）：555</div>
+        <div class="item">上次统计时间：2021-2-1</div>
+        <div class="item">订单总额（元）：9999</div>
+        <div class="item">微信总额（元）：999</div>
+        <div class="item">支付宝总额（元）：555</div>
       </div>
       <div class="ly-tool-panel">
         <table>
@@ -26,13 +27,13 @@
                 width="180px"
               />
             </td>
-           <!-- <td>会员手机号：</td>
-            <td>
-              <el-input
-                v-model="searchParam.recMobile"
-                width="180px"
-              />
-            </td> -->
+            <!-- <td>会员手机号：</td>
+             <td>
+               <el-input
+                 v-model="searchParam.recMobile"
+                 width="180px"
+               />
+             </td> -->
             <td>订单状态:</td>
             <td>
               <el-select
@@ -116,10 +117,10 @@
               label="支付方式"
               width="150px"
             >
-            <template slot-scope="scope">
-              <span v-if="scope.row.payType == 1">支付宝</span>
-              <span v-if="scope.row.payType == 2 || scope.row.payType == 3">微信</span>
-            </template>
+              <template slot-scope="scope">
+                <span v-if="scope.row.payType == 1">支付宝</span>
+                <span v-if="scope.row.payType == 2 || scope.row.payType == 3">微信</span>
+              </template>
             </el-table-column>
             <el-table-column
               prop="recUname"
@@ -150,8 +151,8 @@
               </template>
             </el-table-column>
             <!-- 订单状态;0:订单被取消;10:已提交,待发货20;已发货,待收货;30:已收货;待支付;40:退货/售后;50:交易完成/未评价;51:交易完成/已评价; -->
-            </el-table>
-           </div>
+          </el-table>
+        </div>
         <div class="ly-data-pagination">
           <el-pagination
             v-show="!showPagination"
@@ -164,8 +165,8 @@
           />
         </div>
       </div>
-      </div>
-      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -173,6 +174,13 @@ import {
   getMethod,
   postMethod
 } from '@/api/request'
+
+import {
+  getMethod as getMethodNew,
+  postMethod as postMethodNew
+} from '@/api/request'
+
+
 import {
   formatDate
 } from '@/api/tools.js'
@@ -288,7 +296,7 @@ export default {
         stockNum: ''
       },
       searchParam: {
-        payType:'',
+        payType: '',
         status: '',
         isRisk: 0,
         orderNo: '',
@@ -350,7 +358,7 @@ export default {
         expressNo: '',
         opContent: ''
       },
-        getMethod('/backend/order/findPage', this.searchParam).then(res => {
+        getMethodNew('/order/findPage', this.searchParam).then(res => {
           scope.tableData = res.data
           scope.sendOrder = false
           scope.showPagination = scope.tableData.total == 0
@@ -390,31 +398,35 @@ export default {
 .sub-title {
   font-size: 12px;
 }
-.steps-view{
-    padding: 0 20px;
-    margin-top: 20px;
-    position: relative;
-    z-index: 1;
+
+.steps-view {
+  padding: 0 20px;
+  margin-top: 20px;
+  position: relative;
+  z-index: 1;
 }
-.steps-view::before{
+
+.steps-view::before {
   content: "";
-    position: absolute;
-    width: 2px;
-    background-color: #d8d8d8;
-    height: calc(100% - 0px);
-    left: 138px;
-    z-index: 2;
+  position: absolute;
+  width: 2px;
+  background-color: #d8d8d8;
+  height: calc(100% - 0px);
+  left: 138px;
+  z-index: 2;
 }
-.dataTitle{
-      padding: 0 20px;
-      line-height: 50px;
-      height: 50px;
-      width: 100%;
-      border: 1px solid #e6e6e6;
-      display: flex;
-      .item{
-        padding-right: 80px;
-        font-size: 15px;
-      }
+
+.dataTitle {
+  padding: 0 20px;
+  line-height: 50px;
+  height: 50px;
+  width: 100%;
+  border: 1px solid #e6e6e6;
+  display: flex;
+
+  .item {
+    padding-right: 80px;
+    font-size: 15px;
+  }
 }
 </style>

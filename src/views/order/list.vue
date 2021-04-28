@@ -795,6 +795,16 @@ import {
   getMethod,
   postMethod
 } from '@/api/request'
+
+
+import {
+  getMethod as getMethodNew,
+  postMethod as postMethodNew
+} from '@/api/request-new'
+
+import * as requestMethod from '@/api/request'
+
+
 import {
   formatDate
 } from '@/api/tools.js'
@@ -1388,7 +1398,8 @@ export default {
         expressNo: '',
         opContent: ''
       },
-        getMethod('/backend/order/findPage', this.searchParam).then(res => {
+        // requestMethod
+        getMethodNew('/order/findPage', this.searchParam).then(res => {
           scope.tableData = res.data
           scope.sendOrder = false
           scope.showPagination = scope.tableData.total == 0
