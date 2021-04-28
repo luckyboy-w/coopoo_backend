@@ -553,7 +553,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        getMethod('/backend/order/auditRiskOrder', param).then(res => {
+        getMethodNew('/order/auditRiskOrder', param).then(res => {
           this.loadList()
           this.$message({
             message: '操作成功',
