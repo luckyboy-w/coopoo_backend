@@ -333,7 +333,7 @@ export default {
         exportParam.push(key + "=" + param[key]);
       }
       exportParam.push("token=" + getToken())
-      window.open(process.env.VUE_APP_BASE_API + "/backend/order/export?" + exportParam.join("&"));
+      window.open(process.env.VUE_APP_BASE_API_NEW + "/order/export?" + exportParam.join("&"));
     },
     search() {
       this.searchParam.pageSize = 10

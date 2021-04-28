@@ -440,7 +440,7 @@ export default {
       for (let key in this.searchParam) {
         exportParam.push(key + "=" + this.searchParam[key]);
       }
-      window.open(process.env.VUE_APP_BASE_API + "/backend/order/export?" + exportParam.join("&"));
+      window.open(process.env.VUE_APP_BASE_API_NEW + "/order/export?" + exportParam.join("&"));
     },
     initSupplyList() {
 
