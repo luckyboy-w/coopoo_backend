@@ -171,7 +171,7 @@ import {
 import {
   getMethod as getMethodNew,
   postMethod as postMethodNew
-} from '@/api/request'
+} from '@/api/request-new'
 
 
 import {
