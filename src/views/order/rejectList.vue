@@ -156,6 +156,9 @@
     getMethod,
     postMethod
   } from '@/api/request'
+
+
+  import {getMethod as getMethodNew, postMethod as postMethodNew} from '@/api/request-new'
   import {
     formatDate
   } from '@/api/tools.js'
@@ -241,7 +244,7 @@
           orderType: '',
           riskOrder: '',
           pageSize: 10,
-          pageNum: 0
+          pageNum: 1
         },
         tableData: {
           list: []
@@ -280,7 +283,7 @@
           orderNo: row.orderNo
         }
 
-        getMethod('/backend/order/findRejectPage', param).then(res => {
+        getMethodNew('/order/findRejectPage', param).then(res => {
           scope.showOrdDtl = true
           this.detailData = res.data.list[0]
         })
@@ -338,7 +341,7 @@
             expressNo: '',
             opContent: ''
           },
-          getMethod('/backend/order/findRejectPage', this.searchParam).then(res => {
+          getMethodNew('/order/findRejectPage', this.searchParam).then(res => {
             scope.tableData = res.data
             scope.sendOrder = false
             scope.showPagination = scope.tableData.total == 0

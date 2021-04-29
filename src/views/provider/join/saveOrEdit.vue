@@ -469,8 +469,6 @@
 		  if(this.editData.provinceRole=="6"){
         this.dataForm.personFrontImg=this.editData.personFrontImg
         this.dataForm.personSideImg=this.editData.personSideImg
-        console.log(this.uploadFrontList,'身份证正面')
-        console.log(this.uploadSideList,'身份证反面')
 		  }
 
           this.dataForm = this.editData

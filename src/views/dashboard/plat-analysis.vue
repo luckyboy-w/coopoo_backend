@@ -1,6 +1,6 @@
 <template>
   <div>
-    
+
     <el-row :span="24" style="padding-top:25px" v-if="showSiteData">
               <el-col :span="8">
                 <div style="padding: 0px 10px;">
@@ -215,6 +215,7 @@
 <script>
   import CountTo from 'vue-count-to'
   import { getMethod, postMethod } from "@/api/request";
+  import { getMethod as getMethodNew, postMethod as postMethodNew } from "@/api/request-new";
 
   export default {
     name:'',
@@ -267,7 +268,7 @@
     },
     filters: {
       fmtSiteData(row){
-        
+
         if(row.dataType.indexOf('元') != -1){
           return row.siteData
         }
@@ -301,7 +302,7 @@
         }else{
           this.initData()
         }
-        
+
     },
     methods: {
       exportPlat(){
@@ -349,7 +350,7 @@
         this.initPlatList()
       },
       showOtherDataList(row){
- 
+
         this.showSiteData = false
         this.showOtherList = true
         this.initOtherList()
@@ -379,7 +380,7 @@
       initPlatData(){
         let scope = this;
 
-        getMethod("/backend/siteData/findSiteData", {}).then(res => {
+        getMethodNew("/statistic/findSiteData", {}).then(res => {
             let resData = res.data
             scope.platData = resData
         });
@@ -392,7 +393,7 @@
             scope.otherData = resData
         });
       },
-      
+
       initOtherList(){
         let scope = this;
 
@@ -403,7 +404,7 @@
       },
       initMonthData(){
         let scope = this;
-        getMethod("/backend/siteData/findMonData", {}).then(res => {
+        getMethodNew("/statistic/findMonData", {}).then(res => {
             let resData = res.data
             scope.monthData = resData
         });

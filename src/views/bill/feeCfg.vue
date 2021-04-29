@@ -8,7 +8,7 @@
         <el-date-picker v-model="dataForm.cashDate" type="dates" :picker-options="pkOP" textarea style="width:600px"
           size="large" format="dd" placeholder="选择一个或多个日期" @change="pickCfgDate" />
       </el-form-item>
-     
+
       <el-form-item>
         <el-button type="primary" @click="saveObject">
           保存
@@ -24,6 +24,10 @@
     postMethod,
     getUploadUrl
   } from "@/api/request";
+  import {
+    getMethod as getMethodNew,
+    postMethod as postMethodNew,
+  } from "@/api/request-new";
   import {
     isInteger
   } from "@/utils/validate"
@@ -87,7 +91,7 @@
           dataType: 'cashCfg'
         }
         let scope = this
-        getMethod("/backend/lyConfig/findList", param).then(
+        getMethodNew("/config/findList", param).then(
           res => {
             console.log(res.data)
             let dataList = res.data
