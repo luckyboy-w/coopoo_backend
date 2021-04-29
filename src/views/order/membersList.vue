@@ -3,12 +3,12 @@
     <div v-if="!showOrdDtl"
       v-loading="loading"
       class="ly-container">
-      <div class="dataTitle">
+     <!-- <div class="dataTitle">
           <div class="item">上次统计时间：2021-2-1</div>
           <div class="item" >订单总额（元）：9999</div>
           <div class="item">微信总额（元）：999</div>
           <div class="item">支付宝总额（元）：555</div>
-      </div>
+      </div> -->
       <div class="ly-tool-panel">
         <table>
           <tr>
@@ -69,12 +69,12 @@
               >
                 搜索
               </el-button>
-              <el-button
+             <!-- <el-button
                 icon="el-icon-download"
                 @click="exportData()"
               >
                 导出
-              </el-button>
+              </el-button> -->
             </td>
           </tr>
         </table>

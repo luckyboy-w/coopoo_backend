@@ -22,13 +22,13 @@
                 width="180px"
               />
             </td>
-            <td>买家手机号:</td>
+            <!-- <td>买家手机号:</td>
             <td>
               <el-input
                 v-model="searchParam.orderNo"
                 width="180px"
               />
-            </td>
+            </td> -->
             <td>订单状态:</td>
             <td>
               <el-select
@@ -60,12 +60,12 @@
               >
                 搜索
               </el-button>
-              <el-button
+              <!-- <el-button
                 icon="el-icon-download"
                 @click="exportData()"
               >
                 导出
-              </el-button>
+              </el-button> -->
             </td>
           </tr>
         </table>
@@ -400,17 +400,7 @@
             收货人信息
           </el-col>
           <el-col :span="6">
-            <el-popover
-              placement="right"
-              width="400"
-              trigger="click">
-              <el-table>
-                <el-table-column width="150" property="date" label="日期"></el-table-column>
-                <el-table-column width="100" property="name" label="姓名"></el-table-column>
-                <el-table-column width="300" property="address" label="地址"></el-table-column>
-              </el-table>
-              <el-button  style="color:red" slot="reference">修改收货地址</el-button>
-            </el-popover>
+           <el-button type="text" @click="addressDialog = true">修改收货地址</el-button>
           </el-col>
         </el-row>
         <el-row
@@ -637,7 +627,53 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-
+   <!-- 修改收货地址弹框 -->
+    <el-dialog
+      title="修改收货地址"
+      :visible.sync="addressDialog"
+      width="50%"
+      destroy-on-close
+      :before-close="adressClose">
+      <div style="width: 100%;line-height: 50px;">
+        <div style="display: flex;">
+          <div style="border-right: 1px solid #9E9E9E;min-width: 100px;text-align: center;">原地址：</div>
+          <div style="text-align: center;width: 100%;">上海上海市徐汇区漕河泾中心A座803，飞飞，18311111111</div>
+        </div>
+        <div style="display: flex;border-top: 1px solid #9E9E9E;">
+          <div style="border-right: 1px solid #9E9E9E;min-width: 100px;text-align: center;padding-top: 10px;">新地址：</div>
+          <div style="padding-top: 20px;width: 100%;">
+            <el-form ref="form" :rules="addressRules" :model="addressForm" label-width="100px">
+               <el-form-item label="选择所在地" prop="selectProvince">
+                 <el-select v-model="selectProvince" size="small" value-key="provinceid" placeholder="请选择省份" @change="selectProvinceFun">
+                   <el-option v-for="(item) in city" :key="item.provinceid" :value="item" :label="item.province"/>
+                 </el-select>
+                 <el-select v-model="selectCity" size="small" value-key="cityid" placeholder="请选择城市" @change="selectCityFun">
+                   <el-option v-for="(item) in cityList" :key="item.cityid" :value="item" :label="item.city"/>
+                 </el-select>
+                 <el-select v-model="selectArea" size="small" value-key="areaid" placeholder="请选择区县" @change="selectAreaFun">
+                   <el-option v-for="(item) in areaList" :key="item.areaid" :value="item" :label="item.area"/>
+                 </el-select>
+              </el-form-item>
+              <el-form-item label="详细地址" prop="testdtladdress">
+                <el-input v-model="addressForm.testdtladdress" ></el-input>
+              </el-form-item>
+              <el-form-item label="收货人姓名" prop="testname">
+                <el-input v-model="addressForm.testname"></el-input>
+              </el-form-item>
+              <el-form-item label="手机号" prop="testphone">
+                <el-input v-model="addressForm.testphone"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <div style="text-align: right;">
+                  <el-button @click="adressClose">取 消</el-button>
+                  <el-button type="primary" @click="enterAddress">确 定</el-button>
+                </div>
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
 
 
     <br>
@@ -763,6 +799,13 @@ export default {
       }
     }
     return {
+      addressDialog:false,
+      city: [],
+      cityList: [],
+      areaList: [],
+      selectProvince: '',
+      selectCity: '',
+      selectArea: '',
       loading: true,
       supplyList: [],
       showOrdDtl: false,
@@ -780,6 +823,18 @@ export default {
       },
       //物流轨迹信息数组
       logisticsList:[],
+      //修改收货地址
+      addressForm: {
+        provinceid: '',
+        provincetext: '',
+        cityid: '',
+        citytext: '',
+        areaId: '',
+        areaText: '',
+        testdtladdress:'',
+        testname:'',
+        testphone:''
+      },
       //订单状态;0:订单被取消;10:已提交,待发货20;已付款,待发货;30:已收货;待支付;40:退货/售后;50:交易完成/未评价;51:交易完成/已评价
       ordMarks: {
         10: '待发货',
@@ -819,7 +874,6 @@ export default {
         stockNum: ''
       },
       searchParam: {
-        test:'',
         status: '',
         tenantId: '',
         isRisk: 0,
@@ -859,6 +913,12 @@ export default {
         sendAddress: [{required: true, message: '请选择发货地址', trigger: 'blur'}],
         expressNo: [{required: true, message: '请输入物流单号', trigger: 'blur'}]
       },
+      addressRules:{
+        selectProvince: [{required: true, message: '请选择所在地', trigger: 'visible-change'}],
+        testdtladdress: [{required: true, message: '请输入详细地址', trigger: 'blur'}],
+        testname: [{required: true, message: '请输入收货人姓名', trigger: 'blur'}],
+        testphone: [{required: true, message: '请输入手机号', trigger: 'blur'}]
+      },
     }
   },
   computed: {},
@@ -872,6 +932,7 @@ export default {
       this.getOrdDtl_()
     }
     this.initLoad()
+    this.loadProvinceList()
     //this.loadtypeIdList()
     this.initSupplyList()
   },
@@ -895,6 +956,66 @@ export default {
       this.lpStep = false
       this.dzStep = false
     },
+    //修改地址彈框
+    adressClose() {
+      this.addressDialog = false
+      this.addressForm={
+        provinceid: null,
+        provincetext: null,
+        cityid: null,
+        citytext: null,
+        areaId: null,
+        areaText: null,
+        testdtladdress:null,
+        testname:null,
+        testphone:null
+      }
+     },
+     //省市区
+     loadProvinceList() {
+       const scope = this
+       getMethod('/backend/areas/getAllData').then(res => {
+         scope.city = res.data
+       })
+     },
+     selectProvinceFun(event) {
+       this.selectCity = ''
+       this.selectArea = ''
+       this.addressForm.citytext = ''
+       this.addressForm.areaText = ''
+       if (event) {
+         this.cityList = event.cityList
+       } else {
+         this.cityList = []
+       }
+       this.addressForm.provinceid = event.provinceid
+       this.addressForm.provincetext = event.province
+     },
+     selectCityFun(event) {
+       this.selectArea = ''
+       this.addressForm.areaText = ''
+       if (event) {
+         this.areaList = event.areasList
+       } else {
+         this.areaList = []
+       }
+       this.addressForm.cityid = event.cityid
+       this.addressForm.citytext = event.city
+     },
+     selectAreaFun(event) {
+       this.addressForm.areaId = event.areaid
+       this.addressForm.areaText = event.area
+     },
+     // 提交新的收货地址
+     enterAddress(){
+      console.log('提交')
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          console.log('通过校验')
+        }
+      })
+     },
+
     exportData() {
       let exportParam = [];
 
@@ -1395,5 +1516,11 @@ export default {
   height: 18px;
   margin: 0 30px 0 10px;
 }
-
+.trItem{
+  display: flex;
+  line-height: 50px;
+}
+.tdTitle{
+  width: 100px;
+}
 </style>

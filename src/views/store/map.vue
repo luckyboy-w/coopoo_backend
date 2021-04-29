@@ -1,5 +1,8 @@
 <template>
   <div id="amap-container">
+    <div><input id="search-input" style="line-height: 30px;border: 1px solid #dfe4ed;border-radius: 5px;width: 100%;" type="search" placeholder="输入关键字选取地点"/>
+    <div style="display: none;" id="searchResultPanel"></div>
+    </div>
     <div id="custom-amap" />
   </div>
 </template>
@@ -18,7 +21,7 @@ export default {
   },
   data() {
     return {
-      defaultCity: '上海',
+      // defaultCity: '全国',
       // 地图对象
       map: null,
       // 定位默认地址 | 搜索后选择的地址
@@ -60,7 +63,7 @@ export default {
         zoom: 50
       })
       // 添加工具栏
-      this.map.plugin(['AMap.ToolBar', 'AMap.Scale', 'AMap.OverView'], () => {
+      this.map.plugin(['AMap.ToolBar', 'AMap.Scale', 'AMap.OverView','AMap.PlaceSearch'], () => {
         // 工具条
         const toolbar = new AMap.ToolBar()
         // 比例尺
@@ -88,7 +91,8 @@ export default {
       this.map.plugin('AMap.Geocoder', () => {
         // 异步加载插件
         this.geocoder = new AMap.Geocoder({
-          city: this.defaultCity, // 默认：“全国”
+          // city: this.defaultCity, // 默认：“全国”
+          city: "全国", // 默认：“全国”
           radius: 1000 // 范围，默认：500
         })
       })
@@ -103,6 +107,7 @@ export default {
         const lnglat = [e.lnglat.lng, e.lnglat.lat]
         this.marker.setPosition(lnglat)
         this.geocoder.getAddress(lnglat, (status, result) => {
+          console.log(result,'result')
           if (status === 'complete' && result.regeocode) {
             const res = result.regeocode
             const data = {
@@ -158,7 +163,8 @@ export default {
       // 自动提示
       this.map.plugin('AMap.Autocomplete', () => {
         const auto = new AMap.Autocomplete({
-          city: this.defaultCity,
+          // city: this.defaultCity,
+          city: "全国", // 默认：“全国”
           input: 'search-input'
         })
         // 添加检索监听
@@ -171,7 +177,8 @@ export default {
           type: '', // 兴趣点类别
           pageSize: 5, // 单页显示结果条数
           pageIndex: 1, // 页码
-          city: this.defaultCity, // 兴趣点城市
+          // city: this.defaultCity, // 兴趣点城市
+          city: "全国", // 默认：“全国”
           citylimit: false, // 是否强制限制在设置的城市内搜索
           map: this.map, // 展现结果的地图实例
           panel: 'searchResultPanel', // 结果列表将在此容器中进行展示。
@@ -200,16 +207,19 @@ export default {
     // 按钮触发检索
     handelSearch() {
       this.placeSearch.search(this.searchValue, (status, info) => {
+        console.log(info,'info')
         this.searchInfoList = info.poiList.pois
       })
     },
     // 选择自动提示数据事件回调
     onSelectAutocomplete(e) {
+      console.log(e,'78789')
       this.searchValue = e.poi.name
       this.handelSearch()
     },
     // 选择检索数据结果事件回调
     onSelectSearch(e) {
+      console.log(e,'检索结果')
       const res = e.data
       this.formattedAddress = res.cityname + res.adname + res.address
       this.name = res.name

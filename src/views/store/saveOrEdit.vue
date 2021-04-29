@@ -202,6 +202,7 @@
         })
       },
       callBackMap(mapData) {
+		  console.log(mapData,'mapData')
         this.dataForm.lng = mapData.lng
         this.dataForm.lat = mapData.lat
         this.dataForm.address = mapData.adress
