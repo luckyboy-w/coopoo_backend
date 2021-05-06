@@ -1391,7 +1391,7 @@ export default {
         params.shipperCode = that.ordDtl.expressId
       }
       console.log(params)
-      getMethod('/backend/order/getLogisticsInfo', params)
+      getMethodNew('/order/getLogisticsInfo', params)
         .then(res => {
           console.log(res)
           if (res.code == 200) {
