@@ -399,7 +399,7 @@
           <el-col :span="2">
             收货人信息
           </el-col>
-          <el-col :span="6">
+          <el-col v-if="ordDtl.status==10" :span="6">
            <el-button type="text" @click="addressDialog = true">修改收货地址</el-button>
           </el-col>
         </el-row>
@@ -637,13 +637,13 @@
       <div style="width: 100%;line-height: 50px;">
         <div style="display: flex;">
           <div style="border-right: 1px solid #9E9E9E;min-width: 100px;text-align: center;">原地址：</div>
-          <div style="text-align: center;width: 100%;">上海上海市徐汇区漕河泾中心A座803，飞飞，18311111111</div>
+          <div style="text-align: center;width: 100%;">{{ordDtl.recArea}}&nbsp;,&nbsp;&nbsp;{{ordDtl.recUname}}&nbsp;,&nbsp;&nbsp;{{ordDtl.recPhone}}</div>
         </div>
         <div style="display: flex;border-top: 1px solid #9E9E9E;">
           <div style="border-right: 1px solid #9E9E9E;min-width: 100px;text-align: center;padding-top: 10px;">新地址：</div>
           <div style="padding-top: 20px;width: 100%;">
             <el-form ref="form" :rules="addressRules" :model="addressForm" label-width="100px">
-               <el-form-item label="选择所在地" prop="selectProvince">
+               <el-form-item label="选择所在地" prop="areaText">
                  <el-select v-model="selectProvince" size="small" value-key="provinceid" placeholder="请选择省份" @change="selectProvinceFun">
                    <el-option v-for="(item) in city" :key="item.provinceid" :value="item" :label="item.province"/>
                  </el-select>
@@ -654,14 +654,14 @@
                    <el-option v-for="(item) in areaList" :key="item.areaid" :value="item" :label="item.area"/>
                  </el-select>
               </el-form-item>
-              <el-form-item label="详细地址" prop="testdtladdress">
-                <el-input v-model="addressForm.testdtladdress" ></el-input>
+              <el-form-item label="详细地址" prop="changeAddress">
+                <el-input v-model="addressForm.changeAddress" ></el-input>
               </el-form-item>
-              <el-form-item label="收货人姓名" prop="testname">
-                <el-input v-model="addressForm.testname"></el-input>
+              <el-form-item label="收货人姓名" prop="changeName">
+                <el-input v-model="addressForm.changeName"></el-input>
               </el-form-item>
-              <el-form-item label="手机号" prop="testphone">
-                <el-input v-model="addressForm.testphone"></el-input>
+              <el-form-item label="手机号" prop="changePhone">
+                <el-input v-model="addressForm.changePhone"></el-input>
               </el-form-item>
               <el-form-item>
                 <div style="text-align: right;">
@@ -836,9 +836,9 @@ export default {
         citytext: '',
         areaId: '',
         areaText: '',
-        testdtladdress:'',
-        testname:'',
-        testphone:''
+       changeAddress: '',
+       changeName: '',
+       changePhone: ''
       },
       //订单状态;0:订单被取消;10:已提交,待发货20;已付款,待发货;30:已收货;待支付;40:退货/售后;50:交易完成/未评价;51:交易完成/已评价
       ordMarks: {
@@ -920,10 +920,10 @@ export default {
         expressNo: [{required: true, message: '请输入物流单号', trigger: 'blur'}]
       },
       addressRules:{
-        selectProvince: [{required: true, message: '请选择所在地', trigger: 'visible-change'}],
-        testdtladdress: [{required: true, message: '请输入详细地址', trigger: 'blur'}],
-        testname: [{required: true, message: '请输入收货人姓名', trigger: 'blur'}],
-        testphone: [{required: true, message: '请输入手机号', trigger: 'blur'}]
+        areaText: [{required: true, message: '请选择所在地', trigger: 'change'}],
+        changeAddress: [{required: true, message: '请输入详细地址', trigger: 'blur'}],
+        changeName: [{required: true, message: '请输入收货人姓名', trigger: 'blur'}],
+        changePhone: [{required: true, message: '请输入手机号', trigger: 'blur'}]
       },
     }
   },
@@ -972,10 +972,13 @@ export default {
         citytext: null,
         areaId: null,
         areaText: null,
-        testdtladdress:null,
-        testname:null,
-        testphone:null
+        changeAddress:null,
+        changeName:null,
+        changePhone:null
       }
+      this.selectProvince = ''
+      this.selectCity = ''
+      this.selectArea = ''
      },
      //省市区
      loadProvinceList() {
@@ -1013,13 +1016,37 @@ export default {
        this.addressForm.areaText = event.area
      },
      // 提交新的收货地址
-     enterAddress(){
-      console.log('提交')
-      this.$refs['form'].validate((valid) => {
-        if (valid) {
-          console.log('通过校验')
-        }
-      })
+     enterAddress() {
+       this.$refs['form'].validate((valid) => {
+         if (valid) {
+           let recArea=this.addressForm.provincetext+' '+this.addressForm.citytext+' '+this.addressForm.areaText
+           let param = {
+             orderId:this.ordDtl.orderId,
+             recAddress:this.addressForm.changeAddress,
+             recArea:recArea,
+             recPhone:this.addressForm.changePhone,
+             recUname:this.addressForm.changeName,
+           }
+           postMethodNew('/order/changeAddress', param).then(res => {
+             if(res.code==200){
+               this.$message({
+                 message: '修改成功',
+                 type: 'success'
+               })
+               this.adressClose()
+               let obj={
+                 orderId:this.ordDtl.orderId
+               }
+               this.getOrdDtl(obj)
+             }else{
+               this.$message({
+                 message: res.message,
+                 type: 'error'
+               })
+             }
+           })
+         }
+       })
      },
 
     exportData() {
