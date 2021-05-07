@@ -804,6 +804,9 @@ export default {
       }
     }
     return {
+      saveOrderId:'',
+      menuId:'',
+      operationModuleName:'',
       addressDialog:false,
       city: [],
       cityList: [],
@@ -929,6 +932,7 @@ export default {
   },
   computed: {},
   mounted() {
+    this.getRoute()
     if (this.$route.query.dt != undefined) {
       this.searchParam.dataType = this.$route.query.dt
       this.searchParam.isOverDuePayment = "1"
@@ -1033,6 +1037,11 @@ export default {
                  message: '修改成功',
                  type: 'success'
                })
+               let datas={
+                 operationObject : this.ordDtl.orderId,
+                 operationContent : '发货'
+               }
+               this.saveOperation(datas)
                this.adressClose()
                let obj={
                  orderId:this.ordDtl.orderId
@@ -1101,6 +1110,35 @@ export default {
           message: '定价成功，请等待用户支付',
           type: 'success'
         })
+      })
+    },
+    //获取当前页面路由
+    getRoute(){
+      let menuList = this.$store.getters.permission_routes
+      let menuId=''
+      let operationModuleName=''
+      for (let j = 0; j < menuList.length; j++) {
+        if(menuList[j].children){
+        for (let i = 0; i < menuList[j].children.length; i++) {
+          if (menuList[j].children[i].path==this.$route.path) {
+            menuId=menuList[j].children[i].id
+            operationModuleName=menuList[j].name+'-'+menuList[j].children[i].name
+          }
+        }
+        }
+      }
+      this.menuId = menuId
+      this.operationModuleName = operationModuleName
+    },
+    //保存操作记录
+    saveOperation(datas){
+      let params = {
+        menuId : this.menuId,
+        operationModuleName : this.operationModuleName,
+        operationObject : datas.operationObject,
+        operationContent : datas.operationContent
+      }
+      postMethod('/backend/operation/saveOperationRecord',params).then(res => {
       })
     },
     getOrdDtl_() {
@@ -1258,6 +1296,11 @@ export default {
               message: '发货成功',
               type: 'success'
             })
+            let datas={
+              operationObject : this.saveOrderId,
+              operationContent : '发货'
+            }
+            this.saveOperation(datas)
             this.sendOrder = false
             scope.loadList()
             this.closeSendOrderDialog()
@@ -1273,6 +1316,7 @@ export default {
 
       this.sendOrder = true
       this.sendOrderFrm.orderNo = rowObj.orderNo
+      this.saveOrderId=rowObj.orderId
       let param = {
         orderId: rowObj.orderId
       }

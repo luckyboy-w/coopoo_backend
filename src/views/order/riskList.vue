@@ -347,6 +347,8 @@ export default {
   },
   data() {
     return {
+      menuId:'',
+      operationModuleName:'',
       loading: true,
       supplyList: [],
       showOrdDtl: false,
@@ -419,6 +421,7 @@ export default {
   },
   computed: {},
   mounted() {
+    this.getRoute()
     if (this.$route.query.dt != undefined) {
       this.searchParam.dataType = this.$route.query.dt
     }
@@ -481,6 +484,35 @@ export default {
           message: '定价成功，请等待用户支付',
           type: 'success'
         })
+      })
+    },
+    //获取当前页面路由
+    getRoute(){
+      let menuList = this.$store.getters.permission_routes
+      let menuId=''
+      let operationModuleName=''
+      for (let j = 0; j < menuList.length; j++) {
+        if(menuList[j].children){
+        for (let i = 0; i < menuList[j].children.length; i++) {
+          if (menuList[j].children[i].path==this.$route.path) {
+            menuId=menuList[j].children[i].id
+            operationModuleName=menuList[j].name+'-'+menuList[j].children[i].name
+          }
+        }
+        }
+      }
+      this.menuId = menuId
+      this.operationModuleName = operationModuleName
+    },
+    //保存操作记录
+    saveOperation(datas){
+      let params = {
+        menuId : this.menuId,
+        operationModuleName : this.operationModuleName,
+        operationObject : datas.operationObject,
+        operationContent : datas.operationContent
+      }
+      postMethod('/backend/operation/saveOperationRecord',params).then(res => {
       })
     },
     getOrdDtl(row) {
@@ -559,6 +591,11 @@ export default {
             message: '操作成功',
             type: 'success'
           })
+          let datas={
+            operationObject :row.orderId,
+            operationContent : '提交至供应商'
+          }
+          this.saveOperation(datas)
         });
       })
     },

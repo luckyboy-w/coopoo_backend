@@ -983,12 +983,9 @@
       //获取当前页面路由
       getRoute(){
         let menuList = this.$store.getters.permission_routes
-        console.log(menuList,"菜单列表")
-        console.log(this.$route,"当前的菜单")
         let menuId=''
         let operationModuleName=''
         for (let j = 0; j < menuList.length; j++) {
-          console.log(menuList[j])
           if(menuList[j].children){
           for (let i = 0; i < menuList[j].children.length; i++) {
             if (menuList[j].children[i].path==this.$route.path) {
@@ -1010,7 +1007,6 @@
           operationContent : datas.operationContent
         }
         postMethod('/backend/operation/saveOperationRecord',params).then(res => {
-          console.log(res)
         })
       },
       //修改SKU彈框
@@ -1219,6 +1215,11 @@
                   message: '修改成功',
                   type: 'success'
                 })
+                let datas={
+                  operationObject : this.ordDtl.orderId,
+                  operationContent : '修改收货地址'
+                }
+                this.saveOperation(datas)
                 this.adressClose()
                 let obj={
                   orderId:this.ordDtl.orderId
