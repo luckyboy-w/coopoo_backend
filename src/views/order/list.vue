@@ -1063,7 +1063,7 @@
                 type: 'success'
               })
               let datas={
-                operationObject : this.ordDtl.orderId,
+                operationObject : this.ordDtl.orderNo,
                 operationContent : '修改商品规格'
               }
               this.saveOperation(datas)
@@ -1216,7 +1216,7 @@
                   type: 'success'
                 })
                 let datas={
-                  operationObject : this.ordDtl.orderId,
+                  operationObject : this.ordDtl.orderNo,
                   operationContent : '修改收货地址'
                 }
                 this.saveOperation(datas)

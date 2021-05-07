@@ -31,9 +31,9 @@
             border>
             <el-table-column prop="userName" label="姓名" width="220px" />
             <el-table-column prop="userId" label="账号" width="150px" />
-            <el-table-column prop="operationModuleName" label="模块" width="150px" />
-            <el-table-column prop="operationObject" label="对象" width="150px" />
-            <el-table-column prop="operationContent" label="操作内容" width="120px" />
+            <el-table-column prop="operationModuleName" label="模块" width="200px" />
+            <el-table-column prop="operationObject" label="对象" width="250px" />
+            <el-table-column prop="operationContent" label="操作内容" width="150px" />
             <el-table-column prop="createTime" label="修改时间" width="150px">
               <template slot-scope="scope">
                 {{ scope.row.createTime | _formatDate }}

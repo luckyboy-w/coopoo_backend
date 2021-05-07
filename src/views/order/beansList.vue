@@ -804,7 +804,6 @@ export default {
       }
     }
     return {
-      saveOrderId:'',
       menuId:'',
       operationModuleName:'',
       addressDialog:false,
@@ -1038,7 +1037,7 @@ export default {
                  type: 'success'
                })
                let datas={
-                 operationObject : this.ordDtl.orderId,
+                 operationObject : this.ordDtl.orderNo,
                  operationContent : '发货'
                }
                this.saveOperation(datas)
@@ -1297,7 +1296,7 @@ export default {
               type: 'success'
             })
             let datas={
-              operationObject : this.saveOrderId,
+              operationObject : this.sendOrderFrm.orderNo,
               operationContent : '发货'
             }
             this.saveOperation(datas)
@@ -1316,7 +1315,6 @@ export default {
 
       this.sendOrder = true
       this.sendOrderFrm.orderNo = rowObj.orderNo
-      this.saveOrderId=rowObj.orderId
       let param = {
         orderId: rowObj.orderId
       }

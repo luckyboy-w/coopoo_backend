@@ -592,7 +592,7 @@ export default {
             type: 'success'
           })
           let datas={
-            operationObject :row.orderId,
+            operationObject :row.orderNo,
             operationContent : '提交至供应商'
           }
           this.saveOperation(datas)
