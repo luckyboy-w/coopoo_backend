@@ -34,6 +34,7 @@ requestBodyUrl.push("/backend/goodSalesDesc")
 requestBodyUrl.push("/backend/goodActivity/marketingGoods")
 requestBodyUrl.push("/backend/goodActivity/updateMarketingGoodsList")
 requestBodyUrl.push("/backend/siteData/batchRebate")
+requestBodyUrl.push("/backend/operation/saveOperationRecord")
 
 
 // create an axios instance

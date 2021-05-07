@@ -743,7 +743,7 @@
         selectArr: [], //存放被选中的值
         shopItemInfo: {}, //存放要和选中的值进行匹配的数据
         subIndex: [], //是否选中 因为不确定是多规格还是单规格，所以这里定义数组来判断
-        price: '', 
+        price: '',
         menuId:'',
         operationModuleName:'',
         goodDtlList: {},
@@ -1000,7 +1000,6 @@
         }
         this.menuId = menuId
         this.operationModuleName = operationModuleName
-        console.log('7777',menuId,operationModuleName)
       },
       //保存操作记录
       saveOperation(datas){
@@ -1010,7 +1009,7 @@
           operationObject : datas.operationObject,
           operationContent : datas.operationContent
         }
-        getMethod('/backend/operation/saveOperationRecord',params).then(res => {
+        postMethod('/backend/operation/saveOperationRecord',params).then(res => {
           console.log(res)
         })
       },
@@ -1606,9 +1605,8 @@
         if (that.ordDtl.expressId && that.ordDtl.expressId != '') {
           params.shipperCode = that.ordDtl.expressId
         }
-        getMethod('/backend/order/getLogisticsInfo', params)
+        getMethodNew('/order/getLogisticsInfo', params)
           .then(res => {
-            console.log(res)
             if (res.code == 200) {
               let result = res.data
               let arr = []

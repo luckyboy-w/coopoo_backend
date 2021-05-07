@@ -1417,10 +1417,8 @@ export default {
       if (that.ordDtl.expressId && that.ordDtl.expressId != '') {
         params.shipperCode = that.ordDtl.expressId
       }
-      console.log(params)
-      getMethod('/backend/order/getLogisticsInfo', params)
+      getMethodNew('/order/getLogisticsInfo', params)
         .then(res => {
-          console.log(res)
           if (res.code == 200) {
             let result = res.data
             let arr = []
