@@ -155,7 +155,7 @@
                   发起定价收款
                 </el-link>
                 <el-link v-if="scope.row.status == 10||scope.row.status == 20||scope.row.status == 30||scope.row.status == 60"
-                  type="primary" @click="test(scope.row)">
+                  type="primary" @click="modifyState(scope.row)">
                   修改状态
                 </el-link>
                 <el-link v-if="scope.row.orderType != 3" type="primary" @click="getOrdDtl(scope.row)">
@@ -594,9 +594,12 @@
               label="交易完成" value="50"></el-option>
           </el-select>
         </div>
+        <div v-if="(currentOrderType==1&&states==50&&currentOrderState==30)||(currentOrderType==4&&states==10&&currentOrderState==30)">
+          <el-input v-model="serialNumber" placeholder="请输入支付流水号"></el-input>
+        </div>
         <div style="text-align: right;">
           <el-button @click="stateClose">取 消</el-button>
-          <el-button type="primary" @click="enterAddress">确 定</el-button>
+          <el-button type="primary" @click="enterState">确 定</el-button>
         </div>
       </div>
     </el-dialog>
@@ -749,7 +752,10 @@
         goodDtlList: {},
         currentOrderType: '',
         currentOrderState: '',
+        currentOrderId:'',
+        currentOrderNo:'',
         states: '',
+        serialNumber:'',
         stateShow: false,
         skuDialog: false,
         addressDialog: false,
@@ -1131,17 +1137,141 @@
             return true; //如果数组里有为空的值，那直接返回true
           }
         }
-        return true; //匹配选中的数据的库存，若不为空返回true反之返回false
+        return true;
       },
 
       //修改订单状态
-      test(row) {
-        console.log(row, '修改订单状态')
+      modifyState(row) {
         this.currentOrderType = row.orderType,
-          this.currentOrderState = row.status,
-          this.stateShow = true
+        this.currentOrderState = row.status,
+        this.currentOrderId = row.orderId
+        this.currentOrderNo = row.orderNo
+        this.stateShow = true
+      },
+      enterState(){
+        // console.log(this.currentOrderType,this.currentOrderState,this.states,this.currentOrderId,this.serialNumber)//选中的订单类型，选中的订单状态，要修改成的状态，订单id，支付流水号
+        //0取消订单 10待发货 30待支付 50交易完成
+        if (this.states=='') {
+          this.$message({
+            message: '请选择要修改的状态',
+            type: 'warning'
+          })
+          return
+        }
+        let beforeText=''
+        let afterText=''
+        switch (this.currentOrderState) {
+          case '10':
+            beforeText = '待发货';
+            break;
+          case '20':
+            beforeText = '待收货';
+            break;
+          case '30':
+            beforeText = '待支付';
+            break;
+          case '60':
+            beforeText = '待确认';
+            break;
+        }
+        switch (this.states) {
+          case '0':
+            afterText = '取消订单';
+            break;
+          case '10':
+            afterText = '待发货';
+            break;
+          case '30':
+            afterText = '待支付';
+            break;
+          case '50':
+            afterText = '交易完成';
+            break;
+        }
+        let datas={
+          operationObject : this.currentOrderNo,
+          operationContent : beforeText+'改成'+afterText
+        }
+        if(this.states==0){
+          postMethodNew(`/order/cancelOrder?orderId=${this.currentOrderId}`).then(res => {
+            if(res.code==200){
+              this.$message({
+                message: '修改成功',
+                type: 'success'
+              })
+              this.stateClose()
+              this.saveOperation(datas)
+              this.loadList()
+            }else{
+              this.$message({
+                message: res.message,
+                type: 'error'
+              })
+              return false;
+            }
+          })
+        }
+        if(this.states==10){
+        postMethodNew(`/order/rollbackDelivered?orderId=${this.currentOrderId}&thirdTradeNo=${this.serialNumber}`).then(res => {
+          if(res.code==200){
+            this.$message({
+              message: '修改成功',
+              type: 'success'
+            })
+            this.stateClose()
+            this.saveOperation(datas)
+            this.loadList()
+          }else{
+            this.$message({
+              message: res.message,
+              type: 'error'
+            })
+            return false;
+          }
+        })
+        }
+        if(this.states==30){
+        postMethodNew(`/order/changeToWaitingPay?orderId=${this.currentOrderId}`).then(res => {
+          if(res.code==200){
+            this.$message({
+              message: '修改成功',
+              type: 'success'
+            })
+            this.stateClose()
+            this.saveOperation(datas)
+            this.loadList()
+          }else{
+            this.$message({
+              message: res.message,
+              type: 'error'
+            })
+            return false;
+          }
+        })
+        }
+        if(this.states==50){
+        postMethodNew(`/order/changeToComplete?orderId=${this.currentOrderId}&thirdTradeNo=${this.serialNumber}`).then(res => {
+          if(res.code==200){
+            this.$message({
+              message: '修改成功',
+              type: 'success'
+            })
+            this.stateClose()
+            this.saveOperation(datas)
+            this.loadList()
+          }else{
+            this.$message({
+              message: res.message,
+              type: 'error'
+            })
+            return false;
+          }
+        })
+        }
       },
       stateClose() {
+        this.states=''
+        this.serialNumber=''
         this.stateShow = false
       },
       //修改地址彈框
@@ -1201,11 +1331,12 @@
       enterAddress() {
         this.$refs['form'].validate((valid) => {
           if (valid) {
-            let recArea=this.addressForm.provincetext+' '+this.addressForm.citytext+' '+this.addressForm.areaText
             let param = {
               orderId:this.ordDtl.orderId,
               recAddress:this.addressForm.changeAddress,
-              recArea:recArea,
+              recProvinceName:this.addressForm.provincetext,
+              recCityName:this.addressForm.citytext,
+              recAreaName:this.addressForm.areaText,
               recPhone:this.addressForm.changePhone,
               recUname:this.addressForm.changeName,
             }
@@ -1356,7 +1487,6 @@
         postMethodNew('/order/getOrdDtl', param).then(res => {
           scope.showOrdDtl = true
           scope.ordDtl = res.data
-          console.log(scope.ordDtl, 'scope.ordDtl')
           scope.ptStep = false
           scope.dzStep = false
           scope.lpStep = false

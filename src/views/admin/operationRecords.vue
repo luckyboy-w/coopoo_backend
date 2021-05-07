@@ -30,7 +30,7 @@
           <el-table ref="mainTable" :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="orderId"
             border>
             <el-table-column prop="userName" label="姓名" width="220px" />
-            <el-table-column prop="userId" label="账号" width="150px" />
+            <el-table-column prop="loginName" label="账号" width="150px" />
             <el-table-column prop="operationModuleName" label="模块" width="200px" />
             <el-table-column prop="operationObject" label="对象" width="250px" />
             <el-table-column prop="operationContent" label="操作内容" width="150px" />

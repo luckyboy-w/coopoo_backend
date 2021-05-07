@@ -1022,11 +1022,12 @@ export default {
      enterAddress() {
        this.$refs['form'].validate((valid) => {
          if (valid) {
-           let recArea=this.addressForm.provincetext+' '+this.addressForm.citytext+' '+this.addressForm.areaText
            let param = {
              orderId:this.ordDtl.orderId,
              recAddress:this.addressForm.changeAddress,
-             recArea:recArea,
+             recProvinceName:this.addressForm.provincetext,
+             recCityName:this.addressForm.citytext,
+             recAreaName:this.addressForm.areaText,
              recPhone:this.addressForm.changePhone,
              recUname:this.addressForm.changeName,
            }
