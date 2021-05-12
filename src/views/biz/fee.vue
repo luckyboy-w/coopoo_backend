@@ -912,32 +912,40 @@ export default {
         that.$message('您未选择结算单号 ')
         return;
       }
-      for (let i = 0; i < selectList.length; i++) {
-      	idArr.push(selectList[i].cashNo);
-      }
-      const loading = that.$loading({
-            lock: true,
-            text: '正在批量结算中',
-            spinner: 'el-icon-loading',
-           });
-      postMethod("/backend/siteData/batchRebate", idArr).then(res => {
-       if (res.code==200) {
-          loading.close();
-          that.$message({
-               message: '结算成功',
-               type: 'success'
-            });
-          that.loadFeeProcess()
-          that.loadPlatFee()
-       }else{
-         that.$message.error('结算出错');
-         loading.close();
-       }
-      })
-      .catch(err=>{
-        that.$message.error('结算出错');
-        loading.close()
-      })
+      
+      this.$confirm("是否通过提现请求?", "提示", {
+        confirmButtonText: "通过",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        for (let i = 0; i < selectList.length; i++) {
+        	idArr.push(selectList[i].cashNo);
+        }
+        const loading = that.$loading({
+              lock: true,
+              text: '正在批量结算中',
+              spinner: 'el-icon-loading',
+             });
+        postMethod("/backend/siteData/batchRebate", idArr).then(res => {
+         if (res.code==200) {
+            loading.close();
+            that.$message({
+                 message: '结算成功',
+                 type: 'success'
+              });
+            that.loadFeeProcess()
+            that.loadPlatFee()
+         }else{
+           that.$message.error('结算出错');
+           loading.close();
+         }
+        })
+        .catch(err=>{
+          that.$message.error('结算出错');
+          loading.close()
+        })
+      });
+      
     },
     backToAllFee() {
       this.allFeeDataShow = true
