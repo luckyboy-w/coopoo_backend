@@ -912,7 +912,7 @@ export default {
         that.$message('您未选择结算单号 ')
         return;
       }
-      
+
       this.$confirm("是否通过提现请求?", "提示", {
         confirmButtonText: "通过",
         cancelButtonText: "取消",
@@ -945,7 +945,7 @@ export default {
           loading.close()
         })
       });
-      
+
     },
     backToAllFee() {
       this.allFeeDataShow = true
@@ -1076,7 +1076,10 @@ export default {
         getMethod("/backend/siteData/rebate", param).then(res => {
           scope.loadFeeProcess()
           scope.loadPlatFee()
-          this.$message.alert("提现成功");
+          this.$message({
+               message: '结算成功',
+               type: 'success'
+            });
         });
       });
 
