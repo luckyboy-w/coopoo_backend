@@ -164,7 +164,7 @@
               let providerObject = {
                 id: pobj.id,
                 value: pobj.mobileNo,
-                label: '服务商名称:' + pobj.provinceName + ";手机号码:" + pobj.mobileNo
+                label: pobj.provinceName
               }
               scope.serviceList.push(providerObject);
             }

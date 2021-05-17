@@ -177,7 +177,7 @@ export default {
 
     upShelve(goodsId) {
       this.loading = true
-      putMethod('/exchange_goods//up_shelves', {'id': goodsId}).then(res => {
+      putMethod(`/exchange_goods/up_shelves?id=${goodsId}`).then(res => {
         this.loading = false
         if (res.code != 200) {
           this.$message({
@@ -196,7 +196,7 @@ export default {
 
     downShelve(goodsId) {
       this.loading = true
-      putMethod('/exchange_goods/down_shelves', {'id': goodsId}).then(res => {
+        putMethod(`/exchange_goods/down_shelves?id=${goodsId}`).then(res => {
         this.loading = false
         if (res.code != 200) {
           this.$message({

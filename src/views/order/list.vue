@@ -321,7 +321,7 @@
             收货人：{{ ordDtl.recUname }}
           </el-col>
           <el-col :span="6">
-            收货地址：{{ ordDtl.recArea }}
+            收货地址：{{ ordDtl.recArea }}&nbsp;&nbsp;{{ordDtl.recAddress}}
           </el-col>
           <el-col :span="6">
             收货人电话：{{ ordDtl.recPhone }}
@@ -498,7 +498,7 @@
       <div style="width: 100%;line-height: 50px;">
         <div style="display: flex;">
           <div style="border-right: 1px solid #9E9E9E;min-width: 100px;text-align: center;">原地址：</div>
-          <div style="text-align: center;width: 100%;">{{ordDtl.recArea}}&nbsp;,&nbsp;&nbsp;{{ordDtl.recUname}}&nbsp;,&nbsp;&nbsp;{{ordDtl.recPhone}}</div>
+          <div style="text-align: center;width: 100%;">{{ordDtl.recArea}}&nbsp;&nbsp;{{ordDtl.recAddress}}&nbsp;,&nbsp;&nbsp;{{ordDtl.recUname}}&nbsp;,&nbsp;&nbsp;{{ordDtl.recPhone}}</div>
         </div>
         <div style="display: flex;border-top: 1px solid #9E9E9E;">
           <div style="border-right: 1px solid #9E9E9E;min-width: 100px;text-align: center;padding-top: 10px;">新地址：</div>
