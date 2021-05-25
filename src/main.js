@@ -28,7 +28,7 @@ Vue.use(VueAMap)
 
 // 初始化vue-amap
 VueAMap.initAMapApiLoader({
-  key: '3e52ac2f3dfbbe4f0ec36036a28618ec',
+  key: '12da9101c1e40b646f0fffed0769f1f0',
   plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType'],
   v: '1.4.4'
 });
