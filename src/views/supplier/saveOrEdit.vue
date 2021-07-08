@@ -7,36 +7,33 @@
       <el-form-item label="供应商名称" prop="supplierName">
         <el-input v-model="dataForm.supplierName"></el-input>
       </el-form-item>
-      <el-form-item label="登陆账号" prop="loginNo">
-        <el-input v-model="dataForm.loginNo" :disabled="disabledLoginNo"></el-input>
+      <el-form-item label="登陆账号" prop="loginAccount">
+        <el-input v-model="dataForm.loginAccount" :disabled="disabledLoginNo"></el-input>
       </el-form-item>
-      <el-form-item label="联系人" prop="linkPerson">
-        <el-input v-model="dataForm.linkPerson"></el-input>
+      <el-form-item label="联系人" prop="userName">
+        <el-input v-model="dataForm.userName"></el-input>
+      </el-form-item>
+      <el-form-item label="手机号" prop="phoneNo">
+        <el-input v-model="dataForm.phoneNo"></el-input>
       </el-form-item>
       <el-form-item label="详细地址" prop="address">
         <el-input v-model="dataForm.address"></el-input>
       </el-form-item>
-      <el-form-item label="手机号" prop="mobileNo">
-        <el-input v-model="dataForm.mobileNo"></el-input>
-      </el-form-item>
-      <el-form-item label="联系电话" prop="phoneNo">
-        <el-input v-model="dataForm.phoneNo"></el-input>
-      </el-form-item>
       <el-form-item label="税务代码" prop="taxNo">
         <el-input v-model="dataForm.taxNo"></el-input>
       </el-form-item>
-      <el-form-item label="邮箱" prop="email">
+      <el-form-item label="邮箱地址" prop="email">
         <el-input v-model="dataForm.email"></el-input>
       </el-form-item>
       <el-form-item label="环信配置" style="width:1200px">
         <el-row :span="24" style="">
           <el-col :span="2" style="padding-left:5px">客服ID:</el-col>
           <el-col :span="4">
-            <el-input v-model="dataForm.huanxNo"></el-input>
+            <el-input v-model="dataForm.hxNo"></el-input>
           </el-col>
-          <el-col :span="2" style="padding-left:5px">技能组:</el-col>
+          <el-col :span="2" style="padding-left:5px">客服昵称:</el-col>
           <el-col :span="4">
-            <el-input v-model="dataForm.skillGroup"></el-input>
+            <el-input v-model="dataForm.hxSkillGroup"></el-input>
           </el-col>
           <el-col :span="3" style="padding-left:5px">H5客服配置ID:</el-col>
           <el-col :span="4">
@@ -46,51 +43,29 @@
         <el-row :span="24" style="padding-top:15px">
           <el-col :span="2" style="padding-left:5px">登录账号:</el-col>
           <el-col :span="4">
-            <el-input v-model="dataForm.huanxLoginNo"></el-input>
+            <el-input v-model="dataForm.hxLoginNo"></el-input>
           </el-col>
           <el-col :span="2" style="padding-left:5px">登录密码:</el-col>
           <el-col :span="4">
-            <el-input v-model="dataForm.huanxLoginPwd"></el-input>
+            <el-input v-model="dataForm.hxLoginPwd"></el-input>
           </el-col>
           <el-col :span="12"></el-col>
         </el-row>
       </el-form-item>
       <!-- <el-form-item label="环信技能组">
-        <el-input v-model="dataForm.skillGroup"></el-input>
+        <el-input v-model="dataForm.hxSkillGroup"></el-input>
       </el-form-item>
       <el-form-item label="环信技能组">
         <el-input v-model="dataForm.hxConfigId"></el-input>
       </el-form-item>
       <el-form-item label="环信登录账号">
-        <el-input v-model="dataForm.huanxLoginNo"></el-input>
+        <el-input v-model="dataForm.hxLoginNo"></el-input>
       </el-form-item>
       <el-form-item label="环信登录密码">
-        <el-input v-model="dataForm.huanxLoginPwd"></el-input>
+        <el-input v-model="dataForm.hxLoginPwd"></el-input>
       </el-form-item> -->
-      <el-form-item label="主营分类" prop="goodType">
-        <el-select v-model="dataForm.goodType">
-          <el-option
-            v-for="item in goodTypeList"
-            :key="item.id"
-            :value-key="item.typeName"
-            :label="item.typeName"
-            :value="item.id"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="主营品牌" prop="goodBrand">
-        <el-select v-model="dataForm.goodBrand">
-          <el-option
-            v-for="item in goodBrandList"
-            :key="item.id"
-            :value-key="item.brandName"
-            :label="item.brandName"
-            :value="item.id"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="省份" prop="province">
-        <el-select v-model="dataForm.province">
+      <el-form-item label="省份" prop="provinceId">
+        <el-select v-model="dataForm.provinceId">
           <el-option
             v-for="item in provinceList"
             :key="item.provinceid"
@@ -100,62 +75,15 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="营业执照照片" prop="licenseImg">
-        <el-input v-show="false" v-model="dataForm.licenseImg"></el-input>
-        <el-upload
-          :action="uploadLicenseImgUrl"
-          list-type="picture-card"
-          :on-preview="handleLicenseImgPreview"
-          :before-upload="beforeLicenseImgUpload"
-          :on-success="handleLicenseImgSuccess"
-          :class="{hide:hideLicenseImgUpload}"
-          :file-list="uploadLicenseImgList"
-          :on-remove="handleLicenseImgRemove"
-        >
-          <i class="el-icon-plus"></i>
-        </el-upload>
-        <el-dialog>
-          <img width="100%" :src="imageUrl" alt/>
-        </el-dialog>
+      <el-form-item label="银行名称" prop="bankName">
+        <el-input v-model="dataForm.bankName"></el-input>
       </el-form-item>
-      <el-form-item label="法人身份证正面" prop="personNoFrontImg">
-        <el-input v-show="false" v-model="dataForm.personNoFrontImg"></el-input>
-        <el-upload
-          :action="uploadPersonNoFrontImgUrl"
-          list-type="picture-card"
-          :on-preview="handlePersonNoFrontImgPreview"
-          :before-upload="beforePersonNoFrontImgUpload"
-          :on-success="handlePersonNoFrontImgSuccess"
-          :class="{hide:hidePersonNoFrontImgUpload}"
-          :file-list="uploadPersonNoFrontImgList"
-          :on-remove="handlePersonNoFrontImgRemove"
-        >
-          <i class="el-icon-plus"></i>
-        </el-upload>
-        <el-dialog>
-          <img width="100%" :src="imageUrl" alt/>
-        </el-dialog>
+      <el-form-item label="银行卡号" prop="bankCard">
+        <el-input v-model="dataForm.bankCard"></el-input>
       </el-form-item>
-      <el-form-item label="法人身份证背面" prop="personNoSideImg">
-        <el-input v-show="false" v-model="dataForm.personNoSideImg"></el-input>
-        <el-upload
-          :action="uploadpersonNoSideImgUrl"
-          list-type="picture-card"
-          :on-preview="handlepersonNoSideImgPreview"
-          :before-upload="beforepersonNoSideImgUpload"
-          :on-success="handlepersonNoSideImgSuccess"
-          :class="{hide:hidepersonNoSideImgUpload}"
-          :file-list="uploadpersonNoSideImgList"
-          :on-remove="handlepersonNoSideImgRemove"
-        >
-          <i class="el-icon-plus"></i>
-        </el-upload>
-        <el-dialog>
-          <img width="100%" :src="imageUrl" alt/>
-        </el-dialog>
-      </el-form-item>
-      <el-form-item label="协议文件" prop="protocalFile">
-        <el-input v-show="false" v-model="dataForm.protocalFile"></el-input>
+
+      <el-form-item label="协议文件" prop="protocolFile">
+        <el-input v-show="false" v-model="dataForm.protocolFile"></el-input>
         <el-upload
           :action="uploadProtocalFileUrl"
           list-type="text"
@@ -169,51 +97,62 @@
           <el-button size="small" v-show="hideProtocalFileUpload" type="primary">点击上传</el-button>
           <div slot="tip" class="el-upload__tip">只能上传jpg/png/pdf文件，且不超过5mb</div>
         </el-upload>
-        <!--        <a href="http://testimg.coopoo.com/2021-03-31/20210331142942gLPiOiHLVUvLZLHizKcfUQoPHfJBUblj.jpg"-->
-        <!--          download="test.name"-->
-        <!--        >asdfasdf</a>-->
-        <!--        <a href="http://testimg.coopoo.com/2021-03-31/20210331142942gLPiOiHLVUvLZLHizKcfUQoPHfJBUblj.jpg" download="logo.png">-->
-        <!--          <img border="0" src="http://testimg.coopoo.com/2021-03-31/20210331142942gLPiOiHLVUvLZLHizKcfUQoPHfJBUblj.jpg" alt="runoob.com" >-->
-        <!--        </a>-->
-        <!--        <a href="http://testimg.coopoo.com/2021-03-31/20210331142942gLPiOiHLVUvLZLHizKcfUQoPHfJBUblj.jpg" download="test.png">-->
-        <!--          asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf-->
-        <!--        </a>-->
-        <!--        <ul class="el-upload-list el-upload-list&#45;&#45;text">-->
-        <!--          <li-->
-        <!--            v-for="(item,index) in uploadProtocalFileList"-->
-        <!--            :key="index"-->
-        <!--            tabindex="0"-->
-        <!--            class="el-upload-list__item is-success el-list-enter-to"-->
-        <!--          >-->
-        <!--            &lt;!&ndash;&ndash;&gt;-->
-        <!--            <a class="el-upload-list__item-name" @click="downloadFile(item)">-->
-        <!--              <i class="el-icon-document"></i>{{ item.name }}</a>-->
-        <!--            <label class="el-upload-list__item-status-label">-->
-        <!--              <i-->
-        <!--                class="el-icon-upload-success el-icon-circle-check"-->
-        <!--                @click="handleProtocalFileRemove(item)"-->
-        <!--              ></i>-->
-        <!--            </label>-->
-        <!--            <i class="el-icon-close" @click="handleProtocalFileRemove(item)"></i>-->
-        <!--          </li>-->
-        <!--        </ul>-->
       </el-form-item>
-      <el-form-item label="是否启用">
-        <el-switch v-model="dataForm.enable" inactive-value="0" active-value="1"></el-switch>
+
+      <el-form-item label="营业执照照片" prop="licenseImg">
+        <el-input v-show="false" v-model="dataForm.licenseImg"></el-input>
+        <el-upload
+        :limit="1"
+          :action="uploadLicenseImgUrl"
+          list-type="picture-card"
+          :on-preview="handleLicenseImgPreview"
+          :before-upload="beforeLicenseImgUpload"
+          :on-success="handleLicenseImgSuccess"
+          :class="{'hideTrue':hideLicenseImgUpload}"
+          :file-list="uploadLicenseImgList"
+          :on-remove="handleLicenseImgRemove"
+        >
+          <i class="el-icon-plus"></i>
+        </el-upload>
+        <el-dialog>
+          <img width="100%" :src="imageUrl" alt/>
+        </el-dialog>
       </el-form-item>
-      <!--			<el-form-item label="发布礼品">
-              <el-switch v-model="dataForm.publishGift" inactive-value="0" active-value="1"></el-switch>
-            </el-form-item>-->
-      <el-form-item label="供应商比例" prop="serviceRatio">
-        <el-input placeholder="请输入内容" v-model.number="dataForm.serviceRatio">
-          <template slot="append">%</template>
-        </el-input>
+      <el-form-item label="法人身份证正面" prop="personFrontImg">
+        <el-input v-show="false" v-model="dataForm.personFrontImg"></el-input>
+        <el-upload
+          :action="uploadPersonNoFrontImgUrl"
+          list-type="picture-card"
+          :on-preview="handlePersonNoFrontImgPreview"
+          :before-upload="beforePersonNoFrontImgUpload"
+          :on-success="handlePersonNoFrontImgSuccess"
+          :class="{hideTrue:hidePersonNoFrontImgUpload}"
+          :file-list="uploadPersonNoFrontImgList"
+          :on-remove="handlePersonNoFrontImgRemove"
+        >
+          <i class="el-icon-plus"></i>
+        </el-upload>
+        <el-dialog>
+          <img width="100%" :src="imageUrl" alt/>
+        </el-dialog>
       </el-form-item>
-      <el-form-item label="银行名称" prop="bankName">
-        <el-input v-model="dataForm.bankName"></el-input>
-      </el-form-item>
-      <el-form-item label="银行卡号" prop="bankCardNo">
-        <el-input v-model="dataForm.bankCardNo"></el-input>
+      <el-form-item label="法人身份证背面" prop="personSideImg">
+        <el-input v-show="false" v-model="dataForm.personSideImg"></el-input>
+        <el-upload
+          :action="uploadpersonNoSideImgUrl"
+          list-type="picture-card"
+          :on-preview="handlepersonNoSideImgPreview"
+          :before-upload="beforepersonNoSideImgUpload"
+          :on-success="handlepersonNoSideImgSuccess"
+          :class="{hideTrue:hidepersonNoSideImgUpload}"
+          :file-list="uploadpersonNoSideImgList"
+          :on-remove="handlepersonNoSideImgRemove"
+        >
+          <i class="el-icon-plus"></i>
+        </el-upload>
+        <el-dialog>
+          <img width="100%" :src="imageUrl" alt/>
+        </el-dialog>
       </el-form-item>
       <el-form-item>
         <el-button :loading="submitLoading" type="primary" @click="submitUpdate">添加</el-button>
@@ -227,17 +166,18 @@
 import {getMethod, postMethod, getUploadUrl} from "@/api/request";
 import {luhnCheck} from "@/utils/validate";
 import axios from 'axios'
+import addressData from "@/utils/address.json"
 
 export default {
   computed: {},
   mounted() {
-    this.loadgoodTypeList();
-    this.loadgoodBrandList();
+    console.log(addressData,'addressData');
     this.loadprovinceList();
     this.buildLicenseImgGroupId();
     this.buildPersonNoFrontImgGroupId();
     this.buildpersonNoSideImgGroupId();
     this.buildProtocalFileGroupId();
+        console.log(this.editData);
     this.$nextTick(function () {
       if (this.editData.id) {
         this.dataForm = this.editData;
@@ -269,14 +209,6 @@ export default {
         }
       } else {
         callback(new Error("电话号码输入错误"));
-      }
-    }
-
-    const validateServiceRatio = (rule, value, callback) => {
-      if (value < 50 || value > 70) {
-        callback(new Error("供应商比例只能为50~70之间"));
-      } else {
-        callback();
       }
     }
 
@@ -313,29 +245,14 @@ export default {
     }
 
     const validateBankNo = (rule, value, callback) => {
-      if (!luhnCheck(this.dataForm.bankCardNo)) {
+      if (!luhnCheck(this.dataForm.bankCard)) {
         callback(new Error("银行卡号输入错误"));
       } else {
         callback();
       }
     }
     return {
-      serviceRatioList: [{
-        value: 0.05,
-        label: '5%'
-      }, {
-        value: 0.1,
-        label: '10%'
-      }, {
-        value: 0.2,
-        label: '20%'
-      }, {
-        value: 0.3,
-        label: '30%'
-      }, {
-        value: 0.4,
-        label: '40%'
-      }],
+      addressData:addressData,
       submitLoading: false,
       disabledLoginNo: false,
       disabledSupplierNo: false,
@@ -361,27 +278,24 @@ export default {
       dataForm: {
         supplierName: "",
         supplierNo: "",
-        loginNo: "",
-        linkPerson: "",
-        mobileNo: "",
+        loginAccount: "",
+        userName: "",
+        phoneNo: "",
         phoneNo: "",
         taxNo: '',
         email: '',
         address: "",
         bankName: "",
-        bankCardNo: "",
-        goodType: "",
-        huanxNo: "",
-        skillGroup: '',
-        huanxLoginNo: '',
-        huanxLoginPwd: '',
-        goodBrand: "",
-        province: "",
-        enable: true,
+        bankCard: "",
+        hxNo: "",
+        hxSkillGroup: '',
+        hxLoginNo: '',
+        hxLoginPwd: '',
+        provinceId: "",
         licenseImg: "",
-        personNoFrontImg: "",
-        personNoSideImg: "",
-        protocalFile: "",
+        personFrontImg: "",
+        personSideImg: "",
+        protocolFile: "",
         id: ""
       },
       rules: {
@@ -391,21 +305,18 @@ export default {
         supplierNo: [
           {required: true, message: '请输入供应商编号', trigger: 'blur'},
         ],
-        loginNo: [
+        loginAccount: [
           {required: true, message: '请输入登陆账号', trigger: 'blur'},
         ],
-        linkPerson: [
+        userName: [
           {required: true, message: '请输入联系人', trigger: 'blur'},
         ],
         address: [
           {required: true, message: '请输入详细地址', trigger: 'blur'},
         ],
-        mobileNo: [
+        phoneNo: [
           {required: true, message: "请输入手机号码", trigger: "blur"},
           {validator: isMobileNumber, trigger: "blur"}
-        ],
-        phoneNo: [
-          {required: true, message: "请输入联系电话", trigger: "blur"},
         ],
         taxNo: [
           {required: true, message: '请输入税务代码', trigger: 'blur'},
@@ -413,34 +324,25 @@ export default {
         email: [
           {required: true, message: '请输入邮箱', trigger: 'blur'},
         ],
-        goodType: [
-          {required: true, message: '请选择主营分类', trigger: 'change'},
-        ],
-        goodBrand: [
-          {required: true, message: '请选择主营品牌', trigger: 'change'},
-        ],
-        province: [
+        provinceId: [
           {required: true, message: '请选择省份', trigger: 'change'},
-        ],
-        serviceRatio: [
-          {required: true, validator: validateServiceRatio, trigger: 'blur'},
         ],
         licenseImg: [
           {required: true, validator: isUploadLicenseImg, trigger: "blur"}
         ],
-        personNoFrontImg: [
+        personFrontImg: [
           {required: true, validator: isUploadPersonNoFrontImg, trigger: "blur"}
         ],
-        personNoSideImg: [
+        personSideImg: [
           {required: true, validator: isUploadPersonNoSideImg, trigger: "blur"}
         ],
-        protocalFile: [
+        protocolFile: [
           {required: true, validator: isUploadProtocalFile, trigger: "blur"}
         ],
         bankName: [
           {required: true, message: '请输入银行名称', trigger: 'blur'},
         ],
-        bankCardNo: [
+        bankCard: [
           {required: true, message: '请输入银行卡号', trigger: 'blur'},
         ],
       },
@@ -449,37 +351,14 @@ export default {
   },
   methods: {
     handlePreview(file) {
+      console.log(file);
       window.open(file.url)
     },
-    loadgoodTypeList() {
-      let scope = this;
-      let param = {
-        parentId: "-1"
-      };
-      getMethod("/backend/goodType/findList", param).then(res => {
-        scope.goodTypeList = res.data;
-      });
-    },
-    loadgoodBrandList() {
-      let scope = this;
-      let param = {
-        parentId: "-1"
-      };
-      getMethod("/backend/goodBrand/findList", param).then(res => {
-        scope.goodBrandList = res.data;
-      });
-    },
     loadprovinceList() {
-      let scope = this;
-      let param = {
-        parentId: "-1"
-      };
-      getMethod("/backend//areas/findProvince", param).then(res => {
-        scope.provinceList = res.data;
-      });
+        this.provinceList = this.addressData.data
     },
     buildLicenseImgGroupId() {
-      getMethod("/backend/oss/groupId", null).then(res => {
+      getMethod("/oss/get-group-id", null).then(res => {
         this.uploadLicenseImgUrl =
           getUploadUrl() + "?groupId=" + res.data;
         this.dataForm.licenseImg = this.dataForm.licenseImg || res.data;
@@ -490,7 +369,7 @@ export default {
     handleLicenseImgRemove(res) {
       for (let i = 0; i < this.uploadLicenseImgList.length; i++) {
         if (
-          this.uploadLicenseImgList[i].filePath == (res.filePath || res.response.data.filePath)
+          this.uploadLicenseImgList[i].url == (res.url || res.response.data.url)
         ) {
           this.uploadLicenseImgList.splice(i, 1);
           break;
@@ -510,11 +389,12 @@ export default {
           imageCnt++;
         }
       }
+      console.log(imageCnt)
       if (imageCnt >= 1) {
         this.hideLicenseImgUpload = true;
       }
       this.clearValidate('licenseImg')
-      this.dataForm.licenseImg = res.data.groupId
+      this.dataForm.licenseImg = res.data.url
     },
     beforeLicenseImgUpload(file) {
       const fileTypeVerify =
@@ -537,9 +417,9 @@ export default {
       return fileTypeVerify && isLt2M;
     },
     buildPersonNoFrontImgGroupId() {
-      getMethod("/backend/oss/groupId", null).then(res => {
+      getMethod("/oss/get-group-id", null).then(res => {
         this.uploadPersonNoFrontImgUrl = getUploadUrl() + "?groupId=" + res.data;
-        this.dataForm.personNoFrontImg = this.dataForm.personNoFrontImg || res.data;
+        this.dataForm.personFrontImg = this.dataForm.personFrontImg || res.data;
       });
     },
     handlePersonNoFrontImgPreview() {
@@ -548,7 +428,7 @@ export default {
       this.hidePersonNoFrontImgUpload = false;
       for (let i = 0; i < this.uploadPersonNoFrontImgList.length; i++) {
         if (
-          this.uploadPersonNoFrontImgList[i].filePath == (res.filePath || res.response.data.filePath)
+          this.uploadPersonNoFrontImgList[i].url == (res.url || res.response.data.url)
         ) {
           this.uploadPersonNoFrontImgList.splice(i, 1);
           break;
@@ -569,8 +449,8 @@ export default {
       if (imageCnt >= 1) {
         this.hidePersonNoFrontImgUpload = true;
       }
-      this.clearValidate('personNoFrontImg')
-      this.dataForm.personNoFrontImg = res.data.groupId
+      this.clearValidate('personFrontImg')
+      this.dataForm.personFrontImg = res.data.url
     },
     beforePersonNoFrontImgUpload(file) {
       const fileTypeVerify =
@@ -593,11 +473,11 @@ export default {
       return fileTypeVerify && isLt2M;
     },
     buildpersonNoSideImgGroupId() {
-      getMethod("/backend/oss/groupId", null).then(res => {
+      getMethod("/oss/get-group-id", null).then(res => {
         this.uploadpersonNoSideImgUrl =
           getUploadUrl() + "?groupId=" + res.data;
-        this.dataForm.personNoSideImg =
-          this.dataForm.personNoSideImg || res.data;
+        this.dataForm.personSideImg =
+          this.dataForm.personSideImg || res.data;
       });
     },
     handlepersonNoSideImgPreview() {
@@ -605,7 +485,7 @@ export default {
     handlepersonNoSideImgRemove(res) {
       for (let i = 0; i < this.uploadpersonNoSideImgList.length; i++) {
         if (
-          this.uploadpersonNoSideImgList[i].filePath == (res.filePath || res.response.data.filePath)
+          this.uploadpersonNoSideImgList[i].url == (res.url || res.response.data.url)
         ) {
           this.uploadpersonNoSideImgList.splice(i, 1);
           break;
@@ -627,8 +507,8 @@ export default {
       if (imageCnt >= 1) {
         this.hidepersonNoSideImgUpload = true;
       }
-      this.clearValidate('personNoSideImg')
-      this.dataForm.personNoSideImg = res.data.groupId
+      this.clearValidate('personSideImg')
+      this.dataForm.personSideImg = res.data.url
     },
     beforepersonNoSideImgUpload(file) {
       const fileTypeVerify =
@@ -650,24 +530,25 @@ export default {
       return fileTypeVerify && isLt2M;
     },
     buildProtocalFileGroupId() {
-      if (this.dataForm.protocalFile == "") {
-        getMethod("/backend/oss/groupId", null).then(res => {
+      if (this.dataForm.protocolFile == "") {
+        getMethod("/oss/get-group-id", null).then(res => {
           this.uploadProtocalFileUrl =
             getUploadUrl() + "?groupId=" + res.data;
-          this.dataForm.protocalFile =
-            this.dataForm.protocalFile || res.data;
+          this.dataForm.protocolFile =
+            this.dataForm.protocolFile || res.data;
         });
       } else {
         this.uploadProtocalFileUrl =
-          getUploadUrl() + "?groupId=" + this.dataForm.protocalFile;
+          getUploadUrl() + "?groupId=" + this.dataForm.protocolFile;
       }
     },
     handleProtocalFilePreview() {
     },
     handleProtocalFileRemove(res) {
+      console.log(res,this.uploadProtocalFileList);
       for (let i = 0; i < this.uploadProtocalFileList.length; i++) {
         if (
-          this.uploadProtocalFileList[i].filePath == (res.filePath || res.response.data.filePath)
+          this.uploadProtocalFileList[i].url == (res.url || res.response.data.url)
         ) {
           this.uploadProtocalFileList.splice(i, 1);
           break;
@@ -712,8 +593,8 @@ export default {
       if (imageCnt >= 2) {
         this.hideProtocalFileUpload = true;
       }
-      this.clearValidate('protocalFile')
-      this.dataForm.protocalFile = res.data.groupId
+      this.clearValidate('protocolFile')
+      this.dataForm.protocolFile = res.data.url
     },
     beforeProtocalFileUpload(file) {
       const fileTypeVerify =
@@ -735,21 +616,36 @@ export default {
       return fileTypeVerify && isLt2M;
     },
     initDefaultImage() {
-      this.fileList = this.dataForm.files;
-      for (let i = 0; i < this.dataForm.files.length; i++) {
-        let imageObj = this.dataForm.files[i];
-        if (imageObj.groupId == this.dataForm.licenseImg) {
-          this.uploadLicenseImgList.push(imageObj);
-        }
-        if (imageObj.groupId == this.dataForm.personNoFrontImg) {
-          this.uploadPersonNoFrontImgList.push(imageObj);
-        }
-        if (imageObj.groupId == this.dataForm.personNoSideImg) {
-          this.uploadpersonNoSideImgList.push(imageObj);
-        }
-        if (imageObj.groupId == this.dataForm.protocalFile) {
-          this.uploadProtocalFileList.push(imageObj);
-        }
+      // this.fileList = this.dataForm.files;
+      // for (let i = 0; i < this.dataForm.files.length; i++) {
+      //   let imageObj = this.dataForm.files[i];
+      //   if (imageObj.groupId == this.dataForm.licenseImg) {
+      //     this.uploadLicenseImgList.push(imageObj);
+      //   }
+      //   if (imageObj.groupId == this.dataForm.personFrontImg) {
+      //     this.uploadPersonNoFrontImgList.push(imageObj);
+      //   }
+      //   if (imageObj.groupId == this.dataForm.personSideImg) {
+      //     this.uploadpersonNoSideImgList.push(imageObj);
+      //   }
+      //   if (imageObj.groupId == this.dataForm.protocolFile) {
+      //     this.uploadProtocalFileList.push(imageObj);
+      //   }
+      // }
+      // let obj = {
+      //   url:this.dataForm.licenseImg
+      // }
+      if(this.dataForm.licenseImg&&this.dataForm.licenseImg!=''){
+          this.uploadLicenseImgList.push({url:this.dataForm.licenseImg})
+      }
+      if(this.dataForm.personFrontImg&&this.dataForm.personFrontImg!=''){
+          this.uploadPersonNoFrontImgList.push({url:this.dataForm.personFrontImg})
+      }
+      if(this.dataForm.personSideImg&&this.dataForm.personSideImg!=''){
+          this.uploadpersonNoSideImgList.push({url:this.dataForm.personSideImg})
+      }
+      if(this.dataForm.protocolFile&&this.dataForm.protocolFile!=''){
+          this.uploadProtocalFileList.push({url:this.dataForm.protocolFile})
       }
       if (this.uploadLicenseImgList.length >= 1) {
         this.hideLicenseImgUpload = true;
@@ -770,22 +666,41 @@ export default {
     saveObject() {
       this.submitLoading = true
       let scope = this;
+      console.log('dataform',this.dataForm);
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
           delete this.dataForm.createTime;
           delete this.dataForm.createBy;
-
+          delete this.dataForm.enable;
+          delete this.dataForm.updateTime;
+          Object.keys(this.dataForm).forEach(item=>{
+              if(!this.dataForm[item])  delete this.dataForm[item]
+          })
+          console.log('dataform',this.dataForm);
           let fileList = [];
           fileList = fileList.concat(this.uploadLicenseImgList);
           fileList = fileList.concat(this.uploadPersonNoFrontImgList);
           fileList = fileList.concat(this.uploadpersonNoSideImgList);
           fileList = fileList.concat(this.uploadProtocalFileList);
-          this.dataForm.fileJsonStr = JSON.stringify(fileList);
-          this.dataForm.files = [];
-
-          postMethod("/backend/supplier/update", this.dataForm).then(
+          // this.dataForm.fileJsonStr = JSON.stringify(fileList);
+          // this.dataForm.files = [];
+          console.log('11111',this.dataForm);
+          if(this.dataForm.id&&this.dataForm.id!=''){
+            postMethod("/supplier/update-supplier", this.dataForm).then(
+              res => {
+                this.$message({
+                  message: "操作成功",
+                  type: "success"
+                });
+                scope.submitLoading = false
+                this.$emit("showListPanel", true);
+              }
+            ).catch(error => {
+              this.submitLoading = false
+            });
+          }else{
+            postMethod("/supplier/add-supplier", this.dataForm).then(
             res => {
-              scope.typeList = res.data;
               this.$message({
                 message: "操作成功",
                 type: "success"
@@ -795,7 +710,9 @@ export default {
             }
           ).catch(error => {
             this.submitLoading = false
-          });;;
+          });
+          }
+
         } else {
           scope.submitLoading = false
           return false;
@@ -827,7 +744,7 @@ export default {
 }
 </style>
 <style lang="scss">
-.hide .el-upload--picture-card {
-  display: none;
+.hideTrue .el-upload--picture-card {
+  display: none!important;
 }
 </style>

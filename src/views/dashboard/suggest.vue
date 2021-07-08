@@ -4,8 +4,8 @@
           <div class="ly-tool-panel" style="line-heigth:40px">
               &nbsp;&nbsp;
           </div>
-          <div style="width:730px" >
-            <div style="width:730px">
+          <div style="width:800px" >
+            <div style="width:800px">
               <el-table
                 ref="suggestTbl"
                 :data="tableData.list"
@@ -13,10 +13,10 @@
                 row-key="id"
                 border>
                 <el-table-column prop="content" label="意见内容" width="450px"></el-table-column>
-                <el-table-column prop="nickName" label="提交人" width="120px"></el-table-column>
-                <el-table-column prop="createTime" label="创建时间" width="150px">
+                <el-table-column prop="userName" label="提交人" ></el-table-column>
+                <el-table-column prop="createTime" label="创建时间" width="170px">
                   <template slot-scope="scope">
-                    {{scope.row.createTime| _formatDate}}
+                    {{scope.row.createTime}}
                   </template>
                 </el-table-column>
               </el-table>
@@ -67,7 +67,7 @@
           },
           searchParam:{
             pageSize:10,
-            pageNum:0
+            pageNum:1
           }
       };
     },
@@ -130,8 +130,9 @@
       initSuggestData(){
         let scope = this;
 
-        getMethod("/backend/siteData/selectSuggest", this.searchParam).then(res => {
-            scope.tableData = res.data;
+        getMethod("/operate/get-feedback-list", this.searchParam).then(res => {
+            scope.tableData.list = res.data.records;
+            scope.tableData.total = res.data.total;
 					  scope.showPagination = scope.tableData.total == 0;
         });
       }

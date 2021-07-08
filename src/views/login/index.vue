@@ -5,63 +5,29 @@
       <div class="loginbg">
         <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on"
           label-position="left">
-
-          <!-- <lang-select style="margin-right:-300px;margin-top: 50px;" class="set-language" /> -->
-
           <el-form-item prop="username">
-            <!-- <span class="svg-container">
-            <svg-icon icon-class="user" />
-          </span> -->
             <el-input style="margin-top: 80px;" ref="username" v-model="loginForm.username" :placeholder="$t('login.username')"
               name="username" type="text" tabindex="1" autocomplete="on" />
           </el-form-item>
-
           <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
             <el-form-item prop="password">
-              <!-- <span class="svg-container">
-              <svg-icon icon-class="password" />
-            </span> -->
               <el-input :key="passwordType" ref="password" v-model="loginForm.password" :type="passwordType"
                 :placeholder="$t('login.password')" name="password" tabindex="2" autocomplete="on" @keyup.native="checkCapslock"
                 @blur="capsTooltip = false" @keyup.enter.native="handleLogin" />
                 <div style="position: absolute;margin-top: -40px;right: 55px;"><span @click="showPwd">
                 <svg-icon  :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
               </span></div>
-
             </el-form-item>
           </el-tooltip>
-
           <el-button :loading="loading" type="primary" style="margin-top: 20px;width:85%;margin-bottom:30px;height:50px;border-radius: 25px;background-color: #A49E83;"
             @click.native.prevent="handleLogin">
             {{ $t('login.logIn') }}
           </el-button>
-
         </el-form>
       </div>
       <div class="text">欢迎登录&nbsp;&nbsp;靠谱家后台管理系统</div>
-
     </div>
   </div>
-
-  <!--
-	<div style="text-align: center;">
-		<img class="login" />
-		<div style="display: inline-flex;">
-      <div>
-        <img class="lgbg" />
-      </div>
-			<div class="txt">
-				<span>欢迎登录&nbsp;&nbsp;靠谱家后台管理系统</span>
-			</div>
-			<div class="dl">
-
-			</div>
-		</div>
-	</div>
- -->
-
-
-
 </template>
 
 <script>
@@ -187,6 +153,7 @@
             this.loading = true
             this.$store.dispatch('user/login', this.loginForm)
               .then(() => {
+              console.log("登录成功")
                 this.$router.push({
                   path: this.redirect || '/',
                   query: this.otherQuery

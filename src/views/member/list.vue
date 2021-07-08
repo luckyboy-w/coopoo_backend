@@ -1,180 +1,238 @@
 <template>
   <div>
-    <div v-if="showList" class="ly-container">
-      <div class="ly-tool-panel">
-        <table>
-          <tr>
-            <td>手机号:</td>
-            <td>
-              <el-input v-model="searchParam.phoneNo" width="180px" />
-            </td>
-            <td>会员类型:</td>
-            <td>
-              <el-select v-model="searchParam.memberType" placeholder="请选择">
-                <el-option label="全部" value="" />
-                <el-option label="普通会员" value="10" />
-                <el-option label="用户" value="30" />
-                <el-option label="A类服务商" value="1" />
-                <el-option label="B类服务商" value="2" />
-                <el-option label="C类服务商" value="3" />
-                <el-option label="D类服务商" value="4" />
-                <el-option label="E类服务商" value="5" />
-                <el-option label="EA类服务商" value="6" />
-              </el-select>
-            </td>
-            <td>状态:</td>
-            <td>
-              <el-select v-model="searchParam.enable" placeholder="请选择">
-                <el-option label="全部" value="" />
-                <el-option label="启用" value="1" />
-                <el-option label="禁用" value="2" />
-              </el-select>
-            </td>
-            <td>赠品:</td>
-            <td>
-              <el-select v-model="searchParam.isSendGift" placeholder="请选择">
-                <el-option label="全部" value="" />
-                <el-option label="未发放" value="0" />
-                <el-option label="已发放" value="1" />
-              </el-select>
-            </td>
-            <td>邀请人手机号:</td>
-            <td>
-              <el-input v-model="searchParam.owerProvider" width="180px" />
-            </td>
-
-            <td>
-              <el-button icon="el-icon-search" @click="search()">
-                搜索
-              </el-button>
-              <el-button plain type="normal" icon="el-icon-download" @click="exportData()">
-                导出
-              </el-button>
-            </td>
-          </tr>
-        </table>
+    <div class="ly-container" v-if="showList">
+      <div class="ly-tool-panel" v-if="showDtl">
+        <div class="tabTd">
+          <div>会员昵称：</div>
+          <div>
+            <el-input v-model="searchParam.userName" placeholder="请输入" width="180px" />
+          </div>
+        </div>
+        <div class="tabTd">
+          <div>手机号：</div>
+          <div>
+            <el-input v-model="searchParam.phoneNo" placeholder="请输入" width="180px" />
+          </div>
+        </div>
+        <div class="tabTd">
+          <div>会员类型：</div>
+          <div>
+            <el-select v-model="searchParam.accountType" placeholder="请选择">
+              <el-option label="全部" value="" />
+              <el-option label="会员" value="0" />
+              <el-option label="门店" value="3" />
+            </el-select>
+          </div>
+        </div>
+        <div class="tabTd">
+          <div>状态：</div>
+          <div>
+            <el-select v-model="searchParam.enable" placeholder="请选择">
+              <el-option label="全部" value="" />
+              <el-option label="启用" value="1" />
+              <el-option label="禁用" value="0" />
+            </el-select>
+          </div>
+        </div>
+        <div class="tabTd">
+          <div>所属门店：</div>
+          <div>
+            <el-input v-model="searchParam.storeName" placeholder="请输入" width="180px" />
+          </div>
+        </div>
+        <div class="tabTd">
+          <div>
+            <el-button icon="el-icon-search" type="primary" @click="search()">搜索</el-button>
+            <el-button @click="showDtl = true" v-if="!showDtl">返回</el-button>
+          </div>
+        </div>
       </div>
-      <div class="ly-table-panel">
+      <div class="ly-table-panel" v-if="showDtl">
         <div class="ly-data-list">
-          <el-table ref="mainTable" :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id"
-            border>
-            <el-table-column prop="nickName" label="会员名称" width="150px" />
-            <el-table-column prop="phoneNo" label="手机号" width="150px" />
-            <el-table-column prop="owerProviderName" label="邀请人" width="150px" />
-            <el-table-column prop="regTime" label="注册时间" width="150px">
+          <el-table ref="mainTable" :data="tableData" style="width: 100%; margin-bottom: 20px;" row-key="id"
+            :header-cell-style="{'text-align':'center'}" :cell-style="{'text-align':'center'}" border>
+            <el-table-column prop="userName" label="会员昵称"></el-table-column>
+            <el-table-column prop="phoneNo" label="手机号" width="150px"></el-table-column>
+            <el-table-column prop="accountType" label="会员类型">
               <template slot-scope="scope">
-                {{ scope.row.regTime | formatDate }}
+                {{ scope.row.accountType | memberType}}
               </template>
             </el-table-column>
-            <el-table-column prop="costPrice" label="消费总额" width="150px" />
-            <el-table-column prop="beans" label="靠谱豆数量" width="150px" />
-            <el-table-column prop="address" label="家庭住址" width="150px" />
-            <el-table-column prop="memberType" label="会员类型" width="150px">
+            <el-table-column prop="storeName" label="所属门店" >
               <template slot-scope="scope">
-                <span v-if="scope.row.memberType == '10' && scope.row.isProvider == undefined">会员</span>
-                <span v-if="scope.row.memberType == '30' && scope.row.isProvider == undefined">用户</span>
-                <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '1' ">A类服务商</span>
-                <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '2' ">B类服务商</span>
-                <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '3' ">C类服务商</span>
-                <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '4' ">D类服务商</span>
-                <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '5' ">E类服务商</span>
-                <span v-if="scope.row.memberType == '20' && scope.row.isProvider == '6' ">EA类服务商</span>
+                {{ scope.row.storeName?scope.row.storeName:"暂无" }}
               </template>
             </el-table-column>
-            <el-table-column prop="isSendGift" label="赠品" width="150px">
+            <el-table-column prop="orderPayAmount" label="消费金额"></el-table-column>
+            <el-table-column prop="currBeanQty" label="靠谱豆" ></el-table-column>
+            <el-table-column prop="createTime" label="注册时间" width="150px">
               <template slot-scope="scope">
-                {{ scope.row.isSendGift == "1" ? "已发放" : "未发放" }}
+                {{ scope.row.createTime }}
               </template>
             </el-table-column>
-            <el-table-column prop="enable" label="状态" width="150px">
+            <el-table-column prop="enable" label="状态" >
               <template slot-scope="scope">
-                {{ scope.row.enable == "1" ? "启用" : "禁用" }}
+                <el-switch v-model="scope.row.enable" active-value="1" inactive-value="0" @change="enable(scope.row)" />
               </template>
             </el-table-column>
-            <el-table-column prop="pkMemberId" label="操作" width="150px">
+            <el-table-column prop="pkMemberId" label="操作" fixed="right" width="250px">
               <template slot-scope="scope">
-                <div style="font-size:12px;">
-                  <el-link v-if="scope.row.enable == '1'" type="primary" @click="opUserState(scope.row,2)">
-                    禁用
-                  </el-link>
-                  <el-link v-if="scope.row.enable =='2'" type="primary" @click="opUserState(scope.row,1)">
-                    启用
-                  </el-link>
-                  <el-link v-if="scope.row.isSendGift =='0'&&scope.row.memberType != '30'"  type="primary" @click="sendGift(scope.row)">
-                    发放赠品
-                  </el-link>
-                  <!--<el-link type="primary"  @click="viewMember(scope.row)" >查看</el-link>-->
-                </div>
+                <el-link @click="consumeDtl(scope.row)" type="primary">消费明细</el-link>
+                <el-divider direction="vertical"></el-divider>
+                <el-link v-if="scope.row.isBigShot=='0'||!scope.row.isBigShot" @click="bigShotState(scope.row,1)" type="primary">成为大咖说
+                </el-link>
+                <el-link v-if="scope.row.isBigShot=='1'" @click="bigShotState(scope.row,2)" type="primary">取消大咖说
+                </el-link>
+                <el-divider v-if="scope.row.accountType!='3'" direction="vertical"></el-divider>
+                <el-link v-if="scope.row.accountType!='3'" @click="changeStore(scope.row)" type="primary">更换门店</el-link>
               </template>
             </el-table-column>
           </el-table>
         </div>
         <div class="ly-data-pagination">
-          <el-pagination v-show="!showPagination" background layout="prev, pager, next" :total="tableData.total"
-            @current-change="currentPage" @prev-click="currentPage" @next-click="currentPage" />
+          <el-pagination background v-show="!showPagination" layout="prev, pager, next" @current-change="currentPage"
+            :current-page="searchParam.pageNum" @prev-click="currentPage" @next-click="currentPage"
+            :total="tableData.total"></el-pagination>
         </div>
       </div>
-      <el-dialog v-if="bindProvince" title="绑定操作" visible="sendOrder">
-        <el-form ref="form" :model="sendOrderFrm" label-width="80px">
-          <el-form-item label="订单编号">
-            <el-input v-model="sendOrderFrm.orderNo" :disabled="true" />
-          </el-form-item>
-          <el-form-item label="服务商号码">
-            <el-input v-model="sendOrderFrm.expressNo" />
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitSend()">
-              确认绑定
-            </el-button>
-            <el-button @click="sendOrder=false">
-              取消
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </el-dialog>
-      <div class="list-panel" />
+
+      <div class="ly-tool-panel" v-if="!showDtl">
+        <div class="tabTd">
+          <div>订单编号：</div>
+          <div>
+            <el-input v-model="searchDtlParam.orderNo" placeholder="请输入" width="180px"></el-input>
+          </div>
+        </div>
+        <div class="tabTd">
+          <div>
+            <el-button icon="el-icon-search" type="primary" @click="searchConsume()">搜索</el-button>
+            <el-button @click="backUp" v-if="!showDtl">返回</el-button>
+          </div>
+        </div>
+      </div>
+      <div style="padding: 0 20px 10px;" v-if="!showDtl">
+        用户名称：{{memberName}}
+      </div>
+      <div class="ly-table-panel" v-if="!showDtl">
+        <div class="ly-data-list">
+          <div class="content1">
+           <el-table :data="tableData2.list" border row-key="orderId" style="width: 100%">
+             <el-table-column width="1">
+               <template slot-scope="scope">
+                 <div class="item">
+                   <span style="margin-left:150px">订单编号：{{ scope.row.orderNo }}</span>
+                   <span style="margin-left:150px">订单总额：{{ scope.row.orderPayAmount }}</span>
+                   <span style="margin-left:150px">下单时间：{{ scope.row.createTime }}</span>
+                 </div>
+               </template>
+             </el-table-column>
+             <el-table-column label="商品" align="center" width="400">
+               <template slot-scope="scope">
+                 <div v-for="(item, index) in scope.row.orderItemList" :key="index" class="mesSty">
+                   <div>
+                     <img class="imgSty" :src="item.goodsImage" alt="">
+                   </div>
+                   <div class="mesFont">
+                     <p>{{ item.goodsName }}</p>
+                     <p style="font-size: 12px;color:#909399;margin-top: 10px;">{{ item.skuText }}</p>
+                   </div>
+                 </div>
+               </template>
+             </el-table-column>
+             <el-table-column align="center" min-width="60" label="单价">
+               <template slot-scope="scope">
+                 <div v-for="(item, index) in scope.row.orderItemList" :key="index" class="mesSty2">
+                   <div>{{ item.goodsPrice}}</div>
+                 </div>
+               </template>
+             </el-table-column>
+             <el-table-column align="center" min-width="60" label="数量">
+               <template slot-scope="scope">
+                 <div v-for="(item, index) in scope.row.orderItemList" :key="index" class="mesSty2">
+                   <div>{{item.goodsNum}}</div>
+                 </div>
+               </template>
+             </el-table-column>
+             <el-table-column align="center" min-width="70" label="商品状态">
+               <template slot-scope="scope">
+                 <div v-for="(item, index) in scope.row.orderItemList" :key="index" class="mesSty2">
+                   <div>{{ item.orderItemStatus| goodsText }}</div>
+                 </div>
+               </template>
+             </el-table-column>
+             <el-table-column align="center" min-width="70" label="实付金额">
+               <template slot-scope="scope">
+                 <div v-for="(item, index) in scope.row.orderItemList" :key="index" class="mesSty2">
+                   <div>{{ item.goodsPrice*item.goodsNum}}</div>
+                 </div>
+               </template>
+             </el-table-column>
+             <el-table-column min-width="100" align="center" label="买家">
+               <template slot-scope="scope">
+                 <div class="mesSty2">
+                   <div>{{ scope.row.buyerName }}<br />{{ scope.row.buyerMobile }}</div>
+                 </div>
+               </template>
+             </el-table-column>
+             <el-table-column min-width="140" align="center" label="门店名称">
+               <template slot-scope="scope">
+                 <div class="mesSty2">
+                   {{ scope.row.storeName}}
+                 </div>
+               </template>
+             </el-table-column>
+             <el-table-column label="状态" align="center" fixed="right" min-width="230">
+               <template slot-scope="scope">
+                 <div class="mesSty2">
+                   <template>
+                     <div>
+                       <div>
+                         {{ scope.row.orderStatus | statuts2Text }}
+                       </div>
+                       <div>
+                         <el-button type="text" size="mini" @click="toOrderDtl(scope.row)">订单详情
+                         </el-button>
+                       </div>
+                       <div>
+                       </div>
+                     </div>
+                   </template>
+                 </div>
+               </template>
+             </el-table-column>
+           </el-table>
+          </div>
+        </div>
+        <div class="ly-data-pagination" style="margin: 15px 0;">
+          <el-pagination background v-show="!showPagination" layout="prev, pager, next" @current-change="currentPage_"
+            :current-page="searchDtlParam.pageNum" @prev-click="currentPage_" @next-click="currentPage_"
+            :total="tableData2.total"></el-pagination>
+        </div>
+      </div>
     </div>
-
-    <div v-if="!showList" style="width:600px;padding:20px;40px;40ppx;40px;">
-      <el-form ref="form" :model="user" label-width="120px">
-        <el-form-item label="会员昵称">
-          <el-input v-model="userDtl.nickName" :disabled="true" />
+    <!-- 更换门店弹框 -->
+    <el-dialog title="更换门店" :visible.sync="changeStoreDialog" width="40%" destroy-on-close :before-close="StoreClose">
+      <el-form label-width="80px">
+        <el-form-item label="会员昵称: ">{{storeFrm.userName}}
         </el-form-item>
-        <el-form-item label="手机号码">
-          <el-input v-model="userDtl.phoneNo" />
+        <el-form-item label="手机号: ">{{storeFrm.phoneNo}}
         </el-form-item>
-        <el-form-item label="所属服务商">
-          <el-input v-model="userDtl.owerProviderName" />
+        <el-form-item label="门店名称">
+          <el-autocomplete popper-class="my-autocomplete" v-model="storeFrm.storeName"
+           :trigger-on-focus="false" clearable style="width: 300px;"
+            :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect">
+            </i>
+            <template slot-scope="{ item }">
+              <div class="name">{{ item.storeName }}</div>
+            </template>
+          </el-autocomplete>
         </el-form-item>
-        <el-form-item label="注册时间">
-          <el-input v-model="userDtl.regTimeFmt" />
-        </el-form-item>
-        <el-form-item label="最近消费时间">
-          <el-input v-model="userDtl.lastLoginTimeFmt" />
-        </el-form-item>
-        <el-form-item label="消费总额">
-          <el-input v-model="userDtl.costPrice" />
-        </el-form-item>
-        <el-form-item label="靠谱豆">
-          <el-input v-model="userDtl.beans" />
-        </el-form-item>
-        <el-form-item label="所处城市">
-          <el-input v-model="userDtl.owerCity" />
-        </el-form-item>
-        <el-form-item label="家庭地址">
-          <el-input v-model="userDtl.address" />
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-input v-model="userDtl.enable" />
-        </el-form-item>
-
         <el-form-item>
-          <el-button @click="backToList()">
-            返回
-          </el-button>
+          <el-button type="primary" @click="commit()">保存</el-button>
         </el-form-item>
       </el-form>
-    </div>
+    </el-dialog>
+    <orderDtl v-if="!showList" ref="orderDtl" :orderNo="orderNo" @backToList="backToList" />
   </div>
 </template>
 
@@ -184,229 +242,294 @@
     postMethod,
     formatDate
   } from "@/api/request";
-  import {getToken} from '@/utils/auth'
-
+  import orderDtl from './orderDtl'
   export default {
-    components: {},
-    filters: {
-      formatDate(time) {
-        if (time == '' || time == undefined) {
-          return ''
-        }
-        let date = new Date(time)
-        return formatDate(date, 'yyyy-MM-dd hh:mm')
-      },
-      activateFlagStatus(data) {
-        if (data == 1) {
-          return '未激活'
-        } else {
-          return '已激活'
-        }
-      },
-      isProviderStatus(data) {
-        if (data == 1) {
-          return '是'
-        } else {
-          return '已激活'
-        }
-      }
-    },
-    data() {
-      return {
-        bindProvince: false,
-        providerList: [],
-        goodTypeList: [],
-        goodBrandList: [],
-        provinceList: [],
-        showList: true,
-        showAddOrEdit: false,
-        showPagination: false,
-        editData: {},
-        userDtl: {},
-        searchParam: {
-          typeName: "",
-          dataType: '',
-          pageSize: 10,
-          pageNum: 0
-        },
-        tableData: {
-          list: []
-        },
-        dataList: []
-      };
+    components: {
+      orderDtl
     },
     computed: {},
     mounted() {
-      if (this.$route.query.dt != undefined) {
-        this.searchParam.dataType = this.$route.query.dt
-      }
-      this.initLoad()
+      this.initLoad();
+      this.storeList()
     },
     created() {},
-    methods: {
-      backToList() {
-        this.showList = true
-      },
-      viewMember(row) {
-        this.showList = false
-        this.userDtl = row
-        this.userDtl.regTimeFmt = this.formatDate(this.userDtl.regTime)
-        this.userDtl.lastLoginTimeFmt = this.formatDate(this.userDtl.lastLoginTime)
-      },
+    data() {
+      return {
+        orderNo:'',
+        tableData2: [],
+        memberName: '',
+        row: null,
+        showDtl: true,
+        showList: true,
+        showPagination: false,
+        searchParam: {
+          pageSize: 10,
+          pageNum: 1
+        },
+        searchDtlParam: {
+          orderNo: "",
+          pageSize: 10,
+          pageNum: 1
+        },
+        dtlTableData: [],
+        tableData: [],
+        dataList: [],
+        changeStoreDialog: false,
+        storeFrm: {},
+        restaurants: [],
+      };
+    },
+    filters: {
       formatDate(time) {
-        if (time == '' || time == undefined) {
-          return ''
-        }
         let date = new Date(time)
         return formatDate(date, 'yyyy-MM-dd hh:mm')
       },
-      sendGift(row) {
-        let scope = this;
-        let param = {
-          pkMemberId: row.pkMemberId,
-          isSendGift: "1"
+      memberType(data) {
+        let typeText = ''
+        if (data != "3") {
+          typeText = "会员"
+        } else if (data == "3") {
+          typeText = "门店"
         }
-        this.$confirm("确认是否发放赠品?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(() => {
-          postMethod("/backend/member/gift", param).then(
-            res => {
-              scope.initLoad()
-              this.$message({
-                message: "操作成功",
-                type: "success"
-              });
-            }
-          );
-        });
+        return typeText
       },
-      opUserState(row, enableVal) {
-        let scope = this;
-        let param = {
-          pkMemberId: row.pkMemberId,
-          enable: enableVal
+      statuts2Text(status) {
+        // 订单状态 0:已取消 1:已提交 2:待支付 3:退款中 4:退款完成 5:待取件 6:待发货 7:待收货 8:交易完成 9:拒收 10:拒收完成 11:退货中 12:退货完成
+        let statusText = ''
+        if (status == '0') {
+          statusText = '已取消'
+        } else if (status == '1') {
+          statusText = '已提交'
+        } else if (status == '2') {
+          statusText = '待支付'
+        } else if (status == '3') {
+          statusText = '退款中'
+        } else if (status == '4') {
+          statusText = '退款完成'
+        } else if (status == '5') {
+          statusText = '待取件'
+        } else if (status == '6') {
+          statusText = '待发货'
+        } else if (status == '7') {
+          statusText = '待收货'
+        } else if (status == '8') {
+          statusText = '交易完成'
+        } else if (status == '9') {
+          statusText = '拒收'
+        } else if (status == '10') {
+          statusText = '拒收完成'
+        } else if (status == '11') {
+          statusText = '退货中'
+        } else if (status == '12') {
+          statusText = '退货完成'
+        } else if (status == '13') {
+          statusText = '退货退款中'
+        } else if (status == '14') {
+          statusText = '拒收退款中'
+        } else if (status == '15') {
+          statusText = '待确认'
         }
-        postMethod("/backend/member/modity", param).then(
-          res => {
-            scope.initLoad()
+        return statusText
+      },
+      goodsText(status) {
+        // 商品状态 0:已提交 1:可退款 2:发货中 3:退款中 4:退款失败 5:退款完成 6:待评价 7:已评价 8:退货待接单 9:退货已接单 10:拒收 11:拒收完成 12:退货中 13:退货完成
+        let statusText = ''
+        if (status == '0') {
+          statusText = '已提交'
+        } else if (status == '1') {
+          statusText = '可退款'
+        } else if (status == '2') {
+          statusText = '发货中'
+        } else if (status == '3') {
+          statusText = '退款中'
+        } else if (status == '4') {
+          statusText = '退款失败'
+        } else if (status == '5') {
+          statusText = '退款完成'
+        } else if (status == '6') {
+          statusText = '待评价'
+        } else if (status == '7') {
+          statusText = '已评价'
+        } else if (status == '8') {
+          statusText = '退货待接单'
+        } else if (status == '9') {
+          statusText = '退货已接单'
+        } else if (status == '10') {
+          statusText = '拒收'
+        } else if (status == '11') {
+          statusText = '拒收完成'
+        } else if (status == '12') {
+          statusText = '退货中'
+        } else if (status == '13') {
+          statusText = '退货完成'
+        }
+        return statusText
+      },
+    },
+    methods: {
+      //  启用禁用
+      enable(row) {
+        let scope = this
+        if (row.enable == "1") {
+          postMethod('/member/enable-member?pkMemberId=' + row.pkMemberId).then(res => {
+            scope.loadList()
             this.$message({
-              message: "操作成功",
+              message: "启用成功",
               type: "success"
             });
+          });
+        } else if (row.enable == "0") {
+          postMethod('/member/disable-member?pkMemberId=' + row.pkMemberId).then(res => {
+            scope.loadList()
+            this.$message({
+              message: "禁用成功",
+              type: "success"
+            });
+          });
+        }
+      },
+      //修改大咖说状态
+      bigShotState(row, bigShotVal) {
+        let that = this
+        if (bigShotVal == "1") {
+          postMethod('/member/enable-big-shot?pkMemberId=' + row.pkMemberId).then(res => {
+            that.loadList()
+            this.$message({
+              message: "修改成功",
+              type: "success"
+            });
+          });
+        } else if (bigShotVal == "2") {
+          postMethod('/member/disable-big-shot?pkMemberId=' + row.pkMemberId).then(res => {
+            that.loadList()
+            this.$message({
+              message: "修改成功",
+              type: "success"
+            });
+          });
+        }
+
+      },
+      //更换门店
+      changeStore(row) {
+        let that = this
+        that.changeStoreDialog = true
+        that.storeFrm={
+          userName:row.userName,
+          phoneNo:row.phoneNo,
+          pkMemberId:row.pkMemberId
+        }
+      },
+      storeList() {
+        getMethod("/store/search-store-list", {
+          pageSize: 500,
+          pageNum: 1
+        }).then(
+          res => {
+            this.restaurants = res.data.records
           }
         );
       },
-      exportData() {
-        let exportParam = [];
-        for (let key in this.searchParam) {
-          exportParam.push(key + "=" + this.searchParam[key]);
-        }
-        // window.open( process.env.VUE_APP_BASE_API+'/backend/member/export?'+exportParam.join("&"))
-        exportParam.push("token=" + getToken())
-        window.open(process.env.VUE_APP_BASE_API + '/backend/member/export?' + exportParam.join("&"))
+      querySearch(queryString, cb) {
+        let restaurants = this.restaurants;
+        let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
       },
-      loadgoodTypeList() {
-        let scope = this;
-        getMethod("/backend/goodType/findList", null).then(res => {
-          scope.goodTypeList = res.data.list;
-        });
-      },
-      loadgoodBrandList() {
-        let scope = this;
-        getMethod("/backend/goodBrand/findList", null).then(res => {
-          scope.goodBrandList = res.data.list;
-        });
-      },
-      loadprovinceList() {
-        let scope = this;
-        getMethod("/backend/areas/findProvince", null).then(res => {
-          scope.provinceList = res.data.list;
-        });
-      },
-      deleteRow(rowIndex, data) {
-        let param = {
-          id: data.list[rowIndex].id
+      createFilter(queryString) {
+        return (restaurant) => {
+          return (restaurant.storeName.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
         };
-        this.$confirm("是否继续删除操作?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(() => {
-          postMethod("/backend/supplier/delete", param).then(res => {
-            this.loadList();
-            this.$message("删除成功");
-          });
-        });
       },
-      batchDeleteRow(rowIndex, data) {
-        let selectList = this.$refs.mainTable.selection;
-        let idArr = [];
-        for (let i = 0; i < selectList.length; i++) {
-          idArr.push(selectList[i].id);
-        }
-        let param = {
-          delType: "2",
-          ids: idArr.join(",")
-        };
-        postMethod("/backend/supplier/delete", param).then(res => {
-          scope.editData = res.data[0];
-          this.showList = false;
-          this.showAddOrEdit = true;
-          this.$message({
-            message: "删除成功",
-            type: "success"
+      handleSelect(item) {
+        this.storeFrm.storeName=item.storeName
+        this.storeFrm.storeId=item.id
+      },
+      commit(){
+        let that= this
+        if(that.storeFrm.storeId&&that.storeFrm.storeId!=''){
+          postMethod('/member/change-store?pkMemberId='+that.storeFrm.pkMemberId+"&storeId="+that.storeFrm.storeId).then(res => {
+            that.loadList()
+            that.StoreClose()
+            that.$message({
+              message: "修改成功",
+              type: "success"
+            });
           });
-        });
-        this.searchParam.pageSize = 10;
-        this.searchParam.pageNum = 0;
-        this.loadList();
+        }else{
+          that.$message({
+            message: "请选择正确的门店",
+            type: "warning"
+          });
+        }
+      },
+      //关闭修改门店彈框
+      StoreClose() {
+        this.changeStoreDialog = false
+      },
+      //跳转订单详情
+      toOrderDtl(row) {
+        console.log(row)
+        let scope = this
+        scope.orderNo=row.orderNo
+        scope.showList = false
+      },
+      consumeDtl(row) {
+        this.loadDtlList(row)
       },
       search() {
-        this.searchParam.dataType = ''
-        this.searchParam.pageSize = 10
-        this.searchParam.pageNum = 0
-        this.loadList();
-      },
-      addOrEdit(oper, rowIndex, data) {
-        let scope = this;
-
-        if (oper == "edit") {
-          let param = {
-            id: data.list[rowIndex].id
-          };
-          getMethod("/backend/supplier/findObject", param).then(res => {
-            scope.editData = res.data[0];
-            this.showList = false;
-            this.showAddOrEdit = true;
-          });
-        } else {
-          scope.editData = {};
-          this.showList = false;
-          this.showAddOrEdit = true;
-        }
-      },
-      showListPanel(isCancel) {
-        this.showList = true;
-        this.showAddOrEdit = false;
         this.loadList();
       },
       currentPage(pageNum) {
         this.searchParam.pageNum = pageNum;
         this.loadList();
       },
+      currentPage_(pageNum) {
+        this.searchDtlParam.pageNum = pageNum;
+        this.searchConsume();
+      },
       initLoad() {
         this.loadList();
       },
       loadList() {
         let scope = this;
-        getMethod("/backend/member/findPage", this.searchParam).then(
+        getMethod("/member/search-member-list", this.searchParam).then(
           res => {
-            scope.tableData = res.data;
+            scope.tableData = res.data.records;
+            scope.tableData.forEach(i => {
+              i.enable = JSON.stringify(i.enable)
+            })
+            scope.tableData.total = res.data.total
             scope.showPagination = scope.tableData.total == 0;
           }
         );
+      },
+      backToList() {
+        this.showList = true
+      },
+      backUp(){
+        this.showDtl = true
+        this.searchDtlParam.pageNum = 1
+      },
+      searchConsume() {
+        let that = this
+        postMethod('/order/goods-order-list', that.searchDtlParam).then(res => {
+          that.tableData2.list = res.data.records
+          that.tableData2.total = res.data.total
+          that.showPagination = that.tableData2.total == 0;
+        })
+      },
+      loadDtlList(row) {
+        let scope = this;
+        console.log(row)
+        scope.memberName=row.userName
+        scope.searchDtlParam.memberId=row.pkMemberId
+        postMethod('/order/goods-order-list', scope.searchDtlParam).then(res => {
+          scope.tableData2.list = res.data.records
+          scope.tableData2.total = res.data.total
+          scope.showPagination = scope.tableData2.total == 0;
+          scope.showDtl = false;
+        })
       }
     }
   };
@@ -417,10 +540,8 @@
     font-size: 14px;
 
     .ly-tool-panel {
-      div {
-        display: inline;
-      }
-
+      display: flex;
+      flex-wrap: wrap;
       line-height: "60px";
       height: "60px";
       width: 100%;
@@ -431,5 +552,130 @@
         display: inline;
       }
     }
+  }
+
+  .tabTd {
+    display: flex;
+    flex-wrap: nowrap;
+    margin: 7px 10px;
+    align-items: center;
+  }
+
+  .my-autocomplete {
+    li {
+      line-height: normal;
+      padding: 7px;
+
+      .name {
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .addr {
+        font-size: 12px;
+        color: #b4b4b4;
+      }
+
+      .highlighted .addr {
+        color: #ddd;
+      }
+    }
+  }
+</style>
+<style scoped>
+  .el-table--enable-row-transition /deep/ .cell {
+    padding: 0;
+  }
+
+  .item {
+    width: 100vw;
+    background: #f1f1f1;
+    position: absolute;
+    top: 0;
+    left: -55px;
+    z-index: 1;
+    height: 50px;
+    line-height: 50px;
+  }
+
+  .imgSty {
+    width: 100px;
+    height: 100px;
+    display: block;
+    margin-left: 10px;
+  }
+
+  .mesSty {
+    height: 150px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 10px;
+    border-bottom: 1px solid #ebeef5;
+  }
+
+  .mesSty:first-child {
+    margin-top: 50px;
+  }
+
+  .mesSty:last-child {
+    border-bottom: none;
+  }
+
+  .mesSty2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1px;
+    height: 150px;
+    border-bottom: 1px solid #ebeef5;
+  }
+
+  .mesSty2:last-child {
+    border-bottom: none;
+  }
+
+  .content1>>>.el-table--border td:nth-child(2) {
+    padding: 0;
+  }
+
+  .content1 /deep/ .el-table__row td:nth-child(n+3) .cell {
+    position: absolute !important;
+    top: 50px !important;
+    width: 100%;
+    text-align: center;
+  }
+
+  .content1 /deep/ .el-table__row td:nth-child(1) .cell {
+    position: absolute !important;
+    top: 0px !important;
+    z-index: 999;
+    width: 100vw;
+    height: 50px;
+    line-height: 50px;
+  }
+
+  .pb_sty span {
+    background: #1dc8de;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #fff;
+  }
+
+  .mesFont p {
+    text-align: left !important;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    padding: 0 10px;
+  }
+
+  .mesFont p:nth-child(2) {
+    text-overflow: -o-ellipsis-lastline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 </style>

@@ -215,7 +215,7 @@
 <script>
   import CountTo from 'vue-count-to'
   import { getMethod, postMethod } from "@/api/request";
-  import { getMethod as getMethodNew, postMethod as postMethodNew } from "@/api/request-new";
+  // import { getMethod as getMethodNew, postMethod as postMethodNew } from "@/api/request-new";
 
   export default {
     name:'',
@@ -380,7 +380,7 @@
       initPlatData(){
         let scope = this;
 
-        getMethodNew("/statistic/findSiteData", {}).then(res => {
+        getMethod("/statistic/findSiteData", {}).then(res => {
             let resData = res.data
             scope.platData = resData
         });
@@ -404,7 +404,7 @@
       },
       initMonthData(){
         let scope = this;
-        getMethodNew("/statistic/findMonData", {}).then(res => {
+        getMethod("/statistic/findMonData", {}).then(res => {
             let resData = res.data
             scope.monthData = resData
         });

@@ -1,12 +1,12 @@
 import request from '@/utils/request'
 
 export function getRoutes(param) {
-  let url =  '/backend/menu/getMenu'
+  let url =  '/login/get-menu-list'
   if(param != undefined){
     url = url + param
   }
   return request({
-    url: '/backend/menu/getMenu',
+    url: '/login/get-menu-list',
     method: 'get'
   })
 }

@@ -1,55 +1,76 @@
 <template>
   <div class="update-form-panel">
     <el-form ref="dataForm" :model="dataForm" label-width="140px" width="500px">
+      <el-form-item label="门店编号">
+        <el-input v-model="dataForm.storeNo" />
+      </el-form-item>
       <el-form-item label="门店名称">
         <el-input v-model="dataForm.storeName" />
       </el-form-item>
       <el-form-item label="店主姓名">
-        <el-input v-model="dataForm.owerUserName" />
+        <el-input v-model="dataForm.userName" />
       </el-form-item>
       <el-form-item label="店主手机号">
-        <el-input v-model="dataForm.mobilePhone" disabled="" />
+        <el-input v-model="dataForm.phoneNo" />
       </el-form-item>
-
-      <el-form-item label="E类服务商">
-        <el-select v-model="dataForm.serviceLevel" style="width:300px" @change="setMobilePhone">
-          <el-option v-for="item in serviceList" :key="item.id" :value-key="item.label" :label="item.label" :value="item.value" />
-        </el-select>
+      <el-form-item label="营业时间">
+        <div style="display: flex;flex-wrap: nowrap;">
+          <el-time-picker v-model="dataForm.startWorkTime" value-format="HH:mm:ss" :picker-options="{
+              selectableRange: '00:00:00 - 23:59:59'
+            }" placeholder="请选择开始时间">
+          </el-time-picker>
+          &nbsp;&nbsp;至&nbsp;&nbsp;
+          <el-time-picker value-format="HH:mm:ss" v-model="dataForm.endWorkTime" :picker-options="{
+              selectableRange: '00:00:00 - 23:59:59'
+            }" placeholder="请选择结束时间">
+          </el-time-picker>
+        </div>
       </el-form-item>
-
-      <el-form-item label="店铺图片-列表页面" prop="storeImg">
-        <el-input v-show="false" v-model="dataForm.storeImg" />
-        <el-upload :disabled="!viewSubmit" :action="uploadStoreImgUrl" list-type="picture-card" :on-preview="handleStoreImgPreview"
-          :before-upload="beforeStoreImgUpload" :on-success="handleStoreImgSuccess" :class="{hide:hideStoreImgUpload}"
-          :file-list="uploadStoreImgList" :on-remove="handleStoreImgRemove">
+      <el-form-item label="门店后台账号">
+        <el-input v-model="dataForm.loginAccount" />
+      </el-form-item>
+      <el-form-item label="开户行">
+        <el-input v-model="dataForm.bankName" />
+      </el-form-item>
+      <el-form-item label="银行账号">
+        <el-input v-model="dataForm.bankCard" />
+      </el-form-item>
+      <el-form-item label="门店列表图片" prop="frontImg">
+        <el-input v-show="false" v-model="dataForm.frontImg" />
+        <el-upload :action="uploadStoreImgUrl" list-type="picture-card"
+          :on-preview="handleStoreImgPreview" :before-upload="beforeStoreImgUpload" :on-success="handleStoreImgSuccess"
+          :class="{hideTrue:hideStoreImgUpload}" :file-list="uploadStoreImgList" :on-remove="handleStoreImgRemove">
           <i class="el-icon-plus" />
-          <div slot="tip" class="el-upload__tip">推荐图片尺寸: 1200 * 636</div>
+          <div slot="tip" class="el-upload__tip">推荐图片尺寸: 1000 * 528</div>
         </el-upload>
       </el-form-item>
-
-      <el-form-item label="店铺图片-详情页面" prop="storeImgDtl" style="width:1060px">
-        <el-input v-show="false" v-model="dataForm.storeImgDtl" />
-        <el-upload :disabled="!viewSubmit" :action="uploadStoreImgDtlUrl" list-type="picture-card" :on-preview="handleStoreImgDtlPreview"
-          :before-upload="beforeStoreImgDtlUpload" :on-success="handleStoreImgDtlSuccess" :class="{hide:hideStoreImgDtlUpload}"
-          :file-list="uploadStoreImgDtlList" :on-remove="handleStoreImgDtlRemove">
-          <i class="el-icon-plus" />
-          <div slot="tip" class="el-upload__tip">推荐图片尺寸: 1200 * 636</div>
-        </el-upload>
-      </el-form-item>
-
       <el-form-item label="详细地址">
-        <el-input v-model="dataForm.address" disabled />
+        <el-input v-model="dataForm.address" />
       </el-form-item>
-      <el-form-item label="">
+     <!-- <el-form-item label="">
         <gdMap @callBackMap="callBackMap" />
+      </el-form-item> -->
+      <el-form-item label="地址经纬度">
+        <div style="display: flex;flex-wrap: nowrap;">
+          <div>经度：</div><el-input style="width: 100px;" v-model="dataForm.lng" disabled />&nbsp;&nbsp;&nbsp;&nbsp;
+          <div>纬度：</div><el-input style="width: 100px;" v-model="dataForm.lat" disabled />
+        </div>
       </el-form-item>
-      <el-form-item label="门店状态">
-        <el-select v-model="dataForm.status">
-          <el-option v-for="item in shopStatusList" :key="item.id" :value-key="item.label" :label="item.label" :value="item.id" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="是否启用">
-        <el-switch v-model="dataForm.enable" inactive-value="0" active-value="1" />
+      <el-form-item label="地图定位：">
+        <div style="position: absolute;width: 250px;left: 5px;top: 5px;z-index: 999;">
+         <el-autocomplete v-model="form.address" style="width:100%;" popper-class="autoAddressClass"
+          :fetch-suggestions="querySearchAsync" :trigger-on-focus="false" placeholder="地址搜索" clearable
+          @select="handleSelect">
+          <template slot-scope="{ item }">
+            <i class="el-icon-search fl mgr10" />
+            <div style="overflow:hidden;">
+              <div class="title">{{ item.title }}</div>
+              <span class="address ellipsis">{{ item.address }}</span>
+            </div>
+          </template>
+        </el-autocomplete>
+        </div>
+        <div id="map-container" style="width:100%;height:500px;" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitUpdate">
@@ -75,12 +96,13 @@
   import {
     isInteger
   } from '@/utils/validate'
-  import gdMap from './map'
+  // import gdMap from './map'
+  import loadBMap from '@/utils/loadBMap.js'
 
   export default {
-    components: {
-      gdMap
-    },
+    // components: {
+    //   gdMap
+    // },
     props: {
       editData: {
         type: Object,
@@ -89,137 +111,171 @@
     },
     data() {
       return {
+
+        form: {
+          address: '', // 详细地址
+          addrPoint: { // 详细地址经纬度
+            lng: 0,
+            lat: 0
+          }
+        },
+        map: '', // 地图实例
+        mk: '', // Marker实例
+        locationPoint: null,
         uploadStoreImgUrl: "",
-        uploadStoreImgDtlUrl: "",
         dialogVisible: false,
         dialogImageUrl: '',
-        viewSubmit: true,
         hideStoreImgUpload: false,
-        hideStoreImgDtlUpload: false,
-        serviceList: [],
         uploadStoreImgList: [],
-        uploadStoreImgDtlList: [],
-        shopStatusList: [],
-        provinceList: [],
-        cityList: [],
         fileSortImage: 0,
         imageUrl: '',
         fileList: [],
         dataForm: {
+          storeNo:'',
           storeName: '',
-          storeImg: '',
-          owerUserName: '',
-          mobilePhone: '',
+          frontImg: '',
+          userName: '',
+          phoneNo: '',
           lat: '',
           lng: '',
           address: '',
-          serviceLevel: '',
-          status: '',
-          province: '',
-          city: '',
-          enable: true,
-          id: ''
+          id: '',
+          startWorkTime: '',
+          endWorkTime: '',
+          loginAccount:'',
+          bankName:'',
+          bankCard:''
         }
       }
     },
     computed: {},
-    mounted() {
-      this.shopStatusList = this.GLOBAL.shopStatusList
-      this.loadprovinceList()
-      this.loadServiceList()
-      this.init()
+    async mounted() {
+      await loadBMap('w1aGFYvjyBEi0hElRglVFFnWsW5j3OYe') // 加载引入BMap
+      this.initMap()
       this.$nextTick(function() {
         if (this.editData.id) {
           this.dataForm = this.editData
-          this.imageUrl = this.dataForm.storeImg
-          this.loadCityList()
+          this.imageUrl = this.dataForm.frontImg
           this.initDefaultImage()
         }
         this.buildStoreImgGroupId()
-        this.buildStoreImgDtlGroupId()
       })
-      if (this.oper == 'view') {
-        this.viewSubmit = false
-      }
     },
     created() {},
     methods: {
-      setMobilePhone(sel) {
-        this.dataForm.mobilePhone = sel
+
+      // 初始化地图
+      initMap() {
+        var that = this
+        // 1、挂载地图
+        this.map = new BMap.Map('map-container', {
+          enableMapClick: false
+        })
+        var point = new BMap.Point(121.40574100273545,31.167573870839085)
+        this.map.centerAndZoom(point, 19)
+        this.map.enableScrollWheelZoom(true);
+        // 3、设置图像标注并绑定拖拽标注结束后事件
+        this.mk = new BMap.Marker(point, {
+          enableDragging: true
+        })
+        this.map.addOverlay(this.mk)
+        this.mk.addEventListener('dragend', function(e) {
+          that.getAddrByPoint(e.point)
+        })
+        // 4、添加（右上角）平移缩放控件
+        this.map.addControl(new BMap.NavigationControl({
+          anchor: BMAP_ANCHOR_TOP_RIGHT,
+          type: BMAP_NAVIGATION_CONTROL_SMALL
+        }))
+        // // 5、添加（左下角）定位控件
+        // var geolocationControl = new BMap.GeolocationControl({
+        //   anchor: BMAP_ANCHOR_BOTTOM_LEFT
+        // })
+        // geolocationControl.addEventListener('locationSuccess', function(e) {
+        //   that.getAddrByPoint(e.point)
+        // })
+        // geolocationControl.addEventListener('locationError', function(e) {
+        //   alert(e.message)
+        // })
+        // this.map.addControl(geolocationControl)
+        // 7、绑定点击地图任意点事件
+        this.map.addEventListener('click', function(e) {
+          that.getAddrByPoint(e.point)
+        })
       },
-      loadServiceList() {
-        let scope = this
-        let searchProvider = {
-          provinceRole: '5',
-          verifyStatus: '30',
-          pageSize: 1000,
-          pageNum: 0
-        };
-        getMethod('/backend/lyProvider/findPage', searchProvider).then(
-          res => {
-            let dataList = res.data.list
-            scope.serviceList = []
-            for (let i = 0; i < dataList.length; i++) {
-              let pobj = dataList[i]
-              let providerObject = {
-                id: pobj.id,
-                value: pobj.mobileNo,
-                label: pobj.provinceName
+      // 获取两点间的距离
+      getDistancs(pointA, pointB) {
+        return this.map.getDistance(pointA, pointB).toFixed(2)
+      },
+      // 2、逆地址解析函数
+      getAddrByPoint(point) {
+        var that = this
+        var geco = new BMap.Geocoder()
+        geco.getLocation(point, function(res) {
+          console.log(res)
+          that.mk.setPosition(point)
+          that.map.panTo(point)
+          console.log(point,res)
+          that.dataForm.lat=res.point.lat
+          that.dataForm.lng=res.point.lng
+          that.form.address = res.address
+          that.form.addrPoint = point
+        })
+      },
+      // 8-1、地址搜索
+      querySearchAsync(str, cb) {
+        var options = {
+          onSearchComplete: function(res) {
+            var s = []
+            if (local.getStatus() == BMAP_STATUS_SUCCESS) {
+              for (var i = 0; i < res.getCurrentNumPois(); i++) {
+                s.push(res.getPoi(i))
               }
-              scope.serviceList.push(providerObject);
+              cb(s)
+            } else {
+              cb(s)
             }
           }
-        )
+        }
+        var local = new BMap.LocalSearch(this.map, options)
+        local.search(str)
+      },
+      // 8-2、选择地址
+      handleSelect(item) {
+        console.log('item',item.point);
+        this.dataForm.lat=item.point.lat
+        this.dataForm.lng=item.point.lng
+        this.form.address = item.address + item.title
+        this.form.addrPoint = item.point
+        this.map.clearOverlays()
+        this.mk = new BMap.Marker(item.point)
+        this.map.addOverlay(this.mk)
+        this.map.panTo(item.point)
+      },
+      setMobilePhone(sel) {
+        this.dataForm.phoneNo = sel
       },
       callBackUploadSuc(res, file) {
         this.imageUrl = res.data.url
-        this.dataForm.storeImg = res.data.url
-      },
-      init() {},
-      changeProvince(val) {
-        this.loadCityList()
-      },
-      loadprovinceList() {
-        const scope = this
-        const param = {
-          parentId: '-1'
-        }
-        getMethod('/backend/areas/findProvince', param).then(res => {
-          scope.provinceList = res.data
-        })
-      },
-      loadCityList() {
-        const scope = this
-        const param = {
-          provinceid: this.dataForm.province
-        }
-
-        if (this.dataForm.province == '') {
-          return
-        }
-        getMethod('/backend/areas/findCity', param).then(res => {
-          scope.cityList = res.data
-        })
+        this.dataForm.frontImg = res.data.url
       },
       callBackMap(mapData) {
-		  console.log(mapData,'mapData')
+        console.log(mapData, 'mapData')
         this.dataForm.lng = mapData.lng
         this.dataForm.lat = mapData.lat
         this.dataForm.address = mapData.adress
       },
       initDefaultImage() {
-        this.fileList = this.dataForm.files
-        for (let i = 0; i < this.dataForm.files.length; i++) {
-          const imageObj = this.dataForm.files[i]
-          if (imageObj.groupId == this.dataForm.storeImg) {
-            this.uploadStoreImgList.push(imageObj)
-          }
-
-          if (imageObj.groupId == this.dataForm.storeImgDtl) {
-            this.uploadStoreImgDtlList.push(imageObj)
-          }
+        // this.fileList = this.dataForm.files
+        // for (let i = 0; i < this.dataForm.files.length; i++) {
+        //   const imageObj = this.dataForm.files[i]
+        //   if (imageObj.groupId == this.dataForm.frontImg) {
+        //     this.uploadStoreImgList.push(imageObj)
+        //   }
+        // }
+        if(this.dataForm.frontImg&&this.dataForm.frontImg!=''){
+            this.uploadStoreImgList.push({url:this.dataForm.frontImg})
         }
-
         if (this.uploadStoreImgList.length >= 1) {
           this.hideStoreImgUpload = true
         }
@@ -234,12 +290,22 @@
           let fileList = []
           fileList = fileList.concat(this.uploadStoreImgList)
           fileList = fileList.concat(this.uploadStoreImgDtlList)
-          this.dataForm.fileJsonStr = JSON.stringify(fileList)
-          this.dataForm.files = []
-
-          postMethod('/backend/storeManage/update', this.dataForm).then(
+          // this.dataForm.fileJsonStr = JSON.stringify(fileList)
+          // this.dataForm.files = []
+          if (this.editData.id) {
+            this.dataForm.id=this.editData.id
+            postMethod('/store/update-store', this.dataForm).then(
+              res => {
+                this.$message({
+                  message: '操作成功',
+                  type: 'success'
+                })
+                this.$emit('showListPanel', true)
+              }
+            )
+          } else{
+          postMethod('/store/add-store', this.dataForm).then(
             res => {
-              scope.typeList = res.data
               this.$message({
                 message: '操作成功',
                 type: 'success'
@@ -247,10 +313,11 @@
               this.$emit('showListPanel', true)
             }
           )
+          }
         }
       },
       validate() {
-        if (this.dataForm.storeImg == '') {
+        if (this.dataForm.frontImg == '') {
           this.$message({
             message: '门店图片不能为空',
             type: 'warning'
@@ -258,10 +325,16 @@
           return false;
         }
         const notNvl = [
+          'storeNo',
           'storeName',
-          'owerUserName',
-          'mobilePhone',
-          'address'
+          'userName',
+          'phoneNo',
+          'address',
+          'startWorkTime',
+          'endWorkTime',
+          'loginAccount',
+          'bankName',
+          'bankCard',
         ]
 
         for (let i = 0; i < notNvl.length; i++) {
@@ -291,14 +364,14 @@
         this.$emit('showListPanel', true)
       },
       buildStoreImgGroupId() {
-        if (this.dataForm.storeImg == '' ||
-          this.dataForm.storeImg == undefined) {
-          getMethod('/backend/oss/groupId', null).then(res => {
+        if (this.dataForm.frontImg == '' ||
+          this.dataForm.frontImg == undefined) {
+          getMethod('/oss/get-group-id', null).then(res => {
             this.uploadStoreImgUrl = getUploadUrl() + '?groupId=' + res.data
-            this.dataForm.storeImg = res.data
+            this.dataForm.frontImg = res.data
           })
         } else {
-          this.uploadStoreImgUrl = getUploadUrl() + '?groupId=' + this.dataForm.storeImg
+          this.uploadStoreImgUrl = getUploadUrl() + '?groupId=' + this.dataForm.frontImg
         }
       },
       handleStoreImgPreview(file) {
@@ -329,65 +402,9 @@
           this.hideStoreImgUpload = true
         }
         /*this.clearValidate('storeImg')*/
-        this.dataForm.storeImg = res.data.groupId
+        this.dataForm.frontImg = res.data.url
       },
       beforeStoreImgUpload(file) {
-        const fileTypeVerify =
-          file.type === 'image/jpeg' ||
-          file.type === 'image/png' ||
-          file.type === 'application/pdf'
-        const isLt2M = file.size / 1024 / 1024 < 5
-
-        if (!fileTypeVerify) {
-          this.$message.error('上传文件格式错误!')
-        }
-        if (!isLt2M) {
-          this.$message.error('上传文件大小不能超过 5MB!')
-        }
-        return fileTypeVerify && isLt2M
-      },
-      buildStoreImgDtlGroupId() {
-        if (this.dataForm.storeImgDtl == '' ||
-          this.dataForm.storeImgDtl == undefined) {
-          getMethod('/backend/oss/groupId', null).then(res => {
-            this.uploadStoreImgDtlUrl = getUploadUrl() + '?groupId=' + res.data
-            this.dataForm.storeImgDtl = res.data
-          })
-        } else {
-          this.uploadStoreImgDtlUrl = getUploadUrl() + '?groupId=' + this.dataForm.storeImgDtl
-        }
-      },
-      handleStoreImgDtlPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
-      },
-      handleStoreImgDtlRemove(res) {
-        for (let i = 0; i < this.uploadStoreImgDtlList.length; i++) {
-          if (this.uploadStoreImgDtlList[i].url == (res.url || res.response.data.url)) {
-            this.uploadStoreImgDtlList.splice(i, 1)
-            break
-          }
-        }
-        this.hideStoreImgDtlUpload = false
-      },
-      handleStoreImgDtlSuccess(res, file) {
-        res.data.sort = this.fileSortImage++
-        res.data.fileType = file.raw.type
-        this.uploadStoreImgDtlList.push(res.data)
-        const groupId = res.data.groupId
-        let imageCnt = 0
-        for (let i = 0; i < this.uploadStoreImgDtlList.length; i++) {
-          if (this.uploadStoreImgDtlList[i].groupId == groupId) {
-            imageCnt++
-          }
-        }
-        if (imageCnt >= 1) {
-          this.hideStoreImgDtlUpload = false
-        }
-        /*this.clearValidate('storeImg')*/
-        this.dataForm.storeImgDtl = res.data.groupId
-      },
-      beforeStoreImgDtlUpload(file) {
         const fileTypeVerify =
           file.type === 'image/jpeg' ||
           file.type === 'image/png' ||
@@ -415,7 +432,33 @@
   }
 </style>
 <style lang="scss">
-  .hide .el-upload--picture-card {
+  .hideTrue .el-upload--picture-card {
     display: none;
+  }
+</style>
+
+<style lang="scss" scoped>
+  .autoAddressClass {
+    li {
+      i.el-icon-search {
+        margin-top: 11px;
+      }
+
+      .mgr10 {
+        margin-right: 10px;
+      }
+
+      .title {
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .address {
+        line-height: 1;
+        font-size: 12px;
+        color: #b4b4b4;
+        margin-bottom: 5px;
+      }
+    }
   }
 </style>

@@ -4,64 +4,65 @@
       v-if="showList"
       class="ly-container"
     >
-      <div class="ly-tool-panel">
-        <table>
-          <tr>
-            <td>门店名称:</td>
-            <td>
-              <el-input
-                v-model="searchParam.storeName"
-                width="180px"
-              />
-            </td>
-            <td>状态:</td>
-            <td>
-              <el-select
-                v-model="searchParam.enable"
-                placeholder="请选择"
-              >
-                <el-option
-                  v-for="item in enableList "
-                  :key="item.id"
-                  :value-key="item.label"
-                  :label="item.label"
-                  :value="item.id"
-                />
-              </el-select>
-            </td>
-            <td>门店状态:</td>
-            <td>
-              <el-select
-                v-model="searchParam.status"
-                placeholder="请选择"
-              >
-                <el-option
-                  v-for="item in shopStatusList "
-                  :key="item.id"
-                  :value-key="item.label"
-                  :label="item.label"
-                  :value="item.id"
-                />
-              </el-select>
-            </td>
-            <td>
-              <el-button
-                icon="el-icon-search"
-                @click="search()"
-              >
-                搜索
-              </el-button>
-              <el-button
-                plain
-                type="primary"
-                icon="el-icon-document-add"
-                @click="addOrEdit('add')"
-              >
-                新建
-              </el-button>
-            </td>
-          </tr>
-        </table>
+     <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
+       <div class="tabTd">
+         <div>门店名称：</div>
+         <div>
+           <el-input v-model="searchParam.storeName" width="180px" placeholder="请输入" />
+         </div>
+       </div>
+       <div class="tabTd">
+         <div>手机号：</div>
+         <div>
+           <el-input v-model="searchParam.phone" width="180px" placeholder="请输入" />
+         </div>
+       </div>
+       <div class="tabTd">
+         <div>状态：</div>
+         <div>
+          <el-select
+            v-model="searchParam.enable"
+            placeholder="请选择"
+          >
+          <el-option label="全部" value="" />
+            <el-option label="禁用" value="0" />
+            <el-option label="启用" value="1" />
+          </el-select>
+         </div>
+       </div>
+      <!-- <div class="tabTd">
+         <div>门店状态：</div>
+         <div>
+         <el-select
+           v-model="searchParam.status"
+           placeholder="请选择"
+         >
+           <el-option
+             v-for="item in shopStatusList "
+             :key="item.id"
+             :value-key="item.label"
+             :label="item.label"
+             :value="item.id"
+           />
+         </el-select>
+         </div>
+       </div> -->
+       <div class="tabTd">
+         <el-button
+           icon="el-icon-search"
+           @click="search()"
+         >
+           搜索
+         </el-button>
+         <el-button
+           plain
+           type="primary"
+           icon="el-icon-document-add"
+           @click="addOrEdit('add')"
+         >
+           新建
+         </el-button>
+       </div>
       </div>
       <div class="ly-table-panel">
         <div class="ly-data-list">
@@ -80,19 +81,19 @@
               width="150px"
             />
             <el-table-column
-              prop="owerUserName"
+              prop="userName"
               label="店主姓名"
               width="150px"
             />
             <el-table-column
-              prop="mobilePhone"
+              prop="phoneNo"
               label="店主手机号"
               width="150px"
             />
             <el-table-column
-              prop="empCnt"
-              label="店员数"
-              width="100px"
+              prop="loginAccount"
+              label="登录账号"
+              width="150px"
             />
             <!-- <el-table-column prop="provinceName" label="省份" width="150px"></el-table-column>
             <el-table-column prop="cityName" label="城市" width="150px"></el-table-column> -->
@@ -102,13 +103,8 @@
               width="250px"
             />
             <el-table-column
-              prop="statusText"
-              label="门店状态"
-              width="100px"
-            />
-            <el-table-column
               prop="enable"
-              label="是否启用"
+              label="状态"
               width="150px"
             >
               <template slot-scope="scope">
@@ -121,9 +117,14 @@
               </template>
             </el-table-column>
             <el-table-column
+              prop="createTime"
+              label="创建时间"
+              width="170px"
+            />
+            <el-table-column
               prop="id"
               label="操作"
-              width="360px"
+              width="150px"
             >
               <template slot-scope="scope">
                 <el-button
@@ -134,6 +135,12 @@
                   编辑门店
                 </el-button>
                 <el-button
+                  @click.native.prevent="showResetPwd(scope.row)"
+                  type="text"
+                  size="small"
+                >重置密码
+                </el-button>
+              <!--  <el-button
                   v-show="false"
                   type="text"
                   size="small"
@@ -147,14 +154,14 @@
                   @click.native.prevent="editStoreService(scope.row, tableData)"
                 >
                   编辑门店服务
-                </el-button>
-                <el-button
+                </el-button> -->
+                <!-- <el-button
                   type="text"
                   size="small"
                   @click.native.prevent="downQrcode(scope.row, tableData)"
                 >
                   下载二维码
-                </el-button>
+                </el-button> -->
               </template>
             </el-table-column>
           </el-table>
@@ -178,116 +185,82 @@
       :edit-data="editData"
       @showListPanel="showListPanel"
     />
-    <empIndex
-      v-if="showEditEmp"
-      :store-data="storeData"
-      @backToStoreIndex="backToStoreIndex"
-    />
-    <addStoreService
-      v-if="showStoreService"
-      :store-data="storeData"
-      @backToStoreIndex="backToStoreIndex"
-    />
   </div>
 </template>
 
 <script>
 import saveOrEdit from './saveOrEdit'
-import addStoreService from './addStoreService'
-import empIndex from './emp/index'
 import { getMethod, postMethod } from '@/api/request'
 import {getToken} from '@/utils/auth'
 
 export default {
-  components: { saveOrEdit, empIndex, addStoreService },
+  components: { saveOrEdit },
   data() {
     return {
-      storeData: {},
       shopStatusList: [],
       enableList: [],
       showList: true,
-      showAddOrEdit: false,
-      showEditEmp: false,
-      showStoreService: false,
+      showAddOrEdit:false,
       showPagination: false,
       editData: {},
       searchParam: {
-        typeName: '',
+        storeName:'',
+        phone:'',
+        enable:'',
         pageSize: 10,
-        pageNum: 0
+        pageNum: 1
       },
       tableData: {
         list: []
       },
-      dataList: []
     }
   },
   computed: {},
   mounted() {
     this.initLoad()
-
-    this.shopStatusList.push({
-      label: '全部'
-    })
-
-    this.enableList.push({
-      label: '全部'
-    })
-
-    this.shopStatusList = this.shopStatusList.concat(
-      this.GLOBAL.shopStatusList
-    )
-    this.enableList = this.enableList.concat(this.GLOBAL.enableList)
   },
   created() {},
   methods: {
-    updateEnable(rowObj) {
-      const param = {
-        id: rowObj.id,
-        enable: rowObj.enable
+    updateEnable(row) {
+      console.log(row.enable)
+      if(row.enable=='0'){
+      postMethod('/store/disable-store?id='+row.id).then(res => {
+        this.loadList()
+        this.$message({
+          type: 'success',
+          message: '操作成功'
+        })
+      })
+      }else if(row.enable=='1'){
+      postMethod('/store/enable-store?id='+row.id).then(res => {
+        this.loadList()
+        this.$message({
+          type: 'success',
+          message: '操作成功'
+        })
+      })
       }
-      postMethod('/backend/storeManage/updateEnable', param).then(res => {})
     },
     downQrcode(rowObj){
       window.open( process.env.VUE_APP_BASE_API+'/backend/storeManage/storeQr?id='+rowObj.id+'&storeName='+rowObj.storeName+'&token='+ getToken())
     },
-    deleteRow(rowIndex, data) {
-      const param = {
-        id: data.list[rowIndex].id
+    showResetPwd(row){
+      let param = {
+        id:row.superAccount,
+        newPwd:'123456'
       }
-      this.$confirm('是否继续删除操作?', '提示', {
+      this.$confirm('是否重置密码为‘123456’?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        postMethod('/backend/storeManage/delete', param).then(res => {
-          this.loadList()
-          this.$message('删除成功')
+        postMethod('/permission/change-password', param).then(res => {
+          this.$message({
+            type: 'success',
+            message: '密码重置成功'
+          })
         })
       })
-    },
-    batchDeleteRow(rowIndex, data) {
-      const selectList = this.$refs.mainTable.selection
-      const idArr = []
-      for (let i = 0; i < selectList.length; i++) {
-        idArr.push(selectList[i].id)
-      }
-      const param = {
-        delType: '2',
-        ids: idArr.join(',')
-      }
-      postMethod('/backend/storeManage/delete', param).then(res => {
-        scope.editData = res.data[0]
-        this.showList = false
-        this.showAddOrEdit = true
-        this.$message({
-          message: '删除成功',
-          type: 'success'
-        })
-      })
-      this.searchParam.pageSize = 10
-      this.searchParam.pageNum = 0
-      this.loadList()
     },
     search() {
       this.loadList()
@@ -299,8 +272,8 @@ export default {
         const param = {
           id: data.list[rowIndex].id
         }
-        getMethod('/backend/storeManage/findObject', param).then(res => {
-          scope.editData = res.data[0]
+        getMethod('/store/get-store-info', param).then(res => {
+          scope.editData = res.data
           this.showList = false
           this.showAddOrEdit = true
         })
@@ -315,12 +288,6 @@ export default {
       this.showAddOrEdit = false
       this.loadList()
     },
-    backToStoreIndex() {
-      this.showList = true
-      this.showEditEmp = false
-      this.showStoreService = false
-      this.loadList()
-    },
     currentPage(pageNum) {
       this.searchParam.pageNum = pageNum
       this.loadList()
@@ -330,27 +297,15 @@ export default {
     },
     loadList() {
       const scope = this
-      getMethod('/backend/storeManage/findPage', this.searchParam).then(res => {
-        scope.tableData = res.data
-        const dataList = scope.tableData.list
-        for (let i = 0; i < dataList.length; i++) {
-          dataList[i].statusText = this.GLOBAL.shopStatusMap[
-            dataList[i].status
-          ]
-        }
+      getMethod('/store/search-store-list', this.searchParam).then(res => {
+        scope.tableData.list = res.data.records
+        scope.tableData.list.map(i=>{
+          i.enable=String(i.enable)
+        })
+        scope.tableData.total = res.data.total
         scope.showPagination = scope.tableData.total == 0
       })
     },
-    editEmp(rowData, tableData) {
-      this.storeData = rowData
-      this.showList = false
-      this.showEditEmp = true
-    },
-    editStoreService(rowData, tableData) {
-      this.storeData = rowData
-      this.showList = false
-      this.showStoreService = true
-    }
   }
 }
 </script>
@@ -359,9 +314,6 @@ export default {
   padding: 10px 20px;
   font-size: 14px;
   .ly-tool-panel {
-    div {
-      display: inline;
-    }
     line-height: "60px";
     height: "60px";
     width: 100%;
@@ -372,4 +324,11 @@ export default {
     }
   }
 }
+.tabTd {
+    display: flex;
+    flex-wrap: nowrap;
+    margin: 7px 10px;
+    align-items: center;
+
+  }
 </style>

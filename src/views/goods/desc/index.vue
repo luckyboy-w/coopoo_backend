@@ -1,34 +1,29 @@
 <template>
   <div>
     <div class="ly-container" v-if="showList">
-      <div class="ly-tool-panel">
-        <table>
-          <tr>
-            <td>售后说明名称:</td>
-            <td>
-              <el-input v-model="searchParam.name" width="180px"></el-input>
-            </td>
-            <td>
-              <el-button icon="el-icon-search" @click="search()">搜索</el-button>
-              <el-button plain type="primary" @click="addOrEdit('add')" icon="el-icon-document-add">新建</el-button>
-            </td>
-          </tr>
-        </table>
+      <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
+          <div class="tabTd">
+            <div>售后说明名称：</div>
+            <div>
+              <el-input v-model="searchParam.name" placeholder="请输入" width="180px" />
+            </div>
+          </div>
+          <div class="tabTd">
+            <el-button icon="el-icon-search" @click="search()">搜索</el-button>
+            <el-button plain type="primary" @click="addOrEdit('add')" icon="el-icon-document-add">新建</el-button>
+          </div>
       </div>
       <div class="ly-table-panel">
         <div class="ly-data-list">
           <el-table
             ref="mainTable"
             :data="tableData.list"
-            style="width: 1260px;margin-bottom: 20px;"
+            style="width: 700px;margin-bottom: 20px;"
             row-key="id"
             border
             default-expand-all
-            :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
           >
-            <!--            <el-table-column type="selection" width="55"></el-table-column>-->
-            <el-table-column prop="id" label="序号" width="150px"></el-table-column>
-            <el-table-column prop="name" label="售后说明名称" width="150px"></el-table-column>
+            <el-table-column prop="name" label="售后说明名称"></el-table-column>
             <el-table-column prop="imgUrl" label="图片" width="150px">
               <template slot-scope="scope">
                 <el-image
@@ -47,7 +42,7 @@
             <el-table-column prop="id" label="操作" width="200px">
               <template slot-scope="scope">
                 <el-button
-                  @click.native.prevent="addOrEdit('edit',scope.$index, tableData)"
+                  @click.native.prevent="addOrEdit('edit',scope.row)"
                   type="text"
                   size="small"
                 >编辑
@@ -71,6 +66,7 @@
             @current-change="currentPage"
             @prev-click="currentPage"
             @next-click="currentPage"
+            :current-page="searchParam.pageNum"
             :page-size="searchParam.pageSize"
             :total="tableData.total"
           ></el-pagination>
@@ -109,7 +105,7 @@ export default {
       searchParam: {
         name: "",
         pageSize: 10,
-        pageNum: 0
+        pageNum: 1
       },
       tableData: {
         list: []
@@ -125,9 +121,10 @@ export default {
       this.loadList();
     },
     async loadList() {
-      const {data} = await getMethod("/backend/goodSalesDesc/list", this.searchParam)
-      this.tableData = data;
-      this.showPagination = this.tableData.total == 0;
+     const {data} = await postMethod("/goods/post-sale/list", this.searchParam)
+     this.tableData.list = data.records;
+     this.tableData.total = data.total;
+     this.showPagination = this.tableData.total == 0;
     },
     async deleteRow(rowData, data) {
       try {
@@ -137,17 +134,17 @@ export default {
           type: 'warning'
         })
 
-        const res = await deleteMethod(`/backend/goodSalesDesc/${rowData.id}`)
+        const res = await getMethod('/goods/post-sale/remove?id='+rowData.id)
         this.loadList();
         this.$message.success("删除成功");
 
       } catch (e) {
       }
     },
-    async addOrEdit(oper, rowIndex, data) {
-
+    async addOrEdit(oper,row) {
+    console.log(oper,row)
       if (oper == "edit") {
-        const res = await getMethod(`/backend/goodSalesDesc/${data.list[rowIndex].id}`)
+        const res = await getMethod('/goods/post-sale/detail?id='+row.id)
         this.editData = res.data;
         this.showList = false;
         this.showAddOrEdit = true;
@@ -183,9 +180,6 @@ export default {
   font-size: 14px;
 
   .ly-tool-panel {
-    div {
-      display: inline;
-    }
 
     line-height: "60px";
     height: "60px";
@@ -198,4 +192,11 @@ export default {
     }
   }
 }
+  .tabTd {
+    display: flex;
+    flex-wrap: nowrap;
+    margin: 7px 10px;
+    align-items: center;
+
+  }
 </style>

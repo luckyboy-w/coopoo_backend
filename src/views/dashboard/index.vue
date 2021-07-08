@@ -313,7 +313,7 @@ export default {
       this.showMonthList = true
       this.showPage = false
     } else {
-      this.initData()
+      // this.initData()
     }
 
   },
@@ -354,7 +354,7 @@ export default {
     initData() {
       let scope = this;
       scope.initPlatData()
-      scope.initOtherData()
+      // scope.initOtherData()
       scope.initMonthData()
     },
     showPlatDataList(row) {

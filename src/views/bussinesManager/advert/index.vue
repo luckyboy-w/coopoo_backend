@@ -25,19 +25,33 @@
             border
             default-expand-all
             :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-          > 
+          >
 
-            <el-table-column prop="advertName" label="广告名称" width="150px"></el-table-column>
-            <el-table-column prop="goodName" label="商品名称" width="220px"></el-table-column>
-            <el-table-column prop="advertUrl" label="BANNER图" width="350px">
-                <template slot-scope="scope">
-                    <img v-for="(item,i) in scope.row.files" :key="item.url" width="300px" height="180px" :src="item.url" />
-                </template>
-
+            <el-table-column prop="name" label="广告名称" width="150px"></el-table-column>
+            <el-table-column label="关联数据" width="220px">
+              <template slot-scope="scope">
+                <span v-if="scope.row.dataType=='0'">不跳转</span>
+                <span v-if="scope.row.dataType==3">商品主题</span>
+                <span v-if="scope.row.dataType==4">文本编辑器</span>
+                <span v-if="scope.row.dataType==5">限时秒杀</span>
+                <span v-if="scope.row.dataType==6">大佬说</span>
+                <span v-if="scope.row.dataType==7">平台直播</span>
+                <span v-if="scope.row.dataType==8">优惠卷</span>
+              </template>
             </el-table-column>
-            <el-table-column prop="sort" label="排序" width="80px"></el-table-column>
-            <el-table-column prop="locationText" label="广告位置" width="150px"></el-table-column>
-
+            <el-table-column prop="image" label="BANNER图" width="350px">
+                <template slot-scope="scope">
+                    <img  width="300px" height="180px" :src="scope.row.image" />
+                </template>
+            </el-table-column>
+            <el-table-column prop="location" label="广告位置" width="150px">
+              <template slot-scope="scope">
+                <span v-if="scope.row.location==1">首页banner</span>
+                <span v-if="scope.row.location==2">首页-限时抢购</span>
+                <span v-if="scope.row.location==5">首页-靠谱豆商城</span>
+                <span v-if="scope.row.location==4">我的-线下门店</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="id" label="操作" width="200px">
               <template slot-scope="scope">
                 <el-button
@@ -106,9 +120,8 @@ export default {
       showPagination: false,
       editData: {},
       searchParam: {
-        typeName: "",
         pageSize: 10,
-        pageNum: 0
+        pageNum: 1
       },
       tableData: {
         list: []
@@ -118,17 +131,17 @@ export default {
   },
   methods: {
     deleteRow(rowIndex, data) {
-      let param = {
-        id: data.list[rowIndex].id
-      };
     this.$confirm('是否继续删除操作?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
     }).then(() => {
-        postMethod("/backend/advert/delete", param).then(res => {
+        postMethod("/operate/delete-advert?id="+data.list[rowIndex].id).then(res => {
+        this.$message({
+            message: "删除成功",
+            type: "success"
+        });
         this.loadList();
-        this.$message.alert("删除成功");
     });
     });
 
@@ -158,17 +171,24 @@ export default {
     },
     enableAdv(row,val){
         let scope = this
-        let param = {
-          id: row.id,
-          enable:val
-        };
-        postMethod("/backend/advert/enableAdv", param).then(res => {
+        if (val==1) {
+          postMethod("/operate/enable-advert?id="+row.id).then(res => {
           this.$message({
               message: "操作成功.",
               type: "success"
           });
           scope.loadList()
         });
+        } else{
+          postMethod("/operate/disable-advert?id="+row.id).then(res => {
+            this.$message({
+                message: "操作成功.",
+                type: "success"
+            });
+            scope.loadList()
+          });
+        }
+
     },
     addOrEdit(oper, rowIndex, data) {
       let scope = this;
@@ -177,8 +197,8 @@ export default {
         let param = {
           id: data.list[rowIndex].id
         };
-        getMethod("/backend/advert/findObject", param).then(res => {
-          scope.editData = res.data[0];
+        getMethod("/operate/get-advert-info", param).then(res => {
+          scope.editData = res.data;
           this.showList = false;
           this.showAddOrEdit = true;
         });
@@ -202,8 +222,9 @@ export default {
     },
     loadList() {
       let scope = this;
-      getMethod("/backend/advert/findPage", this.searchParam).then(res => {
-        scope.tableData = res.data;
+      getMethod("/operate/search-advert-list", this.searchParam).then(res => {
+        scope.tableData.list = res.data.records;
+        scope.tableData.total = res.data.total;
         for(let i = 0 ; i < scope.tableData.list.length ; i++){
             let rowObj = scope.tableData.list[i];
             rowObj.locationText = this.GLOBAL.advertLocationMap[rowObj.advertLocation]

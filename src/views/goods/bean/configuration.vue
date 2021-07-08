@@ -63,10 +63,6 @@
 
 <script>
   import { postMethod, getMethod } from '@/api/request'
-  import {
-    getMethod as getMethodNew,
-    postMethod as postMethodNew,
-  } from "@/api/request-new";
   export default {
     name: "configuration",
     data() {
@@ -87,12 +83,12 @@
     },
     mounted() {
       let param = {
-        dataType: 'bean_mall_rule_config'
+        type: 'bean_mall_rule_config'
       }
-      getMethodNew("/config/findList", param).then(res => {
-        const configuration = JSON.parse(JSON.stringify(res.data))[0]
-        const config = JSON.parse(configuration.value)
-
+      getMethod("/operate/get-config-info-by-type", param).then(res => {
+        const configuration = JSON.parse(JSON.stringify(res.data))
+        const config = JSON.parse(configuration.value)[0].value
+        console.log(config,configuration,'congig')
         if (config.ruleType == '1') {
           this.ruleType = config.ruleType
           this.weekList = config.weekList
@@ -224,13 +220,13 @@
         }])
 
         let param = {
-          paramJson: configurationJson
+          bean_mall_rule_config: configurationJson
         }
 
         this.loading = true
-        postMethod("/backend/lyConfig/update", param).then(res => {
+        postMethod("/operate/set-config", param).then(res => {
           this.loading = false
-          if (res.code != 200) {
+          if (res.errCode != 0) {
             this.$message({
               message: res.message,
               type: 'warning'

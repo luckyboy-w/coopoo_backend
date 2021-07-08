@@ -7,7 +7,9 @@ const state = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  lastLoginTime:'',
+  account:''
 }
 
 const mutations = {
@@ -28,6 +30,12 @@ const mutations = {
   },
   SET_MENUS: (state, menus) => {
     state.menus = menus
+  },
+  SET_LASTLOGINTIME: (state, lastLoginTime) => {
+    state.lastLoginTime = lastLoginTime
+  },
+  SET_ACCOUNT: (state, account) => {
+    state.account = account
   }
 }
 
@@ -49,11 +57,14 @@ const actions = {
   },
   // user login
   login({ commit }, userInfo) {
+	  console.log('进来',userInfo)
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
+        commit('SET_LASTLOGINTIME', data.lastLoginTime)
+        commit('SET_ACCOUNT', data.account)
         setToken(data.token)
         resolve()
       }).catch(error => {
@@ -65,25 +76,26 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { access, name, avatar, introduction } = response.data
+        // const { access, name, avatar, introduction } = response.data
 
-        // roles must be a non-empty array
-        if (!access || access.length <= 0) {
-          reject('getInfo: access must be a non-null array!')
-        }
-
+        const access = ["super_admin","admin"]
+        const name = "admin"
+        const avatar = "https://bucket.coopoo.com/2021-07-02/20210702143733wTIhIAetaroVmRLvErQuPyUhgUsKrATR.png"
+        const introduction = "testUser"
         const menus = []
+        const data={
+           access : ["super_admin","admin"],
+           name : "admin",
+           avatar : "https://bucket.coopoo.com/2021-07-02/20210702143733wTIhIAetaroVmRLvErQuPyUhgUsKrATR.png",
+           introduction : "testUser"
+        }
 
         commit('SET_ROLES', access)
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
         commit('SET_MENUS', menus)
-        resolve(response.data)
-      }).catch(error => {
-        reject(error)
-      })
+        resolve(data)
     })
   },
   // user logout
@@ -109,6 +121,7 @@ const actions = {
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {
+		console.log(123456)
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
       removeToken()
@@ -124,7 +137,7 @@ const actions = {
       commit('SET_TOKEN', token)
       setToken(token)
 
-      const { access } = await dispatch('getInfo')
+      const  access  = "admin"
 
       resetRouter()
 

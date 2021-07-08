@@ -2,7 +2,7 @@
   <div class="update-form-panel" v-loading="loading">
     <el-form ref="dataForm" :model="dataForm" label-width="150px">
       <el-form-item label="售后说明名称">
-        <el-input v-model="dataForm.name"/>
+        <el-input v-model="dataForm.name" placeholder="请输入"/>
       </el-form-item>
       <el-form-item label="图片">
         <el-upload
@@ -52,17 +52,24 @@ export default {
   created() {
   },
   mounted() {
-    this.dataForm = this.editData;
-    this.$nextTick(() => {
-      if (this.dataForm.imgUrl != undefined && this.dataForm.imgUrl != '') {
-        this.uploadGoodImageList.push({url: this.dataForm.imgUrl})
+    if(this.editData.id){
+      this.dataForm= {
+      id: this.editData.id,
+      name: this.editData.name,
+      imgUrl: this.editData.imgUrl,
+      }
+      this.$nextTick(() => {
+      if (this.editData.imgUrlSysFile != undefined && this.editData.imgUrlSysFile != []) {
+        this.uploadGoodImageList=this.editData.imgUrlSysFile
       }
     })
+    }
+    console.log('this.dataForm',this.dataForm);
     this.buildGoodImageGroupId();
   },
   methods: {
     async buildGoodImageGroupId() {
-      const res = await getMethod("/backend/oss/groupId", null)
+      const res = await getMethod("/oss/get-group-id", null)
       this.uploadGoodImageUrl = getUploadUrl() + "?groupId=" + res.data;
     },
     handleGoodImageRemove(res) {
@@ -70,10 +77,19 @@ export default {
     },
     handleGoodImageSuccess(res, file) {
       this.uploadGoodImageList = []
-      this.uploadGoodImageList.push(res.data)
-      this.loading = false
-      this.dataForm.imgUrl = res.data.url
+      this.dataForm.imgUrl = res.data.groupId
       this.hideGoodImageUpload = true
+      res.data.fileType = file.raw.type
+      res.data.sort = this.fileSortImage++
+      this.uploadGoodImageList.push(res.data)
+      const groupId = res.data.groupId
+      let imageCnt = 0
+      for (let i = 0; i < this.uploadGoodImageList.length; i++) {
+        if (this.uploadGoodImageList[i].groupId == groupId) {
+          imageCnt++
+        }
+      }
+      this.loading = false
     },
     beforeGoodImageUpload(file) {
       const fileTypeVerify =
@@ -95,14 +111,17 @@ export default {
     },
     async addGoodDesc() {
       if (this.validate()) {
-        const res = await postMethod("/backend/goodSalesDesc", this.dataForm)
+        console.log(this.uploadGoodImageList)
+        this.dataForm.fileList=this.uploadGoodImageList
+        const res = await postMethod("/goods/post-sale/add", this.dataForm)
         this.$message.success("操作成功")
         this.$emit("showListPanel", true);
       }
     },
     async editGoodDesc() {
       if (this.validate()) {
-        const res = await putMethod("/backend/goodSalesDesc", this.dataForm)
+        this.dataForm.fileList=this.uploadGoodImageList
+        const res = await postMethod("/goods/post-sale/update", this.dataForm)
         this.$message.success("操作成功")
         this.$emit("showListPanel", true);
       }
@@ -121,7 +140,7 @@ export default {
       this.$emit("showListPanel", true);
     },
     submitUpdate() {
-      if (this.dataForm.id == null) {
+      if (this.dataForm.id == null||this.dataForm.id=='') {
         this.addGoodDesc();
       } else {
         this.editGoodDesc();

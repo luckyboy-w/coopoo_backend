@@ -231,6 +231,7 @@ export default {
       }
       const goodActivityId = this.activity.id
       getMethod('/backend/goodActivity/findAllGoodBySupplierId', {supplierId, goodActivityId}).then(res => {
+        console.log(res)
         this.goodList = res.data
       })
     },
@@ -268,6 +269,7 @@ export default {
     },
 
     goodInputEvent(inputValue) {
+		console.log(inputValue,'inputValue')
       if (this.goodList.length > 0) {
         this.goodList.forEach(item => {
           if (inputValue != '' && item.goodName.includes(inputValue)) {

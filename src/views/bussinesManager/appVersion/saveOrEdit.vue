@@ -4,16 +4,13 @@
 			<el-form-item label="版本号" prop="versionNo">
 				<el-input v-model="dataForm.versionNo"></el-input>
 			</el-form-item>
-      <el-form-item label="标题" prop="title">
-				<el-input v-model="dataForm.title"></el-input>
-			</el-form-item>
       <el-form-item label="下载地址" prop="downloadUrl">
 				<el-input v-model="dataForm.downloadUrl"></el-input>
 			</el-form-item>
       <el-form-item label="APP类型" prop="type">
         <el-select v-model="dataForm.type">
-          <el-option label="Android" :value="1"></el-option>
-          <el-option label="IOS" :value="2"></el-option>
+          <el-option label="Android" value="1"></el-option>
+          <el-option label="IOS" value="2"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="是否强制更新" prop="isForceUpdate">
@@ -22,7 +19,7 @@
           <el-option label="是" :value="1"></el-option>
         </el-select>
       </el-form-item>
-			<el-form-item label="更新内容">
+			<el-form-item prop="content" label="更新内容">
         <el-input type="textarea" v-model="dataForm.content"></el-input>
 			</el-form-item>
 			<el-form-item>
@@ -36,16 +33,13 @@
 <script>
 import { getMethod, postMethod, getUploadUrl } from "@/api/request";
 import { isInteger } from "@/utils/validate";
-import qEditor from "@/components/RichText/quill-editor"
 
 export default {
 	computed: {},
-	components: { qEditor },
 	mounted() {
 		this.$nextTick(function() {
 			if (this.editData.id) {
 				this.dataForm = this.editData;
-				this.$refs.refEditor.richText = this.dataForm.content
 			}
 		});
 	},
@@ -58,16 +52,22 @@ export default {
 	},
 	data() {
 		return {
-			fileSortImage: 0,
-			imageUrl: "",
 			dataForm: {
-				title: "",
         content: "",
-				id: ""
+				id: "",
+        downloadUrl:'',
+        isForceUpdate:0,
+        type:"1"
 			},
       rules: {
         versionNo: [
           {required: true, message: '请输入版本号', trigger: 'blur'},
+        ],
+        downloadUrl: [
+          {required: true, message: '请输入下载地址', trigger: 'blur'},
+        ],
+        content: [
+          {required: true, message: '请输入更新内容', trigger: 'blur'},
         ],
       }
 		};
@@ -80,21 +80,24 @@ export default {
 			let scope = this;
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
-          delete this.dataForm.createTime;
-
-          let fileList = [];
-
-          this.dataForm.fileJsonStr = JSON.stringify(fileList);
-          this.dataForm.files = [];
-
-          postMethod("/backend/lyAppVersion/update", this.dataForm).then(res => {
-            scope.typeList = res.data;
+          if (this.editData.id) {
+            postMethod("/operate/update-version-info", this.dataForm).then(res => {
+              this.$message({
+                message: "操作成功",
+                type: "success"
+              });
+              this.$emit("showListPanel", true);
+            });
+          } else{
+            postMethod("/operate/add-version-info", this.dataForm).then(res => {
             this.$message({
               message: "操作成功",
               type: "success"
             });
             this.$emit("showListPanel", true);
           });
+          }
+
         }
 
       });

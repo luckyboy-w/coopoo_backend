@@ -2,42 +2,28 @@
   <div class="update-form-panel">
     <el-form ref="dataForm" :model="dataForm" :rules="rules" label-width="100px">
       <el-form-item label="商品名称" prop="goodsName" style="width: 650px">
-        <el-input v-model="dataForm.goodsName" />
+        <el-input v-model="dataForm.goodsName" :disabled="disabled"/>
       </el-form-item>
       <el-form-item label="靠谱豆" prop="needBeanQty" style="width: 650px">
-        <el-input v-model="dataForm.needBeanQty" type="number"/>
+        <el-input v-model="dataForm.needBeanQty" type="number" :disabled="disabled"/>
       </el-form-item>
       <el-form-item label="零售价" prop="retailPrice" style="width: 650px">
-        <el-input v-model="dataForm.retailPrice"/>
+        <el-input v-model="dataForm.retailPrice" type="number" :disabled="disabled"/>
       </el-form-item>
       <el-form-item label="库存" prop="stockQty" style="width: 650px">
-        <el-input v-model="dataForm.stockQty"/>
+        <el-input v-model="dataForm.stockQty" type="number" :disabled="disabled"/>
       </el-form-item>
-      <el-form-item label="商品产地" prop="goodsOrigin" style="width: 650px">
-        <el-input v-model="dataForm.goodsOrigin"/>
-      </el-form-item>
-      <el-form-item label="所属品牌" prop="brandId">
-        <el-select v-model="dataForm.brandId">
-          <el-option
-            v-for="item in brandList"
-            :key="item.id"
-            :value-key="item.brandName"
-            :label="item.brandName"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-
       <el-form-item label="封面图片">
         <div id="front-img">
-          <el-input v-show="false" v-model="dataForm.frontImage"/>
+          <el-input v-show="false"/>
           <el-upload
+           :disabled="disabled"
             :action="uploadFrontImageUrl"
             list-type="picture-card"
             :on-preview="handleImagePreview"
             :before-upload="beforeFrontImageUpload"
             :on-success="handleFrontImageSuccess"
-            :class="{hide:hideFrontImageUpload}"
+            :class="{hideTrue:hideFrontImageUpload}"
             :file-list="uploadFrontImageList"
             :on-remove="handleFrontImageRemove"
           >
@@ -49,14 +35,15 @@
         </div>
       </el-form-item>
       <el-form-item label="商品图片">
-        <el-input v-show="false" v-model="dataForm.goodsImage"/>
+        <el-input v-show="false" />
         <el-upload
+         :disabled="disabled"
           :action="uploadGoodsImageUrl"
           list-type="picture-card"
           :on-preview="handleImagePreview"
           :before-upload="beforeGoodsImageUpload"
           :on-success="handleGoodsImageSuccess"
-          :class="{hide:hideGoodsImageUpload}"
+          :class="{hideTrue:hideGoodsImageUpload}"
           :file-list="uploadGoodsImageList"
           :on-remove="handleGoodsImageRemove"
         >
@@ -67,10 +54,28 @@
         </el-dialog>
       </el-form-item>
       <el-form-item label="商品卖点" prop="sellingPoint" style="width: 650px">
-        <el-input v-model="dataForm.sellingPoint"/>
+        <el-input v-model="dataForm.sellingPoint" :disabled="disabled"/>
       </el-form-item>
-      <el-form-item label="商品详情">
+      <el-form-item prop="postSaleId" label="售后说明">
+        <el-radio-group v-model="dataForm.postSaleId" >
+          <el-radio class="my-el-radio" :disabled="disabled" v-for="(item,index) in goodSaleDescList" :key="item.id" :label="item.id">
+            <div class="my-container">
+              <div class="img" @mouseover="changeImgMask(index,true)" @mouseout="changeImgMask(index,false)">
+                <div ref="imgMask" class="img-mask">
+                  <i class="el-icon-zoom-in my-icon" @click="showBigImg(item.imgUrl)"></i>
+                </div>
+                <el-image :src="item.imgUrl" fit="fill" style="width: 100%;height:100%"></el-image>
+              </div>
+              <div class="title">
+                {{ item.name }}
+              </div>
+            </div>
+          </el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="商品详情" prop="goodsDetail">
         <qEditor
+        :disabled="disabled"
           ref="refEditor"
           :content="dataForm.goodsDetail"
           module-name="detailContent"
@@ -89,23 +94,36 @@
 </template>
 
 <script>
-  import {postMethod as postMethodNew } from '@/api/request-new'
-  import { getMethod, getUploadUrl } from '@/api/request'
+  // import {postMethod as postMethodNew } from '@/api/request-new'
+  import { getMethod,postMethod, getUploadUrl } from '@/api/request'
   import qEditor from '@/components/RichText/quill-editor'
-  import qEditor1 from '@/components/RichText/quill-editor_1'
-  import qEditor2 from '@/components/RichText/quill-editor_2'
 
   export default {
     name: "saveOrEdit",
-    components: { qEditor, qEditor1, qEditor2 },
+    components: { qEditor },
+    props: {
+      editData: {
+        type: Object,
+        required: false
+      }
+    },
     mounted() {
       const scope = this
+      console.log(this.editData);
       this.buildFrontImageGroupId()
       this.buildGoodsImageGroupId()
-
-      getMethod('/backend/goodBrand/findList', null).then(res => {
-        scope.brandList = res.data
-      })
+      this.loadGoodSaleDescList()
+      this.$nextTick(function () {
+        if (this.editData.goodsId) {
+          this.dataForm = this.editData;
+          this.dataForm.postSaleId = String(this.editData.postSaleId);
+          this.$refs['refEditor'].setContent(this.editData.goodsDetail)
+          this.initDefaultImage();
+          if (this.editData.disabled) {
+            this.disabled=true
+          }
+        }
+      });
     },
     data() {
         const isPositiveInteger = (rule, value, callback) => {
@@ -149,18 +167,23 @@
           dialogImageUrl: '',
           uploadFrontImageList: [],
           uploadGoodsImageList: [],
+          goodSaleDescList: [],
           imageUrl: '',
+          disabled:false,
           dataForm: {
-            brandId: '',
-            frontImage: '',
-            goodsImage: ''
+            frontImage:[],
+            goodsImageList:[],
+            goodsDetail:'',
+            goodsName:'',
+            needBeanQty:'',
+            retailPrice:'',
+            sellingPoint:'',
+            stockQty:'',
+            postSaleId:''
           },
           detail: {
             detailContent: '',
-            postSale: '',
-            listDetail: ''
           },
-          brandList: [],
           rules: {
             goodsName: [{required: true, message: '请输入商品名称', trigger: 'blur'} ],
             needBeanQty: [
@@ -168,12 +191,12 @@
               {validator: isPositiveInteger, trigger: "blur"}
             ],
             stockQty: [
-              {required: true, message: '请输入库存', trigger: 'blur'},
-              {validator: isPositiveInteger, trigger: "blur"}
+              {required: true, message: '请输入库存', trigger: 'blur'}
             ],
-            retailPrice: [{required: true, validator: isCorrectFloat, trigger: 'blur'} ],
-            goodsOrigin: [{required: true, message: '请输入商品产地', trigger: 'blur'} ],
-            sellingPoint: [{required: true, message: '请输入卖点', trigger: 'blur'} ]
+            retailPrice: [{required: true, message: '请输入零售价', trigger: 'blur'} ],
+            sellingPoint: [{required: true, message: '请输入卖点', trigger: 'blur'} ],
+            postSaleId: [{required: true, message: '请选择售后说明', trigger: 'blur'} ],
+            goodsDetail: [{required: true, message: '请填写商品详情', trigger: 'blur'} ]
           }
         }
     },
@@ -183,27 +206,42 @@
       },
 
       buildFrontImageGroupId() {
-        if (this.dataForm.frontImage == '') {
-          getMethod('/backend/oss/groupId', null).then(res => {
+          getMethod('/oss/get-group-id', null).then(res => {
             this.uploadFrontImageUrl = getUploadUrl() + '?groupId=' + res.data
-            this.dataForm.frontImage = res.data
-          })
-        } else {
-          this.uploadFrontImageUrl = getUploadUrl() + '?groupId=' + this.dataForm.frontImage
-        }
+            })
       },
 
       buildGoodsImageGroupId() {
-        if (this.dataForm.goodsImage == '') {
-          getMethod('/backend/oss/groupId', null).then(res => {
+          getMethod('/oss/get-group-id', null).then(res => {
             this.uploadGoodsImageUrl = getUploadUrl() + '?groupId=' + res.data
-            this.dataForm.goodsImage = res.data
           })
-        } else {
-          this.uploadGoodsImageUrl = getUploadUrl() + '?groupId=' + this.dataForm.goodsImage
+      },
+      loadGoodSaleDescList() {
+        postMethod('/goods/post-sale/list',{pageNum:1,pageSize:10}).then(res => {
+          this.goodSaleDescList = res.data.records
+          this.goodSaleDescList.forEach(i => {
+            i.id=String(i.id)
+          })
+        if (this.dataForm.postSaleId == '' && this.goodSaleDescList.length > 0) {
+          this.dataForm.postSaleId = this.goodSaleDescList[0].id
         }
+        })
+      },
+      initDefaultImage() {
+        this.uploadFrontImageList.push(this.dataForm.frontImageInfo)
+         this.uploadGoodsImageList= this.dataForm.goodsImageInfoList
+         if (this.uploadFrontImageList.length >= 1) {
+           this.hideFrontImageUpload = true;
+         }
       },
 
+      changeImgMask(index, flag) {
+        this.$refs.imgMask[index].style = flag ? 'display:block' : 'display:none'
+      },
+      showBigImg(url) {
+        this.goodSaleDescImgUrl = url
+        this.goodSaleDescImgVisible = true
+      },
       handleImagePreview(file) {
         this.dialogImageUrl = file.url
         this.dialogVisible = true
@@ -255,9 +293,6 @@
         if (imageCnt >= 1) {
           this.hideFrontImageUpload = true
         }
-
-        this.clearValidate('frontImage')
-        this.dataForm.frontImage = res.data.groupId
       },
 
       handleGoodsImageSuccess(res, file) {
@@ -274,9 +309,6 @@
         if (imageCnt >= 10) {
           this.hideGoodsImageUpload = true
         }
-
-        this.clearValidate('goodsImage')
-        this.dataForm.goodsImage = res.data.groupId
       },
 
       handleFrontImageRemove(res) {
@@ -315,15 +347,6 @@
             if (this.uploadFrontImageList.length == 0) {
               errorMsg = '请上传商品封面图'
             }
-
-            if (this.dataForm.goodsDetail == '') {
-              errorMsg = '请填写商品详情'
-            }
-
-            if (this.dataForm.brandId == '') {
-              errorMsg = '请选择商品品牌'
-            }
-
             if (errorMsg != '') {
               this.$message.warning(errorMsg)
               return
@@ -332,13 +355,14 @@
             let fileList = []
             fileList = fileList.concat(this.uploadGoodsImageList)
             fileList = fileList.concat(this.uploadFrontImageList)
-            this.dataForm.fileJsonStr = JSON.stringify(fileList)
+            this.dataForm.goodsImageList=this.uploadGoodsImageList
+            this.dataForm.frontImage=this.uploadFrontImageList[0]
+            console.log(this.dataForm);
 
-            let brand = this.brandList.filter(item => item.id == this.dataForm.brandId);
-            this.dataForm.brandName = brand[0].brandName
-            this.dataForm.detailStr = JSON.stringify(this.detail)
-            postMethodNew('/exchange_goods/save', this.dataForm).then(res => {
-                if (res.code != 200) {
+            if (this.editData.goodsId) {
+              this.dataForm.goodsId=this.editData.goodsId
+              postMethod('/bean_goods/update', this.dataForm).then(res => {
+                if (res.errCode != 0) {
                   this.$message({
                     message: res.message,
                     type: 'warning'
@@ -350,8 +374,24 @@
                   type: 'success'
                 })
                 this.$emit('showListPanel', true)
-              }
-            )
+              })
+            } else{
+              postMethod('/bean_goods/save', this.dataForm).then(res => {
+                if (res.errCode != 0) {
+                  this.$message({
+                    message: res.message,
+                    type: 'warning'
+                  })
+                  return;
+                }
+                this.$message({
+                  message: '操作成功',
+                  type: 'success'
+                })
+                this.$emit('showListPanel', true)
+              })
+            }
+
           }
         });
       },
@@ -376,7 +416,54 @@
     width: 100%;
   }
 
-  .hide .el-upload--picture-card {
+  .hideTrue .el-upload--picture-card {
     display: none;
+  }
+  .my-el-radio {
+    width: 240px;
+    height: 200px;
+
+    .my-container {
+      display: inline-block;
+      width: 190px;
+      height: 180px;
+
+      .img {
+        position: relative;
+        width: 190px;
+        height: 140px;
+        border-radius: 10px;
+        overflow: hidden;
+
+        .img-mask {
+          position: absolute;
+          display: none;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.6);
+          z-index: 1;
+          color: white;
+
+          .my-icon {
+            position: absolute;
+            display: inline-block;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 30px;
+          }
+        }
+      }
+
+      .title {
+        width: 190px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center
+      }
+
+    }
   }
 </style>

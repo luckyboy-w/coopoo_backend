@@ -1,4 +1,4 @@
-import request from '@/utils/request-new'
+import request from '@/utils/request'
 
 export const getMethod = (url, params) => {
   return request({
@@ -33,7 +33,8 @@ export const deleteMethod = (url, data) => {
 
 
 export const getUploadUrl = () => {
-  return process.env.VUE_APP_BASE_API + '/backend/oss/upload'
+  return process.env.VUE_APP_BASE_API_NEW + '/oss/upload'
+  // return process.env.VUE_APP_BASE_API + '/backend/oss/upload'
 }
 
 export function formatDate(date, fmt) {

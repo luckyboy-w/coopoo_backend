@@ -105,6 +105,7 @@ export default {
       this.serviceRoutes = res.data
       
       const routes = this.generateRoutes(res.data)
+	  console.log(routes,'routes')
       this.routes = this.i18n(routes)
     },
     async getRoles() {

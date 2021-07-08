@@ -2,14 +2,7 @@
 	<div>
 		<div class="ly-container" v-if="showList">
 			<div class="ly-tool-panel">
-				<table>
-					<tr>
-						<td>
-							<!--<el-button icon="el-icon-search" @click="search()">搜索</el-button>-->
-							<el-button plain type="primary" @click="addOrEdit('add')" icon="el-icon-document-add">新建</el-button>
-						</td>
-					</tr>
-				</table>
+				<el-button plain type="primary" @click="addOrEdit('add')" icon="el-icon-document-add">新建</el-button>
 			</div>
 			<div class="ly-table-panel">
 				<div class="ly-data-list">
@@ -21,34 +14,43 @@
 						border
 						default-expand-all
 						:tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-
-						<el-table-column type="selection" width="55"></el-table-column>
-						<el-table-column prop="versionNo" label="版本号" width="150px"></el-table-column>
-						<el-table-column prop="title" label="标题" width="250px"></el-table-column>
-						 <el-table-column prop="content" label="更新内容"></el-table-column>
 						 <el-table-column prop="type" label="APP类型">
                <template slot-scope="scope">
                  {{scope.row.type == '1' ? "Android" : "IOS"}}
                </template>
              </el-table-column>
+						<el-table-column prop="versionNo" label="版本号" ></el-table-column>
+						 <el-table-column prop="content" label="更新内容"></el-table-column>
             <el-table-column prop="downloadUrl" label="下载地址"></el-table-column>
             <el-table-column prop="isForceUpdate" label="是否强制更新">
                <template slot-scope="scope">
                  {{scope.row.isForceUpdate == '1' ? "是" : "否"}}
                </template>
              </el-table-column>
-						<el-table-column prop="createTime" label="更新时间" width="150px">
+						<el-table-column prop="createTime" label="更新时间" width="170px">
 							<template slot-scope="scope">
-									{{scope.row.createTime | fmtDateStr}}
+									{{scope.row.createTime}}
 							</template>
 						</el-table-column>
-						<el-table-column prop="id" label="操作" width="600px">
+						<el-table-column prop="id" label="操作">
 							<template slot-scope="scope">
 									<el-button
 										@click="addOrEdit('edit',scope.$index, tableData)"
 										type="text"
 										size="small"
-									>查看</el-button>
+									>编辑</el-button>
+                  <el-button
+                  v-if="scope.row.enable==1"
+                  	@click="enable('0',scope.row.id)"
+                  	type="text"
+                  	size="small"
+                  >禁用</el-button>
+                  <el-button
+                  v-if="scope.row.enable==0"
+                  	@click="enable('1',scope.row.id)"
+                  	type="text"
+                  	size="small"
+                  >启用</el-button>
 							</template>
 						</el-table-column>
 
@@ -81,12 +83,7 @@ import { formatDate } from '@/api/tools.js'
 export default {
 	computed: {},
 	mounted() {
-        this.initLoad();
-        this.pushTypeList.push({
-            id:'0',
-            label:'全部'
-        });
-        this.pushTypeList = this.pushTypeList.concat(this.GLOBAL.pushTypeList)
+    this.initLoad();
 	},
 	components: { saveOrEdit },
 	created() {},
@@ -98,15 +95,13 @@ export default {
 	},
 	data() {
 		return {
-            pushTypeList: [],
 			showList: true,
 			showAddOrEdit: false,
 			showPagination: false,
 			editData: {},
 			searchParam: {
-				pushType: "",
 				pageSize: 10,
-				pageNum: 0
+				pageNum: 1
 			},
 			tableData: {
 				list: []
@@ -115,56 +110,39 @@ export default {
 		};
 	},
 	methods: {
-		deleteRow(rowIndex, data) {
-			let param = {
-				id: data.list[rowIndex].id
-			};
-			this.$confirm("是否继续删除操作?", "提示", {
-				confirmButtonText: "确定",
-				cancelButtonText: "取消",
-				type: "warning"
-			}).then(() => {
-				postMethod("/backend/lyAppVersion/delete", param).then(res => {
-					this.loadList();
-					this.$message("删除成功");
-				});
-			});
-		},
-		batchDeleteRow(rowIndex, data) {
-			let selectList = this.$refs.mainTable.selection;
-			let idArr = [];
-			for (let i = 0; i < selectList.length; i++) {
-				idArr.push(selectList[i].id);
-			}
-			let param = {
-				delType: "2",
-				ids: idArr.join(",")
-			};
-			postMethod("/backend/lyAppVersion/delete", param).then(res => {
-				scope.editData = res.data[0];
-				this.showList = false;
-				this.showAddOrEdit = true;
-				this.$message({
-					message: "删除成功",
-					type: "success"
-				});
-			});
-			this.searchParam.pageSize = 10;
-			this.searchParam.pageNum = 0;
-			this.loadList();
-		},
+
+    enable(val,id){
+      let scope = this
+      console.log(val);
+      if (val=="1") {
+        postMethod('/operate/enable-version-info?id='+id).then(res => {
+          this.loadList();
+          this.$message({
+            message: "启用成功",
+            type: "success"
+          });
+        });
+      } else if(val=="0"){
+      postMethod('/operate/disable-version-info?id='+id).then(res => {
+        this.loadList();
+        this.$message({
+          message: "禁用成功",
+          type: "success"
+        });
+      });
+      }
+    },
 		search() {
 			this.loadList();
 		},
 		addOrEdit(oper, rowIndex, data) {
 			let scope = this;
-
 			if (oper == "edit") {
 				let param = {
 					id: data.list[rowIndex].id
 				};
-				getMethod("/backend/lyAppVersion/findObject", param).then(res => {
-					scope.editData = res.data[0];
+				getMethod("/operate/get-version-info", param).then(res => {
+					scope.editData = res.data;
 					this.showList = false;
 					this.showAddOrEdit = true;
 				});
@@ -187,17 +165,10 @@ export default {
 			this.loadList();
 		},
 		loadList() {
-            let scope = this;
-            if(this.searchParam.pushType == '0'){
-                this.searchParam.pushType = null
-            }
-			getMethod("/backend/lyAppVersion/findPage", this.searchParam).then(res => {
-                scope.tableData = res.data;
-                let dataList = scope.tableData.list
-                for(let i = 0 ; i < dataList.length ; i++){
-                    dataList[i].pushType = this.GLOBAL.pushTypeMap[dataList[i].pushType]
-                }
-
+      let scope = this;
+			getMethod("/operate/get-version-list", this.searchParam).then(res => {
+        scope.tableData.list = res.data.records;
+        scope.tableData.total = res.data.total;
 				scope.showPagination = scope.tableData.total == 0;
 			});
 		}

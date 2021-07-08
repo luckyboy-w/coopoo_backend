@@ -7,28 +7,34 @@
             @change="switchData()"
             v-model="dataForm.infoType">
             <el-option
-                key="helpInfo"
-                value-key="helpInfo"
-                label="帮助信息"
-                value="helpInfo"
+                key="bean_rules"
+                value-key="bean_rules"
+                label="靠谱豆规则"
+                value="bean_rules"
             ></el-option>
             <el-option
-                key="aboutUs"
-                value-key="aboutUs"
+                key="announcement"
+                value-key="announcement"
+                label="发布告示"
+                value="announcement"
+            ></el-option>
+           <!-- <el-option
+                key="luck_draw_rules"
+                value-key="luck_draw_rules"
+                label="抽奖规则"
+                value="luck_draw_rules"
+            ></el-option> -->
+            <el-option
+                key="about_us"
+                value-key="about_us"
                 label="关于我们"
-                value="aboutUs"
+                value="about_us"
             ></el-option>
             <el-option
-                key="userProctal"
-                value-key="userProctal"
+                key="user_agreement"
+                value-key="user_agreement"
                 label="靠谱家用户协议"
-                value="userProctal"
-            ></el-option>
-            <el-option
-                key="memberRegister"
-                value-key="memberRegister"
-                label="会员注册协议"
-                value="memberRegister"
+                value="user_agreement"
             ></el-option>
         </el-select>
       </el-form-item>
@@ -49,7 +55,6 @@
 
 <script>
 import { getMethod, postMethod, getUploadUrl } from "@/api/request";
-import { isInteger } from "@/utils/validate"
 import qEditor from "@/components/RichText/quill-editor"
 export default {
   computed: {},
@@ -58,71 +63,41 @@ export default {
     this.loadData()
   },
   created() {},
-  props: {
-    editData: {
-      type: Object,
-      required: false
-    }
-  },
   data() {
     return {
       dataForm: {
-        infoType: "",
+        infoType: "bean_rules",
         infoContent: ""
       },
-      dataInfo:{
-
-      }
     };
   },
   methods: {
     switchData(){
-      this.$refs.refEditor.richText = this.dataInfo[this.dataForm.infoType]
-      this.dataForm.infoContent = this.dataInfo[this.dataForm.infoType]
+      console.log(123)
+      this.loadData()
     },
     changeContent(val){
       this.dataForm.infoContent = val
     },
     loadData(){
-      let param = {
-        typeName:'bussCfg'
-      }
       let scope = this
-      getMethod("/backend/siteInfo/findList", param).then(
+      getMethod("/site/get-site-info?infoType="+this.dataForm.infoType).then(
         res => {
-          let dataList = res.data
-          for(let i = 0 ; i < dataList.length ; i++){
-              let rowObj = dataList[i];
-              scope.dataInfo[rowObj.infoType] = rowObj.infoContent
-          }
+          this.$refs.refEditor.richText=res.data.infoContent
         }
       );
     },
     saveObject() {
       let scope = this;
-      if (this.validate()) {
-        postMethod("/backend/siteInfo/update", this.dataForm).then(
+        postMethod("/site/set-site-info", this.dataForm).then(
           res => {
-            scope.typeList = res.data;
             this.$message({
               message: "操作成功",
               type: "success"
             });
-            scope.loadData()
-            this.$emit("showListPanel", true);
           }
         );
-      }
     },
-    validate() {
-      return true;
-    },
-    cancelUpdate() {
-      this.$emit("showListPanel", true);
-    },
-    submitUpdate() {
-      this.saveObject();
-    }
   }
 };
 </script>

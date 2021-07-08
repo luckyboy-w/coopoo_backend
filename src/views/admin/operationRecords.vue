@@ -6,9 +6,10 @@
           <tr>
             <td>模块：</td>
             <td>
-              <el-select v-model="searchParam.menuId" placeholder="请选择">
+              <el-select v-model="searchParam.operationType" placeholder="请选择">
                 <el-option value="" label="全部模块" />
-                <el-option v-for="item in menuList" :key="item.menuId" :label="item.operationModuleName" :value="item.menuId" />
+                <el-option value="order_goods" label="商品订单" />
+                <el-option value="order_bean" label="靠谱豆订单" />
               </el-select>
             </td>
             <td colspan="2">
@@ -76,7 +77,7 @@
         showPagination: false,
         loading: true,
         searchParam: {
-          menuId:'',
+          operationType:'',
           pageSize: 10,
           pageNum: 1
         },
@@ -124,8 +125,8 @@
       },
       loadList() {
         const scope = this
-          getMethod('backend/operation/operationRecordList', this.searchParam).then(res => {
-            scope.tableData = res.data
+          getMethod('/permission/search-operation-list', this.searchParam).then(res => {
+            scope.tableData.list = res.data.records
             scope.sendOrder = false
             scope.showPagination =  res.data.total == 0
             this.loading = false

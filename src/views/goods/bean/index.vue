@@ -1,30 +1,24 @@
 <template>
   <div>
     <div v-if="showList" :loading="isLoading" class="ly-container">
-      <div class="ly-tool-panel">
-        <table>
-          <tr>
-            <td>商品名称:</td>
-            <td>
-              <el-input v-model="searchParam.goodsName" width="180px"/>
-            </td>
-            <td>
-              <el-button icon="el-icon-search" @click="search()">
-                搜索
-              </el-button>
-            </td>
-            <td>
-              <el-button icon="el-icon-search" @click="save()">
-                新增
-              </el-button>
-            </td>
-            <td>
-              <el-button icon="el-icon-search" @click="configuration()">
-                活动配置
-              </el-button>
-            </td>
-          </tr>
-        </table>
+    <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
+      <div class="tabTd">
+        <div>商品名称：</div>
+        <div>
+          <el-input v-model="searchParam.goodsName" placeholder="请输入" width="180px" />
+        </div>
+      </div>
+      <div class="tabTd">
+        <el-button icon="el-icon-search" @click="search()">
+          搜索
+        </el-button>
+        <el-button plain="" type="primary" icon="el-icon-circle-plus-outline" @click="save('add')">
+          新增
+        </el-button>
+        <el-button icon="el-icon-date" @click="configuration()">
+          活动配置
+        </el-button>
+      </div>
       </div>
       <div class="ly-table-panel">
         <div class="ly-data-list">
@@ -34,7 +28,7 @@
           >
             <el-table-column prop="goodsName" label="商品名称" width="300px"/>
             <el-table-column prop="needBeanQty" label="靠谱豆" width="150px"/>
-            <el-table-column prop="createTime" label="创建时间" width="150px"/>
+            <el-table-column prop="createTime" label="创建时间" width="170px"/>
             <el-table-column prop="isSale" label="状态" width="150px">
               <template slot-scope="scope">
                 <span v-if="scope.row.isSale == 0">下架</span>
@@ -43,8 +37,6 @@
             </el-table-column>
             <el-table-column prop="id" label="操作" width="200px">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click.native.prevent="present(scope.row.goodsId)">查看</el-button>
-                <el-button type="text" v-if="scope.row.isSale == 0" size="small" @click.native.prevent="update(scope.row.goodsId)">修改</el-button>
                 <el-button type="text" v-if="scope.row.isSale == 1" size="small"
                            @click.native.prevent="downShelve(scope.row.goodsId)"
                 >下架
@@ -53,6 +45,9 @@
                            @click.native.prevent="upShelve(scope.row.goodsId)"
                 >上架
                 </el-button>
+                <el-button type="text" v-if="scope.row.isSale == 1"  size="small" @click.native.prevent="save('detail',scope.row.goodsId)">查看</el-button>
+                <el-button type="text" v-if="scope.row.isSale == 0" size="small" @click.native.prevent="save('edit',scope.row.goodsId)">修改</el-button>
+                <el-button v-if="scope.row.isSale == 0" type="text" size="small" @click.native.prevent="deleteBean(scope.row.goodsId)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -73,23 +68,19 @@
       </div>
     </div>
 
-    <save v-if="showAdd" @showListPanel="showListPanel"/>
-    <update v-if="showUpdate" :goodsId="goodsId" @showListPanel="showListPanel"/>
-    <present v-if="showPresent" :goodsId="goodsId" @showListPanel="showListPanel"/>
+    <save v-if="showAdd" :editData="editData" @showListPanel="showListPanel"/>
     <configuration v-if="showConfiguration" @showListPanel="showListPanel"/>
   </div>
 </template>
 
 <script>
-import {getMethod, putMethod} from '@/api/request-new'
+import {getMethod,postMethod} from '@/api/request'
 import save from "./save";
-import update from "./update";
-import present from "./present";
 import configuration from "./configuration";
 
 export default {
   name: "index",
-  components: {save, update, present, configuration},
+  components: {save, configuration},
   mounted() {
     this.loadList()
   },
@@ -97,8 +88,6 @@ export default {
     return {
       showList: true,
       showAdd: false,
-      showUpdate: false,
-      showPresent: false,
       showPagination: false,
       showConfiguration: false,
       isLoading: false,
@@ -108,7 +97,7 @@ export default {
         orderColumn: 'create_time',
         orderSeq: 'DESC',
         pageSize: 10,
-        pageNum: 0
+        pageNum: 1
       },
       tableData: {
         records: [],
@@ -125,16 +114,17 @@ export default {
     loadList() {
       this.loading = true
 
-      getMethod("/exchange_goods/list", this.searchParam).then(res => {
+      getMethod("/bean_goods/list", this.searchParam).then(res => {
         this.loading = false
-        if (res.code != 200) {
+        if (res.errCode != 0) {
           this.$message({
             message: res.message,
             type: 'warning'
           })
           return;
         }
-        this.tableData = res.data
+        this.tableData.records= res.data.records
+        this.tableData.total= res.data.total
         this.showPagination = this.tableData.total == 0
       });
     },
@@ -142,8 +132,6 @@ export default {
     showListPanel() {
       this.showList = true;
       this.showAdd = false
-      this.showUpdate = false
-      this.showPresent = false
       this.showConfiguration = false
       this.loadList();
     },
@@ -152,24 +140,44 @@ export default {
       this.searchParam.pageNum = pageNum;
       this.loadList();
     },
-
-    save() {
-      this.showAdd = true
-      this.showList = false;
+    deleteBean(goodsId){
+      this.loading = true
+      postMethod(`/bean_goods/delete?id=${goodsId}`).then(res => {
+        this.loading = false
+        if (res.errCode != 0) {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          })
+          return;
+        }
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        })
+        this.loadList();
+      })
     },
-
-    update(goodsId) {
-      this.showList = false;
-      this.showUpdate = true;
-      this.goodsId = goodsId
+    save(val,goodsId) {
+      if (val=='add') {
+        this.editData={}
+        this.showAdd = true
+        this.showList = false;
+      } else if(val=="edit"){
+        getMethod("/bean_goods/detail?id="+goodsId).then(res => {
+          this.editData=res.data
+          this.showAdd = true
+          this.showList = false;
+        });
+      }else if(val=="detail"){
+        getMethod("/bean_goods/detail?id="+goodsId).then(res => {
+          this.editData=res.data
+          this.editData.disabled=true
+          this.showAdd = true
+          this.showList = false;
+        });
+        }
     },
-
-    present(goodsId) {
-      this.showList = false;
-      this.showPresent = true;
-      this.goodsId = goodsId
-    },
-
     configuration() {
       this.showConfiguration = true
       this.showList = false;
@@ -177,9 +185,9 @@ export default {
 
     upShelve(goodsId) {
       this.loading = true
-      putMethod(`/exchange_goods/up_shelves?id=${goodsId}`).then(res => {
+      postMethod(`/bean_goods/up_shelves?id=${goodsId}`).then(res => {
         this.loading = false
-        if (res.code != 200) {
+        if (res.errCode != 0) {
           this.$message({
             message: res.message,
             type: 'warning'
@@ -196,9 +204,9 @@ export default {
 
     downShelve(goodsId) {
       this.loading = true
-        putMethod(`/exchange_goods/down_shelves?id=${goodsId}`).then(res => {
+        postMethod(`/bean_goods/down_shelves?id=${goodsId}`).then(res => {
         this.loading = false
-        if (res.code != 200) {
+        if (res.errCode != 0) {
           this.$message({
             message: res.message,
             type: 'warning'
@@ -223,10 +231,6 @@ export default {
   font-size: 14px;
 
   .ly-tool-panel {
-    div {
-      display: inline;
-    }
-
     line-height: "60px";
     height: "60px";
     width: 100%;
@@ -238,4 +242,11 @@ export default {
     }
   }
 }
+.tabTd {
+    display: flex;
+    flex-wrap: nowrap;
+    margin: 7px 10px;
+    align-items: center;
+
+  }
 </style>

@@ -1,12 +1,19 @@
 <template>
-  <div class="update-form-panel">
-    <el-form ref="dataForm" :model="dataForm" label-width="120px">
-      <el-form-item label="月结算次数">
-        <el-input-number v-model="dataForm.billCount" :min="1" :max="50" disabled="" label="月结算次数" />
+  <div v-loading="loading" class="update-form-panel">
+    <el-form ref="dataForm" :model="dataForm"  label-width="120px">
+      <el-form-item label="供应商结算次数">
+        <el-input-number v-model="dataForm.cash_supplier_count" disabled label="月结算次数" />
       </el-form-item>
-      <el-form-item label="结算日">
-        <el-date-picker v-model="dataForm.billDate" type="dates" :picker-options="pkOP" textarea style="width:600px"
-          size="large" format="dd" placeholder="选择一个或多个日期" @change="pickCfgDate" />
+      <el-form-item label="供应商结算日">
+        <el-date-picker v-model="dataForm.cash_supplier_date" type="dates" style="width:600px"
+          size="large" format="dd" placeholder="选择一个或多个日期" @change="pickSupplierDate" />
+      </el-form-item>
+      <el-form-item label="门店结算次数">
+        <el-input-number v-model="dataForm.cash_store_count" disabled label="月结算次数" />
+      </el-form-item>
+      <el-form-item label="门店结算日">
+        <el-date-picker v-model="dataForm.cash_store_date" type="dates" style="width:600px"
+          size="large" format="dd" placeholder="选择一个或多个日期" @change="pickStoreDate" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="saveObject">
@@ -21,13 +28,9 @@
   import {
     getMethod,
     postMethod,
-    getUploadUrl
+    getUploadUrl,
+    formatDate
   } from "@/api/request";
-
-  import {
-    getMethod as getMethodNew,
-    postMethod as postMethodNew,
-  } from "@/api/request-new";
   import {
     isInteger
   } from "@/utils/validate"
@@ -42,13 +45,14 @@
     },
     data() {
       return {
-        pkOP: {
-          onPick(minDate, maxDate) {}
-        },
-        day: '',
+        loading: false,
+        supplierDay: '',
+        storeDay: '',
         dataForm: {
-          billDate: "",
-          billCount: ""
+          cash_store_count: "",
+          cash_store_date: "",
+          cash_supplier_count: "",
+          cash_supplier_date: "",
         }
       };
     },
@@ -58,106 +62,94 @@
     },
     created() {},
     methods: {
-      pickCfgDate() {
-        let obj = this.dataForm.billDate
+      pickSupplierDate() {
+        let supplierObj = this.dataForm.cash_supplier_date
         let List = [] //定义空数组
-        if (obj != null) {
-        	for (let i = 0; i < obj.length; i++) {
-        		List.push(this.format(obj[i])) //把天数添加到数组中
+        if (supplierObj != null) {
+        	for (let i = 0; i < supplierObj.length; i++) {
+        		List.push(this.format(supplierObj[i])) //把天数添加到数组中
         	}
-        	this.day = List.toString() //把数组转字符串 赋值给str
-        	this.dataForm.billCount = this.dataForm.billDate.length;
+          console.log(List);
+        	this.supplierDay = List.toString() //把数组转字符串 赋值给str
+          this.dataForm.cash_supplier_count=this.dataForm.cash_supplier_date.length
         } else {
-        	this.dataForm.billCount = 0
+        	this.dataForm.cash_supplier_count = 0
         }
-        // if(this.dataForm.billDate.length > this.dataForm.billCount){
-        //     this.$message({
-        //       message: "月结算天数超出了结算次数",
-        //       type: "warring"
-        //     });
-        //     this.dataForm.billDate = this.dataForm.billDate.slice(0,4)
-        //     return ;
-        // }
-
       },
-      format(date) {
-        const day = date.getDate() >= 10 ? date.getDate() : "0" + date.getDate();
+      pickStoreDate() {
+        let storeObj = this.dataForm.cash_store_date
+        let List = [] //定义空数组
+        if (storeObj != null) {
+        	for (let i = 0; i < storeObj.length; i++) {
+        		List.push(this.format(storeObj[i])) //把天数添加到数组中
+        	}
+        	this.storeDay = List.toString() //把数组转字符串 赋值给str
+          this.dataForm.cash_store_count=this.dataForm.cash_store_date.length
+        } else {
+        	this.dataForm.cash_store_count = 0
+        }
+      },
+      format(time) {
+        console.log(time,'time')
+        let date =new Date(time)
+        let day = date.getDate() >= 10 ? date.getDate() : "0" + date.getDate();
         return day;
       },
-      changeContent(val) {
-        this.dataForm.content = val
-      },
       loadData() {
-        let param = {
-          dataType: 'billCfg'
-        }
         let scope = this
-        getMethodNew("/config/findList", param).then(
+        getMethod("/operate/get-config-info").then(
           res => {
-            let dataList = res.data
-            for (let i = 0; i < dataList.length; i++) {
-            	let rowObj = dataList[i];
-            	if (rowObj.title == 'billDate') {
+            console.log(res);
+            this.dataForm.cash_store_count=res.data.cash_store_count
+            this.dataForm.cash_supplier_count=res.data.cash_supplier_count
             		let myDate = new Date();
             		let tYear = myDate.getFullYear();
             		let tMonth = myDate.getMonth() + 1;
-            		if (rowObj.value != "") {
-            			this.dataForm.billDate = rowObj.value.split(",")
-            			for (let j = 0; j < this.dataForm.billDate.length; j++) {
-            				this.dataForm.billDate[j] = tYear + "-" + tMonth + "-" + this.dataForm.billDate[j]
+                if (res.data.cash_store_date=='') {
+                  this.dataForm.cash_store_date =''
+                } else{
+                  this.dataForm.cash_store_date = res.data.cash_store_date.split(",")
+            			for (let j = 0; j < this.dataForm.cash_store_date.length; j++) {
+            				this.dataForm.cash_store_date[j] = tYear + "-" + tMonth + "-" + this.dataForm.cash_store_date[j]
             			}
-            			this.dataForm.billCount = this.dataForm.billDate.length
+                }
+            		if (res.data.cash_supplier_date=='') {
+            		  this.dataForm.cash_supplier_date = ''
+            		} else{
+            		  this.dataForm.cash_supplier_date = res.data.cash_supplier_date.split(",")
+                  for (let j = 0; j < this.dataForm.cash_supplier_date.length; j++) {
+                  	this.dataForm.cash_supplier_date[j] = tYear + "-" + tMonth + "-" + this.dataForm.cash_supplier_date[j]
+                  }
             		}
-
-            		// scope.dataForm[rowObj.title] = eval("("+rowObj.value+")");
-            		// this.dataForm.billDate=
-            	} else {
-            		// this.dataForm.billCount=0
-            		scope.dataForm[rowObj.title] = rowObj.value
-            	}
-
-            }
           }
         );
       },
       saveObject() {
-        let scope = this;
-        if (this.validate()) {
-          let dataList = []
-          dataList.push({
-            dataType: 'billCfg',
-            title: 'billDate',
-            value: this.day
-          });
-          dataList.push({
-            dataType: 'billCfg',
-            title: 'billCount',
-            value: this.dataForm.billCount
-          });
-          let param = {
-            paramJson: JSON.stringify(dataList)
-          }
-          postMethod("/backend/lyConfig/update", param).then(
+        console.log(this.dataForm,this.supplierDay,this.storeDay)
+        if (this.supplierDay==''&&this.dataForm.cash_supplier_date!='') {
+          console.log(this.dataForm.cash_supplier_date)
+          this.pickSupplierDate()
+        }
+        if (this.storeDay==''&&this.dataForm.cash_store_date!='') {
+          console.log(this.dataForm.cash_store_date)
+          this.pickStoreDate()
+        }
+          let scope = this;
+          this.dataForm.cash_store_date=this.storeDay
+          this.dataForm.cash_supplier_date=this.supplierDay
+          console.log(this.dataForm)
+          this.loading=true
+          postMethod("/operate/set-config", this.dataForm).then(
             res => {
-              scope.typeList = res.data;
               this.$message({
                 message: "操作成功",
                 type: "success"
               });
-              this.$emit("showListPanel", true);
+              this.loading=false
+              this.loadData()
             }
           );
-        }
       },
-      validate() {
-        return true;
-      },
-      cancelUpdate() {
-        this.$emit("showListPanel", true);
-      },
-      submitUpdate() {
-        this.saveObject();
-      }
     }
   };
 </script>
