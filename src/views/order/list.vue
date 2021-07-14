@@ -36,14 +36,13 @@
           <div>订单状态：</div>
           <div>
             <!-- 订单状态 0:已取消 1:已提交 2:待支付 3:退款中 4:退款完成 5:待取件 6:待发货 7:待收货 8:交易完成 9:拒收 10:拒收完成 11:退货中 12:退货完成 -->
-            <el-select v-model="searchParam.orderType" placeholder="请选择">
+            <el-select v-model="searchParam.orderStatus" placeholder="请选择">
               <el-option value="" label="全部" />
               <el-option value="0" label="已取消" />
-              <el-option value="1" label="已提交" />
               <el-option value="2" label="待支付" />
               <el-option value="3" label="退款中" />
               <el-option value="4" label="退款完成" />
-              <el-option value="5" label="待取件" />
+              <el-option value="5" label="待自提" />
               <el-option value="6" label="待发货" />
               <el-option value="7" label="待收货" />
               <el-option value="8" label="交易完成" />
@@ -523,19 +522,17 @@
       <div style="width: 100%;line-height: 50px;">
         <div>
           <el-select v-model="states" placeholder="请选择">
-            <el-option
-              v-if="(currentOrderType==1&&currentOrderState==10)||(currentOrderType==4&&currentOrderState==30)||(currentOrderType==4&&currentOrderState==60)"
-              label="取消订单" value="0"></el-option>
-            <el-option
-              v-if="(currentOrderType==1&&currentOrderState==20)||(currentOrderType==4&&currentOrderState==20)||(currentOrderType==4&&currentOrderState==30)"
-              label="待发货" value="10"></el-option>
-            <el-option v-if="(currentOrderType==1&&currentOrderState==20)" label="待支付" value="30"></el-option>
-            <el-option v-if="(currentOrderType==1&&currentOrderState==30)||(currentOrderType==4&&currentOrderState==20)"
-              label="交易完成" value="50"></el-option>
+            <el-option v-if="currentOrderState==7" label="待发货" value="6"></el-option>
+            <el-option v-if="currentOrderState==2" label="已付款" value="6"></el-option>
+            <el-option v-if="currentOrderState==7&&currentIsSendSevenDay==1" label="交易完成" value="8"></el-option>
           </el-select>
         </div>
         <div
-          v-if="(currentOrderType==1&&states==50&&currentOrderState==30)||(currentOrderType==4&&states==10&&currentOrderState==30)">
+          v-if="states==6&&currentOrderState==2">
+          <el-select v-model="currentPayChannel" placeholder="请选择支付方式">
+            <el-option label="支付宝" value="1"></el-option>
+            <el-option label="微信" value="2"></el-option>
+          </el-select>
           <el-input v-model="serialNumber" placeholder="请输入支付流水号"></el-input>
         </div>
         <div style="text-align: right;">
@@ -610,7 +607,7 @@
         } else if (status == '4') {
           statusText = '退款完成'
         } else if (status == '5') {
-          statusText = '待取件'
+          statusText = '待自提'
         } else if (status == '6') {
           statusText = '待发货'
         } else if (status == '7') {
@@ -682,10 +679,10 @@
         menuId: '',
         operationModuleName: '',
         goodDtlList: {},
-        currentOrderType: '',
         currentOrderState: '',
-        currentOrderId: '',
+        currentPayChannel: '',
         currentOrderNo: '',
+        currentIsSendSevenDay:'',
         states: '',
         serialNumber: '',
         stateShow: false,
@@ -769,7 +766,7 @@
           orderEndTime: '',
           orderNo: '',
           orderStartTime: '',
-          orderType: '',
+          orderStatus: '',
           payType: '',
           receiptStatus: '',
           storeName: '',
@@ -963,15 +960,15 @@
 
       //修改订单状态
       modifyState(row) {
-        this.currentOrderType = row.orderType,
-          this.currentOrderState = row.status,
-          this.currentOrderId = row.orderId
+        console.log(row)
+        this.currentOrderState = row.orderStatus,
+        this.currentIsSendSevenDay = row.isSendSevenDay
         this.currentOrderNo = row.orderNo
         this.stateShow = true
       },
       enterState() {
-        // console.log(this.currentOrderType,this.currentOrderState,this.states,this.currentOrderId,this.serialNumber)//选中的订单类型，选中的订单状态，要修改成的状态，订单id，支付流水号
-        //0取消订单 10待发货 30待支付 50交易完成
+        console.log(this.currentOrderType,this.currentOrderState,this.states,this.currentOrderId,this.serialNumber)//选中的订单类型，选中的订单状态，要修改成的状态，订单id，支付流水号
+
         if (this.states == '') {
           this.$message({
             message: '请选择要修改的状态',
@@ -979,49 +976,34 @@
           })
           return
         }
-        let beforeText = ''
-        let afterText = ''
-        switch (this.currentOrderState) {
-          case '10':
-            beforeText = '待发货';
-            break;
-          case '20':
-            beforeText = '待收货';
-            break;
-          case '30':
-            beforeText = '待支付';
-            break;
-          case '60':
-            beforeText = '待确认';
-            break;
-        }
-        switch (this.states) {
-          case '0':
-            afterText = '取消订单';
-            break;
-          case '10':
-            afterText = '待发货';
-            break;
-          case '30':
-            afterText = '待支付';
-            break;
-          case '50':
-            afterText = '交易完成';
-            break;
-        }
-        let datas = {
-          operationObject: this.currentOrderNo,
-          operationContent: beforeText + '改成' + afterText
-        }
-        if (this.states == 0) {
-          postMethod(`/order/cancelOrder?orderId=${this.currentOrderId}`).then(res => {
-            if (res.code == 200) {
+        if (this.states == 6&&this.currentOrderState==2) {
+          if(this.currentPayChannel==''){
+            this.$message({
+              message: '请选择支付方式',
+              type: 'warning'
+            })
+            return false
+          }
+          if(this.serialNumber==''){
+            this.$message({
+              message: '请填写支付流水号',
+              type: 'warning'
+            })
+            return false
+          }
+          console.log(this.currentPayChannel)
+          let param={
+            orderNo:this.currentOrderNo,
+            payChannel:this.currentPayChannel,
+            tradeNo:this.serialNumber
+          }
+          getMethod('/order/modify-order-pay',param).then(res => {
+            if (res.errCode == 0) {
               this.$message({
                 message: '修改成功',
                 type: 'success'
               })
               this.stateClose()
-              this.saveOperation(datas)
               this.loadList()
             } else {
               this.$message({
@@ -1032,16 +1014,18 @@
             }
           })
         }
-        if (this.states == 10) {
-          postMethod(`/order/rollbackDelivered?orderId=${this.currentOrderId}&thirdTradeNo=${this.serialNumber}`)
+        if (this.states == 6&&this.currentOrderState!=2) {
+          let param={
+            orderNo:this.currentOrderNo
+          }
+          getMethod('/order/modify-order-waiting-send',param)
             .then(res => {
-              if (res.code == 200) {
+            if (res.errCode == 0) {
                 this.$message({
                   message: '修改成功',
                   type: 'success'
                 })
                 this.stateClose()
-                this.saveOperation(datas)
                 this.loadList()
               } else {
                 this.$message({
@@ -1052,15 +1036,17 @@
               }
             })
         }
-        if (this.states == 30) {
-          postMethod(`/order/changeToWaitingPay?orderId=${this.currentOrderId}`).then(res => {
-            if (res.code == 200) {
+        if (this.states == 8) {
+          let param={
+            orderNo:this.currentOrderNo
+          }
+          getMethod('/order/modify-order-finish',param).then(res => {
+            if (res.errCode == 0) {
               this.$message({
                 message: '修改成功',
                 type: 'success'
               })
               this.stateClose()
-              this.saveOperation(datas)
               this.loadList()
             } else {
               this.$message({
@@ -1070,31 +1056,15 @@
               return false;
             }
           })
-        }
-        if (this.states == 50) {
-          postMethod(`/order/changeToComplete?orderId=${this.currentOrderId}&thirdTradeNo=${this.serialNumber}`)
-            .then(res => {
-              if (res.code == 200) {
-                this.$message({
-                  message: '修改成功',
-                  type: 'success'
-                })
-                this.stateClose()
-                this.saveOperation(datas)
-                this.loadList()
-              } else {
-                this.$message({
-                  message: res.message,
-                  type: 'error'
-                })
-                return false;
-              }
-            })
         }
       },
       stateClose() {
-        this.states = ''
-        this.serialNumber = ''
+        this.currentOrderState= ''
+        this.currentPayChannel=''
+        this.currentOrderNo= ''
+        this.currentIsSendSevenDay=''
+        this.states= ''
+        this.serialNumber= ''
         this.stateShow = false
       },
       //修改地址彈框

@@ -24,9 +24,9 @@
           <el-button icon="el-icon-search" type="primary" @click="search()">
             搜索
           </el-button>
-          <el-button plain type="normal" icon="el-icon-download" @click="exportData()">
+          <!-- <el-button plain type="normal" icon="el-icon-download" @click="exportData()">
             导出
-          </el-button>
+          </el-button> -->
         </div>
       </div>
       <div class="ly-table-panel">

@@ -1,623 +1,638 @@
 <template>
-  <div>
-
-    <el-row :span="24" style="padding-top:25px" v-if="showSiteData">
-      <el-col :span="8">
-        <div style="padding: 0px 10px;">
-          <div class="analysis-title">平台数据</div>
-          <div>
-            <el-table
-              ref="settleEndData"
-              :data="platData"
-              style="width: 100%; margin-bottom: 20px;"
-              row-key="id"
-            >
-              <el-table-column prop="dataType" label="统计类型" min-width="70%">
-              </el-table-column>
-              <el-table-column prop="siteData" label="统计数据" min-width="30%">
-                <template slot-scope="scope">
-                  <el-link type="primary" @click="showPlatDataList(scope.row)">{{ scope.row.siteData }}</el-link>
-                </template>
-              </el-table-column>
-            </el-table>
+  <div style="padding: 30px">
+    <div class="panel-group">
+      <div class="card-panel-col">
+        <router-link to="/bc-goods/reject">
+          <div class="card-panel">
+            <div class="card-left">
+              <div class="card-title">
+                举报
+              </div>
+              <div class="card-text">
+                当前未处理的举报
+              </div>
+            </div>
+            <div class="card-right">
+              <count-to :start-val="0" :end-val="indexData.tipOffNumber" :duration="2000" />
+            </div>
           </div>
-        </div>
-      </el-col>
-
-      <el-col :span="8">
-        <div style="padding: 0px 10px;">
-          <div class="analysis-title">其他数据</div>
-          <div>
-            <el-table
-              ref="otherTbl"
-              :data="otherData"
-              style="width: 100%; margin-bottom: 20px;"
-              row-key="id"
-            >
-              <el-table-column prop="dataType" label="统计类型" min-width="70%">
-              </el-table-column>
-              <el-table-column prop="siteData" label="统计数据" min-width="30%">
-                <template slot-scope="scope">
-                  <el-link type="primary" @click="showOtherDataList(scope.row)">{{ scope.row.siteData }}</el-link>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
-        </div>
-      </el-col>
-
-      <el-col :span="8">
-        <div style="padding: 0px 10px;">
-          <div class="analysis-title">月度数据</div>
-          <div>
-            <el-table
-              ref="monthTbl"
-              :data="monthData"
-              style="width: 100%; margin-bottom: 20px;"
-              row-key="id"
-            >
-              <el-table-column prop="dataType" label="统计类型" min-width="70%">
-              </el-table-column>
-              <el-table-column prop="siteData" label="统计数据" min-width="30%">
-                <template slot-scope="scope">
-                  <el-link type="primary" @click="showMonthDataList(scope.row)">{{ scope.row | fmtSiteData }}</el-link>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
-        </div>
-      </el-col>
-    </el-row>
-    <div class="ly-container" v-if="showPlatList">
-      <div class="ly-tool-panel">
-        <table>
-          <tr>
-            <td>统计时间</td>
-            <td>
-              <el-date-picker
-                v-model="searchPlatList.startDate"
-                type="date"
-                placeholder="开始时间"
-              >
-              </el-date-picker>
-            </td>
-            <td colspan="2">
-              <el-date-picker
-                v-model="searchPlatList.endDate"
-                type="date"
-                placeholder="结束时间"
-              >
-              </el-date-picker>
-            </td>
-            <td>
-              <el-button icon="el-icon-search" type="primary" plain @click="searchPlat()">搜索</el-button>
-              <el-button icon="el-icon-download" @click="exportPlat()">导出</el-button>
-              <el-button icon="el-icon-back" type="info" @click="backToPlat()" v-if="showPage" plain>返回首页</el-button>
-            </td>
-          </tr>
-        </table>
+        </router-link>
       </div>
+      <div class="card-panel-col">
+        <router-link to="/bc-goods/saleList">
+          <div class="card-panel">
+            <div class="card-left">
+              <div class="card-title">
+                笔记数
+              </div>
+              <div class="card-text">
+                昨日发布笔记数
+              </div>
+            </div>
+            <div class="card-right">
+              <count-to :start-val="0" :end-val="indexData.noteNumber" :duration="2000" />
+            </div>
+          </div>
+        </router-link>
+      </div>
+      <div class="card-panel-col">
+        <router-link to="/bc-order/ready">
+          <div class="card-panel">
+            <div class="card-left">
+              <div class="card-title">
+                退货/拒收
+              </div>
+              <div class="card-text">
+                当前退货/拒收订单
+              </div>
+            </div>
+            <div class="card-right">
+              <count-to :start-val="0" :end-val="indexData.returnGoodsNumber" :duration="2000" />
+            </div>
+          </div>
+        </router-link>
+      </div>
+      <div class="card-panel-col">
+        <router-link to="bc-order/readyPay">
+          <div class="card-panel">
+            <div class="card-left">
+              <div class="card-title">
+                商品订单
+              </div>
+              <div class="card-text">
+                待发货商品订单
+              </div>
+            </div>
+            <div class="card-right">
+              <count-to :start-val="0" :end-val="indexData.waitSendGoodsOrder" :duration="2000" />
+            </div>
+          </div>
+        </router-link>
+      </div>
+      <div class="card-panel-col">
+        <router-link to="bc-order/readyPay">
+          <div class="card-panel">
+            <div class="card-left">
+              <div class="card-title">
+                靠谱豆订单
+              </div>
+              <div class="card-text">
+                待发货靠谱豆订单
+              </div>
+            </div>
+            <div class="card-right">
+              <count-to :start-val="0" :end-val="indexData.waitSendBeanOrder" :duration="2000" />
+            </div>
+          </div>
+        </router-link>
+      </div>
+    </div>
 
-      <div style="width:100%">
-        <div style="width:100%">
-          <el-table
-            ref="platDataListTable"
-            :data="platDataList"
-            style="width: 100%; margin-bottom: 20px;"
-            row-key="id"
-            border
-          >
-            <el-table-column prop="ordPrice" label="订单额" width="200px"></el-table-column>
-            <el-table-column prop="ordPayPrice" label="总收入" width="200px%"></el-table-column>
-            <el-table-column prop="inviteUser" label="总访客数" width="200px%"></el-table-column>
-            <el-table-column prop="rejectOrdCnt" label="退货订单数" width="200px%"></el-table-column>
-            <el-table-column prop="exceedOrd" label="超期未付款数" width="200px%"></el-table-column>
-            <el-table-column prop="dateStr" label="日期" width="200px"></el-table-column>
-          </el-table>
+    <div style="margin: 15px;display: flex;justify-content: space-between;align-items: center;">
+      <div style="width: 300px;">统计时间：2021-10-01 ~ 2021-11-01</div>
+      <div style="display: flex;align-items: center;">
+        <div @click="changeDate(1)" class="blockT">
+          <div> 7天 </div>
+        </div>
+        <div @click="changeDate(2)" class="blockT">
+          <div> 30天 </div>
+        </div>
+        <div @click="changeDate(3)" class="blockT">
+          <div> 日 </div>
+        </div>
+        <div class="blockT">
+          <el-date-picker v-model="weekValue" @change="testDate2" :picker-options="weekOption" type="week"
+            format="yyyy 第 WW 周" value-format="yyyy-MM-dd" placeholder="选择日期">
+          </el-date-picker>
+        </div>
+        <div class="blockT">
+          <el-date-picker v-model="monthValue" @change="testDate3" :picker-options="pickerOptions" type="month"
+            format="yyyy-MM" value-format="yyyy-MM" placeholder="选择日期">
+          </el-date-picker>
         </div>
       </div>
     </div>
 
-    <div class="ly-container" v-if="showOtherList">
-      <div class="ly-tool-panel">
-        <table>
-          <tr>
-            <td>统计时间</td>
-            <td>
-              <el-date-picker
-                v-model="searchOtherList.startDate"
-                type="date"
-                placeholder="开始时间"
-              >
-              </el-date-picker>
-            </td>
-            <td colspan="2">
-              <el-date-picker
-                v-model="searchOtherList.endDate"
-                type="date"
-                placeholder="结束时间"
-              >
-              </el-date-picker>
-            </td>
-            <td>
-              <el-button icon="el-icon-search" @click="searchOther()">搜索</el-button>
-              <el-button icon="el-icon-download" @click="exportOther()">导出</el-button>
-              <el-button icon="el-icon-back" type="info" @click="backToPlat()" v-if="showPage" plain>返回首页</el-button>
-            </td>
-          </tr>
-        </table>
+    <div class="panel-group" style="margin-left: 15px;">
+      <div class="card-panel-col2">
+        <div class="card-panel">
+          <div class="card-left">
+            <div class="card-title">
+              订单金额
+            </div>
+            <div class="card-text">
+              <count-to :start-val="0" :end-val="orderPayMoney" :duration="2000" />
+            </div>
+          </div>
+          <el-radio class="card-right" @change="dataType" v-model="radio1" label="1">
+            <div>
+            </div>
+          </el-radio>
+        </div>
       </div>
-
-      <div style="width:100%">
-        <div style="width:100%">
-          <el-table
-            ref="otherDataTable"
-            :data="otherDataList"
-            style="width: 100%; margin-bottom: 20px;"
-            row-key="id"
-            border
-          >
-            <el-table-column prop="userData" label="新增会员" width="200px"></el-table-column>
-            <el-table-column prop="providerData" label="新增服务商" width="200px%"></el-table-column>
-            <el-table-column prop="supplierData" label="新增供应商" width="200px%"></el-table-column>
-            <el-table-column prop="beasData" label="新增靠谱豆" width="200px%"></el-table-column>
-            <el-table-column prop="dateStr" label="日期" width="200px"></el-table-column>
-          </el-table>
+      <div class="card-panel-col2">
+        <div class="card-panel">
+          <div class="card-left">
+            <div class="card-title">
+              订单数量
+            </div>
+            <div class="card-text">
+              <count-to :start-val="0" :end-val="orderPayNum" :duration="2000" />
+            </div>
+          </div>
+          <el-radio class="card-right" @change="dataType" v-model="radio1" label="2">
+            <div>
+            </div>
+          </el-radio>
+        </div>
+      </div>
+      <div class="card-panel-col2">
+        <div class="card-panel">
+          <div class="card-left">
+            <div class="card-title">
+              结算收入
+            </div>
+            <div class="card-text">
+              <count-to :start-val="0" :end-val="settleMoney" :duration="2000" />
+            </div>
+          </div>
+          <el-radio class="card-right" @change="dataType" v-model="radio1" label="3">
+            <div>
+            </div>
+          </el-radio>
+        </div>
+      </div>
+      <div class="card-panel-col2">
+        <div class="card-panel">
+          <div class="card-left">
+            <div class="card-title">
+              会员数量
+            </div>
+            <div class="card-text">
+              <count-to :start-val="0" :end-val="registerMemberNum" :duration="2000" />
+            </div>
+          </div>
+          <el-radio class="card-right" @change="dataType" v-model="radio1" label="4">
+            <div>
+            </div>
+          </el-radio>
+        </div>
+      </div>
+      <div class="card-panel-col2">
+        <div class="card-panel">
+          <div class="card-left">
+            <div class="card-title">
+              笔记数量
+            </div>
+            <div class="card-text">
+              <count-to :start-val="0" :end-val="noteNum" :duration="2000" />
+            </div>
+          </div>
+          <el-radio class="card-right" @change="dataType" v-model="radio1" label="5">
+            <div>
+            </div>
+          </el-radio>
         </div>
       </div>
     </div>
 
-    <div class="ly-container" v-if="showMonthList">
-      <div class="ly-tool-panel">
-        <table>
-          <tr>
-            <td>统计时间</td>
-            <td>
-              <el-date-picker
-                v-model="searchMonthList.startDate"
-                type="month"
-                placeholder="开始时间"
-              >
-              </el-date-picker>
-            </td>
-            <td colspan="2">
-              <el-date-picker
-                v-model="searchMonthList.endDate"
-                type="month"
-                placeholder="结束时间"
-              >
-              </el-date-picker>
-            </td>
-            <td>
-              <el-button icon="el-icon-search" @click="searchMonth()">搜索</el-button>
-              <el-button icon="el-icon-download" @click="exportMonth()">导出</el-button>
-              <el-button icon="el-icon-back" type="info" @click="backToPlat()" v-if="showPage" plain>返回首页</el-button>
-            </td>
-          </tr>
-        </table>
-      </div>
 
-      <div style="width:100%">
-        <div style="width:100%">
-          <el-table
-            ref="monthDataTbl"
-            :data="monthDataList"
-            style="width: 100%; margin-bottom: 20px;"
-            row-key="id"
-            border
-          >
-            <el-table-column prop="monthOrdPrice" label="订单额" width="115px"></el-table-column>
-            <el-table-column prop="monthPayPrice" label="总收入" width="115px"></el-table-column>
-            <el-table-column prop="monthOrdNum" label="订单总数" width="115px"></el-table-column>
-            <el-table-column prop="monthNewMen" label="新增会员数" width="115px"></el-table-column>
-            <el-table-column prop="monthProNum" label="新增服务商" width="115px"></el-table-column>
-            <el-table-column prop="monthSupNum" label="新增供应商" width="115px"></el-table-column>
-            <el-table-column prop="monthBean" label="新增靠谱豆" width="115px"></el-table-column>
-            <el-table-column prop="monthRejectOrd" label="退货数" width="115px"></el-table-column>
-            <el-table-column prop="monthNoCash" label="超期未付款总数" width="125px"></el-table-column>
-            <el-table-column prop="dateStr" label="日期" width="200px"></el-table-column>
-          </el-table>
-        </div>
-      </div>
+    <div>
+      <div id="main" style="width: 100%;height:600px;"></div>
     </div>
+
+
   </div>
-
 </template>
 
 <script>
-import CountTo from 'vue-count-to'
-import {getMethod, postMethod} from "@/api/request";
-import { getMethod as getMethodNew, postMethod as postMethodNew } from "@/api/request-new";
+  import {
+    getMethod,
+    postMethod
+  } from '@/api/request'
+  import {
+    formatDate
+  } from '@/api/tools.js'
+  import variables from '@/styles/variables.scss'
+  import CountTo from 'vue-count-to'
+  import {getMon} from "@/utils/index"
+  import * as echarts from 'echarts';
 
-export default {
-  name: '',
-  props: [''],
-  data() {
-    return {
-      showSiteData: true,
-      showPlatList: false,
-      showOtherList: false,
-      showMonthList: false,
-      platData: [],
-      showPage: true,
-      platDataList: [],
-      otherData: [],
-      otherDataList: [],
-      monthData: [],
-      monthDataList: [],
-      worseSale: [],
-      bestFav: [],
-      worseFav: [],
-      searchPlatList: {
-        startDate: null,
-        endDate: null
-      },
-      searchOtherList: {
-        startDate: null,
-        endDate: null
-      },
-      searchMonthList: {
-        startDate: null,
-        endDate: null
-      },
-      orgOptions: {},
-      lineDate: {
-        dateList: [],
-        ordListL: [],
-        payList: []
+  export default {
+    name: '',
+    props: [''],
+    data() {
+      return {
+        pickerOptions: {
+          disabledDate(time) {
+            let t = new Date().getDate();
+              return time.getTime() > Date.now() - 8.64e7 * t;
+          }
+        },
+        weekOption:this.banWeek(),
+        indexData: {
+          noteNumber: 0,
+          returnGoodsNumber: 0,
+          tipOffNumber: 0,
+          waitSendBeanOrder: 0,
+          waitSendGoodsOrder: 0,
+        },
+        noteNum: 0,
+        orderPayMoney: 0,
+        orderPayNum: 0,
+        settleMoney: 0,
+        registerMemberNum: 0,
+        showText: [],
+        orderPayNumList: [],
+        orderPayMoneyList: [],
+        registerMemberNumList: [],
+        settleMoneyList: [],
+        noteNumList: [],
+        dayValue: '',
+        weekValue: '',
+        monthValue: '',
+        radio1: '1'
       }
-    };
-  },
-  props: {
-    dataSource: {
-      type: String,
-      required: false,
-      default: ''
-    }
-  },
-  components: {
-    CountTo
-  },
-  filters: {
-    fmtSiteData(row) {
-
-      if (row.dataType.indexOf('元') != -1) {
-        return row.siteData
-      }
-      return row.siteData.replace(".00", "")
-    }
-  },
-  computed: {},
-  beforeMount() {
-  },
-  mounted() {
-    if (this.dataSource == 'plat') {
-      this.showPlatDataList()
-      this.showSiteData = false
-      this.showPlatList = true
-      this.showOtherList = false
-      this.showMonthList = false
-      this.showPage = false
-    } else if (this.dataSource == 'newAdd') {
-      this.showOtherDataList()
-      this.showSiteData = false
-      this.showPlatList = false
-      this.showOtherList = true
-      this.showMonthList = false
-      this.showPage = false
-    } else if (this.dataSource == 'month') {
-      this.showMonthDataList()
-      this.showSiteData = false
-      this.showPlatList = false
-      this.showOtherList = false
-      this.showMonthList = true
-      this.showPage = false
-    } else {
+    },
+    components: {
+      CountTo
+    },
+    computed: {},
+    beforeMount() {},
+    mounted() {
       // this.initData()
+      this.indexLoad()
+    },
+    methods: {
+      banWeek(){
+            return{
+            	//将自然周的起始日改为周一开始
+              firstDayOfWeek: 1,
+              //禁止选择当前周
+              disabledDate(time) {
+                let day = Date.now();
+                let limit = getMon(day);
+                let limitTime = new Date(limit);
+                return time.getTime() > limitTime.getTime()-8.64e7;
+              }
+            }
+          },
+      testDate1(val) {
+        console.log(val)
+      },
+      testDate2(val) {
+        console.log(val)
+        this.weekValue=val
+        let tempDate = new Date(val) 
+        let beforeDate = tempDate.setDate(tempDate.getDate() - 1)
+        console.log(beforeDate,'beforeDate',formatDate(new Date(beforeDate), 'yyyy-MM-dd'))
+      },
+      testDate3(val) {
+        console.log(val)
+        this.monthValue=val
+      },
+      changeDate(val){
+        console.log(val)
+        let tempDate = new Date() // 获取今天的日期
+        let beforeDate = tempDate.setDate(tempDate.getDate() - 1)
+        console.log(beforeDate,'beforeDate',formatDate(new Date(beforeDate), 'yyyy-MM-dd'))
+      },
+      dataType(val) {
+        console.log(val)
+        this.radio1 = val
+        if (val == '1') {
+          let chartsData = {
+            name: "订单金额",
+            dataList: this.orderPayMoneyList
+          }
+          this.chartData(chartsData)
+        }
+        if (val == '2') {
+          let chartsData = {
+            name: "订单数量",
+            dataList: this.orderPayNumList
+          }
+          this.chartData(chartsData)
+        }
+        if (val == '3') {
+          let chartsData = {
+            name: "结算收入",
+            dataList: this.settleMoneyList
+          }
+          this.chartData(chartsData)
+        }
+        if (val == '4') {
+          let chartsData = {
+            name: "会员数量",
+            dataList: this.registerMemberNumList
+          }
+          this.chartData(chartsData)
+        }
+        if (val == '5') {
+          let chartsData = {
+            name: "笔记数量",
+            dataList: this.noteNumList
+          }
+          this.chartData(chartsData)
+        }
+      },
+      indexLoad() {
+        getMethod('/home/home-count-data', {}).then(res => {
+          this.indexData = res.data
+        })
+        let param = {
+          endTime: "2021-10-1",
+          startTime: "2021-6-1",
+          showType: 1
+        }
+        getMethod('/home/home-count-chart', param).then(res => {
+          console.log(res)
+          this.noteNum = res.data.noteNum
+          this.orderPayMoney = res.data.orderPayMoney
+          this.orderPayNum = res.data.orderPayNum
+          this.registerMemberNum = res.data.registerMemberNum
+          this.settleMoney = res.data.settleMoney
+          res.data.staticDataList.forEach(item => {
+            this.showText.push(item.showText)
+            this.orderPayNumList.push(item.orderPayNum)
+            this.orderPayMoneyList.push(item.orderPayMoney)
+            this.registerMemberNumList.push(item.registerMemberNum)
+            this.settleMoneyList.push(item.settleMoney)
+            this.noteNumList.push(item.noteNum)
+          })
+          this.dataType(this.radio1)
+          console.log(this.showText, this.orderPayNumList, this.orderPayMoneyList, this.registerMemberNumList, this
+            .settleMoneyList, this.noteNumList)
+        })
+      },
+      chartData(data) {
+        console.log(data, 'data')
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        // 绘制图表
+        myChart.setOption({
+          title: {
+            text: data.name
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+            data: [data.name]
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          toolbox: {
+            feature: {
+              saveAsImage: {}
+            }
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: this.showText
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [{
+            name: data.name,
+            type: 'line',
+            data: data.dataList
+          }]
+        });
+      }
     }
-
-  },
-  methods: {
-    exportPlat() {
-      let exportParam = [];
-      for (let key in this.searchPlatList) {
-        if (this.searchPlatList[key] != undefined) {
-          exportParam.push(key + "=" + this.searchPlatList[key]);
-        }
-      }
-      window.open(process.env.VUE_APP_BASE_API + '/backend/siteData/exportPlatDataList?' + exportParam.join("&"))
-    },
-    exportOther() {
-      let exportParam = [];
-      for (let key in this.searchOtherList) {
-        if (this.searchOtherList[key] != undefined) {
-          exportParam.push(key + "=" + this.searchOtherList[key]);
-        }
-      }
-      window.open(process.env.VUE_APP_BASE_API + '/backend/siteData/exportOtherDataList?' + exportParam.join("&"))
-    },
-    exportMonth() {
-      let exportParam = [];
-      for (let key in this.searchMonthList) {
-        if (this.searchMonthList[key] != undefined) {
-          exportParam.push(key + "=" + this.searchMonthList[key]);
-        }
-      }
-      window.open(process.env.VUE_APP_BASE_API + '/backend/siteData/exportMonDataList?' + exportParam.join("&"))
-    },
-    backToPlat() {
-      this.showSiteData = true
-      this.showPlatList = false
-      this.showOtherList = false
-      this.showMonthList = false
-    },
-    initData() {
-      let scope = this;
-      scope.initPlatData()
-      // scope.initOtherData()
-      scope.initMonthData()
-    },
-    showPlatDataList(row) {
-      if (row.dataType == '昨日订单额(元)') {
-        this.$router.push({path: '/order/list', query: {dt: '101'}});
-      } else if (row.dataType == '今日订单额(元)') {
-        this.$router.push({path: '/order/list', query: {dt: '102'}});
-      } else if (row.dataType == '昨日总收入(元)') {
-        this.$router.push({path: '/order/list', query: {dt: '103'}});
-      } else if (row.dataType == '今日总收入(元)') {
-        this.$router.push({path: '/order/list', query: {dt: '104'}});
-      } else if (row.dataType == '昨日订单数(笔)') {
-        this.$router.push({path: '/order/list', query: {dt: '101'}});
-      } else if (row.dataType == '今日订单数(笔)') {
-        this.$router.push({path: '/order/list', query: {dt: '102'}});
-      } else if (row.dataType == '今日退货订单数(笔)') {
-        this.$router.push({path: '/order/rejectList', query: {dt: '109'}});
-      } else if (row.dataType == '超期未付款订单(笔)') {
-        this.$router.push({path: '/order/list', query: {dt: '110'}});
-      }
-
-      // this.showSiteData = false
-      // this.showPlatList = true
-      // this.initPlatList()
-    },
-    showOtherDataList(row) {
-      if (row.dataType == '昨日新增会员(人)') {
-        this.$router.push({path: '/member/list', query: {dt: '10'}});
-      } else if (row.dataType == '今日新增会员(人)') {
-        this.$router.push({path: '/member/list', query: {dt: '20'}});
-      } else if (row.dataType == '昨日新增服务商(个)') {
-        this.$router.push({path: '/provider/list', query: {dt: '10'}});
-      } else if (row.dataType == '今日新增服务商(个)') {
-        this.$router.push({path: '/provider/list', query: {dt: '20'}});
-      } else if (row.dataType == '昨日新增供应商(个)') {
-        this.$router.push({path: '/supplier/index', query: {dt: '10'}});
-      } else if (row.dataType == '今日新增供应商(个)') {
-        this.$router.push({path: '/supplier/index', query: {dt: '20'}});
-      } else if (row.dataType == '昨日新增靠谱豆(个)') {
-        this.$router.push({path: '/biz/bean', query: {dt: '10'}});
-      } else if (row.dataType == '今日新增靠谱豆(个)') {
-        this.$router.push({path: '/biz/bean', query: {dt: '20'}});
-      }
-
-      // this.showSiteData = false
-      // this.showOtherList = true
-      // this.initOtherList()
-    },
-    showMonthDataList(row) {
-      if (row.dataType == '本月新增靠谱豆(个)') {
-        this.$router.push({path: '/biz/bean', query: {dt: '30'}});
-      } else if (row.dataType == '本月成交订单额(元)') {
-        this.$router.push({path: '/order/list', query: {dt: '150'}});
-      } else if (row.dataType == '本月成交订单总数(笔)') {
-        this.$router.push({path: '/order/list', query: {dt: '150'}});
-      } else if (row.dataType == '本月新增会员数(人)') {
-        this.$router.push({path: '/member/list', query: {dt: '30'}});
-      } else if (row.dataType == '本月新增服务商(个)') {
-        this.$router.push({path: '/provider/list', query: {dt: '30'}});
-      } else if (row.dataType == '本月退货数(笔)') {
-        this.$router.push({path: '/order/rejectList', query: {dt: '108'}});
-      } else if (row.dataType == '本月新增供应商(个)') {
-        this.$router.push({path: '/supplier/index', query: {dt: '30'}});
-      } else if (row.dataType == '本月超期未付款(元)') {
-        this.$router.push({path: '/order/list', query: {dt: '210'}});
-      }
-      // this.showSiteData = false
-      // this.showMonthList = true
-      // this.initMonthList()
-    },
-    searchPlat() {
-      this.initPlatList()
-    },
-    searchOther() {
-      this.initOtherList()
-    },
-    searchMonth() {
-      this.initMonthList()
-    },
-    initPlatList() {
-      let scope = this;
-      postMethod("/backend/siteData/findPlatDataList", this.searchPlatList).then(res => {
-        let resData = res.data
-        scope.platDataList = resData
-      });
-    },
-    initPlatData() {
-      let scope = this;
-
-      getMethodNew("/statistic/findSiteData", {}).then(res => {
-        let resData = res.data
-        scope.platData = resData
-      });
-    },
-    initOtherData() {
-      let scope = this;
-
-      getMethod("/backend/siteData/findOtherData", {}).then(res => {
-        let resData = res.data
-        scope.otherData = resData
-      });
-    },
-
-    initOtherList() {
-      let scope = this;
-
-      postMethod("/backend/siteData/findOtherDataList", this.searchOtherList).then(res => {
-        let resData = res.data
-        scope.otherDataList = resData
-      });
-    },
-    initMonthData() {
-      let scope = this;
-      getMethodNew("/statistic/findMonData", {}).then(res => {
-        let resData = res.data
-        scope.monthData = resData
-      });
-    },
-    initMonthList() {
-      let scope = this;
-      postMethod("/backend/siteData/findMonDataList", this.searchMonthList).then(res => {
-        let resData = res.data
-        scope.monthDataList = resData
-      });
-    }
-  },
-  watch: {}
-}
-
+  }
 </script>
 <style lang="scss" scoped>
-.analysis-title {
-  font-family: 'Arial Negreta', 'Arial';
-  font-size: 16px;
-  color: #333333;
-  text-align: center;
-  line-height: 45px;
-  font-weight: 700;
-  background: #F0F0F0;
-}
+  @import "~@/styles/variables.scss";
 
-.panel-group {
-  margin-top: 18px;
-
-  .card-panel-col {
-    margin-bottom: 32px;
+  .analysis-title {
+    font-family: 'Arial Negreta', 'Arial';
+    font-size: 16px;
+    color: #333333;
+    text-align: center;
+    line-height: 45px;
+    font-weight: 700;
+    background: #F0F0F0;
   }
 
-  .card-panel {
-    height: 108px;
-    cursor: pointer;
-    font-size: 12px;
-    position: relative;
-    overflow: hidden;
-    color: #666;
-    background: #fff;
-    box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
-    border-color: rgba(0, 0, 0, .05);
+  .blockT {
+    margin: 5px;
+    border: 1px solid #b5b5b5;
+    display: block;
+    line-height: 40px;
+    padding: 0 10px;
+  }
 
-    &:hover {
-      .card-panel-icon-wrapper {
-        color: #fff;
+  .panel-group {
+    //margin-top: 18px;
+    margin-bottom: 50px;
+    display: flex;
+    flex-wrap: wrap;
+
+    .card-panel-col {
+      margin: 15px;
+      width: 250px;
+
+      .card-right {
+        width: 30%;
+        font-size: 40px;
+        font-weight: 600;
       }
 
-      .icon-people {
-        background: #40c9c6;
-      }
-
-      .icon-message {
-        background: #36a3f7;
-      }
-
-      .icon-money {
-        background: #f4516c;
-      }
-
-      .icon-shopping {
-        background: #34bfa3
+      .card-text {
+        font-size: 15px;
       }
     }
 
-    .icon-people {
-      color: #40c9c6;
-    }
+    .card-panel-col2 {
+      width: 200px;
 
-    .icon-message {
-      color: #36a3f7;
-    }
-
-    .icon-money {
-      color: #f4516c;
-    }
-
-    .icon-shopping {
-      color: #34bfa3
-    }
-
-    .card-panel-icon-wrapper {
-      float: left;
-      margin: 14px 0 0 14px;
-      padding: 16px;
-      transition: all 0.38s ease-out;
-      border-radius: 6px;
-    }
-
-    .card-panel-icon {
-      float: left;
-      font-size: 48px;
-    }
-
-    .card-panel-description {
-      font-weight: bold;
-      margin: 26px;
-      padding-left: 10px;
-      margin-left: 0px;
-
-      .card-panel-text {
-        line-height: 18px;
-        color: rgba(0, 0, 0, 0.45);
-        font-size: 16px;
-        margin-bottom: 12px;
+      .card-right {
+        height: 100%;
+        width: 30%;
+        padding: 25px;
+        font-weight: 600;
       }
 
-      .card-panel-num {
+      .card-text {
         font-size: 20px;
       }
     }
+
+    .card-left {
+      width: 70%;
+      padding-left: 25px;
+      line-height: 35px;
+    }
+
+
+
+    .card-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+
+
+    .card-panel {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      //height: 108px;
+      height: 150px;
+      cursor: pointer;
+      font-size: 12px;
+      position: relative;
+      overflow: hidden;
+      color: #666;
+      background: #fff;
+      border-color: rgba(0, 0, 0, .05);
+      transition: .2s;
+      border-radius: 10px;
+      box-shadow: 0px 2px 3px #ccc;
+
+      &:hover {
+        box-shadow: 0px 4px 15px #ccc;
+      }
+
+      .icon-people {
+        color: #40c9c6;
+      }
+
+      .icon-message {
+        color: #36a3f7;
+      }
+
+      .icon-money {
+        color: #f4516c;
+      }
+
+      .icon-shopping {
+        color: #34bfa3
+      }
+
+      .card-panel-icon-wrapper {
+        float: right;
+        //margin: 14px 0 0 14px;
+        padding: 16px;
+        transition: all 0.38s ease-out;
+        border-radius: 6px;
+      }
+
+      .card-panel-icon {
+        float: right;
+        font-size: 48px;
+      }
+
+      .card-panel-description {
+        font-weight: bold;
+        margin-top: 16px;
+        padding-left: 20px;
+        margin-left: 0px;
+
+        .card-panel-text {
+          line-height: 18px;
+          color: rgba(0, 0, 0, 0.45);
+          font-size: 15px;
+          margin-bottom: 12px;
+        }
+
+        .card-panel-num {
+          font-size: 30px;
+        }
+      }
+
+      .card-panel-footer-text {
+        color: rgba(0, 0, 0, 0.45);
+        text-align: center;
+        font-weight: bold;
+        font-size: 16px;
+      }
+    }
+
   }
-}
 
-@media (max-width: 550px) {
-  .card-panel-description {
-    display: none;
-  }
+  @media (max-width: 550px) {
+    .card-panel-description {
+      display: none;
+    }
 
-  .card-panel-icon-wrapper {
-    float: none !important;
-    width: 100%;
-    height: 100%;
-    margin: 0 !important;
-
-    .svg-icon {
-      display: block;
-      margin: 14px auto !important;
+    .card-panel-icon-wrapper {
       float: none !important;
+      width: 100%;
+      height: 100%;
+      margin: 0 !important;
+
+      .svg-icon {
+        display: block;
+        margin: 14px auto !important;
+        float: none !important;
+      }
     }
   }
-}
 
-.ly-container {
-  padding: 10px 20px;
-  font-size: 14px;
-
-  .ly-tool-panel {
-    line-height: "60px";
-    height: "60px";
+  .counter-area {
+    // background: $heavyBGColor;
     width: 100%;
-    padding: 10px 10px;
+    min-height: 50vh;
+    margin-top: 4vh;
+    padding: 5vh 2vw 5vh 2vw;
+    transition: .2s;
 
-    .ly-tool-btn {
-      padding-left: 20px;
-      display: inline;
+
+    &:hover {
+      box-shadow: 0px 4px 10px #ccc;
     }
+
   }
-}
+
+  .el-divider--horizontal {
+    display: block;
+    height: 1px;
+    width: 100%;
+    margin: 30px 0px 10px 0px;
+  }
+
+  .el-table>>>th.is-leaf,
+  .el-table>>>td {
+    border: none;
+  }
+
+  .el-table::before {
+    height: 0px;
+  }
+
+  .dashbord-tab-list>>>.el-tabs__nav-wrap::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 0px;
+    z-index: 1;
+  }
+
+  .dashbord-tab-list {}
+
+  .dashbord-tab-list>>>.el-tabs__item {
+    padding: 0 20px;
+    height: 30px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    line-height: 30px;
+    display: inline-block;
+    list-style: none;
+    font-family: PingFang SC;
+    font-size: 14px;
+    font-weight: 600;
+    color: #939393;
+    position: relative;
+  }
 </style>

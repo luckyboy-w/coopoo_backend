@@ -20,7 +20,7 @@ import './permission' // permission control
 import './utils/error-log' // error log
 import global_variable from './api/global_variable'
 import VueAMap from 'vue-amap';
-import BaiduMap from 'vue-baidu-map'
+// import BaiduMap from 'vue-baidu-map'
 import * as filters from './filters' // global filters
 
 Vue.prototype.GLOBAL = global_variable

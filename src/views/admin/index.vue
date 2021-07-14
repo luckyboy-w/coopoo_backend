@@ -91,6 +91,7 @@
           reppwd: '',
         },
         searchParam:{
+          accountType:'1',
           userName:'',
           pageNum:1,
           pageSize:10,

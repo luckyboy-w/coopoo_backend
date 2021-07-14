@@ -5,7 +5,7 @@
         <div class="tabTd">
           <div>主题名称：</div>
           <div>
-            <el-input v-model="searchParam.themeName" width="180px" placeholder="请输入" clearable />
+            <el-input v-model="searchParam.name" width="180px" placeholder="请输入" clearable />
           </div>
         </div>
         <div class="tabTd">

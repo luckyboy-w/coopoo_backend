@@ -25,19 +25,19 @@
               <div class="tabTd">
                 <div>会员昵称：</div>
                 <div>
-                  <el-input v-model="searchParam.userName" width="180px" placeholder="请输入" clearable />
+                  <el-input v-model="searchParams.userName" width="180px" placeholder="请输入" clearable />
                 </div>
               </div>
               <div class="tabTd">
                 <div>手机号：</div>
                 <div>
-                  <el-input v-model="searchParam.phoneNo" width="180px" placeholder="请输入" clearable />
+                  <el-input v-model="searchParams.phoneNo" width="180px" placeholder="请输入" clearable />
                 </div>
               </div>
               <div class="tabTd">
                 <div>会员类型：</div>
                 <div>
-                  <el-select v-model="searchParam.accountType" placeholder="请选择">
+                  <el-select v-model="searchParams.accountType" placeholder="请选择">
                     <el-option label="全部" value="" />
                     <el-option label="会员" value="0" />
                     <el-option label="门店" value="3" />
