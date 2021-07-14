@@ -37,7 +37,7 @@
           <el-table-column prop="activityName" label="活动名称" width="200px"/>
           <el-table-column prop="activityType" label="活动类型" width="200px">
             <template slot-scope="scope">
-              <span v-if="scope.row.activityType == '1'">秒杀活动</span>
+              <span v-if="scope.row.activityType == '1'">限时抢购</span>
             </template>
           </el-table-column>
           <el-table-column prop="frontImage" label="预热开始时间" width="350px">
@@ -75,7 +75,7 @@
           <el-select ref="select" v-model="activityForm.activityType" placeholder="请选择活动类型"
                      :disabled="activityTypeDisable"
           >
-            <el-option label="秒杀活动" :value="1"/>
+            <el-option label="限时抢购" :value="1"/>
           </el-select>
         </el-form-item>
         <el-form-item label="活动名称" prop="activityName">

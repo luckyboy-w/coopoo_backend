@@ -30,7 +30,7 @@
             <el-select v-model="searchParam.enable" placeholder="请选择">
               <el-option label="全部" value="" />
               <el-option label="启用" value="1" />
-              <el-option label="禁用" value="0" />
+              <el-option label="禁用" value="2" />
             </el-select>
           </div>
         </div>
