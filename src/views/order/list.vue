@@ -632,7 +632,7 @@
         return statusText
       },
       goodsText(status) {
-        // 商品状态 0:已提交 1:可退款 2:发货中 3:退款中 4:退款失败 5:退款完成 6:待评价 7:已评价 8:退货待接单 9:退货已接单 10:拒收 11:拒收完成 12:退货中 13:退货完成
+        // 商品状态 0:已提交 1:可退款 2:发货中 3:退款中 4:退款失败 5:退款完成 6:待评价 7:已评价 8:退货待接单 9:退货已接单 10:退货中 11:退货完成 12:拒收 13:拒收完成 14:退货退款中 15:拒收退款中
         let statusText = ''
         if (status == '0') {
           statusText = '已提交'
@@ -655,13 +655,17 @@
         } else if (status == '9') {
           statusText = '退货已接单'
         } else if (status == '10') {
-          statusText = '拒收'
-        } else if (status == '11') {
-          statusText = '拒收完成'
-        } else if (status == '12') {
           statusText = '退货中'
-        } else if (status == '13') {
+        } else if (status == '11') {
           statusText = '退货完成'
+        } else if (status == '12') {
+          statusText = '拒收'
+        } else if (status == '13') {
+          statusText = '拒收完成'
+        } else if (status == '14') {
+          statusText = '退货退款中'
+        } else if (status == '15') {
+          statusText = '拒收退款中'
         }
         return statusText
       },

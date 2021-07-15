@@ -4,24 +4,26 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item prop="type" label="主题类型">
           <el-select v-model="form.type" @change="changeImg" :disabled="disabled" placeholder="请选择主题类型">
-            <el-option v-for="item in themeData" :key="item.value" :label="item.name" :value-key="item.name" :value="item.value" />
+            <el-option v-for="item in themeData" :key="item.value" :label="item.name" :value-key="item.name"
+              :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item prop="themeName" label="主题名称">
-          <el-input v-model="form.themeName" placeholder="请输入" clearable :disabled="disabled"/>
+          <el-input v-model="form.themeName" placeholder="请输入" clearable :disabled="disabled" />
         </el-form-item>
         <el-form-item prop="subtitle" label="副标题名称" v-if="showSubtitle">
-          <el-input v-model="form.subtitle " placeholder="请输入" clearable :disabled="disabled"/>
+          <el-input v-model="form.subtitle " placeholder="请输入" clearable :disabled="disabled" />
         </el-form-item>
         <el-form-item prop="description" label="主题描述" v-if="showDescribe">
-          <el-input v-model="form.description" type="textarea" rows placeholder="请输入" clearable :disabled="disabled"/>
+          <el-input v-model="form.description" type="textarea" rows placeholder="请输入" clearable :disabled="disabled" />
         </el-form-item>
         <el-form-item prop="backgroundColor" label="背景色值" v-if="showColor">
-          <el-input v-model="form.backgroundColor" type="color" :disabled="disabled"/>
+          <el-input v-model="form.backgroundColor" type="color" :disabled="disabled" />
         </el-form-item>
 
         <el-form-item label="图片/视频">
-          <el-select v-model="form.fileType" :disabled="showVideo||disabled" @change="changeFileType" placeholder="请选择主图类型" >
+          <el-select v-model="form.fileType" :disabled="showVideo||disabled" @change="changeFileType"
+            placeholder="请选择主图类型">
             <el-option label="图片" :value="1" />
             <el-option label="视频" :value="2" />
           </el-select>
@@ -29,16 +31,16 @@
         <el-form-item>
           <div style="display: flex;flex-wrap: wrap;">
             <div class="upLoadContainer" @click="buildImgGroupId()" v-show="form.fileType==2">
-              <el-upload :disabled="disabled" :class="{hide:hideGoodVideoUpload}" :action="uploadImageUrl" list-type="picture-card"
-                v-bind:on-progress="uploadVideoProcess" v-bind:on-success="handleVideoSuccess"
+              <el-upload :disabled="disabled" :class="{hide:hideGoodVideoUpload}" :action="uploadImageUrl"
+                list-type="picture-card" v-bind:on-progress="uploadVideoProcess" v-bind:on-success="handleVideoSuccess"
                 v-bind:before-upload="beforeUploadVideo" v-bind:show-file-list="false">
                 <video v-if="modularVideo !='' && !videoFlag" v-bind:src="modularVideo" class="video-avatar"
                   style="height: inherit;min-width: -webkit-fill-available;" controls="controls">
                   您的浏览器不支持视频播放
                 </video>
-                <i v-else-if="modularVideo =='' && !videoFlag" class="el-icon-plus" ></i>
-                <i v-if="modularVideo !='' && !videoFlag" @click="handleGoodVideoRemove" :disabled="disabled" class="el-icon-error"
-                  style="position: absolute;top: 0;display: flex;"></i>
+                <i v-else-if="modularVideo =='' && !videoFlag" class="el-icon-plus"></i>
+                <i v-if="modularVideo !='' && !videoFlag" @click="handleGoodVideoRemove" :disabled="disabled"
+                  class="el-icon-error" style="position: absolute;top: 0;display: flex;"></i>
                 <el-progress v-if="videoFlag == true" type="circle" v-bind:percentage="videoUploadPercent"
                   style="margin-top:7px;"></el-progress>
               </el-upload>
@@ -52,8 +54,8 @@
             </div>
             <div class="upLoadContainer" v-show="form.fileType==2">
               <div id="videoCover" @click="buildImgGroupId">
-                <el-upload :disabled="disabled" :action="uploadImageUrl" list-type="picture-card" :on-preview="handleGoodImagePreview"
-                  :before-upload="beforeImageUpload"
+                <el-upload :disabled="disabled" :action="uploadImageUrl" list-type="picture-card"
+                  :on-preview="handleGoodImagePreview" :before-upload="beforeImageUpload"
                   :on-success="(response, file, fileList)=>handleImageSuccess(response, file, fileList,'videoCover')"
                   :file-list="uploadVideoCoverList" :on-remove="handleVideoCoverRemove">
                   <i class="el-icon-plus" />
@@ -69,8 +71,8 @@
             </div>
             <div class="upLoadContainer" v-show="form.fileType==1">
               <div id="mainImage" @click="buildImgGroupId">
-                <el-upload :disabled="disabled" :action="uploadImageUrl" list-type="picture-card" :on-preview="handleGoodImagePreview"
-                  :before-upload="beforeImageUpload"
+                <el-upload :disabled="disabled" :action="uploadImageUrl" list-type="picture-card"
+                  :on-preview="handleGoodImagePreview" :before-upload="beforeImageUpload"
                   :on-success="(response, file, fileList)=>handleImageSuccess(response, file, fileList,'mainImage')"
                   :file-list="uploadMainImageList" :on-remove="handleMainImageRemove">
                   <i class="el-icon-plus" />
@@ -86,8 +88,8 @@
             </div>
             <div class="upLoadContainer" v-show="showNum==1||showNum==2||showNum==3">
               <div id="firstImage" @click="buildImgGroupId">
-                <el-upload :disabled="disabled" :action="uploadImageUrl" list-type="picture-card" :on-preview="handleGoodImagePreview"
-                  :before-upload="beforeImageUpload"
+                <el-upload :disabled="disabled" :action="uploadImageUrl" list-type="picture-card"
+                  :on-preview="handleGoodImagePreview" :before-upload="beforeImageUpload"
                   :on-success="(response, file, fileList)=>handleImageSuccess(response, file, fileList,1)"
                   :file-list="uploadFirstImageList" :on-remove="handleFirstImageRemove">
                   <i class="el-icon-plus" />
@@ -103,8 +105,8 @@
             </div>
             <div class="upLoadContainer" v-show="showNum==2||showNum==3">
               <div id="secondImage" @click="buildImgGroupId">
-                <el-upload :disabled="disabled" :action="uploadImageUrl" list-type="picture-card" :on-preview="handleGoodImagePreview"
-                  :before-upload="beforeImageUpload"
+                <el-upload :disabled="disabled" :action="uploadImageUrl" list-type="picture-card"
+                  :on-preview="handleGoodImagePreview" :before-upload="beforeImageUpload"
                   :on-success="(response, file, fileList)=>handleImageSuccess(response, file, fileList,2)"
                   :file-list="uploadSecondImageList" :on-remove="handleSecondImageRemove">
                   <i class="el-icon-plus" />
@@ -120,8 +122,8 @@
             </div>
             <div class="upLoadContainer" v-show="showNum==3">
               <div id="thirdImage" @click="buildImgGroupId">
-                <el-upload :disabled="disabled" :action="uploadImageUrl" list-type="picture-card" :on-preview="handleGoodImagePreview"
-                  :before-upload="beforeImageUpload"
+                <el-upload :disabled="disabled" :action="uploadImageUrl" list-type="picture-card"
+                  :on-preview="handleGoodImagePreview" :before-upload="beforeImageUpload"
                   :on-success="(response, file, fileList)=>handleImageSuccess(response, file, fileList,3)"
                   :file-list="uploadThirdImageList" :on-remove="handleThirdImageRemove">
                   <i class="el-icon-plus" />
@@ -138,7 +140,7 @@
           </div>
         </el-form-item>
         <el-form-item prop="sort" label="排序">
-          <el-input v-model="form.sort" placeholder="请输入" clearable :disabled="disabled"/>
+          <el-input v-model="form.sort" placeholder="请输入" clearable :disabled="disabled" />
         </el-form-item>
         <el-form-item label="关联商品">
           <el-button type="success" @click="relatedGoods" :disabled="disabled">关联商品</el-button>
@@ -148,37 +150,40 @@
             <div class="ly-data-list">
               <el-table ref="mainTable" :data="bindingList" style="width: 100%!important; margin-bottom: 20px;"
                 row-key="id" border>
-               <el-table-column prop="goodsName" label="商品名称"  />
-               <el-table-column label="商品价格" >
-                 <template slot-scope="scope">
-                   <span>{{scope.row.maxGoodsSalePrice?(scope.row.minGoodsSalePrice+'~'+scope.row.maxGoodsSalePrice):scope.row.minGoodsSalePrice}}</span>
-                 </template>
-               </el-table-column>
-                <el-table-column prop="saleVolume" label="销量"  width="80"/>
+                <el-table-column prop="goodsName" label="商品名称" />
+                <el-table-column label="商品价格">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.maxGoodsSalePrice?(scope.row.minGoodsSalePrice+'~'+scope.row.maxGoodsSalePrice):scope.row.minGoodsSalePrice}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="saleVolume" label="销量" width="80" />
                 <el-table-column prop="supplierSettleRatio" label="供应商结算比例" width="160">
                   <template slot-scope="scope">
-                    <el-input-number :max="100" :min="0" size="mini" placeholder="请输入" :disabled="disabled" v-model="scope.row.supplierSettleRatio" />
+                    <el-input-number :max="100" :min="0" size="mini" placeholder="请输入" :disabled="disabled"
+                      v-model="scope.row.supplierSettleRatio" />
                   </template>
                 </el-table-column>
                 <el-table-column prop="storeSettleRatio" label="门店结算比例" width="160">
                   <template slot-scope="scope">
-                    <el-input-number :max="100" :min="0" size="mini" placeholder="请输入" :disabled="disabled"  v-model="scope.row.storeSettleRatio" />
+                    <el-input-number :max="100" :min="0" size="mini" placeholder="请输入" :disabled="disabled"
+                      v-model="scope.row.storeSettleRatio" />
                   </template>
                 </el-table-column>
-                <el-table-column prop="createTime" label="创建时间" width="170" >
+                <el-table-column prop="createTime" label="创建时间" width="170">
                   <template slot-scope="scope">
                     {{ scope.row.createTime}}
                   </template>
                 </el-table-column>
-                <el-table-column prop="id" label="操作" >
+                <el-table-column prop="id" label="操作">
                   <template slot-scope="scope">
-                    <el-button type="text" :disabled="disabled" size="small" @click="deleteGoods(scope.row)">
+                    <el-button type="text" :disabled="disabled" size="small"
+                      @click="deleteGoods(scope.row,scope.$index)">
                       删除
                     </el-button>
                     <el-divider direction="vertical"></el-divider>
-                      <el-button type="text" size="small" @click="getGoodsDtl(scope.row)">
-                        详情
-                      </el-button>
+                    <el-button type="text" size="small" @click="getGoodsDtl(scope.row)">
+                      详情
+                    </el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -187,7 +192,8 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="disabled" v-if="submitStatus==1" @click="submitUpdate(1)">提交</el-button>
-          <el-button type="primary" :disabled="disabled" v-if="submitStatus==2" @click="submitUpdate(2)">保存编辑</el-button>
+          <el-button type="primary" :disabled="disabled" v-if="submitStatus==2" @click="submitUpdate(2)">保存编辑
+          </el-button>
           <el-button @click="cancelUpdate">取消</el-button>
         </el-form-item>
       </el-form>
@@ -223,14 +229,14 @@
               border @selection-change="handleSelectionChange" @select="selectThis">
               <el-table-column type="selection" width="55">
               </el-table-column>
-              <el-table-column prop="goodsName" label="商品名称"  />
-              <el-table-column label="商品价格" >
+              <el-table-column prop="goodsName" label="商品名称" />
+              <el-table-column label="商品价格">
                 <template slot-scope="scope">
                   <span>{{scope.row.maxGoodsSalePrice?(scope.row.minGoodsSalePrice+'~'+scope.row.maxGoodsSalePrice):scope.row.minGoodsSalePrice}}</span>
                 </template>
               </el-table-column>
               <el-table-column prop="saleVolume" label="销量" />
-              <el-table-column prop="isSale" label="商品状态" >
+              <el-table-column prop="isSale" label="商品状态">
                 <template slot-scope="scope">
                   <span v-if="scope.row.isSale==1">已上架</span>
                   <span v-if="scope.row.isSale==0">未上架</span>
@@ -273,8 +279,8 @@
     data() {
       return {
         loading: false,
-        disabled:false,
-        submitStatus:1,
+        disabled: false,
+        submitStatus: 1,
         themeData: [{
             name: '单图半屏展示',
             value: '0',
@@ -442,12 +448,12 @@
         tableData: {
           list: []
         },
-        multipleSelection:[],
-        bindingList:[],
+        multipleSelection: [],
+        bindingList: [],
         searchParam: {
           pageSize: 10,
           pageNum: 1,
-          status:'0'
+          status: '0'
         },
         rules: {
           type: [{
@@ -493,15 +499,15 @@
     mounted() {
       console.log(this.editData, 'this.editData.')
       if (this.editData.goodsThemeId) {
-       this.dataEcho()
-       this.changeImg()
+        this.dataEcho()
+        this.changeImg()
       }
-      if (this.editData.operation=="add") {
-        this.submitStatus=1
-      } else if (this.editData.operation=="edit"){
-        this.submitStatus=2
-      }else if (this.editData.operation=="detail"){
-        this.disabled=true
+      if (this.editData.operation == "add") {
+        this.submitStatus = 1
+      } else if (this.editData.operation == "edit") {
+        this.submitStatus = 2
+      } else if (this.editData.operation == "detail") {
+        this.disabled = true
       }
     },
     created() {},
@@ -551,28 +557,28 @@
           this.uploadImageUrl = getUploadUrl() + '?groupId=' + res.data
         })
       },
-      dataEcho(){
+      dataEcho() {
         let that = this
-        that.form=that.editData
-        that.form.type=String(that.editData.type)
-        that.bindingList=that.editData.goodsList
-        that.editData.goodsThemeItemVOList.forEach(i=>{
-          if(i.sort==0&&that.editData.fileType==1){
+        that.form = that.editData
+        that.form.type = String(that.editData.type)
+        that.bindingList = that.editData.goodsList
+        that.editData.goodsThemeItemVOList.forEach(i => {
+          if (i.sort == 0 && that.editData.fileType == 1) {
             that.uploadMainImageList = i.imageUrlFileList
           }
-          if (i.sort==0&&that.editData.fileType==2) {
-            console.log(i.videoUrlFileList,i.videoCoverImgUrlFileList)
+          if (i.sort == 0 && that.editData.fileType == 2) {
+            console.log(i.videoUrlFileList, i.videoCoverImgUrlFileList)
             that.modularVideo = i.videoUrlFileList[0].url
             that.uploadModularVideoList = i.videoUrlFileList
             that.uploadVideoCoverList = i.videoCoverImgUrlFileList
           }
-           if (i.sort==1) {
+          if (i.sort == 1) {
             that.uploadFirstImageList = i.imageUrlFileList
           }
-           if (i.sort==2) {
+          if (i.sort == 2) {
             that.uploadSecondImageList = i.imageUrlFileList
           }
-           if (i.sort==3) {
+          if (i.sort == 3) {
             that.uploadThirdImageList = i.imageUrlFileList
           }
         })
@@ -585,17 +591,17 @@
         this.showGoodsList = true
       },
       showGoodsListClose() {
-        if (this.multipleSelection.length>0) {
-          this.bindingList=this.bindingList.concat(this.multipleSelection)
+        if (this.multipleSelection.length > 0) {
+          this.bindingList = this.bindingList.concat(this.multipleSelection)
         }
         this.showGoodsList = false
       },
-      deleteGoods(row){
+      deleteGoods(row, val) {
         let that = this
-        console.log(row,that.bindingList,'row')
-        that.bindingList.map((item,index)=>{
-          if (item.goodsId==row.goodsId) {
-            that.bindingList.splice(index,1)
+        console.log(row, that.bindingList, val, 'row')
+        that.bindingList.map((item, index) => {
+          if (val == index) {
+            that.bindingList.splice(index, 1)
           }
         })
       },
@@ -616,105 +622,115 @@
         // return false
         this.$refs["form"].validate((valid) => {
           if (valid) {
-        let scope = this
-        let fileList = []
-        let videoFileImg=[]
-        let themeItemList=[]
-        let goodsData=[]
-        // this.$refs["form"].validate((valid) => {
-        console.log(scope.form)
+            let scope = this
+            let fileList = []
+            let videoFileImg = []
+            let themeItemList = []
+            let goodsData = []
+            // this.$refs["form"].validate((valid) => {
+            console.log(scope.form)
 
 
-        fileList = fileList.concat(scope.uploadModularVideoList)
-        fileList = fileList.concat(scope.uploadVideoCoverList)
-        fileList = fileList.concat(scope.uploadMainImageList)
-        fileList = fileList.concat(scope.uploadFirstImageList)
-        fileList = fileList.concat(scope.uploadSecondImageList)
-        fileList = fileList.concat(scope.uploadThirdImageList)
-        videoFileImg=videoFileImg.concat(scope.uploadFirstImageList)
-        videoFileImg=videoFileImg.concat(scope.uploadSecondImageList)
-        videoFileImg=videoFileImg.concat(scope.uploadThirdImageList)
-        console.log(fileList, this.form.fileType, 'filelist')
+            fileList = fileList.concat(scope.uploadModularVideoList)
+            fileList = fileList.concat(scope.uploadVideoCoverList)
+            fileList = fileList.concat(scope.uploadMainImageList)
+            fileList = fileList.concat(scope.uploadFirstImageList)
+            fileList = fileList.concat(scope.uploadSecondImageList)
+            fileList = fileList.concat(scope.uploadThirdImageList)
+            videoFileImg = videoFileImg.concat(scope.uploadFirstImageList)
+            videoFileImg = videoFileImg.concat(scope.uploadSecondImageList)
+            videoFileImg = videoFileImg.concat(scope.uploadThirdImageList)
+            console.log(fileList, this.form.fileType, 'filelist')
 
-        if (this.form.fileType == 1) {
-          fileList.forEach(i => {
-            let obj = {
-              sort: i.sort,
-              img: i.groupId?i.groupId:'',
-              type: 1,
-            }
-            themeItemList=themeItemList.concat(obj)
-          })
-        } else if (this.form.fileType == 2) {
-          console.log(this.form)
-            let obj = {
-              sort: 0,
-              type: 2,
-              video:scope.uploadModularVideoList.length>=1?scope.uploadModularVideoList[0].groupId:'',
-              videoCoverImg:scope.uploadVideoCoverList.length>=1?scope.uploadVideoCoverList[0].groupId:''
-            }
-            console.log(123456)
-            themeItemList=themeItemList.concat(obj)
-            videoFileImg.forEach(i => {
-              let obj_ = {
-                sort: i.sort,
-                img: i.groupId?i.groupId:'',
-                type: 1,
+            if (this.form.fileType == 1) {
+              fileList.forEach(i => {
+                let obj = {
+                  sort: i.sort,
+                  img: i.groupId ? i.groupId : '',
+                  type: 1,
+                }
+                themeItemList = themeItemList.concat(obj)
+              })
+            } else if (this.form.fileType == 2) {
+              console.log(this.form)
+              let obj = {
+                sort: 0,
+                type: 2,
+                video: scope.uploadModularVideoList.length >= 1 ? scope.uploadModularVideoList[0].groupId : '',
+                videoCoverImg: scope.uploadVideoCoverList.length >= 1 ? scope.uploadVideoCoverList[0].groupId : ''
               }
-              themeItemList=themeItemList.concat(obj_)
+              console.log(123456)
+              themeItemList = themeItemList.concat(obj)
+              videoFileImg.forEach(i => {
+                let obj_ = {
+                  sort: i.sort,
+                  img: i.groupId ? i.groupId : '',
+                  type: 1,
+                }
+                themeItemList = themeItemList.concat(obj_)
+              })
+            }
+            this.bindingList.forEach(item => {
+              let obj = {
+                goodsId: item.goodsId,
+                storeSettleRatio: item.storeSettleRatio ? item.storeSettleRatio : "0",
+                supplierSettleRatio: item.supplierSettleRatio ? item.supplierSettleRatio : "0"
+              }
+              goodsData.push(obj)
             })
-        }
-        this.bindingList.forEach(item=>{
-          let obj ={
-            goodsId:item.goodsId,
-            storeSettleRatio:item.storeSettleRatio?item.storeSettleRatio:"0",
-            supplierSettleRatio:item.supplierSettleRatio?item.supplierSettleRatio:"0"
-          }
-          goodsData.push(obj)
-        })
-        this.form.goodsList=goodsData
-        this.form.fileList=fileList
-        this.form.goodsThemeItemList=themeItemList
-        if(this.form.fileList.length<=0){
-          this.$message({
-            message: "请上传主题相关视频/图片",
-            type: "warning"
-          });
-          return false
-        }
-        if(this.form.goodsList.length<=0){
-          this.$message({
-            message: "请选择主题需要关联的商品",
-            type: "warning"
-          });
-          return false
-        }
-        console.log(this.form);
-        this.loading = true
-        if (val==1) {
-          postMethod('/goods/theme/publish', this.form).then(res => {
-          this.loading = false
-          this.$emit('showListPanel', true)
-          this.$message({
-            message: "保存成功",
-            type: "success"
-          });
-        })
-        } else if(val==2){
-          this.form.goodsThemeId=this.editData.goodsThemeId
-          postMethod('/goods/theme/outer-update', this.form).then(res => {
-            this.loading = false
-            this.$emit('showListPanel', true)
-            this.$message({
-              message: "保存成功",
-              type: "success"
-            });
-          })
-        }
+            this.form.goodsList = goodsData
+            this.form.fileList = fileList
+            this.form.goodsThemeItemList = themeItemList
 
-        }else{
-          this.loading = false
-          return false;
+            let goodsIdData = this.form.goodsList.map(value => value.goodsId);
+            const goodsIdDataSet = new Set(goodsIdData);
+            if (goodsIdDataSet.size != goodsIdData.length) {
+              this.$message({
+                message: '绑定的商品有重复',
+                type: 'warning'
+              });
+              return false;
+            }
+            if (this.form.fileList.length <= 0) {
+              this.$message({
+                message: "请上传主题相关视频/图片",
+                type: "warning"
+              });
+              return false
+            }
+            if (this.form.goodsList.length <= 0) {
+              this.$message({
+                message: "请选择主题需要关联的商品",
+                type: "warning"
+              });
+              return false
+            }
+            console.log(this.form);
+            this.loading = true
+            if (val == 1) {
+              postMethod('/goods/theme/publish', this.form).then(res => {
+                this.loading = false
+                this.$emit('showListPanel', true)
+                this.$message({
+                  message: "保存成功",
+                  type: "success"
+                });
+              })
+            } else if (val == 2) {
+              this.form.goodsThemeId = this.editData.goodsThemeId
+              postMethod('/goods/theme/outer-update', this.form).then(res => {
+                this.loading = false
+                this.$emit('showListPanel', true)
+                this.$message({
+                  message: "保存成功",
+                  type: "success"
+                });
+              })
+            }
+
+          } else {
+            this.loading = false
+            return false;
           }
         })
       },
@@ -797,7 +813,7 @@
           this.uploadMainImageList = []
           res.data.sort = 0
           this.uploadMainImageList.push(res.data)
-         this.none()
+          this.none()
         } else if (d == 'videoCover') {
           this.uploadVideoCoverList = []
           res.data.sort = 0
@@ -812,7 +828,7 @@
           this.uploadSecondImageList = []
           res.data.sort = 2
           this.uploadSecondImageList.push(res.data)
-         this.none()
+          this.none()
         } else if (d == '3') {
           this.uploadThirdImageList = []
           res.data.sort = 3
@@ -820,46 +836,46 @@
           this.none()
         }
       },
-      block(){
-        if(this.uploadMainImageList = []){
+      block() {
+        if (this.uploadMainImageList = []) {
           document.getElementById('mainImage').getElementsByClassName('el-upload--picture-card')[0].style.display =
             'block'
         }
-        if(this.uploadVideoCoverList = []){
+        if (this.uploadVideoCoverList = []) {
           document.getElementById('videoCover').getElementsByClassName('el-upload--picture-card')[0].style.display =
             'block'
         }
-        if(this.uploadFirstImageList = []){
+        if (this.uploadFirstImageList = []) {
           document.getElementById('firstImage').getElementsByClassName('el-upload--picture-card')[0].style.display =
             'block'
         }
-        if(this.uploadSecondImageList = []){
+        if (this.uploadSecondImageList = []) {
           document.getElementById('secondImage').getElementsByClassName('el-upload--picture-card')[0].style.display =
             'block'
         }
-        if(this.uploadThirdImageList = []){
+        if (this.uploadThirdImageList = []) {
           document.getElementById('thirdImage').getElementsByClassName('el-upload--picture-card')[0].style.display =
             'block'
         }
       },
-      none(){
-        if(this.uploadMainImageList.length>=1){
+      none() {
+        if (this.uploadMainImageList.length >= 1) {
           document.getElementById('mainImage').getElementsByClassName('el-upload--picture-card')[0].style.display =
             'none'
         }
-        if(this.uploadVideoCoverList.length>=1){
+        if (this.uploadVideoCoverList.length >= 1) {
           document.getElementById('videoCover').getElementsByClassName('el-upload--picture-card')[0].style.display =
             'none'
         }
-        if(this.uploadFirstImageList.length>=1){
+        if (this.uploadFirstImageList.length >= 1) {
           document.getElementById('firstImage').getElementsByClassName('el-upload--picture-card')[0].style.display =
             'none'
         }
-        if(this.uploadSecondImageList.length>=1){
+        if (this.uploadSecondImageList.length >= 1) {
           document.getElementById('secondImage').getElementsByClassName('el-upload--picture-card')[0].style.display =
             'none'
         }
-        if(this.uploadThirdImageList.length>=1){
+        if (this.uploadThirdImageList.length >= 1) {
           document.getElementById('thirdImage').getElementsByClassName('el-upload--picture-card')[0].style.display =
             'none'
         }
@@ -887,33 +903,33 @@
         this.block()
       },
       search() {
-        if (this.multipleSelection.length>0) {
-          this.bindingList=this.bindingList.concat(this.multipleSelection)
+        if (this.multipleSelection.length > 0) {
+          this.bindingList = this.bindingList.concat(this.multipleSelection)
         }
-        this.searchParam.pageNum='1'
+        this.searchParam.pageNum = '1'
         this.loadGoodsList();
       },
       // 获取商品列表
       loadGoodsList() {
-       postMethod("/goods/list", this.searchParam).then(res => {
-         this.tableData.list = res.data.records;
-         this.tableData.total = res.data.total;
-         this.showPagination = this.tableData.total == 0;
-       });
+        postMethod("/goods/list", this.searchParam).then(res => {
+          this.tableData.list = res.data.records;
+          this.tableData.total = res.data.total;
+          this.showPagination = this.tableData.total == 0;
+        });
       },
       // 选择商品
       handleSelectionChange(val) {
-        console.log(val,'val')
+        console.log(val, 'val')
         let n = val.filter(item => !this.multipleSelection.includes(item));
         console.log(n); //本次新增的项
         this.multipleSelection = val;
       },
-      selectThis(val){
-        console.log(val,'单个')
+      selectThis(val) {
+        console.log(val, '单个')
       },
       currentPage(pageNum) {
-        if (this.multipleSelection.length>0) {
-          this.bindingList=this.bindingList.concat(this.multipleSelection)
+        if (this.multipleSelection.length > 0) {
+          this.bindingList = this.bindingList.concat(this.multipleSelection)
         }
         this.searchParam.pageNum = pageNum;
         this.loadGoodsList();

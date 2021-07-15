@@ -89,25 +89,31 @@
     </div>
 
     <div style="margin: 15px;display: flex;justify-content: space-between;align-items: center;">
-      <div style="width: 300px;">统计时间：2021-10-01 ~ 2021-11-01</div>
-      <div style="display: flex;align-items: center;">
-        <div @click="changeDate(1)" class="blockT">
+      <div style="width: 300px;">统计时间：{{startCountTime}} ~ {{endCountTime}}</div>
+      <div style="display: flex;align-items: center;position: relative;">
+        <div @click="changeDate(1)" class="blockT" :class="dateType==1?'active':''" style="width: 50px;">
           <div> 7天 </div>
         </div>
-        <div @click="changeDate(2)" class="blockT">
+        <div @click="changeDate(2)" class="blockT" :class="dateType==2?'active':''" style="width: 60px;">
           <div> 30天 </div>
         </div>
-        <div @click="changeDate(3)" class="blockT">
+        <div @click="changeDate(3)" class="blockT" :class="dateType==3?'active':''" style="width: 40px;">
           <div> 日 </div>
         </div>
-        <div class="blockT">
-          <el-date-picker v-model="weekValue" @change="testDate2" :picker-options="weekOption" type="week"
-            format="yyyy 第 WW 周" value-format="yyyy-MM-dd" placeholder="选择日期">
+        <div @click="weekOver(4)" class="blockT"  :class="dateType==4?'active':''" style="width: 40px;">
+          <div> 周 </div>
+        </div>
+        <div @click="monthOver(5)" class="blockT" :class="dateType==5?'active':''" style="width: 40px;">
+          <div> 月 </div>
+        </div>
+        <div style="width: 40px;overflow: hidden;position: absolute;left: 185px;z-index: -1;">
+          <el-date-picker v-model="weekValue" ref="weekDateInput" @change="changeWeek" :picker-options="weekOption"
+            type="week" value-format="yyyy-MM-dd">
           </el-date-picker>
         </div>
-        <div class="blockT">
-          <el-date-picker v-model="monthValue" @change="testDate3" :picker-options="pickerOptions" type="month"
-            format="yyyy-MM" value-format="yyyy-MM" placeholder="选择日期">
+        <div style="width: 40px;overflow: hidden;position: absolute;left: 235px;z-index: -1;">
+          <el-date-picker v-model="monthValue" ref="monthDateInput" @change="changeMonth"
+            :picker-options="pickerOptions" type="month" value-format="yyyy-MM-dd">
           </el-date-picker>
         </div>
       </div>
@@ -121,7 +127,7 @@
               订单金额
             </div>
             <div class="card-text">
-              <count-to :start-val="0" :end-val="orderPayMoney" :duration="2000" />
+              <count-to :start-val="0" :end-val="orderPayMoney" :decimals="2" :duration="2000" />
             </div>
           </div>
           <el-radio class="card-right" @change="dataType" v-model="radio1" label="1">
@@ -129,6 +135,7 @@
             </div>
           </el-radio>
         </div>
+          <div v-if="radio1==1" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
       </div>
       <div class="card-panel-col2">
         <div class="card-panel">
@@ -145,6 +152,7 @@
             </div>
           </el-radio>
         </div>
+        <div v-if="radio1==2" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
       </div>
       <div class="card-panel-col2">
         <div class="card-panel">
@@ -153,7 +161,7 @@
               结算收入
             </div>
             <div class="card-text">
-              <count-to :start-val="0" :end-val="settleMoney" :duration="2000" />
+              <count-to :start-val="0" :end-val="settleMoney" :decimals="2" :duration="2000" />
             </div>
           </div>
           <el-radio class="card-right" @change="dataType" v-model="radio1" label="3">
@@ -161,6 +169,7 @@
             </div>
           </el-radio>
         </div>
+        <div v-if="radio1==3" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
       </div>
       <div class="card-panel-col2">
         <div class="card-panel">
@@ -177,6 +186,7 @@
             </div>
           </el-radio>
         </div>
+        <div v-if="radio1==4" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
       </div>
       <div class="card-panel-col2">
         <div class="card-panel">
@@ -193,6 +203,7 @@
             </div>
           </el-radio>
         </div>
+      <div v-if="radio1==5" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
       </div>
     </div>
 
@@ -215,7 +226,9 @@
   } from '@/api/tools.js'
   import variables from '@/styles/variables.scss'
   import CountTo from 'vue-count-to'
-  import {getMon} from "@/utils/index"
+  import {
+    getMon
+  } from "@/utils/index"
   import * as echarts from 'echarts';
 
   export default {
@@ -226,10 +239,15 @@
         pickerOptions: {
           disabledDate(time) {
             let t = new Date().getDate();
-              return time.getTime() > Date.now() - 8.64e7 * t;
+            return time.getTime() > Date.now() - 8.64e7 * t;
           }
         },
-        weekOption:this.banWeek(),
+        weekOption: this.banWeek(),
+        dateType:1,
+        searchParam: {
+          type: 1,
+          date: ''
+        },
         indexData: {
           noteNumber: 0,
           returnGoodsNumber: 0,
@@ -237,6 +255,8 @@
           waitSendBeanOrder: 0,
           waitSendGoodsOrder: 0,
         },
+        endCountTime: '',
+        startCountTime: '',
         noteNum: 0,
         orderPayMoney: 0,
         orderPayNum: 0,
@@ -262,40 +282,64 @@
     mounted() {
       // this.initData()
       this.indexLoad()
+      this.loadCharts()
     },
     methods: {
-      banWeek(){
-            return{
-            	//将自然周的起始日改为周一开始
-              firstDayOfWeek: 1,
-              //禁止选择当前周
-              disabledDate(time) {
-                let day = Date.now();
-                let limit = getMon(day);
-                let limitTime = new Date(limit);
-                return time.getTime() > limitTime.getTime()-8.64e7;
-              }
-            }
-          },
-      testDate1(val) {
-        console.log(val)
+      banWeek() {
+        return {
+          //将自然周的起始日改为周一开始
+          firstDayOfWeek: 1,
+          //禁止选择当前周
+          disabledDate(time) {
+            let day = Date.now();
+            let limit = getMon(day);
+            let limitTime = new Date(limit);
+            return time.getTime() > limitTime.getTime() - 8.64e7;
+          }
+        }
       },
-      testDate2(val) {
-        console.log(val)
-        this.weekValue=val
-        let tempDate = new Date(val) 
-        let beforeDate = tempDate.setDate(tempDate.getDate() - 1)
-        console.log(beforeDate,'beforeDate',formatDate(new Date(beforeDate), 'yyyy-MM-dd'))
+      // 触摸获得焦点
+      weekOver(val) {
+        this.dateType=val
+        this.$refs.weekDateInput.$refs.reference.$refs.input.focus()
       },
-      testDate3(val) {
-        console.log(val)
-        this.monthValue=val
+      monthOver(val) {
+        this.dateType=val
+        this.$refs.monthDateInput.$refs.reference.$refs.input.focus()
       },
-      changeDate(val){
+      changeDate(val) {
         console.log(val)
-        let tempDate = new Date() // 获取今天的日期
-        let beforeDate = tempDate.setDate(tempDate.getDate() - 1)
-        console.log(beforeDate,'beforeDate',formatDate(new Date(beforeDate), 'yyyy-MM-dd'))
+        this.dateType=val
+        this.searchParam = {
+          type: val,
+          date: ''
+        }
+        this.loadCharts()
+      },
+      changeWeek(val) {
+        this.weekValue = val
+        let tempDate = new Date(val)
+        let beforeDate = tempDate.setDate(tempDate.getDate() + 5)
+        console.log(beforeDate, 'beforeDate', formatDate(new Date(beforeDate), 'yyyy-MM-dd'))
+        this.searchParam = {
+          type: 4,
+          date: formatDate(new Date(beforeDate), 'yyyy-MM-dd')
+        }
+        this.loadCharts()
+      },
+      changeMonth(val) {
+        console.log(val)
+        this.monthValue = val
+        let date = new Date(val)
+        let year = date.getFullYear()
+        let month = date.getMonth() + 1
+        month = month < 10 ? '0' + month : month
+        let day = new Date(year, month, 0)
+        this.searchParam = {
+          type: 5,
+          date: year + '-' + month + '-' + day.getDate()
+        }
+        this.loadCharts()
       },
       dataType(val) {
         console.log(val)
@@ -340,18 +384,23 @@
         getMethod('/home/home-count-data', {}).then(res => {
           this.indexData = res.data
         })
-        let param = {
-          endTime: "2021-10-1",
-          startTime: "2021-6-1",
-          showType: 1
-        }
-        getMethod('/home/home-count-chart', param).then(res => {
+      },
+      loadCharts() {
+        getMethod('/home/home-count-chart', this.searchParam).then(res => {
           console.log(res)
+          this.startCountTime = res.data.startCountTime
+          this.endCountTime = res.data.endCountTime
           this.noteNum = res.data.noteNum
           this.orderPayMoney = res.data.orderPayMoney
           this.orderPayNum = res.data.orderPayNum
           this.registerMemberNum = res.data.registerMemberNum
           this.settleMoney = res.data.settleMoney
+          this.showText = []
+          this.orderPayNumList = []
+          this.orderPayMoneyList = []
+          this.registerMemberNumList = []
+          this.settleMoneyList = []
+          this.noteNumList = []
           res.data.staticDataList.forEach(item => {
             this.showText.push(item.showText)
             this.orderPayNumList.push(item.orderPayNum)
@@ -386,11 +435,11 @@
             bottom: '3%',
             containLabel: true
           },
-          toolbox: {
-            feature: {
-              saveAsImage: {}
-            }
-          },
+          // toolbox: {
+          //   feature: {
+          //     saveAsImage: {}
+          //   }
+          // },
           xAxis: {
             type: 'category',
             boundaryGap: false,
@@ -412,6 +461,31 @@
 <style lang="scss" scoped>
   @import "~@/styles/variables.scss";
 
+
+  .active{
+    background-color: #409EFF!important;
+    color: white!important;
+  }
+
+  .el-input--medium .el-input__inner {
+    height: 40px;
+    line-height: 40px;
+    padding: 0 !important;
+  }
+
+  .el-date-editor.el-input,
+  .el-date-editor.el-input__inner {
+    width: 25px;
+  }
+
+  .el-input__prefix {
+    display: none;
+
+    .el-input--medium .el-input__icon {
+      display: none;
+    }
+  }
+
   .analysis-title {
     font-family: 'Arial Negreta', 'Arial';
     font-size: 16px;
@@ -423,6 +497,7 @@
   }
 
   .blockT {
+    background-color: white;
     margin: 5px;
     border: 1px solid #b5b5b5;
     display: block;
@@ -478,7 +553,6 @@
       font-size: 18px;
       font-weight: bold;
     }
-
 
 
     .card-panel {

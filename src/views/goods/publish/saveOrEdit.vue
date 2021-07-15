@@ -1285,6 +1285,7 @@
 
       // 删除属性值
       deleteAttrValueInput(specName, attrSkuList, index) {
+        console.log(specName, attrSkuList, index,'888888')
         // 删除Sku表格的值
         this.removeAttrList(specName, attrSkuList[index].skuText)
 

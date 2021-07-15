@@ -45,3 +45,21 @@ export function deepCopy(target) {
   // 返回最终结果
   return result
 }
+
+/*
+ * 根据数组对象属性删除对应项
+ * @param {Array} arr - 数组对象
+ * @param {String} attr - 属性
+ * @param {} value - 属性值
+ * @return void
+ */
+export function removeByValue(arr, attr, value) {
+  var index = 0
+  for (var i in arr) {
+    if (arr[i][attr] == value) {
+      index = i
+      break
+    }
+  }
+  arr.splice(index, 1)
+}

@@ -50,7 +50,8 @@
           </el-table-column>
           <el-table-column  label="限售">
             <template slot-scope="scope">
-              <el-input-number :max="scope.row.maxStock" :min="0" size="medium" placeholder="请输入" v-model="scope.row.stock" />
+              <el-input-number v-if="!scope.row.marketingStock" :max="scope.row.maxStock" :min="0" size="medium" placeholder="请输入" v-model="scope.row.stock" />
+			  <el-input-number v-if="scope.row.marketingStock" :max="scope.row.maxStock" :min="0" size="medium" placeholder="请输入" v-model="scope.row.marketingStock" />
             </template>
           </el-table-column>
         </el-table>
@@ -378,7 +379,7 @@ export default {
               skuObj={
                 id:arr.table[j].id?arr.table[j].id:null,
                 goodsSkuId:arr.table[j].goodsSkuId?arr.table[j].goodsSkuId:arr.table[j].skuId,
-                marketingStock:arr.table[j].stock,
+                marketingStock:arr.table[j].marketingStock?arr.table[j].marketingStock:arr.table[j].stock,
                 promotionPrice:arr.table[j].promotionPrice,
                 salePrice:arr.table[j].salePrice
               }
