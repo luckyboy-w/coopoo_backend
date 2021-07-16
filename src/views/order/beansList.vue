@@ -30,7 +30,7 @@
           <div>订单状态：</div>
           <div>
             <!-- 订单状态 0:已取消 1:已提交 2:待支付 3:退款中 4:退款完成 5:待取件 6:待发货 7:待收货 8:交易完成 9:拒收 10:拒收完成 11:退货中 12:退货完成 -->
-            <el-select v-model="searchParam.orderType" placeholder="请选择">
+            <el-select v-model="searchParam.orderStatus" placeholder="请选择">
               <el-option value="" label="全部" />
               <el-option value="15" label="待审核" />
               <el-option value="6" label="待发货" />
@@ -665,15 +665,11 @@
     },
     computed: {},
     mounted() {
-      this.getRoute()
-      if (this.$route.query.dt != undefined) {
-        this.searchParam.dataType = this.$route.query.dt
-        this.searchParam.isOverDuePayment = "1"
-      }
-      if (this.$route.query.orderId) {
-        this.orderId_ = this.$route.query.orderId
-        this.getOrdDtl_()
-      }
+      // this.getRoute()
+      if (this.$route.query.orderStatus != undefined) {
+        console.log(11111)
+            this.searchParam.orderStatus = this.$route.query.orderStatus
+          }
       this.initLoad()
       // this.loadProvinceList()
       //this.loadtypeIdList()

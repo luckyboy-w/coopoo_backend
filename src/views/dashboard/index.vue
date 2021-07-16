@@ -2,11 +2,11 @@
   <div style="padding: 30px">
     <div class="panel-group">
       <div class="card-panel-col">
-        <router-link to="/bc-goods/reject">
+        <router-link to="/bussinesManager/service/report">
           <div class="card-panel">
             <div class="card-left">
               <div class="card-title">
-                举报
+                举报123
               </div>
               <div class="card-text">
                 当前未处理的举报
@@ -19,7 +19,7 @@
         </router-link>
       </div>
       <div class="card-panel-col">
-        <router-link to="/bc-goods/saleList">
+        <router-link to="/bussinesManager/topic/notesList">
           <div class="card-panel">
             <div class="card-left">
               <div class="card-title">
@@ -36,7 +36,12 @@
         </router-link>
       </div>
       <div class="card-panel-col">
-        <router-link to="/bc-order/ready">
+        <router-link :to="{
+                          path: '/order/list',
+                          query: {
+                              orderStatus: '11'
+                          }
+                      }">
           <div class="card-panel">
             <div class="card-left">
               <div class="card-title">
@@ -53,7 +58,12 @@
         </router-link>
       </div>
       <div class="card-panel-col">
-        <router-link to="bc-order/readyPay">
+        <router-link :to="{
+                          path: '/order/list',
+                          query: {
+                              orderStatus: '6'
+                          }
+                      }">
           <div class="card-panel">
             <div class="card-left">
               <div class="card-title">
@@ -70,7 +80,12 @@
         </router-link>
       </div>
       <div class="card-panel-col">
-        <router-link to="bc-order/readyPay">
+        <router-link :to="{
+                          path: '/order/beansList',
+                          query: {
+                              orderStatus: '6'
+                          }
+                      }">
           <div class="card-panel">
             <div class="card-left">
               <div class="card-title">
@@ -100,7 +115,7 @@
         <div @click="changeDate(3)" class="blockT" :class="dateType==3?'active':''" style="width: 40px;">
           <div> 日 </div>
         </div>
-        <div @click="weekOver(4)" class="blockT"  :class="dateType==4?'active':''" style="width: 40px;">
+        <div @click="weekOver(4)" class="blockT" :class="dateType==4?'active':''" style="width: 40px;">
           <div> 周 </div>
         </div>
         <div @click="monthOver(5)" class="blockT" :class="dateType==5?'active':''" style="width: 40px;">
@@ -135,7 +150,7 @@
             </div>
           </el-radio>
         </div>
-          <div v-if="radio1==1" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
+        <div v-if="radio1==1" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
       </div>
       <div class="card-panel-col2">
         <div class="card-panel">
@@ -203,7 +218,7 @@
             </div>
           </el-radio>
         </div>
-      <div v-if="radio1==5" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
+        <div v-if="radio1==5" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
       </div>
     </div>
 
@@ -243,7 +258,7 @@
           }
         },
         weekOption: this.banWeek(),
-        dateType:1,
+        dateType: 1,
         searchParam: {
           type: 1,
           date: ''
@@ -300,16 +315,16 @@
       },
       // 触摸获得焦点
       weekOver(val) {
-        this.dateType=val
+        this.dateType = val
         this.$refs.weekDateInput.$refs.reference.$refs.input.focus()
       },
       monthOver(val) {
-        this.dateType=val
+        this.dateType = val
         this.$refs.monthDateInput.$refs.reference.$refs.input.focus()
       },
       changeDate(val) {
         console.log(val)
-        this.dateType=val
+        this.dateType = val
         this.searchParam = {
           type: val,
           date: ''
@@ -462,9 +477,9 @@
   @import "~@/styles/variables.scss";
 
 
-  .active{
-    background-color: #409EFF!important;
-    color: white!important;
+  .active {
+    background-color: #409EFF !important;
+    color: white !important;
   }
 
   .el-input--medium .el-input__inner {
