@@ -6,7 +6,7 @@
           <div class="card-panel">
             <div class="card-left">
               <div class="card-title">
-                举报123
+                举报
               </div>
               <div class="card-text">
                 当前未处理的举报
