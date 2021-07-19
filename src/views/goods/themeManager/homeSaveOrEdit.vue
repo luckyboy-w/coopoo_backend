@@ -350,7 +350,7 @@
             value: '7',
             url: 'http://bucket.coopoo.com/coopoo-images/img7.png',
             showNum: '1',
-            firstFileSize: '1000*1105',
+            firstFileSize: '1000*1381',
             secondFileSize: '500*800',
             showSubtitle: true,
             showDescribe: true
