@@ -36,13 +36,13 @@
                       <el-checkbox label="7">周日</el-checkbox>
                     </el-checkbox-group>
                     时间： <el-time-picker style="margin-top: 10px" v-model="startTime" placeholder="请选择开始时间" value-format="HH:mm:ss"></el-time-picker>
-                    <el-time-picker style="margin-top: 10px" v-model="endTime" placeholder="请选择开始时间" value-format="HH:mm:ss"></el-time-picker>
+                    <el-time-picker style="margin-top: 10px" v-model="endTime" placeholder="请选择结束时间" value-format="HH:mm:ss"></el-time-picker>
                   </template>
 
                   <template v-if="ruleType =='2'">
                     <el-date-picker v-model="dayList"  type="dates" :picker-options="pkOP" textarea size="large" format="d" value-format="d"/>
                     时间：<el-time-picker style="margin-top: 10px" v-model="startTime" placeholder="请选择开始时间" value-format="HH:mm:ss"></el-time-picker>
-                    <el-time-picker style="margin-top: 10px" v-model="endTime" placeholder="请选择结束" value-format="HH:mm:ss"></el-time-picker>
+                    <el-time-picker style="margin-top: 10px" v-model="endTime" placeholder="请选择结束时间" value-format="HH:mm:ss"></el-time-picker>
                   </template>
 
                   <template v-if="ruleType =='3'">
@@ -212,12 +212,13 @@
           }
         }
 
-        const configurationJson = JSON.stringify([{
-          "id": "bean_mall_rule_config",
-          "dataType": "bean_mall_rule_config",
-          "title": "靠谱豆商城购买时间",
-          "value": configuration
-        }])
+        const configurationJson = JSON.stringify(
+          // "id": "bean_mall_rule_config",
+          // "dataType": "bean_mall_rule_config",
+          // "title": "靠谱豆商城购买时间",
+          // "value": configuration
+          configuration
+        )
 
         let param = {
           bean_mall_rule_config: configurationJson
