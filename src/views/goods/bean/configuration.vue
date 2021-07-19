@@ -87,7 +87,7 @@
       }
       getMethod("/operate/get-config-info-by-type", param).then(res => {
         const configuration = JSON.parse(JSON.stringify(res.data))
-        const config = JSON.parse(configuration.value)[0].value
+        const config = JSON.parse(configuration.value)
         console.log(config,configuration,'congig')
         if (config.ruleType == '1') {
           this.ruleType = config.ruleType
