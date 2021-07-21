@@ -11,7 +11,7 @@
         <el-input v-model="dataForm.userName" />
       </el-form-item>
       <el-form-item label="店主手机号">
-        <el-input v-model="dataForm.phoneNo" />
+        <el-input maxlength="11" v-model="dataForm.phoneNo" />
       </el-form-item>
       <el-form-item label="营业时间">
         <div style="display: flex;flex-wrap: nowrap;">

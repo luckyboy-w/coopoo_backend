@@ -51,11 +51,6 @@
     computed: {},
     mounted() {
       this.initLoad();
-      this.pushTypeList.push({
-        id: '0',
-        label: '全部'
-      });
-      this.pushTypeList = this.pushTypeList.concat(this.GLOBAL.pushTypeList)
     },
     components: {
       saveOrEdit
@@ -75,7 +70,6 @@
         showPagination: false,
         editData: {},
         searchParam: {
-          pushType: "",
           pageSize: 10,
           pageNum: 1
         },
@@ -86,45 +80,8 @@
       };
     },
     methods: {
-      deleteRow(rowIndex, data) {
-        let param = {
-          id: data.list[rowIndex].id
-        };
-        this.$confirm("是否继续删除操作?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(() => {
-          postMethod("/backend/push/delete", param).then(res => {
-            this.loadList();
-            this.$message("删除成功");
-          });
-        });
-      },
-      batchDeleteRow(rowIndex, data) {
-        let selectList = this.$refs.mainTable.selection;
-        let idArr = [];
-        for (let i = 0; i < selectList.length; i++) {
-          idArr.push(selectList[i].id);
-        }
-        let param = {
-          delType: "2",
-          ids: idArr.join(",")
-        };
-        postMethod("/backend/push/delete", param).then(res => {
-          scope.editData = res.data[0];
-          this.showList = false;
-          this.showAddOrEdit = true;
-          this.$message({
-            message: "删除成功",
-            type: "success"
-          });
-        });
-        this.searchParam.pageSize = 10;
-        this.searchParam.pageNum = 1;
-        this.loadList();
-      },
       search() {
+        this.searchParam.pageNum = 1;
         this.loadList();
       },
       addOrEdit(oper, rowIndex, data) {
