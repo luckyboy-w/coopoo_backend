@@ -11,16 +11,16 @@
         <el-input v-model="dataForm.userName" />
       </el-form-item>
       <el-form-item label="店主手机号">
-        <el-input maxlength="11" v-model="dataForm.phoneNo" />
+        <el-input maxlength="11" v-model="dataForm.phoneNo" :disabled="isDisabled" />
       </el-form-item>
       <el-form-item label="营业时间">
         <div style="display: flex;flex-wrap: nowrap;">
-          <el-time-picker v-model="dataForm.startWorkTime" value-format="HH:mm:ss" :picker-options="{
+          <el-time-picker v-model="dataForm.startWorkTime" value-format="HH:mm" :picker-options="{
               selectableRange: '00:00:00 - 23:59:59'
             }" placeholder="请选择开始时间">
           </el-time-picker>
           &nbsp;&nbsp;至&nbsp;&nbsp;
-          <el-time-picker value-format="HH:mm:ss" v-model="dataForm.endWorkTime" :picker-options="{
+          <el-time-picker value-format="HH:mm" v-model="dataForm.endWorkTime" :picker-options="{
               selectableRange: '00:00:00 - 23:59:59'
             }" placeholder="请选择结束时间">
           </el-time-picker>
@@ -119,6 +119,7 @@
             lat: 0
           }
         },
+        isDisabled:false,
         map: '', // 地图实例
         mk: '', // Marker实例
         locationPoint: null,
@@ -155,6 +156,7 @@
       this.$nextTick(function() {
         if (this.editData.id) {
           this.dataForm = this.editData
+          this.isDisabled = this.editData.isDisabled
           this.imageUrl = this.dataForm.frontImg
           this.initDefaultImage()
         }
@@ -282,6 +284,8 @@
 
       },
       saveObject() {
+        console.log(this.dataForm);
+        // return false
         const scope = this
         if (this.validate()) {
           delete this.dataForm.createTime

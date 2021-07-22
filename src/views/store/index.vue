@@ -274,6 +274,7 @@ export default {
         }
         getMethod('/store/get-store-info', param).then(res => {
           scope.editData = res.data
+          scope.editData.isDisabled = true
           this.showList = false
           this.showAddOrEdit = true
         })
