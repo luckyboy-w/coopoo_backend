@@ -236,6 +236,11 @@
         });
       },
       deleteGoods(row){
+        this.$confirm("是否删除该商品?", "提示", {
+          confirmButtonText: "确认",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
         getMethod("/goods/remove?goodsId="+row.goodsId).then(res => {
           if(res.errCode==0){
             this.$message({
@@ -245,6 +250,8 @@
           this.loadList()
           }
         });
+        });
+        
       },
       search() {
         this.searchParam.pageNum='1'
