@@ -7,6 +7,9 @@
       <el-form-item label="门店名称">
         <el-input v-model="dataForm.storeName" />
       </el-form-item>
+	  <el-form-item label="联系方式">
+	    <el-input maxlength="15" v-model="dataForm.contact" />
+	  </el-form-item>
       <el-form-item label="店主姓名">
         <el-input v-model="dataForm.userName" />
       </el-form-item>
@@ -137,6 +140,7 @@
           frontImg: '',
           userName: '',
           phoneNo: '',
+          contact:'',
           lat: '',
           lng: '',
           address: '',
@@ -333,6 +337,7 @@
           'storeName',
           'userName',
           'phoneNo',
+          'contact',
           'address',
           'startWorkTime',
           'endWorkTime',

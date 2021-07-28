@@ -6,7 +6,7 @@
           <div class="card-panel">
             <div class="card-left">
               <div class="card-title">
-                举报 
+                举报
               </div>
               <div class="card-text">
                 当前未处理的举报
@@ -135,7 +135,7 @@
     </div>
 
     <div class="panel-group" style="margin-left: 15px;">
-      <div class="card-panel-col2">
+      <div @click="dataType('1')" class="card-panel-col2">
         <div class="card-panel">
           <div class="card-left">
             <div class="card-title">
@@ -145,14 +145,14 @@
               <count-to :start-val="0" :end-val="orderPayMoney" :decimals="2" :duration="2000" />
             </div>
           </div>
-          <el-radio class="card-right" @change="dataType" v-model="radio1" label="1">
+          <el-radio class="card-right" v-model="radio1" label="1">
             <div>
             </div>
           </el-radio>
         </div>
         <div v-if="radio1==1" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
       </div>
-      <div class="card-panel-col2">
+      <div @click="dataType('2')" class="card-panel-col2">
         <div class="card-panel">
           <div class="card-left">
             <div class="card-title">
@@ -162,14 +162,14 @@
               <count-to :start-val="0" :end-val="orderPayNum" :duration="2000" />
             </div>
           </div>
-          <el-radio class="card-right" @change="dataType" v-model="radio1" label="2">
+          <el-radio class="card-right" v-model="radio1" label="2">
             <div>
             </div>
           </el-radio>
         </div>
         <div v-if="radio1==2" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
       </div>
-      <div class="card-panel-col2">
+      <div @click="dataType('3')" class="card-panel-col2">
         <div class="card-panel">
           <div class="card-left">
             <div class="card-title">
@@ -179,14 +179,14 @@
               <count-to :start-val="0" :end-val="settleMoney" :decimals="2" :duration="2000" />
             </div>
           </div>
-          <el-radio class="card-right" @change="dataType" v-model="radio1" label="3">
+          <el-radio class="card-right" v-model="radio1" label="3">
             <div>
             </div>
           </el-radio>
         </div>
         <div v-if="radio1==3" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
       </div>
-      <div class="card-panel-col2">
+      <div @click="dataType('4')" class="card-panel-col2">
         <div class="card-panel">
           <div class="card-left">
             <div class="card-title">
@@ -196,14 +196,14 @@
               <count-to :start-val="0" :end-val="registerMemberNum" :duration="2000" />
             </div>
           </div>
-          <el-radio class="card-right" @change="dataType" v-model="radio1" label="4">
+          <el-radio class="card-right"v-model="radio1" label="4">
             <div>
             </div>
           </el-radio>
         </div>
         <div v-if="radio1==4" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
       </div>
-      <div class="card-panel-col2">
+      <div @click="dataType('5')" class="card-panel-col2">
         <div class="card-panel">
           <div class="card-left">
             <div class="card-title">
@@ -213,7 +213,7 @@
               <count-to :start-val="0" :end-val="noteNum" :duration="2000" />
             </div>
           </div>
-          <el-radio class="card-right" @change="dataType" v-model="radio1" label="5">
+          <el-radio class="card-right"v-model="radio1" label="5">
             <div>
             </div>
           </el-radio>
@@ -323,6 +323,8 @@
         this.$refs.monthDateInput.$refs.reference.$refs.input.focus()
       },
       changeDate(val) {
+        this.weekValue=''
+        this.monthValue=''
         console.log(val)
         this.dateType = val
         this.searchParam = {
@@ -332,6 +334,7 @@
         this.loadCharts()
       },
       changeWeek(val) {
+        this.monthValue=''
         this.weekValue = val
         let tempDate = new Date(val)
         let beforeDate = tempDate.setDate(tempDate.getDate() + 5)
@@ -343,6 +346,7 @@
         this.loadCharts()
       },
       changeMonth(val) {
+        this.weekValue=''
         console.log(val)
         this.monthValue = val
         let date = new Date(val)
