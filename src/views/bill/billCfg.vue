@@ -7,7 +7,7 @@
       <el-form-item label="供应商结算日">
         <!-- <el-date-picker v-model="dataForm.cash_supplier_date" type="dates" style="width:600px" size="large" format="dd"
           placeholder="选择一个或多个日期" @change="pickSupplierDate" /> -->
-          <el-date-picker v-model="dataForm.cash_supplier_date" type="date" style="width:600px" size="large" format="dd" value-format="dd"
+          <el-date-picker v-model="dataForm.cash_supplier_date" type="date" style="width:600px" size="large" format="dd"
             placeholder="请选择日期" @change="pickSupplierDate" />
       </el-form-item>
       <el-form-item label="门店结算次数">
@@ -16,7 +16,7 @@
       <el-form-item label="门店结算日">
         <!-- <el-date-picker v-model="dataForm.cash_store_date" type="dates" style="width:600px" size="large" format="dd"
           placeholder="选择一个或多个日期" @change="pickStoreDate" /> -->
-          <el-date-picker v-model="dataForm.cash_store_date" type="date" style="width:600px" size="large" format="dd" value-format="dd"
+          <el-date-picker v-model="dataForm.cash_store_date" type="date" style="width:600px" size="large" format="dd"
             placeholder="请选择日期" @change="pickStoreDate" />
       </el-form-item>
       <el-form-item>
@@ -122,11 +122,13 @@
         );
       },
       saveObject() {
+        // console.log(this.dataForm.cash_store_date,this.dataForm.cash_supplier_date,'88888')
+        // console.log(this.format(this.dataForm.cash_store_date),this.format(this.dataForm.cash_supplier_date));
         let param = {
           cash_store_count: this.dataForm.cash_store_count,
-          cash_store_date: this.dataForm.cash_store_date,
+          cash_store_date: this.format(this.dataForm.cash_store_date),
           cash_supplier_count: this.dataForm.cash_supplier_count,
-          cash_supplier_date: this.dataForm.cash_supplier_date,
+          cash_supplier_date: this.format(this.dataForm.cash_supplier_date),
         }
         this.loading = true
         postMethod("/operate/set-config", param).then(

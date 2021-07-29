@@ -152,9 +152,17 @@
       saveObject() {
         let scope = this;
         if (this.validate()) {
+          if (this.dataForm.msgType==1&&this.dataForm.img=='') {
+            this.$message({
+              message: "请上传封面图",
+              type: "warning"
+            });
+            return false
+          }
           delete this.dataForm.createTime;
           delete this.dataForm.createBy;
           console.log(this.dataForm)
+          // return false
           postMethod("/operate/send-active-info", this.dataForm).then(res => {
             this.$message({
               message: "操作成功",
