@@ -32,6 +32,7 @@
               <template slot-scope="scope">
                 <span v-if="scope.row.dataType=='0'">不跳转</span>
                 <span v-if="scope.row.dataType==3">商品主题</span>
+                <span v-if="scope.row.dataType==2">链接地址</span>
                 <span v-if="scope.row.dataType==4">文本编辑器</span>
                 <span v-if="scope.row.dataType==5">限时秒杀</span>
                 <span v-if="scope.row.dataType==6">大佬说</span>

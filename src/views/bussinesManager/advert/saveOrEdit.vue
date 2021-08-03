@@ -36,6 +36,7 @@
             label="平台直播"
             value="7"
           /> -->
+          <el-option label="链接" :value="2" />
           <el-option label="大佬说" :value="6" />
           <el-option label="编辑器" :value="4" />
           <el-option label="限时秒杀" :value="5" />
@@ -44,10 +45,13 @@
         </el-select>
       </el-form-item>
       <el-form-item v-if="dataForm.dataType == 3" label="商品主题">
-        <el-select v-model="dataForm.url" placeholder="请选择">
-          <el-option v-for="item in relationList" :key="item.id"  :label="item.text" :value="item.id"></el-option>
-        </el-select>
+          <el-select v-model="dataForm.url" placeholder="请选择">
+            <el-option v-for="item in relationList" :key="item.id"  :label="item.text" :value="item.id"></el-option>
+          </el-select>
       </el-form-item>
+	  <el-form-item v-if="dataForm.dataType == 2" label="链接地址">
+	    <el-input v-model="dataForm.url" placeholder="请输入"></el-input>
+	  </el-form-item>
       <el-form-item v-if="dataForm.dataType == 7" label="平台直播">
         <el-select v-model="dataForm.url" placeholder="请选择">
           <el-option></el-option>
@@ -319,7 +323,7 @@
             return false;
           }
         }
-        if (this.dataForm.dataType==3||this.dataForm.dataType==4||this.dataForm.dataType==5||this.dataForm.dataType==6||this.dataForm.dataType==7||this.dataForm.dataType==8) {
+        if (this.dataForm.dataType==3||this.dataForm.dataType==4||this.dataForm.dataType==5||this.dataForm.dataType==6||this.dataForm.dataType==7||this.dataForm.dataType==8||this.dataForm.dataType==2) {
           if (this.dataForm.url=='') {
             this.$message({
               message: "字段不能为空",

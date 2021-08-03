@@ -4,7 +4,7 @@
       <el-form-item prop="couponName" label="优惠券名称">
         <el-input style="width:260px" :disabled="disabled" v-model="dataForm.couponName" />
       </el-form-item>
-      <el-form-item prop="applyClause" label="卖点">
+      <el-form-item prop="applyClause" label="使用说明">
         <el-input style="width:260px" :disabled="disabled" v-model="dataForm.applyClause" />
       </el-form-item>
       <el-form-item prop="buyPrice" label="购买价格">
