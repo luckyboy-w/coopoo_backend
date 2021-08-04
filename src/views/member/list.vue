@@ -116,7 +116,7 @@
       <div class="ly-table-panel" v-if="!showDtl">
         <div class="ly-data-list">
           <div class="content1">
-           <el-table :data="tableData2.list" border row-key="orderId" style="width: 100%">
+           <el-table :data="tableData2.list" border  style="width: 100%">
              <el-table-column width="1">
                <template slot-scope="scope">
                  <div class="item">
@@ -489,6 +489,7 @@
         this.loadList();
       },
       currentPage_(pageNum) {
+        // console.log(pageNum,'1341654')
         this.searchDtlParam.pageNum = pageNum;
         this.searchConsume();
       },
@@ -518,7 +519,8 @@
       searchConsume() {
         let that = this
         postMethod('/order/goods-order-list', that.searchDtlParam).then(res => {
-          that.tableData2.list = res.data.records
+          this.$set(this.tableData2, 'list', res.data.records)
+          // that.tableData2.list = res.data.records
           that.tableData2.total = res.data.total
           that.showPagination = that.tableData2.total == 0;
         })
@@ -529,7 +531,8 @@
         scope.memberName=row.userName
         scope.searchDtlParam.memberId=row.pkMemberId
         postMethod('/order/goods-order-list', scope.searchDtlParam).then(res => {
-          scope.tableData2.list = res.data.records
+          this.$set(this.tableData2, 'list', res.data.records)
+          // scope.tableData2.list = res.data.records
           scope.tableData2.total = res.data.total
           scope.showPagination = scope.tableData2.total == 0;
           scope.showDtl = false;
