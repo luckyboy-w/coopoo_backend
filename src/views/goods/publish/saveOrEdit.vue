@@ -15,7 +15,7 @@
           <el-form-item label="发货方式">
             <el-radio v-model="dataForm.deliveryMethod" label="2">邮寄到家</el-radio>
             <el-radio v-model="dataForm.deliveryMethod" label="3">到店自提</el-radio>
-            <el-radio v-model="dataForm.deliveryMethod" label="1">邮寄/自提</el-radio>
+            <!-- <el-radio v-model="dataForm.deliveryMethod" label="1">邮寄/自提</el-radio> -->
           </el-form-item>
           <el-form-item label="属性选择">
             <template v-for="item in dbAttrList">
