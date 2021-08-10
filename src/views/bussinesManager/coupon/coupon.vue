@@ -43,10 +43,10 @@
             <el-table-column prop="createTime" label="创建时间" width="170px" />
             <el-table-column prop="id" label="操作" width="150px">
               <template slot-scope="scope">
-                <el-button v-if="scope.row.isSale==0" type="text" size="small" @click.native.prevent="addOrEdit('edit',scope.$index, tableData)">
+                <el-button v-if="scope.row.isSale==0" type="text" size="small" @click.native.prevent="addOrEdit('edit',scope.row)">
                   编辑
                 </el-button>
-                <el-button v-if="scope.row.isSale==1" type="text" size="small" @click.native.prevent="addOrEdit('detail',scope.$index, tableData)">
+                <el-button v-if="scope.row.isSale==1" type="text" size="small" @click.native.prevent="addOrEdit('detail',scope.row)">
                   查看
                 </el-button>
                 <el-button v-if="scope.row.isSale==0" type="text" size="small" @click.native.prevent="updateEnable(scope.row)">
@@ -106,6 +106,12 @@
     },
     computed: {},
     mounted() {
+      if(this.$route.query.id){
+        let row={
+          id:this.$route.query.id
+        }
+        this.addOrEdit('detail', row)
+      }
       this.initLoad()
     },
     created() {},
@@ -137,7 +143,7 @@
       search() {
         this.loadList()
       },
-      addOrEdit(oper, rowIndex, data) {
+      addOrEdit(oper,row) {
         const scope = this
         if (oper=='add') {
          scope.editData = {}
@@ -145,7 +151,7 @@
          this.showAddOrEdit = true
         } else if(oper=="edit"){
           let param = {
-            id: data.list[rowIndex].id
+            id: row.id
           }
           getMethod('/coupon/get-coupon-info', param).then(res => {
             scope.editData = res.data
@@ -154,7 +160,7 @@
           })
         }else if(oper=="detail"){
           let param = {
-            id: data.list[rowIndex].id
+            id: row.id
           }
           getMethod('/coupon/get-coupon-info', param).then(res => {
             scope.editData = res.data

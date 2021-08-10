@@ -142,10 +142,19 @@
         <el-form-item prop="sort" label="排序">
           <el-input v-model="form.sort" placeholder="请输入" clearable :disabled="disabled" />
         </el-form-item>
-        <el-form-item label="关联商品">
+        <el-form-item label="关联类型">
+          <el-select v-model="form.goodsType" :disabled="disabled">
+            <el-option label="商品" :value="1" />
+            <el-option label="优惠券" :value="2" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="form.goodsType==1" label="关联商品">
           <el-button type="success" @click="relatedGoods" :disabled="disabled">关联商品</el-button>
         </el-form-item>
-        <el-form-item label="已关联商品">
+        <el-form-item v-if="form.goodsType==2" label="关联优惠券">
+          <el-button type="success" @click="relatedGoods" :disabled="disabled">关联优惠券</el-button>
+        </el-form-item>
+        <el-form-item v-if="form.goodsType==1" label="已关联商品">
           <div class="ly-table-panel" style="min-width:1000px!important;">
             <div class="ly-data-list">
               <el-table ref="mainTable" :data="bindingList" style="width: 100%!important; margin-bottom: 20px;"
@@ -190,6 +199,38 @@
             </div>
           </div>
         </el-form-item>
+        <el-form-item v-if="form.goodsType==2" label="已关联优惠券">
+          <div class="ly-table-panel" style="min-width:1000px!important;">
+            <div class="ly-data-list">
+              <el-table ref="mainTable" :data="bindingList_" style="width: 100%!important; margin-bottom: 20px;"
+                row-key="id" border>
+                <el-table-column prop="couponName" label="优惠券名称" />
+                <el-table-column label="价格">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.buyPrice}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="createTime" label="创建时间" width="170">
+                  <template slot-scope="scope">
+                    {{ scope.row.createTime}}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="id" label="操作">
+                  <template slot-scope="scope">
+                    <el-button type="text" :disabled="disabled" size="small"
+                      @click="deleteGoods(scope.row,scope.$index)">
+                      删除
+                    </el-button>
+                    <el-divider direction="vertical"></el-divider>
+                    <el-button type="text" size="small" @click="getGoodsDtl(scope.row)">
+                      详情
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="disabled" v-if="submitStatus==1" @click="submitUpdate(1)">提交</el-button>
           <el-button type="primary" :disabled="disabled" v-if="submitStatus==2" @click="submitUpdate(2)">保存编辑
@@ -205,7 +246,6 @@
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
     <el-dialog :visible="showGoodsList" :before-close="showGoodsListClose" title="关联商品" width="90%">
-
       <div class="ly-container">
         <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
           <div class="tabTd">
@@ -239,7 +279,67 @@
               <el-table-column prop="isSale" label="商品状态">
                 <template slot-scope="scope">
                   <span v-if="scope.row.isSale==1">已上架</span>
-                  <span v-if="scope.row.isSale==0">未上架</span>
+                  <span v-if="scope.row.isSale===0">未上架</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="createTime" label="创建时间">
+                <template slot-scope="scope">
+                  {{ scope.row.createTime}}
+                </template>
+              </el-table-column>
+              <el-table-column prop="id" label="操作">
+                <template slot-scope="scope">
+                  <div>
+                    <el-button type="text" size="small" @click="getGoodsDtl(scope.row)">
+                      详情
+                    </el-button>
+                  </div>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+          <div class="ly-data-pagination">
+            <el-pagination :total="tableData.total" background layout="prev, pager, next" @current-change="currentPage"
+              @prev-click="currentPage" @next-click="currentPage" />
+          </div>
+        </div>
+      </div>
+    </el-dialog>
+    <el-dialog :visible="showGoodsList_" :before-close="showGoodsListClose" title="关联商品" width="90%">
+      <div class="ly-container">
+        <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
+          <div class="tabTd">
+            <div>优惠券名称：</div>
+            <div>
+              <el-input v-model="searchParam.couponName" width="180px" clearable />
+            </div>
+          </div>
+          <div class="tabTd">
+            <el-button icon="el-icon-search" type="primary" @click="search()">
+              搜索
+            </el-button>
+            <el-button type="success" @click="showGoodsListClose()">
+              完成
+            </el-button>
+          </div>
+        </div>
+        <div class="ly-table-panel">
+          <div class="ly-data-list">
+            <el-table ref="mainTable" :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id"
+              border @selection-change="handleSelectionChange" @select="selectThis">
+              <el-table-column type="selection" width="55">
+              </el-table-column>
+              <el-table-column prop="couponName" label="优惠券名称" />
+              <el-table-column label="价格">
+                <template slot-scope="scope">
+                  <span>{{scope.row.faceValue}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="totalSales" label="销量" />
+              <el-table-column prop="isSale" label="状态">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.isSale==1">已上架</span>
+                  <span v-if="scope.row.isSale===0">未上架</span>
                 </template>
               </el-table-column>
               <el-table-column prop="createTime" label="创建时间">
@@ -423,6 +523,7 @@
         dialogImageUrl: '',
         dialogVisible: false,
         showGoodsList: false,
+        showGoodsList_: false,
         modularVideo: '',
         uploadModularVideoList: [],
         uploadVideoCoverList: [],
@@ -433,6 +534,7 @@
         goodsThemeItemList: [],
         // 表单数据
         form: {
+          goodsType: 1,
           themeName: '',
           subtitle: '',
           description: '',
@@ -450,6 +552,7 @@
         },
         multipleSelection: [],
         bindingList: [],
+        bindingList_:[],
         searchParam: {
           pageSize: 10,
           pageNum: 1,
@@ -561,7 +664,9 @@
         let that = this
         that.form = that.editData
         that.form.type = String(that.editData.type)
-        that.bindingList = that.editData.goodsList
+        that.form.goodsType = that.editData.goodsType
+          that.bindingList = that.editData.goodsList
+          that.bindingList_ = that.editData.couponList
         that.editData.goodsThemeItemVOList.forEach(i => {
           if (i.sort == 0 && that.editData.fileType == 1) {
             that.uploadMainImageList = i.imageUrlFileList
@@ -588,34 +693,71 @@
       relatedGoods() {
         console.log("关联商品")
         this.loadGoodsList()
-        this.showGoodsList = true
+        if (this.form.goodsType == 1) {
+          this.showGoodsList = true
+        } else if (this.form.goodsType == 2) {
+          this.showGoodsList_ = true
+        }
       },
       showGoodsListClose() {
-        if (this.multipleSelection.length > 0) {
-          this.bindingList = this.bindingList.concat(this.multipleSelection)
+        this.searchParam={
+          pageSize: 10,
+          pageNum: 1,
+          status: '0'
         }
-        this.showGoodsList = false
+        if (this.form.goodsType == 1) {
+          if (this.multipleSelection.length > 0) {
+            this.bindingList = this.bindingList.concat(this.multipleSelection)
+          }
+          this.showGoodsList = false
+        } else if (this.form.goodsType == 2) {
+          if (this.multipleSelection.length > 0) {
+            this.bindingList_ = this.bindingList_.concat(this.multipleSelection)
+          }
+          this.showGoodsList_ = false
+        }
       },
       deleteGoods(row, val) {
         let that = this
-        console.log(row, that.bindingList, val, 'row')
-        that.bindingList.map((item, index) => {
-          if (val == index) {
-            that.bindingList.splice(index, 1)
-          }
-        })
+
+        if (this.form.goodsType == 1) {
+          that.bindingList.map((item, index) => {
+            if (val == index) {
+              that.bindingList.splice(index, 1)
+            }
+          })
+        } else if (this.form.goodsType == 2) {
+          that.bindingList_.map((item, index) => {
+            if (val == index) {
+              that.bindingList_.splice(index, 1)
+            }
+          })
+        }
+
+
       },
       // 新建标签跳详情
       getGoodsDtl(row) {
         console.log(row, 'row')
-        let newpage = this.$router.resolve({
-          path: "/goods/list", //路径
-          query: {
-            goodsId: row.goodsId, //商品id
-          }
-        })
-        console.log(newpage, 'newpage')
-        window.open(newpage.href, '_blank');
+        if (this.form.goodsType == 1) {
+          let newpage = this.$router.resolve({
+            path: "/goods/list", //路径
+            query: {
+              goodsId: row.goodsId, //商品id
+            }
+          })
+          console.log(newpage, 'newpage')
+          window.open(newpage.href, '_blank');
+        } else if (this.form.goodsType == 2) {
+          let newpage = this.$router.resolve({
+            path: "/bussinesManager/coupon/coupon", //路径
+            query: {
+              id: row.id, //商品id
+            }
+          })
+          console.log(newpage, 'newpage')
+          window.open(newpage.href, '_blank');
+        }
       },
       submitUpdate(val) {
         console.log(val)
@@ -670,15 +812,29 @@
                 themeItemList = themeItemList.concat(obj_)
               })
             }
-            this.bindingList.forEach(item => {
-              let obj = {
-                goodsId: item.goodsId,
-                storeSettleRatio: item.storeSettleRatio ? item.storeSettleRatio : "0",
-                supplierSettleRatio: item.supplierSettleRatio ? item.supplierSettleRatio : "0"
-              }
-              goodsData.push(obj)
-            })
-            this.form.goodsList = goodsData
+
+            if (this.form.goodsType == 1) {
+              this.bindingList.forEach(item => {
+                let obj = {
+                  goodsId: item.goodsId,
+                  storeSettleRatio: item.storeSettleRatio ? item.storeSettleRatio : "0",
+                  supplierSettleRatio: item.supplierSettleRatio ? item.supplierSettleRatio : "0"
+                }
+                goodsData.push(obj)
+              })
+              this.form.goodsList = goodsData
+              this.form.couponList = []
+            } else if (this.form.goodsType == 2) {
+              this.bindingList_.forEach(item => {
+                let obj = {
+                  id: item.id,
+                }
+                goodsData.push(obj)
+              })
+              this.form.couponList = goodsData
+              this.form.goodsList = []
+            }
+            this.form.goodsType=this.form.goodsType
             this.form.fileList = fileList
             this.form.goodsThemeItemList = themeItemList
 
@@ -698,9 +854,16 @@
               });
               return false
             }
-            if (this.form.goodsList.length <= 0) {
+            if (this.form.goodsType == 1&&this.form.goodsList.length <= 0) {
               this.$message({
                 message: "请选择主题需要关联的商品",
+                type: "warning"
+              });
+              return false
+            }
+            if (this.form.goodsType == 2&&this.form.couponList.length <= 0) {
+              this.$message({
+                message: "请选择主题需要关联的优惠券",
                 type: "warning"
               });
               return false
@@ -903,19 +1066,36 @@
         this.block()
       },
       search() {
-        if (this.multipleSelection.length > 0) {
+        if (this.form.goodsType == 1) {
+          if (this.multipleSelection.length > 0) {
           this.bindingList = this.bindingList.concat(this.multipleSelection)
+        }
+        this.searchParam.status= '0'
+        } else if (this.form.goodsType == 2) {
+          if (this.multipleSelection.length > 0) {
+            this.bindingList_ = this.bindingList_.concat(this.multipleSelection)
+          }
+          this.searchParam.status= ''
         }
         this.searchParam.pageNum = '1'
         this.loadGoodsList();
       },
       // 获取商品列表
       loadGoodsList() {
-        postMethod("/goods/list", this.searchParam).then(res => {
-          this.tableData.list = res.data.records;
-          this.tableData.total = res.data.total;
-          this.showPagination = this.tableData.total == 0;
-        });
+        if (this.form.goodsType == 1) {
+          postMethod("/goods/list", this.searchParam).then(res => {
+            this.tableData.list = res.data.records;
+            this.tableData.total = res.data.total;
+            this.showPagination = this.tableData.total == 0;
+          });
+        } else if (this.form.goodsType == 2) {
+          getMethod('/coupon/search-coupon-list', this.searchParam).then(res => {
+            this.tableData.list = res.data.records;
+            this.tableData.total = res.data.total;
+            this.showPagination = this.tableData.total == 0;
+          });
+        }
+
       },
       // 选择商品
       handleSelectionChange(val) {
@@ -928,8 +1108,15 @@
         console.log(val, '单个')
       },
       currentPage(pageNum) {
-        if (this.multipleSelection.length > 0) {
+
+        if (this.form.goodsType == 1) {
+          if (this.multipleSelection.length > 0) {
           this.bindingList = this.bindingList.concat(this.multipleSelection)
+        }
+        } else if (this.form.goodsType == 2) {
+          if (this.multipleSelection.length > 0) {
+            this.bindingList_ = this.bindingList_.concat(this.multipleSelection)
+          }
         }
         this.searchParam.pageNum = pageNum;
         this.loadGoodsList();
