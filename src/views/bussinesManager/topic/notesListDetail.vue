@@ -2,6 +2,9 @@
   <div>
     <div class="ly-container" v-if="showList">
       <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
+        <el-button @click="cancelUpdate" icon="el-icon-arrow-left">返回</el-button>
+       </div>
+      <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
         <div class="tabTd">
           <div>标题：</div>
           <div>
@@ -73,10 +76,17 @@
   export default {
     computed: {},
     mounted() {
+
       this.initLoad();
     },
     components: {
       saveOrEdit
+    },
+    props: {
+      editData2: {
+        type: Object,
+        required: false
+      }
     },
     created() {},
     filters: {
@@ -136,6 +146,9 @@
       initLoad() {
         this.loadList();
       },
+      cancelUpdate() {
+        this.$emit("showListPanel", true);
+      },
       loadList() {
         let scope = this;
         if (this.searchParam.pushType == '0') {
@@ -160,7 +173,6 @@
     font-size: 14px;
 
     .ly-tool-panel {
-
       line-height: "60px";
       height: "60px";
       width: 100%;

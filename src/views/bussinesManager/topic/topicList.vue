@@ -18,7 +18,7 @@
                 <el-button @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">查看</el-button>
                 <el-button @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">编辑</el-button>
                 <el-divider direction="vertical"></el-divider>
-                <el-button @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">查看笔记</el-button>
+                <el-button @click="goNotesList(scope.row)" type="text" size="small">查看笔记</el-button>
                 <el-divider direction="vertical"></el-divider>
                 <el-button @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">禁用</el-button>
                 <el-button @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">启用</el-button>
@@ -34,11 +34,13 @@
       <div class="list-panel"></div>
     </div>
     <saveOrEdit v-if="showAddOrEdit" @showListPanel="showListPanel" :editData="editData"></saveOrEdit>
+    <notesList v-if="noteList" @showListPanel="showListPanel" :editData="editData2"></notesList>
   </div>
 </template>
 
 <script>
   import saveOrEdit from "./topicDetail";
+  import notesList from "./notesListDetail";
   import {
     getMethod,
     postMethod
@@ -53,7 +55,8 @@
       this.initLoad();
     },
     components: {
-      saveOrEdit
+      saveOrEdit,
+      notesList
     },
     created() {},
     filters: {
@@ -67,8 +70,10 @@
         pushTypeList: [],
         showList: true,
         showAddOrEdit: false,
+        noteList:false,
         showPagination: false,
         editData: {},
+        editData2: {},
         searchParam: {
           pageSize: 10,
           pageNum: 1
@@ -101,9 +106,16 @@
           this.showAddOrEdit = true;
         }
       },
+      goNotesList(row) {
+        let scope = this;
+          scope.editData2 =row;
+          this.showList = false;
+          this.noteList = true;
+      },
       showListPanel(isCancel) {
         this.showList = true;
         this.showAddOrEdit = false;
+        this.noteList = false;
         this.loadList();
       },
       currentPage(pageNum) {

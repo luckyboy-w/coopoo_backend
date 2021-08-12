@@ -62,7 +62,6 @@
           }else{
             this.dataForm.msgType = 2;
           }
-          this.$refs.refEditor.richText = this.dataForm.content
         }
       });
     },
