@@ -364,6 +364,9 @@
   }
 </script>
 <style lang="scss" scoped>
+	.el-carousel__item {
+	    overflow-y: auto!important;
+	}
   .ly-container {
     padding: 10px 20px;
     font-size: 14px;
