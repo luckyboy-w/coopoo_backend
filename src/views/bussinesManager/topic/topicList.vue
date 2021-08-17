@@ -10,18 +10,18 @@
             default-expand-all :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
 
             <!-- <el-table-column type="selection" width="55"></el-table-column> -->
-            <el-table-column prop="title" label="话题名称" width="250px"></el-table-column>
-            <el-table-column prop="title" label="话题内容" width="250px"></el-table-column>
-            <el-table-column prop="title" label="发布笔记数" width="250px"></el-table-column>
-            <el-table-column prop="id" label="操作" width="600px">
+            <el-table-column prop="subjectName" label="话题名称"></el-table-column>
+            <el-table-column prop="subjectContent" label="话题内容"> </el-table-column>
+            <el-table-column prop="relPosts" label="发布笔记数" ></el-table-column>
+            <el-table-column prop="id" label="操作">
               <template slot-scope="scope">
-                <el-button @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">查看</el-button>
-                <el-button @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">编辑</el-button>
+                <el-button v-if="scope.row.subjectStatus==1" @click="addOrEdit('detail',scope.$index, tableData)" type="text" size="small">查看</el-button>
+                <el-button v-if="scope.row.subjectStatus==0" @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">编辑</el-button>
                 <el-divider direction="vertical"></el-divider>
                 <el-button @click="goNotesList(scope.row)" type="text" size="small">查看笔记</el-button>
                 <el-divider direction="vertical"></el-divider>
-                <el-button @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">禁用</el-button>
-                <el-button @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">启用</el-button>
+                <el-button v-if="scope.row.subjectStatus==1" @click="enable('1',scope.row)" type="text" size="small">禁用</el-button>
+                <el-button v-if="scope.row.subjectStatus==0" @click="enable('0',scope.row)" type="text" size="small">启用</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -93,10 +93,20 @@
         let scope = this;
         if (oper == "edit") {
           let param = {
-            id: data.list[rowIndex].id
+            subjectId: data.list[rowIndex].subjectId
           };
-          getMethod("/operate/get-active-info", param).then(res => {
+          getMethod("/town-talk/detail", param).then(res => {
             scope.editData = res.data;
+            this.showList = false;
+            this.showAddOrEdit = true;
+          });
+        }else if(oper == "detail"){
+          let param = {
+            subjectId: data.list[rowIndex].subjectId
+          };
+          getMethod("/town-talk/detail", param).then(res => {
+            scope.editData = res.data;
+            this.editData.isDisabled = true
             this.showList = false;
             this.showAddOrEdit = true;
           });
@@ -104,6 +114,26 @@
           scope.editData = {};
           this.showList = false;
           this.showAddOrEdit = true;
+        }
+      },
+      enable(val,row){
+        console.log(val,row)
+        if (val=="1") {
+          getMethod('/town-talk/disable', {subjectId:row.subjectId}).then(res => {
+            this.$message({
+              message: "禁用成功",
+              type: "success"
+            });
+            this.loadList();
+          });
+        } else if(val=="0"){
+        getMethod('/town-talk/enable', {subjectId:row.subjectId}).then(res => {
+          this.$message({
+            message: "启用成功",
+            type: "success"
+          });
+          this.loadList();
+        });
         }
       },
       goNotesList(row) {
@@ -130,8 +160,9 @@
         if (this.searchParam.pushType == '0') {
           this.searchParam.pushType = null
         }
-        getMethod("/operate/search-active-list", this.searchParam).then(res => {
-          scope.tableData.list = res.data.records;
+        postMethod("/town-talk/page", this.searchParam).then(res => {
+          scope.$set(this.tableData, 'list', res.data.records)
+          // scope.tableData.list = res.data.records;
           scope.tableData.total = res.data.total;
           scope.showPagination = scope.tableData.total == 0;
           // let dataList = scope.tableData.list

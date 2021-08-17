@@ -13,6 +13,15 @@
       <el-form-item label="库存" prop="stockQty" style="width: 650px">
         <el-input v-model="dataForm.stockQty" type="number" :disabled="disabled"/>
       </el-form-item>
+      <el-form-item label="供应商名称" prop="test" style="width: 650px">
+        <el-input v-model="dataForm.test" :disabled="disabled"/>
+      </el-form-item>
+      <el-form-item label="供货价" prop="test" style="width: 650px">
+        <el-input v-model="dataForm.test" type="number" :disabled="disabled"/>
+      </el-form-item>
+      <el-form-item label="结算周期" prop="test" style="width: 650px">
+        <el-input v-model="dataForm.test" :disabled="disabled"/>
+      </el-form-item>
       <el-form-item label="封面图片">
         <div id="front-img">
           <el-input v-show="false"/>
@@ -193,6 +202,9 @@
             stockQty: [
               {required: true, message: '请输入库存', trigger: 'blur'}
             ],
+            test: [{required: true, message: '请输入供应商名称', trigger: 'blur'} ],
+            test: [{required: true, message: '请输入供货价', trigger: 'blur'} ],
+            test: [{required: true, message: '请输入结算周期', trigger: 'blur'} ],
             retailPrice: [{required: true, message: '请输入零售价', trigger: 'blur'} ],
             sellingPoint: [{required: true, message: '请输入卖点', trigger: 'blur'} ],
             postSaleId: [{required: true, message: '请选择售后说明', trigger: 'blur'} ],

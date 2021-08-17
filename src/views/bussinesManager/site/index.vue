@@ -18,12 +18,12 @@
                 label="发布告示"
                 value="announcement"
             ></el-option>
-           <!-- <el-option
+           <el-option
                 key="luck_draw_rules"
                 value-key="luck_draw_rules"
                 label="抽奖规则"
                 value="luck_draw_rules"
-            ></el-option> -->
+            ></el-option>
             <el-option
                 key="about_us"
                 value-key="about_us"

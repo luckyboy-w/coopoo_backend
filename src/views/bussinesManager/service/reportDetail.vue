@@ -6,6 +6,31 @@
       </div>
      </div>
     <el-tabs type="border-card">
+      <el-tab-pane label="举报内容">
+        <el-form ref="dataForm" :model="dataForm" label-width="80px">
+          <el-form-item label="评论内容">
+            <el-input  style="width: 500px;" rows="8" v-model="dataForm.content" type="textarea"></el-input>
+          </el-form-item>
+          <el-form-item label="举报描述">
+            <el-input  style="width: 500px;" rows="8" v-model="dataForm.content" type="textarea"></el-input>
+          </el-form-item>
+          <el-form-item label="出处链接">
+            <el-input  style="width: 300px;" v-model="dataForm.title"></el-input>
+          </el-form-item>
+          <el-form-item label="图片证据">
+            <div id="front-img">
+              <el-input v-show="false" v-model="dataForm.img" />
+              <el-upload disabled  :action="uploadAdvertUrl" list-type="picture-card" :on-preview="handleAdvertPreview"
+                :class="{hideTrue:hideAdvertUpload}" :file-list="uploadAdvertList">
+              </el-upload>
+            </div>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" :disabled="isDisabled" @click="submitUpdate">禁用</el-button>
+            <el-button @click="cancelUpdate">返回</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
       <el-tab-pane label="笔记">
         <el-form ref="dataForm" :model="dataForm" label-width="80px">
           <el-form-item label="标题">
@@ -35,52 +60,6 @@
             <el-button @click="cancelUpdate">返回</el-button>
           </el-form-item>
         </el-form>
-      </el-tab-pane>
-      <el-tab-pane label="评论">
-        <div class="ly-table-panel">
-          <div class="ly-data-list">
-            <el-table
-              ref="mainTable"
-              :data="tableData.list"
-              style="width: 100%; margin-bottom: 20px;"
-              row-key="id" border
-            >
-              <el-table-column prop="orderNo" label="评论内容" ></el-table-column>
-              <el-table-column prop="goodsName" label="用户名称"></el-table-column>
-              <el-table-column prop="supplierName" label="点赞数" ></el-table-column>
-              <el-table-column prop="supplierName" label="评论数" ></el-table-column>
-              <el-table-column fixed="right" prop="id" label="操作" >
-                <template slot-scope="scope">
-                    <el-button
-                      @click="replyMsg(scope.row)"
-                      v-if="scope.row.replyStatus == 0"
-                      size="mini" type="primary"
-                    >启用
-                    </el-button>
-                    <el-button
-                      @click="replyMsg(scope.row)"
-                      v-if="scope.row.replyStatus == 0"
-                      size="mini" type="primary"
-                    >禁用
-                    </el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
-          <div class="ly-data-pagination">
-            <el-pagination
-              background
-              v-show="!showPagination"
-              layout="prev, pager, next"
-              @current-change="currentPage"
-              @prev-click="currentPage"
-              @next-click="currentPage"
-              :total="tableData.total"
-              :page-size="searchParam.pageSize"
-              :current-page="searchParam.pageNum"
-            ></el-pagination>
-          </div>
-        </div>
       </el-tab-pane>
     </el-tabs>
     <el-dialog :visible.sync="dialogVisible">

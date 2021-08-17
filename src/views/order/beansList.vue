@@ -27,6 +27,18 @@
           </div>
         </div>
         <div class="tabTd">
+          <div>供应商名称：</div>
+          <div>
+            <el-input v-model="searchParam.test" width="180px" placeholder="请输入" />
+          </div>
+        </div>
+        <div class="tabTd">
+          <div>结款周期：</div>
+          <div>
+            <el-input v-model="searchParam.test" width="180px" placeholder="请输入" />
+          </div>
+        </div>
+        <div class="tabTd">
           <div>订单状态：</div>
           <div>
             <!-- 订单状态 0:已取消 1:已提交 2:待支付 3:退款中 4:退款完成 5:待取件 6:待发货 7:待收货 8:交易完成 9:拒收 10:拒收完成 11:退货中 12:退货完成 -->
@@ -70,6 +82,9 @@
               <template slot-scope="scope">
                 <div class="item">
                   <span style="margin-left:150px">订单编号：{{ scope.row.orderNo }}</span>
+                  <el-tag effect="light" size="mini">
+                    已结算
+                  </el-tag>
                   <span style="margin-left:150px">下单时间：{{ scope.row.createTime }}</span>
                 </div>
               </template>
@@ -107,6 +122,13 @@
                 </div>
               </template>
             </el-table-column>
+            <el-table-column min-width="100" align="center" label="供货价">
+              <template slot-scope="scope">
+                <div class="mesSty2">
+                  <div>{{ scope.row.test }}</div>
+                </div>
+              </template>
+            </el-table-column>
             <el-table-column label="状态" align="center" fixed="right" min-width="170">
               <template slot-scope="scope">
                 <div class="mesSty2">
@@ -124,6 +146,8 @@
                           <el-button size="mini" type="primary" v-if="scope.row.orderStatus==6" @click="sendOrd(scope.row)">发货
                           </el-button>
                           <el-button size="mini" type="primary" v-if="scope.row.orderStatus==15" @click="confirmed(scope.row)">确认无误
+                          </el-button>
+                          <el-button size="mini" type="primary"  @click="confirmed(scope.row)">结算
                           </el-button>
                         </el-button-group>
                       </div>
@@ -563,6 +587,8 @@
           orderNo: '',
           orderStatus: '',
           phoneNo: '',
+          test:'',
+          test:'',
           startCreateTime: '',
           userName: '',
           pageSize: 10,

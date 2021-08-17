@@ -2,14 +2,14 @@
   <div class="update-form-panel">
     <el-form ref="dataForm" :model="dataForm" label-width="80px">
       <el-form-item label="话题名称">
-        <el-input :disabled="isDisabled" v-model="dataForm.title" maxlength="8" show-word-limit></el-input>
+        <el-input :disabled="isDisabled" v-model="dataForm.subjectName" maxlength="8" show-word-limit></el-input>
       </el-form-item>
       <el-form-item label="话题内容">
-        <el-input :disabled="isDisabled" v-model="dataForm.content" maxlength="20" show-word-limit></el-input>
+        <el-input :disabled="isDisabled" v-model="dataForm.subjectContent" maxlength="20" show-word-limit></el-input>
       </el-form-item>
       <el-form-item label="封面图">
         <div id="front-img">
-          <el-input v-show="false" v-model="dataForm.img" />
+          <el-input v-show="false" v-model="dataForm.subjectImage" />
           <el-upload :disabled="isDisabled" :action="uploadAdvertUrl" list-type="picture-card" :on-preview="handleAdvertPreview"
             :before-upload="beforeAdvertUpload" :on-success="handleAdvertSuccess" :class="{hideTrue:hideAdvertUpload}"
             :file-list="uploadAdvertList" :on-remove="handleAdvertRemove">
@@ -47,20 +47,17 @@
       qEditor
     },
     mounted() {
-      console.log(123456)
+      console.log(this.editData)
       this.$nextTick(function() {
-        if (this.editData.id) {
-          this.isDisabled=true
+        if (this.editData.subjectId) {
+          this.isDisabled=this.editData.isDisabled
           this.dataForm = this.editData;
-          if (this.editData.img) {
-            this.dataForm.msgType = 1;
-            this.dataForm.img = this.editData.img;
+          if (this.editData.subjectImage) {
+            this.dataForm.subjectImage = this.editData.subjectImage;
             this.uploadAdvertList.push({
-              url: this.editData.img
+              url: this.editData.subjectImage
             })
             this.hideAdvertUpload=true
-          }else{
-            this.dataForm.msgType = 2;
           }
         }
       });
@@ -78,10 +75,9 @@
         fileSortImage: 0,
         imageUrl: "",
         dataForm: {
-          img: "",
-          title: "",
-          content: "",
-          msgType:2
+          subjectImage: "",
+          subjectName: "",
+          subjectContent: "",
         },
         uploadAdvertList: [],
         hideAdvertUpload: false,
@@ -92,7 +88,7 @@
     },
     methods: {
       changeContent(val) {
-        this.dataForm.content = val
+        this.dataForm.subjectContent = val
       },
       handleAdvertPreview(file) {
         this.dialogImageUrl = file.url;
@@ -109,7 +105,7 @@
       },
       handleAdvertSuccess(res, file) {
         console.log(res, file)
-        this.dataForm.img = res.data.url
+        this.dataForm.subjectImage = res.data.url
         res.data.fileType = file.raw.type;
         res.data.sort = this.fileSortImage++;
         this.uploadAdvertList.push(res.data);
@@ -143,18 +139,13 @@
       saveObject() {
         let scope = this;
         if (this.validate()) {
-          if (this.dataForm.msgType==1&&this.dataForm.img=='') {
-            this.$message({
-              message: "请上传封面图",
-              type: "warning"
-            });
-            return false
-          }
           delete this.dataForm.createTime;
           delete this.dataForm.createBy;
+		  delete this.dataForm.relPosts;
+		  delete this.dataForm.subjectStatus;
           console.log(this.dataForm)
           // return false
-          postMethod("/operate/send-active-info", this.dataForm).then(res => {
+          postMethod("/town-talk/add-or-update", this.dataForm).then(res => {
             this.$message({
               message: "操作成功",
               type: "success"
@@ -164,7 +155,7 @@
         }
       },
       validate() {
-        let notNvl = ["title", "content"];
+        let notNvl = ["subjectName", "subjectContent","subjectImage"];
         for (let i = 0; i < notNvl.length; i++) {
           if (this.dataForm[notNvl[i]] == "") {
             this.$message({
@@ -174,18 +165,6 @@
             return false;
           }
         }
-
-        let needInt = [];
-        for (let i = 0; i < needInt.length; i++) {
-          if (!isInteger(this.dataForm[needInt[i]])) {
-            this.$message({
-              message: "请输入正整数",
-              type: "warning"
-            });
-            return false;
-          }
-        }
-
         return true;
       },
       cancelUpdate() {

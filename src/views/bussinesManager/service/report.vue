@@ -28,7 +28,7 @@
        </div>
       <div class="ly-table-panel">
         <div class="ly-data-list">
-          <el-table ref="mainTable" :data="tableData.list" style="width: 100%;margin-bottom: 20px;" row-key="id" border
+          <el-table ref="mainTable" :data="tableData.list" style="margin-bottom: 20px;" row-key="id" border
             default-expand-all :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
 
             <!-- <el-table-column type="selection" width="55"></el-table-column> -->
@@ -40,12 +40,9 @@
                 {{scope.row.createTime | fmtDateStr}}
               </template>
             </el-table-column>
-            <el-table-column prop="id" label="操作" width="600px">
+            <el-table-column prop="id" label="操作">
               <template slot-scope="scope">
                 <el-button @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">查看</el-button>
-                <el-divider direction="vertical"></el-divider>
-                <el-button @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">禁用</el-button>
-                <el-button @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">启用</el-button>
               </template>
             </el-table-column>
           </el-table>
