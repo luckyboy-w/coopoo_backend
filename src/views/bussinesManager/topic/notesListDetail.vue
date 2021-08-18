@@ -2,23 +2,19 @@
   <div>
     <div class="ly-container" v-if="showList">
       <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
-        <el-button @click="cancelUpdate" icon="el-icon-arrow-left">返回</el-button>
+        <el-button @click="cancelUpdate" type="primary" icon="el-icon-arrow-left">返回</el-button>
        </div>
       <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
         <div class="tabTd">
           <div>标题：</div>
           <div>
-            <el-select v-model="searchParam.replyStatus" placeholder="请选择">
-              <el-option value="" label="全部"></el-option>
-              <el-option value="1" label="已回复"></el-option>
-              <el-option value="0" label="未回复"></el-option>
-            </el-select>
+            <el-input v-model="searchParam.postsTitle" placeholder="请输入" width="180px" />
           </div>
         </div>
         <div class="tabTd">
           <div>用户名称：</div>
           <div>
-           <el-input v-model="searchParam.supplierName" placeholder="请输入" width="180px" />
+           <el-input v-model="searchParam.userName" placeholder="请输入" width="180px" />
           </div>
         </div>
         <div class="tabTd">
@@ -31,23 +27,23 @@
             default-expand-all :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
 
             <!-- <el-table-column type="selection" width="55"></el-table-column> -->
-            <el-table-column prop="title" label="标题"></el-table-column>
-            <el-table-column prop="title" label="话题"></el-table-column>
-            <el-table-column prop="title" label="用户名称"></el-table-column>
-            <el-table-column prop="title" label="收藏数" ></el-table-column>
-            <el-table-column prop="title" label="点赞数" ></el-table-column>
-            <el-table-column prop="title" label="评论数" ></el-table-column>
+            <el-table-column prop="postTitle" label="标题"></el-table-column>
+            <el-table-column prop="subjectName" label="话题"></el-table-column>
+            <el-table-column prop="memberNickname" label="用户名称"></el-table-column>
+            <el-table-column prop="collectCount" label="收藏数" ></el-table-column>
+            <el-table-column prop="likesCount" label="点赞数" ></el-table-column>
+            <el-table-column prop="commentCount" label="评论数" ></el-table-column>
             <el-table-column prop="createTime" label="发布时间" width="150px">
               <template slot-scope="scope">
                 {{scope.row.createTime | fmtDateStr}}
               </template>
             </el-table-column>
-            <el-table-column prop="id" label="操作" width="600px">
+            <el-table-column prop="id" label="操作">
               <template slot-scope="scope">
-                <el-button @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">查看</el-button>
+                <el-button @click="addOrEdit('detail',scope.$index, tableData)" type="text" size="small">查看</el-button>
                 <el-divider direction="vertical"></el-divider>
-                <el-button @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">禁用</el-button>
-                <el-button @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">启用</el-button>
+               <el-button v-if="scope.row.postStatus==1" @click="enable('1',scope.row)" type="text" size="small">禁用</el-button>
+               <el-button v-if="scope.row.postStatus==0" @click="enable('0',scope.row)" type="text" size="small">启用</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -76,14 +72,15 @@
   export default {
     computed: {},
     mounted() {
-
+      console.log(this.editData_)
+      this.searchParam.subjectId=this.editData_.subjectId
       this.initLoad();
     },
     components: {
       saveOrEdit
     },
     props: {
-      editData2: {
+      editData_: {
         type: Object,
         required: false
       }
@@ -103,6 +100,9 @@
         showPagination: false,
         editData: {},
         searchParam: {
+          userName:'',
+          postsTitle:'',
+          subjectId:'',
           pageSize: 10,
           pageNum: 1
         },
@@ -119,11 +119,11 @@
       },
       addOrEdit(oper, rowIndex, data) {
         let scope = this;
-        if (oper == "edit") {
+        if (oper == "detail") {
           let param = {
-            id: data.list[rowIndex].id
+            postsId: data.list[rowIndex].postsId
           };
-          getMethod("/operate/get-active-info", param).then(res => {
+          getMethod("/posts/detail", param).then(res => {
             scope.editData = res.data;
             this.showList = false;
             this.showAddOrEdit = true;
@@ -132,6 +132,26 @@
           scope.editData = {};
           this.showList = false;
           this.showAddOrEdit = true;
+        }
+      },
+      enable(val,row){
+        console.log(val,row)
+        if (val=="1") {
+          getMethod('/posts/disable', {postsId:row.postsId}).then(res => {
+            this.$message({
+              message: "禁用成功",
+              type: "success"
+            });
+            this.loadList();
+          });
+        } else if(val=="0"){
+        getMethod('/posts/enable', {postsId:row.postsId}).then(res => {
+          this.$message({
+            message: "启用成功",
+            type: "success"
+          });
+          this.loadList();
+        });
         }
       },
       showListPanel(isCancel) {
@@ -151,10 +171,7 @@
       },
       loadList() {
         let scope = this;
-        if (this.searchParam.pushType == '0') {
-          this.searchParam.pushType = null
-        }
-        getMethod("/operate/search-active-list", this.searchParam).then(res => {
+        postMethod("/posts/page", this.searchParam).then(res => {
           scope.tableData.list = res.data.records;
           scope.tableData.total = res.data.total;
           scope.showPagination = scope.tableData.total == 0;

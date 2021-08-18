@@ -14,9 +14,9 @@
           <el-form-item label="内容">
             <el-input  style="width: 500px;" rows="8 " v-model="dataForm.postContent" type="textarea"></el-input>
           </el-form-item>
-          <el-form-item label="视频">
+          <el-form-item label="视频" v-if="dataForm.video">
             <div style="width: 300px;height: 200px;">
-                <video class="video-avatar"
+                <video class="video-avatar" :src="dataForm.video.url"
                 style="height: inherit;min-width: -webkit-fill-available;" controls="controls">
                 您的浏览器不支持视频播放
               </video>
@@ -30,7 +30,8 @@
             </div>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" :disabled="dataForm.postStatus==1" @click="noteDisable">禁用</el-button>
+            <el-button v-if="postStatus===1" @click="noteEnable('1')" type="primary">禁用</el-button>
+            <el-button v-if="postStatus===0" @click="noteEnable('0')" type="primary">启用</el-button>
             <el-button @click="cancelUpdate">返回</el-button>
           </el-form-item>
         </el-form>
@@ -106,8 +107,9 @@
     mounted() {
       console.log(this.editData)
       this.$nextTick(function() {
-          this.isDisabled=true
           this.dataForm = this.editData;
+          this.postStatus=this.editData.postStatus
+          console.log(this.postStatus)
           this.hideAdvertUpload=true
       });
       this.loadList()
@@ -121,13 +123,12 @@
     },
     data() {
       return {
+        postStatus:'',
         dialogVisible: false,
         dialogImageUrl: '',
         sendEval: false,
         showPagination: false,
-        replyFrm: {
-
-        },
+        replyFrm: {},
         searchParam: {
           pageSize: 10,
           pageNum: 1
@@ -135,7 +136,6 @@
         tableData: {
           list: []
         },
-        isDisabled:false,
         fileSortImage: 0,
         imageUrl: "",
         dataForm: {},
@@ -151,13 +151,25 @@
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
       },
-      noteDisable(){
-        getMethod('/posts/disable', {postsId:this.editData.postsId}).then(res => {
+      noteEnable(val){
+
+        if (val=="1") {
+          getMethod('/posts/disable', {postsId:this.editData.postsId}).then(res => {
+            this.$message({
+              message: "禁用成功",
+              type: "success"
+            });
+            this.postStatus=0
+          });
+        } else if(val=="0"){
+        getMethod('/posts/enable', {postsId:this.editData.postsId}).then(res => {
           this.$message({
-            message: "禁用成功",
+            message: "启用成功",
             type: "success"
           });
+          this.postStatus=1
         });
+        }
       },
       enable(val,row){
         console.log(val,row)

@@ -34,7 +34,7 @@
       <div class="list-panel"></div>
     </div>
     <saveOrEdit v-if="showAddOrEdit" @showListPanel="showListPanel" :editData="editData"></saveOrEdit>
-    <notesList v-if="noteList" @showListPanel="showListPanel" :editData="editData2"></notesList>
+    <notesList v-if="noteList" @showListPanel="showListPanel" :editData_="editData_"></notesList>
   </div>
 </template>
 
@@ -73,7 +73,7 @@
         noteList:false,
         showPagination: false,
         editData: {},
-        editData2: {},
+        editData_: {},
         searchParam: {
           pageSize: 10,
           pageNum: 1
@@ -137,8 +137,9 @@
         }
       },
       goNotesList(row) {
-        let scope = this;
-          scope.editData2 =row;
+          let scope = this;
+          console.log(row)
+          scope.editData_ =row;
           this.showList = false;
           this.noteList = true;
       },

@@ -7,7 +7,7 @@
       <el-form-item label="话题内容">
         <el-input :disabled="isDisabled" v-model="dataForm.subjectContent" maxlength="20" show-word-limit></el-input>
       </el-form-item>
-      <el-form-item label="封面图">
+      <el-form-item label="图片">
         <div id="front-img">
           <el-input v-show="false" v-model="dataForm.subjectImage" />
           <el-upload :disabled="isDisabled" :action="uploadAdvertUrl" list-type="picture-card" :on-preview="handleAdvertPreview"
