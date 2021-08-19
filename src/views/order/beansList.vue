@@ -29,13 +29,13 @@
         <div class="tabTd">
           <div>供应商名称：</div>
           <div>
-            <el-input v-model="searchParam.test" width="180px" placeholder="请输入" />
+            <el-input v-model="searchParam.supplierName" width="180px" placeholder="请输入" />
           </div>
         </div>
         <div class="tabTd">
           <div>结款周期：</div>
           <div>
-            <el-input v-model="searchParam.test" width="180px" placeholder="请输入" />
+            <el-input v-model="searchParam.settlePeriod" width="180px" placeholder="请输入" />
           </div>
         </div>
         <div class="tabTd">
@@ -82,7 +82,7 @@
               <template slot-scope="scope">
                 <div class="item">
                   <span style="margin-left:150px">订单编号：{{ scope.row.orderNo }}</span>
-                  <el-tag effect="light" size="mini">
+                  <el-tag effect="light" size="mini" v-if="scope.row.settleStatus==1">
                     已结算
                   </el-tag>
                   <span style="margin-left:150px">下单时间：{{ scope.row.createTime }}</span>
@@ -124,8 +124,8 @@
             </el-table-column>
             <el-table-column min-width="100" align="center" label="供货价">
               <template slot-scope="scope">
-                <div class="mesSty2">
-                  <div>{{ scope.row.test }}</div>
+                <div v-for="(item, index) in scope.row.orderItemList" :key="index" class="mesSty2">
+                  <div>{{ item.supplyPrice}}</div>
                 </div>
               </template>
             </el-table-column>
@@ -147,7 +147,7 @@
                           </el-button>
                           <el-button size="mini" type="primary" v-if="scope.row.orderStatus==15" @click="confirmed(scope.row)">确认无误
                           </el-button>
-                          <el-button size="mini" type="primary"  @click="confirmed(scope.row)">结算
+                          <el-button size="mini" type="primary" v-if="scope.row.orderStatus==8&&scope.row.settleStatus!=1"  @click="settlement(scope.row)">结算
                           </el-button>
                         </el-button-group>
                       </div>
@@ -587,8 +587,8 @@
           orderNo: '',
           orderStatus: '',
           phoneNo: '',
-          test:'',
-          test:'',
+          settlePeriod:'',
+          supplierName:'',
           startCreateTime: '',
           userName: '',
           pageSize: 10,
@@ -751,6 +751,22 @@
             type: 'success'
           })
           this.quotaClose()
+        })
+      },
+      settlement(row){
+        console.log(row)
+        this.$confirm('是否确认结算?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          getMethod('/order/settle-bean-order', {orderNo:row.orderNo}).then(res => {
+            this.loadList()
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
+          })
         })
       },
       confirmed(row){
