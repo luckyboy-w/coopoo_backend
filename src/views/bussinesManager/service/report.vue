@@ -39,25 +39,25 @@
             default-expand-all :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
 
             <!-- <el-table-column type="selection" width="55"></el-table-column> -->
-            <el-table-column prop="reportType" label="举报类型">
+            <el-table-column prop="reportType" label="举报类型"  width="200px">
               <template slot-scope="scope">
                 {{ scope.row.reportType | typeText }}
               </template>
             </el-table-column>
-            <el-table-column prop="reportObjectType" label="举报对象">
+            <el-table-column prop="reportObjectType" label="举报对象"  width="150px">
               <template slot-scope="scope">
                 {{ scope.row.reportObjectType==1?"笔记":"评论" }}
               </template>
             </el-table-column>
             <el-table-column prop="reportContent" label="举报内容"></el-table-column>
-            <el-table-column prop="createTime" label="举报时间" width="150px">
+            <el-table-column prop="createTime" label="举报时间" width="170px">
               <template slot-scope="scope">
-                {{scope.row.createTime | fmtDateStr}}
+                {{scope.row.createTime}}
               </template>
             </el-table-column>
-            <el-table-column prop="id" label="操作">
+            <el-table-column prop="id" label="操作"  width="150px">
               <template slot-scope="scope">
-                <el-button @click="addOrEdit('edit',scope.$index, tableData)" type="text" size="small">查看</el-button>
+                <el-button @click="addOrEdit('detail',scope.$index, tableData)" type="text" size="small">查看</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -144,19 +144,15 @@
       },
       addOrEdit(oper, rowIndex, data) {
         let scope = this;
-        if (oper == "edit") {
+        if (oper == "detail") {
           let param = {
             id: data.list[rowIndex].id
           };
-          getMethod("/operate/get-active-info", param).then(res => {
+          getMethod("/report/get-detail", param).then(res => {
             scope.editData = res.data;
             this.showList = false;
             this.showAddOrEdit = true;
           });
-        } else {
-          scope.editData = {};
-          this.showList = false;
-          this.showAddOrEdit = true;
         }
       },
       showListPanel(isCancel) {
