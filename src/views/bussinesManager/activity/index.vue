@@ -320,7 +320,10 @@
       htmlShow(row){
         console.log(row)
         this.htmlId=row.id
-        this.isShowHtmlDialog = true
+        getMethod('/activity/get-h5-url',{activityId:row.id}).then(res => {
+          this.isShowHtmlDialog = true
+          this.htmlUrl=res.data.url
+        });
       },
       handleCloseHtml() {
         this.isShowHtmlDialog = false
