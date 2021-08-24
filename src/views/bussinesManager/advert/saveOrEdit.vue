@@ -41,6 +41,7 @@
           <el-option label="编辑器" :value="4" />
           <el-option label="限时秒杀" :value="5" />
           <el-option label="优惠券" :value="8" />
+          <el-option label="新人礼" :value="9" />
           <el-option label="无" :value='0' />
         </el-select>
       </el-form-item>
