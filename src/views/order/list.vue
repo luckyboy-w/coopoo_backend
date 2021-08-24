@@ -573,25 +573,14 @@
         return formatDate(date, 'yyyy-MM-dd hh:mm')
       },
       pay2Text(pay) {
-        let string = ''
-        switch (pay) {
-          case '1':
-            string = '阿里支付';
-            break;
-          case '2':
-            string = '微信支付';
-            break;
-          case '3':
-            string = '小程序支付';
-            break;
-          case '4':
-            string = '靠谱豆支付';
-            break;
-          default:
-            string = '未支付';
-            break
+        if (pay == 1) {
+          return '支付宝'
+        } else if (pay == 2) {
+          return '微信'
+        } else if (pay == 3) {
+          return '微信'
         }
-        return string
+        return '未支付'
       },
       statuts2Text(status) {
         // 订单状态 0:已取消 1:已提交 2:待支付 3:退款中 4:退款完成 5:待取件 6:待发货 7:待收货 8:交易完成 9:拒收 10:拒收完成 11:退货中 12:退货完成
