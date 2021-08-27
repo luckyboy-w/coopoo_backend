@@ -124,7 +124,6 @@
             value-format="yyyy-MM-dd HH:mm:ss"
             :default-time="['00:00:00', '00:00:00']"
           >
-            style="width:80%"
           </el-date-picker>
         </el-form-item>
         <el-form-item>
