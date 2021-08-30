@@ -15,29 +15,28 @@
       <table>
         <tr>
           <td>
-            <el-button type="primary" @click="homeEdit()">新建直播</el-button>
+            <el-button type="primary" @click="edit()">新建直播</el-button>
           </td>
         </tr>
         <tr>
           <td colspan="4">
             <el-table :data="liveList.list" style="width: 100%; margin-bottom: 20px;" row-key="id" border>
               <el-table-column label="直播名称" width="180" prop="liveName"></el-table-column>
-              <el-table-column label="直播时间" width="180">
+              <el-table-column label="直播时间" width="320">
                 <template slot-scope="scope">
                   {{ scope.row.liveBegin}} 至 {{ scope.row.liveEnd}}
                 </template>
               </el-table-column>
-              <el-table-column label="获赞数" width="180" prop="likesCount"></el-table-column>
-              <el-table-column label="下单数" width="180" prop="orderCount"></el-table-column>
-              <el-table-column label="观看人数" width="180" prop="watchCount"></el-table-column>
+              <el-table-column label="获赞数" width="100" prop="likesCount"></el-table-column>
+              <el-table-column label="下单数" width="100" prop="orderCount"></el-table-column>
+              <el-table-column label="观看人数" width="100" prop="watchCount"></el-table-column>
               <el-table-column label="创建时间" width="180" prop="createTime"></el-table-column>
               <el-table-column label="操作" width="280">
                 <template slot-scope="scope">
-                  <el-link v-if="scope.row.isSale=='0'" type="primary" @click="homeEdit(scope.row,1)">编辑</el-link>
-                    <el-divider direction="vertical"></el-divider>
-                  <el-link v-if="scope.row.isSale=='0'" type="primary" @click="enable(scope.row)">删除</el-link>
-                  <el-divider direction="vertical"></el-divider>
-                  <el-link  type="primary" @click="homeEdit(scope.row,2)">查看</el-link>
+                  <el-link v-if="scope.row.status!=2" type="primary" @click="edit(scope.row,1)">编辑</el-link>
+                    <el-divider v-if="scope.row.status!=2" direction="vertical"></el-divider>
+                  <el-link v-if="scope.row.status!=2" type="primary" @click="deleteLive(scope.row)">删除</el-link>
+                  <el-link v-if="scope.row.status==2"  type="primary" @click="edit(scope.row,2)">查看</el-link>
                 </template>
               </el-table-column>
             </el-table>
@@ -114,41 +113,31 @@
         this.searchParam.pageNum = pageNum;
         this.loadLive();
       },
-      //  上架下架
-      enable(row) {
+      //  刪除
+      deleteLive(row) {
         console.log("888",row)
         let scope = this
-        if (row.isSale=="0") {
-          getMethod('/goods/theme/on-sale-goods-theme', {goodsThemeId:row.id}).then(res => {
+          postMethod('/live/delete-live?liveId='+row.liveId).then(res => {
             scope.loadLive()
             this.$message({
-              message: "上架成功",
+              message: "删除成功",
               type: "success"
             });
           });
-        } else if(row.isSale=="1"){
-        getMethod('/goods/theme/off-sale-goods-theme', {goodsThemeId:row.id}).then(res => {
-          scope.loadLive()
-          this.$message({
-            message: "下架成功",
-            type: "success"
-          });
-        });
-        }
       },
 
       // 首页编辑和详情
-      homeEdit(row,val){
+      edit(row,val){
         console.log(row,val,'列表参数')
         if (val==1) {
-          getMethod('/goods/theme/outer-detail', {goodsThemeId:row.id}).then(res => {
+          getMethod('/live/get-live-detail', {liveId:row.liveId}).then(res => {
 
           this.editData=res.data
           this.editData.operation="edit"
           this.showHome=true
           });
         } else if(val==2){
-          getMethod('/goods/theme/outer-detail', {goodsThemeId:row.id}).then(res => {
+          getMethod('/live/get-live-detail', {liveId:row.liveId}).then(res => {
           this.editData=res.data
           this.editData.operation="detail"
           this.showHome=true
@@ -159,27 +148,6 @@
           this.showHome=true
         }
         this.showList = false
-      },
-      // 内页编辑和详情
-      insideEdit(row,val){
-        console.log(row,val,'列表参数')
-        if (val==1) {
-          getMethod('/goods/theme/inner-detail', {goodsThemeId:row.id}).then(res => {
-            this.editData={}
-          this.editData.allData=res.data
-          this.editData.operation="edit"
-          this.editData.goodsThemeId=row.id
-          this.showList = false
-          });
-        } else if(val==2){
-          getMethod('/goods/theme/inner-detail', {goodsThemeId:row.id}).then(res => {
-            this.editData={}
-          this.editData.allData=res.data
-          this.editData.operation="detail"
-          this.editData.goodsThemeId=row.id
-          this.showList = false
-          });
-        }
       },
       showListPanel(isCancel) {
         this.showList = true

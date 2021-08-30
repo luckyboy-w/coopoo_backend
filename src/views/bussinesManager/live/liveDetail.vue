@@ -7,7 +7,7 @@
         </el-form-item>
         <el-form-item label="直播时间">
                <el-date-picker
-                 v-model="testDate" clearable :disabled="disabled"
+                 v-model="liveDate" clearable :disabled="disabled"
                  type="datetimerange"
                  start-placeholder="开始日期"
                  end-placeholder="结束日期"
@@ -140,7 +140,7 @@
         submitStatus: 1,
         showGoodsList: false,
         // 表单数据
-        testDate:'',
+        liveDate:'',
         form: {
           relatedGoodsList: [],
           liveName:'',
@@ -175,8 +175,10 @@
         this.submitStatus = 1
       } else if (this.editData.operation == "edit") {
         this.submitStatus = 2
+        this.dataEcho()
       } else if (this.editData.operation == "detail") {
         this.disabled = true
+        this.dataEcho()
       }
     },
     created() {},
@@ -187,11 +189,33 @@
       dataEcho() {
         let that = this
         that.form = that.editData
-        that.bindingList = that.editData.relatedGoodsList
+        that.bindingList = that.editData.liveGoodsList
+        this.liveDate = [new Date(that.editData.liveBegin), new Date(that.editData.liveEnd)]
       },
       activityDateTimeChange() {
-        this.form.liveBegin = this.testDate[0]
-        this.form.liveEnd = this.testDate[1]
+        this.form.liveBegin = this.liveDate[0]
+        this.form.liveEnd = this.liveDate[1]
+      },
+      enable(row) {
+        console.log("888",row)
+        let scope = this
+        if (row.isSale=="0") {
+          getMethod('/goods/theme/on-sale-goods-theme', {goodsThemeId:row.id}).then(res => {
+            scope.loadLive()
+            this.$message({
+              message: "上架成功",
+              type: "success"
+            });
+          });
+        } else if(row.isSale=="1"){
+        getMethod('/goods/theme/off-sale-goods-theme', {goodsThemeId:row.id}).then(res => {
+          scope.loadLive()
+          this.$message({
+            message: "下架成功",
+            type: "success"
+          });
+        });
+        }
       },
       // 关联商品
       relatedGoods() {
@@ -242,33 +266,34 @@
           if (valid) {
             let scope = this
             let goodsData = []
-              this.bindingList.forEach(item => {
+              this.bindingList.forEach((item,index) => {
                 let obj = {
                   goodsId: item.goodsId,
-                  storeSettleRatio: item.storeSettleRatio ? item.storeSettleRatio : "0",
-                  supplierSettleRatio: item.supplierSettleRatio ? item.supplierSettleRatio : "0"
+                  sort: index+1,
+                  status: item.status ? item.status : '1'
                 }
                 goodsData.push(obj)
               })
               this.form.relatedGoodsList = goodsData
-            let goodsIdData = this.form.relatedGoodsList.map(value => value.goodsId);
-            const goodsIdDataSet = new Set(goodsIdData);
-            if (goodsIdDataSet.size != goodsIdData.length) {
-              this.$message({
-                message: '绑定的商品有重复',
-                type: 'warning'
-              });
-              return false;
-            }
-            if (this.form.goodsType == 1&&this.form.relatedGoodsList.length <= 0) {
+              this.form.liveType = '1'
+            // let goodsIdData = this.form.relatedGoodsList.map(value => value.goodsId);
+            // const goodsIdDataSet = new Set(goodsIdData);
+            // if (goodsIdDataSet.size != goodsIdData.length) {
+            //   this.$message({
+            //     message: '绑定的商品有重复',
+            //     type: 'warning'
+            //   });
+            //   return false;
+            // }
+            if (this.form.relatedGoodsList.length <= 0) {
               this.$message({
                 message: "请选择主题需要关联的商品",
                 type: "warning"
               });
               return false
             }
-            console.log(this.form,this.testDate);
-            return false
+            console.log(this.form,this.liveDate);
+            // return false
             this.loading = true
             if (val == 1) {
               postMethod('/live/add-live', this.form).then(res => {
@@ -318,7 +343,9 @@
             this.tableData.list = res.data.records;
             this.tableData.total = res.data.total;
             this.showPagination = this.tableData.total == 0;
+            if (this.bindingList&&this.bindingList.length>0) {
             this.testF()
+            }
           });
 
       },
