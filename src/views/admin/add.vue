@@ -124,7 +124,7 @@
               });
               return;
             }
-            this.loading = true
+            // this.loading = true
             delete this.form.reppwd
             console.log(this.editData.id)
             if (!this.editData.id||this.editData.id=='') {
