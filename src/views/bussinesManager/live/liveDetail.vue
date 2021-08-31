@@ -12,10 +12,10 @@
                  start-placeholder="开始日期"
                  end-placeholder="结束日期"
                  @change="activityDateTimeChange"
-                 :picker-options="startDateTimePickerOptions"
                  value-format="yyyy-MM-dd HH:mm:ss"
                  :default-time="['00:00:00', '00:00:00']"
                >
+                 <!-- :picker-options="startDateTimePickerOptions" -->
                </el-date-picker>
         </el-form-item>
         <el-form-item label="直播商品">
@@ -40,13 +40,21 @@
                 </el-table-column>
                 <el-table-column prop="id" label="操作">
                   <template slot-scope="scope">
-                    <el-button type="text" :disabled="disabled" size="small"
+                    <el-button type="text" size="small" @click="getGoodsDtl(scope.row)">
+                      详情
+                    </el-button>
+                    <el-divider direction="vertical" v-if="form.status!=2"></el-divider>
+                    <el-button type="text" v-if="form.status===0||(!scope.row.status&&scope.row.status!==0)" :disabled="disabled" size="small"
                       @click="deleteGoods(scope.row,scope.$index)">
                       删除
                     </el-button>
-                    <el-divider direction="vertical"></el-divider>
-                    <el-button type="text" size="small" @click="getGoodsDtl(scope.row)">
-                      详情
+                    <el-button type="text" v-if="form.status==1&&scope.row.status==1" :disabled="disabled" size="small"
+                      @click="enable(scope.row,scope.$index)">
+                      禁止销售
+                    </el-button>
+                    <el-button type="text" v-if="form.status==1&&scope.row.status==0" :disabled="disabled" size="small"
+                      @click="enable(scope.row,scope.$index)">
+                      可以销售
                     </el-button>
                   </template>
                 </el-table-column>
@@ -84,7 +92,7 @@
           <div class="ly-data-list">
             <el-table ref="multipleTable" :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id"
               border  @select="selectThis" @selection-change="selectioncChange" >
-              <el-table-column type="selection" width="55">
+              <el-table-column type="selection" :selectable="checkSelectable" width="55">
               </el-table-column>
               <el-table-column prop="goodsName" label="商品名称" />
               <el-table-column label="商品价格">
@@ -192,26 +200,37 @@
         that.bindingList = that.editData.liveGoodsList
         this.liveDate = [new Date(that.editData.liveBegin), new Date(that.editData.liveEnd)]
       },
+
+      checkSelectable (row) {
+        let mark = 0
+        this.bindingList.forEach((item) => {
+          if (item.goodsId === row.goodsId&&(item.status||item.status===0)) {
+            mark = mark + 1
+            return false
+          }
+        })
+        return mark <= 0
+      },
       activityDateTimeChange() {
         this.form.liveBegin = this.liveDate[0]
         this.form.liveEnd = this.liveDate[1]
       },
-      enable(row) {
+      enable(row,index) {
         console.log("888",row)
         let scope = this
-        if (row.isSale=="0") {
-          getMethod('/goods/theme/on-sale-goods-theme', {goodsThemeId:row.id}).then(res => {
-            scope.loadLive()
+        if (row.status=="0") {
+          postMethod('/live/enable-live-goods?liveGoodsId='+row.id).then(res => {
+            this.$set(this.bindingList[index], 'status', '1')
             this.$message({
-              message: "上架成功",
+              message: "启售成功",
               type: "success"
             });
           });
-        } else if(row.isSale=="1"){
-        getMethod('/goods/theme/off-sale-goods-theme', {goodsThemeId:row.id}).then(res => {
-          scope.loadLive()
+        } else if(row.status=="1"){
+        postMethod('/live/disable-live-goods?liveGoodsId='+row.id).then(res => {
+          this.$set(this.bindingList[index], 'status', '0')
           this.$message({
-            message: "下架成功",
+            message: "禁售成功",
             type: "success"
           });
         });
@@ -275,7 +294,6 @@
                 goodsData.push(obj)
               })
               this.form.relatedGoodsList = goodsData
-              this.form.liveType = '1'
             // let goodsIdData = this.form.relatedGoodsList.map(value => value.goodsId);
             // const goodsIdDataSet = new Set(goodsIdData);
             // if (goodsIdDataSet.size != goodsIdData.length) {
@@ -285,6 +303,13 @@
             //   });
             //   return false;
             // }
+            let param={
+              liveBegin:this.form.liveBegin,
+              liveEnd:this.form.liveEnd,
+              liveName:this.form.liveName,
+              liveType:'1',
+              relatedGoodsList:this.form.relatedGoodsList
+            }
             if (this.form.relatedGoodsList.length <= 0) {
               this.$message({
                 message: "请选择主题需要关联的商品",
@@ -292,27 +317,33 @@
               });
               return false
             }
-            console.log(this.form,this.liveDate);
+            console.log(param);
             // return false
             this.loading = true
             if (val == 1) {
-              postMethod('/live/add-live', this.form).then(res => {
+              postMethod('/live/add-live',param).then(res => {
                 this.loading = false
                 this.$emit('showListPanel', true)
                 this.$message({
                   message: "保存成功",
                   type: "success"
                 });
+              }).catch(err=>{
+                this.loading = false
               })
             } else if (val == 2) {
-              this.form.goodsThemeId = this.editData.goodsThemeId
-              postMethod('/live/update-live', this.form).then(res => {
+              param.liveId = this.editData.liveId
+              console.log(param,'编辑数据');
+              // return false
+              postMethod('/live/update-live', param).then(res => {
                 this.loading = false
                 this.$emit('showListPanel', true)
                 this.$message({
                   message: "保存成功",
                   type: "success"
                 });
+              }).catch(err=>{
+                this.loading = false
               })
             }
 
