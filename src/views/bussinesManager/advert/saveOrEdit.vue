@@ -43,6 +43,7 @@
           <el-option label="优惠券" :value="8" />
           <el-option label="新人礼" :value="9" />
           <el-option label="邀请好友" :value="10" />
+          <el-option label="门店列表" :value="11" />
           <el-option label="无" :value='0' />
         </el-select>
       </el-form-item>
