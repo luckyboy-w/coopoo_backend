@@ -40,6 +40,7 @@
           <el-option label="大佬说" :value="6" />
           <el-option label="编辑器" :value="4" />
           <el-option label="限时秒杀" :value="5" />
+          <el-option label="平台直播" :value="7" />
           <el-option label="优惠券" :value="8" />
           <el-option label="无" :value='0' />
         </el-select>
@@ -54,7 +55,7 @@
 	  </el-form-item>
       <el-form-item v-if="dataForm.dataType == 7" label="平台直播">
         <el-select v-model="dataForm.url" placeholder="请选择">
-          <el-option></el-option>
+          <el-option v-for="item in relationList" :key="item.id"  :label="item.text" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item v-if="dataForm.dataType == 6" label="大佬说">

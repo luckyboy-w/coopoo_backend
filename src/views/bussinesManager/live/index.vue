@@ -15,7 +15,7 @@
       <table>
         <tr>
           <td>
-            <el-button type="primary" @click="edit()">新建直播</el-button>
+            <el-button type="primary" @click="toLiveDetail()">新建直播</el-button>
           </td>
         </tr>
         <tr>
@@ -33,10 +33,10 @@
               <el-table-column label="创建时间" width="180" prop="createTime"></el-table-column>
               <el-table-column label="操作" width="280">
                 <template slot-scope="scope">
-                  <el-link v-if="scope.row.status!=2" type="primary" @click="edit(scope.row,1)">编辑</el-link>
+                  <el-link v-if="scope.row.status!=2" type="primary" @click="toLiveDetail(scope.row,1)">编辑</el-link>
                     <el-divider v-if="scope.row.status!=2" direction="vertical"></el-divider>
                   <el-link v-if="scope.row.status!=2" type="primary" @click="deleteLive(scope.row)">删除</el-link>
-                  <el-link v-if="scope.row.status==2"  type="primary" @click="edit(scope.row,2)">查看</el-link>
+                  <el-link v-if="scope.row.status==2"  type="primary" @click="toLiveDetail(scope.row,2)">查看</el-link>
                 </template>
               </el-table-column>
             </el-table>
@@ -127,11 +127,10 @@
       },
 
       // 首页编辑和详情
-      edit(row,val){
+      toLiveDetail(row,val){
         console.log(row,val,'列表参数')
         if (val==1) {
           getMethod('/live/get-live-detail', {liveId:row.liveId}).then(res => {
-
           this.editData=res.data
           this.editData.operation="edit"
           this.showHome=true
