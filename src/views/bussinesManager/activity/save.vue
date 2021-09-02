@@ -24,8 +24,8 @@
           删除
         </el-button>
         </p>
-        <span>用户限购：</span>
-        <el-input-number :max="100" :min="0" size="mini" placeholder="请输入" v-model="table.purchaseLimit" />
+        <span v-if="activity.activityType==1">用户限购：</span>
+        <el-input-number v-if="activity.activityType==1" :max="100" :min="0" size="mini" placeholder="请输入" v-model="table.purchaseLimit" />
         <span>&nbsp;&nbsp;&nbsp;&nbsp;供应商比例：</span>
         <el-input-number :max="100" :min="0" size="mini" placeholder="请输入" v-model="table.supplierSettleRatio" />
         <span>&nbsp;&nbsp;&nbsp;&nbsp;门店比例：</span>
@@ -69,7 +69,7 @@
       </el-form-item>
       <el-divider content-position="left"/>
       <el-form-item prop="activityTimePeriod" label="活动有效期:" >
-        <el-date-picker
+        <el-date-picker v-if="activity.isPermanent==0"
           v-model="activityGoodForm.activityTimePeriod"
           type="datetimerange"
           range-separator="至"
@@ -78,6 +78,7 @@
           end-placeholder="结束日期"
         >
         </el-date-picker>
+        <el-radio v-if="activity.isPermanent==1" disabled>永久有效</el-radio>
       </el-form-item>
       <el-divider content-position="left"/>
       <el-button @click="submit" :loading="loading" style="display:block;margin:0 auto" type="primary">提交</el-button>

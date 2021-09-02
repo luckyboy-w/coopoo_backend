@@ -38,6 +38,9 @@
                 <span v-if="scope.row.dataType==6">大佬说</span>
                 <span v-if="scope.row.dataType==7">平台直播</span>
                 <span v-if="scope.row.dataType==8">优惠卷</span>
+                <span v-if="scope.row.dataType==9">新人礼</span>
+                <span v-if="scope.row.dataType==10">邀请好友</span>
+                <span v-if="scope.row.dataType==11">门店列表</span>
               </template>
             </el-table-column>
             <el-table-column prop="image" label="BANNER图" width="350px">
