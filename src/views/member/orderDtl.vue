@@ -68,27 +68,45 @@
        </el-row>
      </div>
 
-     <div style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);padding:10px;margin:10px 0px;">
-       <el-row :gutter="20" style="line-height:40px" class="main-title">
-         <el-col :span="6">
-           收货人信息
-         </el-col>
-         <!-- <el-col :span="6">
-           <el-button type="text" @click="addressDialog = true">修改收货地址</el-button>
-         </el-col> -->
-       </el-row>
-       <el-row :gutter="20" class="main-text">
-         <el-col :span="6">
-           收货人：{{ ordDtl.receiverName }}
-         </el-col>
-         <el-col :span="6">
-           收货人电话：{{ ordDtl.receiverPhone }}
-         </el-col>
-         <el-col :span="6">
-           收货地址：{{ ordDtl.receiverAddress }}
-         </el-col>
-       </el-row>
-     </div>
+     <div v-if="ordDtl.deliveryMethod==1" style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);padding:10px;margin:10px 0px;">
+            <el-row :gutter="20" style="line-height:40px" class="main-title">
+              <el-col :span="6">
+                收货人信息
+              </el-col>
+              <!-- <el-col :span="6">
+                <el-button type="text" @click="addressDialog = true">修改收货地址</el-button>
+              </el-col> -->
+            </el-row>
+            <el-row :gutter="20" class="main-text">
+              <el-col :span="6">
+                收货人：{{ ordDtl.receiverName }}
+              </el-col>
+              <el-col :span="6">
+                收货人电话：{{ ordDtl.receiverPhone }}
+              </el-col>
+              <el-col :span="6">
+                收货地址：{{ ordDtl.receiverAddress }}
+              </el-col>
+            </el-row>
+          </div>
+          <div v-if="ordDtl.deliveryMethod==2" style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);padding:10px;margin:10px 0px;">
+            <el-row :gutter="20" style="line-height:40px" class="main-title">
+              <el-col :span="6">
+                提货信息
+              </el-col>
+            </el-row>
+            <el-row :gutter="20" class="main-text">
+              <el-col :span="6">
+                预约时间：{{ ordDtl.appointmentDate }}
+              </el-col>
+              <el-col :span="6">
+                预留手机号：{{ ordDtl.appointmentMobile }}
+              </el-col>
+              <el-col :span="6">
+                取件门店：{{ ordDtl.memberStoreName }}
+              </el-col>
+            </el-row>
+          </div>
      <div v-if="ordDtl.receiptId"
        style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);padding:10px;margin:10px 0px 10px 0;">
        <el-row :gutter="20" style="line-height:40px" class="main-title">
