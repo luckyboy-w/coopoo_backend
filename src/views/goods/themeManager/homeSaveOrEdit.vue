@@ -35,7 +35,7 @@
                 list-type="picture-card" v-bind:on-progress="uploadVideoProcess" v-bind:on-success="handleVideoSuccess"
                 v-bind:before-upload="beforeUploadVideo" v-bind:show-file-list="false">
                 <video v-if="modularVideo !='' && !videoFlag" v-bind:src="modularVideo" class="video-avatar"
-                  style="height: inherit;min-width: -webkit-fill-available;" controls="controls">
+                  style="height: inherit;width: inherit;" controls="controls">
                   您的浏览器不支持视频播放
                 </video>
                 <i v-else-if="modularVideo =='' && !videoFlag" class="el-icon-plus"></i>
@@ -165,7 +165,11 @@
                     <span>{{scope.row.maxGoodsSalePrice?(scope.row.minGoodsSalePrice+'~'+scope.row.maxGoodsSalePrice):scope.row.minGoodsSalePrice}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="saleVolume" label="销量" width="80" />
+                <el-table-column prop="saleVolume" label="销量" width="80">
+                  <template slot-scope="scope">
+                    {{ scope.row.saleVolume}}
+                  </template>
+                </el-table-column>
                 <el-table-column prop="supplierSettleRatio" label="供应商结算比例" width="160">
                   <template slot-scope="scope">
                     <el-input-number :max="100" :min="0" size="mini" placeholder="请输入" :disabled="disabled"
@@ -265,9 +269,9 @@
         </div>
         <div class="ly-table-panel">
           <div class="ly-data-list">
-            <el-table ref="mainTable" :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id"
-              border @selection-change="handleSelectionChange" @select="selectThis">
-              <el-table-column type="selection" width="55">
+                <el-table ref="multipleTable" :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id"
+                  border  @select="selectThis" @selection-change="selectioncChange" >
+                  <el-table-column type="selection" width="55">
               </el-table-column>
               <el-table-column prop="goodsName" label="商品名称" />
               <el-table-column label="商品价格">
@@ -325,8 +329,8 @@
         </div>
         <div class="ly-table-panel">
           <div class="ly-data-list">
-            <el-table ref="mainTable" :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id"
-              border @selection-change="handleSelectionChange" @select="selectThis">
+            <el-table ref="multipleTable_" :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id"
+              border @selection-change="selectioncChange" @select="selectThis">
               <el-table-column type="selection" width="55">
               </el-table-column>
               <el-table-column prop="couponName" label="优惠券名称" />
@@ -641,6 +645,7 @@
         let scope = this
         if (this.form.fileType == 1) {
           console.log("图片")
+          scope.modularVideo=''
           scope.uploadModularVideoList = []
           scope.uploadVideoCoverList = []
           scope.uploadFirstImageList = []
@@ -707,11 +712,27 @@
         }
         if (this.form.goodsType == 1) {
           if (this.multipleSelection.length > 0) {
+           this.bindingList.forEach((i,dex)=>{
+             this.multipleSelection.forEach((item,index)=>{
+                 if (i.goodsId==item.goodsId) {
+                    this.multipleSelection.splice(index,1)
+                 }
+               })
+             })
+             console.log(this.multipleSelection,'this.multipleSelection')
             this.bindingList = this.bindingList.concat(this.multipleSelection)
           }
           this.showGoodsList = false
         } else if (this.form.goodsType == 2) {
           if (this.multipleSelection.length > 0) {
+           this.bindingList_.forEach((i,dex)=>{
+             this.multipleSelection.forEach((item,index)=>{
+                 if (i.id==item.id) {
+                    this.multipleSelection.splice(index,1)
+                 }
+               })
+             })
+             console.log(this.multipleSelection,'this.multipleSelection')
             this.bindingList_ = this.bindingList_.concat(this.multipleSelection)
           }
           this.showGoodsList_ = false
@@ -1066,13 +1087,30 @@
         this.block()
       },
       search() {
+
         if (this.form.goodsType == 1) {
           if (this.multipleSelection.length > 0) {
-          this.bindingList = this.bindingList.concat(this.multipleSelection)
-        }
-        this.searchParam.status= '0'
+           this.bindingList.forEach((i,dex)=>{
+             this.multipleSelection.forEach((item,index)=>{
+                 if (i.goodsId==item.goodsId) {
+                    this.multipleSelection.splice(index,1)
+                 }
+               })
+             })
+             console.log(this.multipleSelection,'this.multipleSelection')
+            this.bindingList = this.bindingList.concat(this.multipleSelection)
+          }
+          this.searchParam.status= '0'
         } else if (this.form.goodsType == 2) {
           if (this.multipleSelection.length > 0) {
+           this.bindingList_.forEach((i,dex)=>{
+             this.multipleSelection.forEach((item,index)=>{
+                 if (i.id==item.id) {
+                    this.multipleSelection.splice(index,1)
+                 }
+               })
+             })
+             console.log(this.multipleSelection,'this.multipleSelection')
             this.bindingList_ = this.bindingList_.concat(this.multipleSelection)
           }
           this.searchParam.status= ''
@@ -1082,39 +1120,94 @@
       },
       // 获取商品列表
       loadGoodsList() {
+        console.log(this.bindingList,this.bindingList_)
         if (this.form.goodsType == 1) {
           postMethod("/goods/list", this.searchParam).then(res => {
             this.tableData.list = res.data.records;
             this.tableData.total = res.data.total;
             this.showPagination = this.tableData.total == 0;
+            if (this.bindingList&&this.bindingList.length>0) {
+            this.testF()
+            }
           });
         } else if (this.form.goodsType == 2) {
           getMethod('/coupon/search-coupon-list', this.searchParam).then(res => {
             this.tableData.list = res.data.records;
             this.tableData.total = res.data.total;
             this.showPagination = this.tableData.total == 0;
+            if (this.bindingList_&&this.bindingList_.length>0) {
+            this.testQ()
+            }
           });
         }
 
       },
-      // 选择商品
-      handleSelectionChange(val) {
-        console.log(val, 'val')
-        let n = val.filter(item => !this.multipleSelection.includes(item));
-        console.log(n); //本次新增的项
-        this.multipleSelection = val;
+      testF(){
+        this.$nextTick(() => {
+          this.tableData.list.forEach((item,index)=>{
+            this.bindingList.forEach((i,dex)=>{
+              if (i.goodsId==item.goodsId) {
+                this.$refs.multipleTable.toggleRowSelection(this.tableData.list[index], true)
+              }
+            })
+          })
+         })
       },
-      selectThis(val) {
-        console.log(val, '单个')
+      testQ(){
+        this.$nextTick(() => {
+            this.tableData.list.forEach((item,index)=>{
+              this.bindingList_.forEach((i,dex)=>{
+                if (i.id==item.id) {
+                  this.$refs.multipleTable_.toggleRowSelection(this.tableData.list[index], true)
+                }
+              })
+            })
+          })
+      },
+      selectThis(selection, row) {
+        console.log(selection,row);
+        this.multipleSelection = selection
+        if (this.form.goodsType == 1) {
+          this.bindingList.forEach((item,index)=>{
+            if (row.goodsId==item.goodsId) {
+               this.bindingList.splice(index,1)
+            }
+          })
+        }else if (this.form.goodsType == 2) {
+          this.bindingList_.forEach((item,index)=>{
+            if (row.id==item.id) {
+               this.bindingList_.splice(index,1)
+            }
+          })
+        }
+
+      },
+      selectioncChange(selection){
+        console.log(selection,'改变');
       },
       currentPage(pageNum) {
-
         if (this.form.goodsType == 1) {
           if (this.multipleSelection.length > 0) {
-          this.bindingList = this.bindingList.concat(this.multipleSelection)
-        }
+           this.bindingList.forEach((i,dex)=>{
+             this.multipleSelection.forEach((item,index)=>{
+                 if (i.goodsId==item.goodsId) {
+                    this.multipleSelection.splice(index,1)
+                 }
+               })
+             })
+             console.log(this.multipleSelection,'this.multipleSelection')
+            this.bindingList = this.bindingList.concat(this.multipleSelection)
+          }
         } else if (this.form.goodsType == 2) {
           if (this.multipleSelection.length > 0) {
+           this.bindingList_.forEach((i,dex)=>{
+             this.multipleSelection.forEach((item,index)=>{
+                 if (i.id==item.id) {
+                    this.multipleSelection.splice(index,1)
+                 }
+               })
+             })
+             console.log(this.multipleSelection,'this.multipleSelection')
             this.bindingList_ = this.bindingList_.concat(this.multipleSelection)
           }
         }
@@ -1124,7 +1217,11 @@
     }
   }
 </script>
+
 <style scoped>
+  /deep/.el-table__header-wrapper  .el-checkbox{
+  	display:none
+  }
   .update-form-panel {
     padding: 30px 20px;
     width: 700px;
