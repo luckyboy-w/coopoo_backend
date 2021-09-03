@@ -14,8 +14,8 @@
             :before-upload="beforeAdvertUpload" :on-success="handleAdvertSuccess" :class="{hideTrue:hideAdvertUpload}"
             :file-list="uploadAdvertList" :on-remove="handleAdvertRemove">
             <i class="el-icon-plus" />
-            <!-- <div slot="tip" class="el-upload__tip">推荐尺寸：1000*600
-            </div> -->
+            <div slot="tip" class="el-upload__tip">推荐尺寸：1000*697
+            </div>
           </el-upload>
           <el-dialog>
             <img width="100%" :src="image" alt>
