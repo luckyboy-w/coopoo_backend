@@ -409,15 +409,15 @@
     }
   }
 </script>
-
+<style lang="scss">
+.hideTrue .el-upload--picture-card {
+  display: none!important;
+}
+</style>
 <style scoped>
   .update-form-panel {
     padding: 30px 20px;
     width: 100%;
-  }
-
-  .hideTrue .el-upload--picture-card {
-    display: none;
   }
   .my-el-radio {
     width: 240px;
