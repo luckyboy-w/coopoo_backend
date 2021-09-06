@@ -239,8 +239,8 @@
         this.$refs.imgMask[index].style = flag ? 'display:block' : 'display:none'
       },
       showBigImg(url) {
-        this.goodSaleDescImgUrl = url
-        this.goodSaleDescImgVisible = true
+        this.dialogImageUrl = url
+        this.dialogVisible = true
       },
       handleImagePreview(file) {
         this.dialogImageUrl = file.url

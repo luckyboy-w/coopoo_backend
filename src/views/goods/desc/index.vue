@@ -115,6 +115,7 @@ export default {
   },
   methods: {
     initLoad() {
+		this.searchParam.pageNum = 1;
       this.loadList();
     },
     search() {

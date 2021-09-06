@@ -108,6 +108,7 @@ export default {
   },
   methods: {
     search() {
+		this.searchParam.pageNum = 1;
       this.loadList()
     },
 

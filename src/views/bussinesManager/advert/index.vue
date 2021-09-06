@@ -167,10 +167,11 @@ export default {
         this.$message("删除成功");
       });
       this.searchParam.pageSize = 10;
-      this.searchParam.pageNum = 0;
+      this.searchParam.pageNum = 1;
       this.loadList();
     },
     search() {
+		this.searchParam.pageNum = 1;
       this.loadList();
     },
     enableAdv(row,val){

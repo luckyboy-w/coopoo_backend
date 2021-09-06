@@ -26,7 +26,7 @@
                   v-bind:on-progress="uploadVideoProcess" v-bind:on-success="(response, file)=>handleVideoSuccess(response, file,attrItem,index)"
                   v-bind:before-upload="beforeUploadVideo" v-bind:show-file-list="false">
                   <video v-if="attrItem.videoFile !=''" v-bind:src="attrItem.videoFile" class="video-avatar"
-                    style="height: inherit;min-width: -webkit-fill-available;" controls="controls">
+                    style="height: inherit;min-width: inherit;" controls="controls">
                     您的浏览器不支持视频播放
                   </video>
                   <i v-else-if="attrItem.videoFile ==''" class="el-icon-plus" ></i>
@@ -65,10 +65,10 @@
                   <div  v-for="(i,itemIndex) in attrItem.imageList" >
                     <div class="img" >
                       <div class="img-mask">
-                        <i class="el-icon-zoom-in my-icon"></i>
+                        <i class="el-icon-zoom-in my-icon"  @click="showBigImg(i.url)"></i>
                         <i class="el-icon-delete my-icon_" @click="handleImageRemove(i,index)"></i>
                       </div>
-                      <el-image @click="showBigImg(i.url)" style="width: 148px;height: 148px;margin-right: 15px;" :src="i.url"></el-image>
+                      <el-image style="width: 148px;height: 148px;margin-right: 15px;" :src="i.url"></el-image>
                     </div>
                     <div>
                       <el-select :disabled="disabled" v-model="i.goodsId" style="margin: 10px 0;width: 148px;margin-right: 15px;" placeholder="请选择商品">
@@ -329,6 +329,7 @@
         this.dialogVisible = true
       },
       showBigImg(url) {
+		  console.log('123456',url);
         this.dialogImageUrl = url
         this.dialogVisible = true
       },
