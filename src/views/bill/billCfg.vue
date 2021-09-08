@@ -25,6 +25,24 @@
         </el-button>
       </el-form-item>
     </el-form>
+    <el-divider></el-divider>
+    <el-form label-width="120px" >
+      <el-form-item label="手动结算日期">
+        <el-date-picker
+              v-model="monthDate"
+              type="month"
+              value-format="yyyy-MM"
+              @change="pickMonthDate"
+              :picker-options="pickerOptions"
+              placeholder="选择月">
+            </el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="monthSubmit">
+          提交
+        </el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
@@ -52,12 +70,19 @@
         loading: false,
         supplierDay: '',
         storeDay: '',
+        monthDate:"",
         dataForm: {
           cash_store_count: "",
           cash_store_date: "",
           cash_supplier_count: "",
           cash_supplier_date: "",
-        }
+        },
+        pickerOptions: {
+          disabledDate(time) {
+            let t = new Date().getDate();
+            return time.getTime() > Date.now();
+          }
+        },
       };
     },
     computed: {},
@@ -66,6 +91,28 @@
     },
     created() {},
     methods: {
+      pickMonthDate(val){
+        console.log(val)
+      },
+      monthSubmit(){
+        console.log(this.monthDate);
+        if (this.monthDate==''||!this.monthDate) {
+          this.$message({
+            message: "结算月份不能为空",
+            type: "warning"
+          });
+          return false
+        }
+        getMethod("/settlement/manual-settlement?date="+this.monthDate).then(
+          res => {
+            this.$message({
+              message: "操作成功",
+              type: "success"
+            });
+            this.monthDate=''
+          }
+        );
+      },
       pickSupplierDate(val) {
         if (val) {
           // this.dataForm.cash_supplier_count = val.length

@@ -27,6 +27,9 @@
         <el-button @click="cancelUpdate">取消</el-button>
       </el-form-item>
     </el-form>
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="dialogImageUrl" alt="">
+    </el-dialog>
   </div>
 </template>
 
@@ -71,6 +74,8 @@
     },
     data() {
       return {
+        dialogVisible:false,
+        dialogImageUrl:'',
         isDisabled:false,
         fileSortImage: 0,
         imageUrl: "",

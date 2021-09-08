@@ -146,6 +146,8 @@
           <el-select v-model="form.goodsType" :disabled="disabled">
             <el-option label="商品" :value="1" />
             <el-option label="优惠券" :value="2" />
+            <el-option label="门店列表" :value="3" />
+            
           </el-select>
         </el-form-item>
         <el-form-item v-if="form.goodsType==1" label="关联商品">

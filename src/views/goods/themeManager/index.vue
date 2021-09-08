@@ -44,9 +44,9 @@
                     <el-divider direction="vertical"></el-divider>
                   <el-link v-if="scope.row.isSale=='0'" type="primary" @click="homeEdit(scope.row,1)">首页编辑</el-link>
                   <el-link v-else type="primary" @click="homeEdit(scope.row,2)">首页详情</el-link>
-                      <el-divider direction="vertical"></el-divider>
-                  <el-link v-if="scope.row.isSale=='0'" type="primary" @click="insideEdit(scope.row,1)">内页编辑</el-link>
-                  <el-link v-else type="primary" @click="insideEdit(scope.row,2)">内页详情</el-link>
+                      <el-divider v-if="scope.row.goodsType!='3'" direction="vertical"></el-divider>
+                  <el-link v-if="scope.row.isSale=='0'&&scope.row.goodsType!='3'" type="primary" @click="insideEdit(scope.row,1)">内页编辑</el-link>
+                  <el-link v-if="scope.row.isSale=='1'&&scope.row.goodsType!='3'" type="primary" @click="insideEdit(scope.row,2)">内页详情</el-link>
                 </template>
               </el-table-column>
             </el-table>
@@ -155,7 +155,7 @@
         console.log(row,val,'列表参数')
         if (val==1) {
           getMethod('/goods/theme/outer-detail', {goodsThemeId:row.id}).then(res => {
-            
+
           this.editData=res.data
           this.editData.operation="edit"
           this.showHome=true
