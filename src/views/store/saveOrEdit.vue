@@ -222,8 +222,14 @@
           that.mk.setPosition(point)
           that.map.panTo(point)
           console.log(point,res)
-          that.dataForm.lat=res.point.lat
-          that.dataForm.lng=res.point.lng
+      var x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+      var ll =[res.point.lng,res.point.lat]
+      var x = ll[0] - 0.0065, y = ll[1] - 0.006;
+      var z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * x_pi);
+      var theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * x_pi);
+      // console.log('777777',(z * Math.cos(theta)) + ',' + (z * Math.sin(theta)));
+          that.dataForm.lng=z * Math.cos(theta)
+          that.dataForm.lat=z * Math.sin(theta)
           that.form.address = res.address
           that.form.addrPoint = point
         })
@@ -249,8 +255,14 @@
       // 8-2、选择地址
       handleSelect(item) {
         console.log('item',item.point);
-        this.dataForm.lat=item.point.lat
-        this.dataForm.lng=item.point.lng
+        var x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+        var ll =[item.point.lng,item.point.lat]
+        var x = ll[0] - 0.0065, y = ll[1] - 0.006;
+        var z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * x_pi);
+        var theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * x_pi);
+        // console.log('55555',(z * Math.cos(theta)) + ',' + (z * Math.sin(theta)));
+        this.dataForm.lng=z * Math.cos(theta)
+        this.dataForm.lat=z * Math.sin(theta)
         this.form.address = item.address + item.title
         this.form.addrPoint = item.point
         this.map.clearOverlays()
@@ -258,19 +270,19 @@
         this.map.addOverlay(this.mk)
         this.map.panTo(item.point)
       },
-      setMobilePhone(sel) {
-        this.dataForm.phoneNo = sel
-      },
-      callBackUploadSuc(res, file) {
-        this.imageUrl = res.data.url
-        this.dataForm.frontImg = res.data.url
-      },
-      callBackMap(mapData) {
-        console.log(mapData, 'mapData')
-        this.dataForm.lng = mapData.lng
-        this.dataForm.lat = mapData.lat
-        this.dataForm.address = mapData.adress
-      },
+      // setMobilePhone(sel) {
+      //   this.dataForm.phoneNo = sel
+      // },
+      // callBackUploadSuc(res, file) {
+      //   this.imageUrl = res.data.url
+      //   this.dataForm.frontImg = res.data.url
+      // },
+      // callBackMap(mapData) {
+      //   console.log(mapData, 'mapData')
+      //   this.dataForm.lng = mapData.lng
+      //   this.dataForm.lat = mapData.lat
+      //   this.dataForm.address = mapData.adress
+      // },
       initDefaultImage() {
         // this.fileList = this.dataForm.files
         // for (let i = 0; i < this.dataForm.files.length; i++) {
