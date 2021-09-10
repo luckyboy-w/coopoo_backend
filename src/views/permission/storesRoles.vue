@@ -132,6 +132,7 @@
     methods: {
       // 条件查询
       search() {
+		  this.searchParam.pageNum = 1;
         this.loadRole()
       },
       // 删除角色

@@ -8,6 +8,7 @@
         <el-upload
           :action="uploadGoodImageUrl"
           list-type="picture-card"
+		  :on-preview="handleAdvertPreview"
           :before-upload="beforeGoodImageUpload"
           :on-success="handleGoodImageSuccess"
           :file-list="uploadGoodImageList">
@@ -19,6 +20,9 @@
         <el-button @click="cancelUpdate">取消</el-button>
       </el-form-item>
     </el-form>
+	<el-dialog :visible.sync="dialogVisible">
+	  <img width="100%" :src="dialogImageUrl" alt="">
+	</el-dialog>
   </div>
 </template>
 
@@ -37,6 +41,8 @@ export default {
       loading: false,
       uploadGoodImageList: [],
       hideGoodImageUpload: false,
+	  dialogImageUrl:'',
+	  dialogVisible:false,
       uploadGoodImageUrl: "",
       fileSortImage: 0,
       imageUrl: "",
@@ -91,6 +97,10 @@ export default {
       }
       this.loading = false
     },
+	handleAdvertPreview(file) {
+	  this.dialogImageUrl = file.url;
+	  this.dialogVisible = true;
+	},
     beforeGoodImageUpload(file) {
       const fileTypeVerify =
         file.type === "image/jpeg" ||

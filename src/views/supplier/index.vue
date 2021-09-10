@@ -241,6 +241,7 @@ export default {
     //   });
     // },
     search() {
+		this.searchParam.pageNum = 1;
       this.loadList();
     },
     addOrEdit(oper, rowIndex, data) {

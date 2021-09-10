@@ -141,6 +141,7 @@
           rowObj.storeName + '&token=' + getToken())
       },
       search() {
+		  this.searchParam.pageNum = 1
         this.loadList()
       },
       addOrEdit(oper,row) {

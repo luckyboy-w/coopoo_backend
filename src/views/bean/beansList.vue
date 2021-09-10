@@ -53,7 +53,7 @@
                 </el-button>
               </div>
             </div>
-            <el-table ref="noBillData" stripe :data="noBillData.list" style="width: 100%; margin-bottom: 20px;"
+            <el-table ref="noBillData" stripe border :data="noBillData.list" style="width: 100%; margin-bottom: 20px;"
               row-key="id">
               <el-table-column prop="userName" label="会员名称">
                 <template slot-scope="scope">
@@ -145,8 +145,8 @@
                 <div>支出靠谱豆：{{ consumeBean?consumeBean:'0' }}</div>
               </div>
             </div>
-            <el-table stripe :data="detailsListData.list" style="width: 100%; margin-bottom: 20px;" row-key="id">
-              <el-table-column type="index" width="50" label="序号" />
+            <el-table stripe :data="detailsListData.list" border style="width: 100%; margin-bottom: 20px;" row-key="id">
+              <!-- <el-table-column type="index" width="50" label="序号" /> -->
               <el-table-column prop="type" label="交易路径" min-width="15%">
                 <template slot-scope="scope">
                   <span v-if="scope.row.type == '2'">邀请好友购买</span>
@@ -221,8 +221,7 @@
         allFeeDataShow: true,
         memId: '',
         detailList: [],
-        typeList: [
-          {
+        typeList: [{
             id: '',
             typeName: '请选择'
           },
@@ -335,7 +334,8 @@
           pageNum: this.searchParam.pageNum
         }
         getMethod("/bean/search-bean-rec-list", param).then(res => {
-          scope.detailsListData = res.data
+          scope.detailsListData.list = res.data.records
+          scope.detailsListData.total = res.data.total
         });
       },
       loadPlatFee() {
@@ -349,7 +349,7 @@
       },
       loadPlatFee_() {
         let scope = this
-        getMethod('/bean/get-bean-rec-list-count?member_id='+this.memId).then(res => {
+        getMethod('/bean/get-bean-rec-list-count?member_id=' + this.memId).then(res => {
           let platData = res.data
           scope.currBeanQty = platData.memberSurplus
           scope.totalBeanQty = platData.add
@@ -375,11 +375,8 @@
       },
       search() {
         let that = this
-        getMethod("/bean/search-bean-list", this.searchParams).then(res => {
-         that.noBillData.list = res.data.records
-         that.noBillData.total = res.data.total
-
-        })
+        this.searchParams.pageNum = 1
+        this.loadList()
       },
       reset() {
         this.searchParams_ = {
@@ -387,6 +384,8 @@
           opType: '',
           startCreateTime: '',
           endCreateTime: '',
+          pageSize: 10,
+          pageNum: 1
         }
       },
       search_() {
@@ -396,10 +395,12 @@
           opType: that.searchParams_.opType,
           startCreateTime: that.searchParams_.startCreateTime,
           endCreateTime: that.searchParams_.endCreateTime,
-          memId: this.memId
+          memId: this.memId,
+          pageSize: 10,
+          pageNum: 1
         }
         getMethod("/bean/search-bean-rec-list", param).then(res => {
-          that.detailsListData = res.data.records // 返回的数据
+          that.detailsListData.list = res.data.records // 返回的数据
           that.detailsListData.total = res.data.total
         })
       },

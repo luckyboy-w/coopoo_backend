@@ -236,10 +236,11 @@ export default {
 				});
 			});
 			this.searchParam.pageSize = 10;
-			this.searchParam.pageNum = 0;
+			this.searchParam.pageNum = 1;
 			this.loadList();
 		},
 		search() {
+			this.searchParam.pageNum = 1;
 			this.loadList();
 		},
 		addOrEdit(oper, rowIndex, data) {

@@ -90,7 +90,7 @@
           </el-table>
         </div>
         <div class="ly-data-pagination">
-          <el-pagination background v-show="!showPagination" layout="prev, pager, next" @current-change="currentPage"
+          <el-pagination background  layout="prev, pager, next" @current-change="currentPage"
             :current-page="searchParam.pageNum" @prev-click="currentPage" @next-click="currentPage"
             :total="tableData.total"></el-pagination>
         </div>
@@ -105,7 +105,7 @@
         </div>
         <div class="tabTd">
           <div>
-            <el-button icon="el-icon-search" type="primary" @click="searchConsume()">搜索</el-button>
+            <el-button icon="el-icon-search" type="primary" @click="search_()">搜索</el-button>
             <el-button @click="backUp" v-if="!showDtl">返回</el-button>
           </div>
         </div>
@@ -204,7 +204,7 @@
           </div>
         </div>
         <div class="ly-data-pagination" style="margin: 15px 0;">
-          <el-pagination background v-show="!showPagination" layout="prev, pager, next" @current-change="currentPage_"
+          <el-pagination background layout="prev, pager, next" @current-change="currentPage_"
             :current-page="searchDtlParam.pageNum" @prev-click="currentPage_" @next-click="currentPage_"
             :total="tableData2.total"></el-pagination>
         </div>
@@ -261,7 +261,6 @@
         row: null,
         showDtl: true,
         showList: true,
-        showPagination: false,
         searchParam: {
           pageSize: 10,
           pageNum: 1
@@ -482,7 +481,12 @@
         this.loadDtlList(row)
       },
       search() {
+        this.searchParam.pageNum = 1;
         this.loadList();
+      },
+      search_() {
+        this.searchDtlParam.pageNum = 1
+        this.searchConsume();
       },
       currentPage(pageNum) {
         this.searchParam.pageNum = pageNum;
@@ -505,7 +509,6 @@
               i.enable = JSON.stringify(i.enable)
             })
             scope.tableData.total = res.data.total
-            scope.showPagination = scope.tableData.total == 0;
           }
         );
       },
@@ -514,7 +517,11 @@
       },
       backUp(){
         this.showDtl = true
-        this.searchDtlParam.pageNum = 1
+        this.searchDtlParam={
+          orderNo: "",
+          pageSize: 10,
+          pageNum: 1
+        }
       },
       searchConsume() {
         let that = this
@@ -522,7 +529,6 @@
           this.$set(this.tableData2, 'list', res.data.records)
           // that.tableData2.list = res.data.records
           that.tableData2.total = res.data.total
-          that.showPagination = that.tableData2.total == 0;
         })
       },
       loadDtlList(row) {
@@ -534,7 +540,6 @@
           this.$set(this.tableData2, 'list', res.data.records)
           // scope.tableData2.list = res.data.records
           scope.tableData2.total = res.data.total
-          scope.showPagination = scope.tableData2.total == 0;
           scope.showDtl = false;
         })
       }
