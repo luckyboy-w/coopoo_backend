@@ -19,7 +19,13 @@
         </router-link>
       </div>
       <div class="card-panel-col">
-        <router-link to="/bussinesManager/topic/notesList">
+        <router-link :to="{
+                          path: '/bussinesManager/topic/notesList',
+                          query: {
+                             startCreateTime : beforeDay,
+                             endCreateTime:beforeDay
+                          }
+                      }">
           <div class="card-panel">
             <div class="card-left">
               <div class="card-title">
@@ -258,6 +264,7 @@
           }
         },
         weekOption: this.banWeek(),
+        beforeDay:formatDate(new Date(new Date().setDate(new Date().getDate() - 1)), 'yyyy-MM-dd'),
         dateType: 1,
         searchParam: {
           type: 1,

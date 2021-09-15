@@ -43,7 +43,9 @@
         <div class="tabTd">
           <div>
             <el-button icon="el-icon-search" type="primary" @click="search()">搜索</el-button>
-            <el-button @click="showDtl = true" v-if="!showDtl">返回</el-button>
+            <el-button icon="el-icon-download" type="primary" @click="exportData()">
+              导出
+            </el-button>
           </div>
         </div>
       </div>
@@ -242,6 +244,9 @@
     postMethod,
     formatDate
   } from "@/api/request";
+  import {
+    getToken
+  } from '@/utils/auth'
   import orderDtl from './orderDtl'
   export default {
     components: {
@@ -262,6 +267,11 @@
         showDtl: true,
         showList: true,
         searchParam: {
+          accountType:'',
+          enable:'',
+          userName:'',
+          phoneNo:'',
+          storeName:'',
           pageSize: 10,
           pageNum: 1
         },
@@ -370,6 +380,19 @@
       },
     },
     methods: {
+      exportData() {
+        let exportParam = [];
+
+        let param = JSON.parse(JSON.stringify(this.searchParam));
+        delete param.pageSize
+        delete param.pageNum
+
+        for (let key in param) {
+          exportParam.push(key + "=" + param[key]);
+        }
+        exportParam.push("token=" + getToken())
+        window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/member-list/export?" + exportParam.join("&"));
+      },
       //  启用禁用
       enable(row) {
         let scope = this

@@ -8,13 +8,13 @@
         <el-input v-model="dataForm.storeName" />
       </el-form-item>
 	  <el-form-item label="联系方式">
-	    <el-input maxlength="15" v-model="dataForm.contact" />
+	    <el-input maxlength="15" oninput="if(value.length>15) value=value.slice(0,15)" type="number" v-model="dataForm.contact" />
 	  </el-form-item>
       <el-form-item label="店主姓名">
         <el-input v-model="dataForm.userName" />
       </el-form-item>
       <el-form-item label="店主手机号">
-        <el-input maxlength="11" v-model="dataForm.phoneNo" :disabled="isDisabled" />
+        <el-input maxlength="11" v-model="dataForm.phoneNo" type="number" oninput="if(value.length>11) value=value.slice(0,11)" :disabled="isDisabled" />
       </el-form-item>
       <el-form-item label="营业时间">
         <div style="display: flex;flex-wrap: nowrap;">

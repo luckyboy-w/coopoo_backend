@@ -48,6 +48,7 @@
                 <el-button type="primary" @click="search()">
                   搜索
                 </el-button>
+
                 <el-button @click="resetMain()">
                   重置
                 </el-button>
@@ -126,6 +127,9 @@
                 <el-button type="primary" @click="search_()">
                   搜索
                 </el-button>
+                <el-button icon="el-icon-download" type="primary" @click="exportData()">
+                  导出
+                </el-button>
                 <el-button @click="reset()">
                   重置
                 </el-button>
@@ -193,7 +197,9 @@
   import {
     formatDate
   } from "@/api/tools.js"
-
+  import {
+    getToken
+  } from '@/utils/auth'
   export default {
     components: {},
     filters: {
@@ -219,7 +225,6 @@
       return {
         tabIndex: 0,
         allFeeDataShow: true,
-        memId: '',
         detailList: [],
         typeList: [{
             id: '',
@@ -277,6 +282,9 @@
           accountType: '',
         },
         searchParams_: {
+          pageSize: 10,
+          pageNum: 1,
+          memId:'',
           type: '',
           opType: '',
           startCreateTime: '',
@@ -290,11 +298,6 @@
         currBeanQty: '',
         totalBeanQty: '',
         consumeBean: '',
-        //10:未结算;20:结算中;30:已结算
-        searchParam: {
-          pageSize: 10,
-          pageNum: 1
-        },
         noBillData: {
           list: [],
           total: 0
@@ -306,21 +309,31 @@
       };
     },
     mounted() {
-      if (this.$route.query.dt != undefined) {
-        this.searchParam.dataType = this.$route.query.dt
-      }
       this.loadList();
       // this.loadRecTitle();
       this.loadPlatFee()
     },
 
     methods: {
+      exportData() {
+        let exportParam = [];
+
+        let param = JSON.parse(JSON.stringify(this.searchParams_));
+        delete param.pageSize
+        delete param.pageNum
+
+        for (let key in param) {
+          exportParam.push(key + "=" + param[key]);
+        }
+        exportParam.push("token=" + getToken())
+        window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/bean-rec-list/export?" + exportParam.join("&"));
+      },
       backToAllFee() {
         this.allFeeDataShow = true
         // this.loadList();
       },
       transdetails(row) {
-        this.memId = row.memberId
+        this.searchParams_.memId=row.memberId
         this.memName = row.userName
         this.allFeeDataShow = false
         this.loadDetailsList(row)
@@ -328,12 +341,7 @@
       },
       loadDetailsList(row) {
         let scope = this
-        let param = {
-          memId: this.memId,
-          pageSize: this.searchParam.pageSize,
-          pageNum: this.searchParam.pageNum
-        }
-        getMethod("/bean/search-bean-rec-list", param).then(res => {
+        getMethod("/bean/search-bean-rec-list", this.searchParams_).then(res => {
           scope.detailsListData.list = res.data.records
           scope.detailsListData.total = res.data.total
         });
@@ -349,7 +357,7 @@
       },
       loadPlatFee_() {
         let scope = this
-        getMethod('/bean/get-bean-rec-list-count?member_id=' + this.memId).then(res => {
+        getMethod('/bean/get-bean-rec-list-count?member_id=' + this.searchParams_.memId).then(res => {
           let platData = res.data
           scope.currBeanQty = platData.memberSurplus
           scope.totalBeanQty = platData.add
@@ -361,12 +369,12 @@
         this.loadList();
       },
       currentPage_(pageNum) {
-        this.searchParam.pageNum = pageNum;
+        this.searchParams_.pageNum = pageNum;
         this.loadDetailsList();
       },
       resetMain() {
         this.searchParams = {
-          memName: '',
+          userName: '',
           phoneNo: '',
           memberType: '',
           pageSize: 10,
@@ -382,6 +390,7 @@
         this.searchParams_ = {
           type: '',
           opType: '',
+          memId:this.searchParams_.memId,
           startCreateTime: '',
           endCreateTime: '',
           pageSize: 10,
@@ -390,16 +399,7 @@
       },
       search_() {
         let that = this
-        let param = {
-          type: that.searchParams_.type,
-          opType: that.searchParams_.opType,
-          startCreateTime: that.searchParams_.startCreateTime,
-          endCreateTime: that.searchParams_.endCreateTime,
-          memId: this.memId,
-          pageSize: 10,
-          pageNum: 1
-        }
-        getMethod("/bean/search-bean-rec-list", param).then(res => {
+        getMethod("/bean/search-bean-rec-list", that.searchParams_).then(res => {
           that.detailsListData.list = res.data.records // 返回的数据
           that.detailsListData.total = res.data.total
         })

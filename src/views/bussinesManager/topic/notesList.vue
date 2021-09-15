@@ -18,6 +18,17 @@
            <el-input v-model="searchParam.userName" placeholder="请输入" width="180px" />
           </div>
         </div>
+		<div class="tabTd">
+		  <div>发布时间：</div>
+		  <div>
+		    <el-date-picker v-model="searchParam.startCreateTime" value-format="yyyy-MM-dd" type="date"
+		                      placeholder="选择开始日期"
+		      /> &nbsp;&nbsp;至&nbsp;&nbsp;
+		      <el-date-picker v-model="searchParam.endCreateTime" value-format="yyyy-MM-dd" type="date"
+		                      placeholder="选择结束日期"
+		      />
+		  </div>
+		</div>
         <div class="tabTd">
           <el-button type="primary" @click="search()" icon="el-icon-search">搜索</el-button>
         </div>
@@ -73,6 +84,11 @@
   export default {
     computed: {},
     mounted() {
+      console.log(this.$route.query)
+      if (this.$route.query.startCreateTime != undefined) {
+        this.searchParam.startCreateTime = this.$route.query.startCreateTime
+        this.searchParam.endCreateTime = this.$route.query.endCreateTime
+      }
       this.initLoad();
     },
     components: {
@@ -93,6 +109,8 @@
         showPagination: false,
         editData: {},
         searchParam: {
+          startCreateTime:'',
+          endCreateTime:"",
           postsTitle:'',
           userName:'',
           pageSize: 10,

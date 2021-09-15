@@ -69,6 +69,9 @@
           <el-button icon="el-icon-search" @click="search()">
             搜索
           </el-button>
+          <el-button icon="el-icon-download" type="primary" @click="exportData()">
+            导出
+          </el-button>
           <el-button icon="el-icon-warning" @click="quota()">
             风险额度
           </el-button>
@@ -882,7 +885,7 @@
           exportParam.push(key + "=" + param[key]);
         }
         exportParam.push("token=" + getToken())
-        window.open(process.env.VUE_APP_BASE_API_NEW + "/order/export?" + exportParam.join("&"));
+        window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/bean-order/export?" + exportParam.join("&"));
       },
       //获取当前页面路由
       getRoute() {
