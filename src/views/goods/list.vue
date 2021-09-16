@@ -34,9 +34,9 @@
           <el-button icon="el-icon-search" type="primary" @click="search()">
             搜索
           </el-button>
-          <!-- <el-button plain type="normal" icon="el-icon-download" @click="exportData()">
+          <el-button plain type="normal" icon="el-icon-download" @click="exportData()">
             导出
-          </el-button> -->
+          </el-button>
         </div>
       </div>
       <div class="ly-table-panel">
@@ -178,6 +178,10 @@
           dataId: ""
         },
         searchParam: {
+          goodsName:'',
+          goodsCode:'',
+          supplierName:'',
+          status:'',
           pageSize: 10,
           pageNum: 1
         },
@@ -206,13 +210,17 @@
     methods: {
       exportData() {
         let exportParam = [];
-        for (let key in this.searchParam) {
-          if (this.searchParam[key] != undefined) {
-            exportParam.push(key + "=" + this.searchParam[key]);
-          }
+
+        let param = JSON.parse(JSON.stringify(this.searchParam));
+        delete param.pageSize
+        delete param.pageNum
+
+        for (let key in param) {
+          exportParam.push(key + "=" + param[key]);
         }
         exportParam.push("token=" + getToken())
-        window.open(process.env.VUE_APP_BASE_API + '/backend/good/export?' + exportParam.join("&"))
+        // console.log(process.env.VUE_APP_BASE_API_NEW + "/excel/goods-sku/export?" + exportParam.join("&"));
+        window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/goods-sku/export?" + exportParam.join("&"));
       },
       editGood(row, disabled) {
         let scope = this

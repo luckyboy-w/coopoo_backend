@@ -38,9 +38,9 @@
           <el-button @click="search()" type="primary">
             查询
           </el-button>
-         <!-- <el-button icon="el-icon-download" @click="exportData()">
+         <el-button icon="el-icon-download" @click="exportData()">
             导出
-          </el-button> -->
+          </el-button>
         </div>
       </div>
       <el-table border ref="noBillData" :data="noBillData.list" style="width: 100%; margin-bottom: 20px;" row-key="id">
@@ -157,24 +157,18 @@
     },
     methods: {
       exportData() {
-        if (this.searchParam.startTime == null) {
-          this.searchParam.startTime = ''
-        }
-        if (this.searchParam.endTime == null) {
-          this.searchParam.endTime = ''
-        }
-        let param = {
-          billType: this.searchParam.billType,
-          billNo: this.searchParam.billNo,
-          startTime: this.searchParam.startTime,
-          endTime: this.searchParam.endTime
-        }
         let exportParam = [];
+
+        let param = JSON.parse(JSON.stringify(this.searchParam));
+        delete param.pageSize
+        delete param.pageNum
+
         for (let key in param) {
           exportParam.push(key + "=" + param[key]);
         }
         exportParam.push("token=" + getToken())
-        window.open(process.env.VUE_APP_BASE_API + "/backend/orderBill/export?" + exportParam.join("&"));
+        // console.log(process.env.VUE_APP_BASE_API_NEW + "/excel/supplier-settlement/export?" + exportParam.join("&"));
+        window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/supplier-settlement/export?" + exportParam.join("&"));
       },
       search() {
         let that = this
