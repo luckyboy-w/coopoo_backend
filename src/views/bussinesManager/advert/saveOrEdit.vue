@@ -175,10 +175,10 @@
       this.$nextTick(function () {
         if (this.editData.id) {
           console.log(this.editData)
-          this.changeType_(this.editData.dataType)
           this.dataForm = this.editData
           this.dataForm.sort = '1'
           this.dataForm.enable = this.editData.enable + ''
+          this.changeType_(this.editData.dataType)
           if (this.editData.image) {
           this.dataForm.image = this.editData.image;
           this.uploadAdvertList.push({url:this.editData.image})
@@ -207,6 +207,9 @@
         console.log(val);
         getMethod("/operate/get-advert-redirect-value?type=" + val).then(res => {
           this.relationList = res.data
+          if(this.relationList.length<=0){
+            this.dataForm.url=''
+          }
           console.log(res);
         });
       },
