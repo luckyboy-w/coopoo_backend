@@ -219,7 +219,6 @@
           exportParam.push(key + "=" + param[key]);
         }
         exportParam.push("token=" + getToken())
-        // console.log(process.env.VUE_APP_BASE_API_NEW + "/excel/goods-sku/export?" + exportParam.join("&"));
         window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/goods-sku/export?" + exportParam.join("&"));
       },
       editGood(row, disabled) {

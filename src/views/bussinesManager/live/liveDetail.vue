@@ -178,7 +178,6 @@
     },
     computed: {},
     mounted() {
-      console.log(this.editData, 'this.editData.')
       if (this.editData.operation == "add") {
         this.submitStatus = 1
       } else if (this.editData.operation == "edit") {
@@ -216,7 +215,6 @@
         this.form.liveEnd = this.liveDate[1]
       },
       enable(row,index) {
-        console.log("888",row)
         let scope = this
         if (row.status=="0") {
           postMethod('/live/enable-live-goods?liveGoodsId='+row.id).then(res => {
@@ -238,7 +236,6 @@
       },
       // 关联商品
       relatedGoods() {
-        console.log("关联商品")
         this.searchParam.pageNum = '1'
         this.loadGoodsList()
         this.showGoodsList = true
@@ -279,7 +276,6 @@
           window.open(newpage.href, '_blank');
       },
       submitUpdate(val) {
-        console.log(val)
         // return false
         this.$refs["form"].validate((valid) => {
           if (valid) {
@@ -317,7 +313,6 @@
               });
               return false
             }
-            console.log(param);
             // return false
             this.loading = true
             if (val == 1) {
@@ -333,7 +328,6 @@
               })
             } else if (val == 2) {
               param.liveId = this.editData.liveId
-              console.log(param,'编辑数据');
               // return false
               postMethod('/live/update-live', param).then(res => {
                 this.loading = false
@@ -370,7 +364,6 @@
       // 获取商品列表
       loadGoodsList() {
           postMethod("/goods/list", this.searchParam).then(res => {
-            console.log(this.bindingList,'已绑定的商品')
             this.tableData.list = res.data.records;
             this.tableData.total = res.data.total;
             this.showPagination = this.tableData.total == 0;
@@ -393,13 +386,11 @@
       },
       // 选择商品
       handleSelectionChange(val) {
-        console.log(val, 'val')
         let n = val.filter(item => !this.multipleSelection.includes(item));
         console.log(n); //本次新增的项
         this.multipleSelection = val;
       },
       selectThis(selection, row) {
-        console.log(selection,row);
         this.multipleSelection = selection
         this.bindingList.forEach((item,index)=>{
             if (row.goodsId==item.goodsId) {
@@ -408,7 +399,6 @@
           })
       },
       selectioncChange(selection){
-        console.log(selection,'改变');
       },
       currentPage(pageNum) {
           if (this.multipleSelection.length > 0) {
@@ -419,7 +409,6 @@
                }
              })
            })
-           console.log(this.multipleSelection,'this.multipleSelection')
           this.bindingList = this.bindingList.concat(this.multipleSelection)
         }
         this.searchParam.pageNum = pageNum;

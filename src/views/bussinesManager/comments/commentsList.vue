@@ -183,7 +183,6 @@ export default {
     },
     sendReply() {
       let scope = this
-      console.log(this.replyFrm);
       let param = {
         id:this.replyFrm.id,
         isShow:this.replyFrm.isShow,
@@ -227,7 +226,6 @@ export default {
       }
     },
     replyMsg(row) {
-      console.log(row, '这是回复')
       this.sendEval = true
       this.replyFrm = row
     },

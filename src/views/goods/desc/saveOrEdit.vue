@@ -70,7 +70,6 @@ export default {
       }
     })
     }
-    console.log('this.dataForm',this.dataForm);
     this.buildGoodImageGroupId();
   },
   methods: {
@@ -121,7 +120,6 @@ export default {
     },
     async addGoodDesc() {
       if (this.validate()) {
-        console.log(this.uploadGoodImageList)
         this.dataForm.fileList=this.uploadGoodImageList
         const res = await postMethod("/goods/post-sale/add", this.dataForm)
         this.$message.success("操作成功")

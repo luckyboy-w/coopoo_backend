@@ -129,7 +129,6 @@
       },
       //  上架下架
       enable(row) {
-        console.log("888",row)
         let scope = this
         if (row.isSale=="0") {
           getMethod('/goods/theme/on-sale-goods-theme', {goodsThemeId:row.id}).then(res => {
@@ -152,7 +151,6 @@
 
       // 首页编辑和详情
       homeEdit(row,val){
-        console.log(row,val,'列表参数')
         if (val==1) {
           getMethod('/goods/theme/outer-detail', {goodsThemeId:row.id}).then(res => {
 
@@ -175,7 +173,6 @@
       },
       // 内页编辑和详情
       insideEdit(row,val){
-        console.log(row,val,'列表参数')
         if (val==1) {
           getMethod('/goods/theme/inner-detail', {goodsThemeId:row.id}).then(res => {
             this.editData={}

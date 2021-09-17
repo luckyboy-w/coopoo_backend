@@ -102,7 +102,6 @@
         }
       },
       deleteOne(row) {
-        console.log("8888", row)
         let scope = this
         getMethod('/posts/filter-word/delete', {
           id: row.id

@@ -118,7 +118,6 @@
       };
     },
     mounted() {
-      console.log(this.detailData)
         this.loadList()
         this.supplierName=this.detailData.supplierName
     },
@@ -131,7 +130,6 @@
           scope.dataList.list = res.data.records
           scope.dataList.total = res.data.total;
           scope.showPagination = scope.dataList.total == 0;
-          console.log(scope.dataList, '8888')
         });
       },
       search(val) {
@@ -143,7 +141,6 @@
         this.loadList();
       },
       exportData(val) {
-        console.log(val);
         if (this.searchParam.startTime == null) {
           this.searchParam.startTime = ''
         }
@@ -157,7 +154,6 @@
           billMem: this.billMem,
           billType: this.billType
         }
-        console.log(param, 'param')
         let exportParam = [];
         for (let key in param) {
           exportParam.push(key + "=" + param[key]);
@@ -178,7 +174,6 @@
           billMem: this.billMem,
           tenantId: this.tenantId
         }
-        console.log(param, 'param')
         let exportParam = [];
         for (let key in param) {
           exportParam.push(key + "=" + param[key]);

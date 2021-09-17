@@ -123,11 +123,9 @@
       // 条件查询
       search() {
         let that = this
-        console.log(that.testName)
       },
       // 删除角色
       deleteRole(row){
-        console.log(row)
       },
       backToList() {
         this.isEdit = false

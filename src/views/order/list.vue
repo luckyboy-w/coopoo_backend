@@ -982,15 +982,12 @@
 
       //修改订单状态
       modifyState(row) {
-        console.log(row)
         this.currentOrderState = row.orderStatus,
         this.currentIsSendSevenDay = row.isSendSevenDay
         this.currentOrderNo = row.orderNo
         this.stateShow = true
       },
       enterState() {
-        console.log(this.currentOrderType,this.currentOrderState,this.states,this.currentOrderId,this.serialNumber)//选中的订单类型，选中的订单状态，要修改成的状态，订单id，支付流水号
-
         if (this.states == '') {
           this.$message({
             message: '请选择要修改的状态',
@@ -1013,7 +1010,6 @@
             })
             return false
           }
-          console.log(this.currentPayChannel)
           let param={
             orderNo:this.currentOrderNo,
             payChannel:this.currentPayChannel,
@@ -1263,7 +1259,6 @@
           })
           }
           scope.ordDtl = res.data
-          console.log(scope.ordDtl)
           // that.logisticsList = result
           scope.ptStep = false
           scope.dzStep = false

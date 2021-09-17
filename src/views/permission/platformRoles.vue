@@ -138,7 +138,6 @@
       // 删除角色
       deleteRole(row){
         let that = this
-        console.log(row)
         postMethod('/permission/delete-role', {id:row.id}).then(res => {
           that.loadRole()
           that.$message({
@@ -158,7 +157,6 @@
         this.loadRole()
       },
       editRole(row) {
-        console.log('row',row);
         const scope = this
         scope.roleName = row.name
         const param = {
@@ -193,7 +191,6 @@
         })
       },
       changeAccess(val, row) {
-        console.log("权限",val, row)
         if (row.parentId != '0') {
           if (val == 1) {
             //如果是非一級菜單被打開
@@ -266,7 +263,6 @@
           })
           return false;
         }
-        console.log(selectMenu,'selectMenu')
         if (this.rid=='') {
           scope.loading = true
         const param = {
@@ -312,7 +308,6 @@
         getMethod('/permission/get-permission-list', {
          accountType:1
         }).then(res => {
-          console.log(res,'res')
           scope.roleMenuData = res.data
           res.data.forEach(i => {
             i.isSelect="1"

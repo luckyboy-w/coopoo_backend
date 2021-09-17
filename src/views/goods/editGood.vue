@@ -749,7 +749,6 @@
               textList.splice(index,1)
             }
           })
-          console.log(textList,'textList')
           // return false
           this.dataForm.goodsSpecificationList = textList
           const param = this.dataForm
@@ -787,7 +786,6 @@
           try {
 
             await this.handleSaveAttrData()
-            console.log(param)
             const {
               data
             } = await postMethod('/goods/update', param)
@@ -973,17 +971,14 @@
         this.fillTableList()
         this.columnList = []
         this.tableList = []
-        console.log(this.dbAttrList,this.tableList)
         for (let i = this.dbAttrList.length - 1; i >= 0; i--) {
           this.tableList = this.addColumn(this.tableList, this.dbAttrList[i].specName, this.dbAttrList[i].skuObj)
         }
-        console.log(this.dbAttrList,this.tableList)
       },
 
       // 填充老数据
       fillTableList() {
         this.oldTableMap = new Map()
-        console.log(this.tableList,'888888')
         for (const skuInfo of this.tableList) {
           let fillData = {}
           let key = this.getKeyByTdList(skuInfo.tdList)
@@ -1000,7 +995,6 @@
 
       // 添加列
       addColumn(dataList, specName, specValue) {
-        console.log(dataList, specName, specValue,'zheshi')
         // 此属性规格是否有选中值 有的话 添加到动态列中
         let isAddColume = false
 
@@ -1039,7 +1033,6 @@
 
           // 进行乘积
           for (let j = 0; j < dataList.length; j++) {
-            console.log(dataList[j],'000000000')
             newDataList.push({
               tdList: [{
                 name: specName,

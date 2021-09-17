@@ -276,7 +276,6 @@
         this.isShowActivityDialog = false
       },
       selectPreheat(val) {
-        console.log(val)
         if (val == 2) {
           this.selectPreheatDisabled = true
         } else {
@@ -295,7 +294,6 @@
         this.activityForm.startTime = ''
       },
       firstActive() {
-        console.log("新人配置")
         getMethod('/operate/get-config-info').then(res => {
         this.isShowQuotaDialog = true
           this.activity_new_user_purchase_limit=res.data.activity_new_user_purchase_limit
@@ -306,7 +304,6 @@
         this.activity_new_user_purchase_limit=''
       },
       enterQuota() {
-        console.log("提交限购数");
         postMethod('/operate/set-config', {
           activity_new_user_purchase_limit:this.activity_new_user_purchase_limit
         }).then(res => {
@@ -318,7 +315,6 @@
         });
       },
       htmlShow(row){
-        console.log(row)
         this.htmlId=row.id
         getMethod('/activity/get-h5-url',{activityId:row.id}).then(res => {
           this.isShowHtmlDialog = true
@@ -331,7 +327,6 @@
         this.htmlId=''
       },
       enterHtml() {
-        console.log("提交链接");
         getMethod('/activity/update-h5-url', {
           id: this.htmlId,
           url:this.htmlUrl
@@ -345,7 +340,6 @@
         });
       },
       enable(val, row) {
-        console.log(val, row)
         if (val == "1") {
           getMethod('/activity/disable', {
             id: row.id
@@ -369,7 +363,6 @@
         }
       },
       change(val) {
-        console.log(val)
         this.activityDateTimePeriod = null
         this.activityForm = {
             activityType: val,
@@ -448,7 +441,6 @@
                 })
                 return false
               }
-              console.log(this.activityForm);
               // return false
               postMethod('/activity/addOrUpdate', this.activityForm).then(
                 res => {
@@ -484,7 +476,6 @@
               } else if (this.radio_ == 2) {
                 this.activityForm.isPermanent = '1'
               }
-              console.log(this.activityForm);
               // return false
               postMethod('/activity/add-or-update-new-user', this.activityForm).then(
                 res => {

@@ -168,7 +168,6 @@ export default {
       // this.resetFrm.id=row.id
       // this.resetFrm.loginName = row.loginAccount
       // this.showReset = true;
-      console.log('row',row);
       let param = {
         id:row.superAccount,
         newPwd:'123456'
@@ -194,7 +193,6 @@ export default {
         })
         return;
       }
-      console.log(this.resetFrm);
       delete this.resetFrm.loginName
       delete this.resetFrm.reppwd
       postMethod('/permission/change-password', this.resetFrm).then(res => {
@@ -206,7 +204,6 @@ export default {
       })
     },
     enableSupply(row) {
-      console.log(row.enable)
       if(row.enable=='0'){
       postMethod('/supplier/disable-supplier?id='+row.id).then(res => {
         this.loadList()

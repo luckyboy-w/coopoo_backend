@@ -127,13 +127,11 @@
         this.billOrd(row.pkBillId)
       },
       findBillDtl(row) {
-        console.log(row)
         let scope = this
         scope.detailData={
             supplierId:row.supplierId,
             supplierName:row.supplierName
         }
-        console.log(scope.detailData);
         scope.showList = false
       },
       currentPage(pageNum) {

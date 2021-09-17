@@ -478,7 +478,6 @@
             this.getSkuData(skuArr, i + 1, list); // 递归循环
           } else {
             skuArr[i] = this.getSkuKey(list[i][j]);
-            console.log([...skuArr]);
             let titleText = [...skuArr].join(";");
             let column = {
               skuText: titleText,

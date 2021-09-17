@@ -84,7 +84,6 @@
   export default {
     computed: {},
     mounted() {
-      console.log(this.$route.query)
       if (this.$route.query.startCreateTime != undefined) {
         this.searchParam.startCreateTime = this.$route.query.startCreateTime
         this.searchParam.endCreateTime = this.$route.query.endCreateTime
@@ -145,7 +144,6 @@
         }
       },
       enable(val,row){
-        console.log(val,row)
         if (val=="1") {
           getMethod('/posts/disable', {postsId:row.postsId}).then(res => {
             this.$message({

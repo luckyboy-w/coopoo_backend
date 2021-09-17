@@ -205,7 +205,6 @@ export default {
   },
 
   mounted() {
-    console.log(this.activity)
     if (this.activity.preheatStartTime&&this.activity.preheatStartTime!='') {
       this.activityGoodForm.preheatStartTime = new Date(this.activity.preheatStartTime)
     } else{
@@ -219,7 +218,6 @@ export default {
     // 加载商品
     initBindingList(){
       getMethod("/activity/marketing-goods/detail?activityId="+this.activity.id).then(res => {
-        console.log(res)
         if (res.data.length>=1) {
           this.flag='edit'
         } else{
@@ -228,18 +226,15 @@ export default {
         res.data.forEach(item=>{
         let obj={purchaseLimit:item.purchaseLimit,storeSettleRatio:item.storeSettleRatio,supplierSettleRatio:item.supplierSettleRatio,id:item.id}
         let table = this.loadTableList(item.activityGoodsSkuList,item.goodsName,item.goodsId,obj)
-        console.log(table,'table')
         table.table.map(i=>{
           i.maxStock=i.stock
         })
         this.tableList.push(table)
         })
-        console.log(this.tableList,'this.tableList')
       });
     },
     // 关联商品
     relatedGoods() {
-      console.log("关联商品")
       this.loadGoodsList()
       this.showGoodsList = true
     },
@@ -247,7 +242,6 @@ export default {
       if (this.multipleSelection.length>0) {
         this.multipleSelection.forEach(item=>{
         let table = this.loadTableList(item.skuList,item.goodsName,item.goodsId,{})
-        console.log(table,'table')
         table.table.map(i=>{
           i.maxStock=i.stock
         })
@@ -259,7 +253,6 @@ export default {
     },
     deleteGoods(table,num){
       let that = this
-      console.log(table,that.tableList,num,'row')
         that.tableList.map((item,index)=>{
         if (item.goodsId==table.goodsId) {
           that.tableList.splice(index,1)
@@ -279,7 +272,6 @@ export default {
       if (this.multipleSelection.length>0) {
         this.multipleSelection.forEach(item=>{
         let table = this.loadTableList(item.skuList,item.goodsName,item.goodsId,{})
-        console.log(table,'table')
         table.table.map(i=>{
           i.maxStock=i.stock
         })
@@ -302,19 +294,16 @@ export default {
     },
     // 选择商品
     handleSelectionChange(val) {
-      console.log(val,'val')
       let n = val.filter(item => !this.multipleSelection.includes(item));
       console.log(n); //本次新增的项
       this.multipleSelection = val;
     },
     selectThis(val){
-      console.log(val,'单个')
     },
     currentPage(pageNum) {
       if (this.multipleSelection.length>0) {
         this.multipleSelection.forEach(item=>{
         let table = this.loadTableList(item.skuList,item.goodsName,item.goodsId,{})
-        console.log(table,'table')
         table.table.map(i=>{
           i.maxStock=i.stock
         })
@@ -328,19 +317,16 @@ export default {
 
     // 新建标签跳详情
     getGoodsDtl(row) {
-      console.log(row, 'row')
       let newpage = this.$router.resolve({
         path: "/goods/list", //路径
         query: {
           goodsId: row.goodsId, //商品id
         }
       })
-      console.log(newpage, 'newpage')
       window.open(newpage.href, '_blank');
     },
 
    submit() {
-     console.log('tableList',this.tableList);
      // return false
       if (this.tableList.length == 0) {
         this.$message({
@@ -361,7 +347,6 @@ export default {
                   }
                 }
       const integerReg = /^\+?[1-9][0-9]*$/;
-      console.log('tableList',this.tableList);
       let marketingGoodList=[]
       // let marketingGoodsList = []
       let goodsObj
@@ -396,7 +381,6 @@ export default {
           }
           marketingGoodList.push(goodsObj)
       }
-      console.log(marketingGoodList,this.activity.id)
       // return false
       let param={
         goodsActivityId:this.activity.id,
@@ -477,7 +461,6 @@ export default {
 
     // 加载SKU表格的数据
     loadTableList(skuPriceList, goodsName, goodsId,objData) {
-      console.log(objData,'objData');
       let tempTableList = []
       let columnList = []
       for (let i = 0; i < skuPriceList.length; i++) {

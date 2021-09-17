@@ -89,7 +89,6 @@ export default {
   },
   computed: {},
   mounted() {
-    console.log(this.editData,'xainshi')
     this.dataForm = this.editData;
     this.$nextTick(()=>{
 

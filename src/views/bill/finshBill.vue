@@ -160,7 +160,6 @@
           startTime: this.searchParam.startTime,
           endTime: this.searchParam.endTime
         }
-        console.log(param, 'param')
         let exportParam = [];
         for (let key in param) {
           exportParam.push(key + "=" + param[key]);

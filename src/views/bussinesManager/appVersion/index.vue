@@ -113,7 +113,6 @@ export default {
 
     enable(val,id){
       let scope = this
-      console.log(val);
       if (val=="1") {
         postMethod('/operate/enable-version-info?id='+id).then(res => {
           this.loadList();

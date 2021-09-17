@@ -143,7 +143,6 @@ export default {
       }
     },
     async addOrEdit(oper,row) {
-    console.log(oper,row)
       if (oper == "edit") {
         const res = await getMethod('/goods/post-sale/detail?id='+row.id)
         this.editData = res.data;

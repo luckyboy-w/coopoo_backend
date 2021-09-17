@@ -167,7 +167,6 @@
           exportParam.push(key + "=" + param[key]);
         }
         exportParam.push("token=" + getToken())
-        // console.log(process.env.VUE_APP_BASE_API_NEW + "/excel/supplier-settlement/export?" + exportParam.join("&"));
         window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/supplier-settlement/export?" + exportParam.join("&"));
       },
       search() {
@@ -187,7 +186,6 @@
           scope.showList = false
       },
       billFee(row) {
-        console.log(row, '这是单号')
         let scope = this
         this.$confirm('是否确认完成结算?', '提示', {
           confirmButtonText: '确定',

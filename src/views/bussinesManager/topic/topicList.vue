@@ -117,7 +117,6 @@
         }
       },
       enable(val,row){
-        console.log(val,row)
         if (val=="1") {
           getMethod('/town-talk/disable', {subjectId:row.subjectId}).then(res => {
             this.$message({
@@ -138,7 +137,6 @@
       },
       goNotesList(row) {
           let scope = this;
-          console.log(row)
           scope.editData_ =row;
           this.showList = false;
           this.noteList = true;

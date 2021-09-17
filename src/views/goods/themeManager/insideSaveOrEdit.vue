@@ -174,13 +174,11 @@
       },
       dataEcho(){
         let arr=[]
-        console.log(this.editData.allData)
         this.editData.allData.forEach((item,index)=>{
           let echo = {}
           let imgList =[]
           item.goodsThemeProductVOList.forEach((i,iIndex)=>{
              if(i.type==1){
-              console.log(i,'1')
               imgList=imgList.concat(i.image)
               i.image[0].goodsId=i.goodsId
                echo={
@@ -191,9 +189,7 @@
                  videoCoverList:[],
                  type:"1",
                }
-               console.log(echo,'echo')
              }else if(i.type==2){
-               console.log(i,'2')
                echo={
                  goodsId:i.goodsId,
                  imageList:[],
@@ -202,16 +198,12 @@
                  videoCoverList:i.videoCover,
                  type:"2",
                }
-              console.log(echo,'echo')
              }else{
-               console.log(55555);
              }
              return
           })
-          console.log(echo,'8568746746')
           arr.push(echo)
         })
-        console.log(arr);
         this.addAttrParam=arr
       },
       buildGroupId(event) {
@@ -246,14 +238,12 @@
       },
       //上传成功回调
       handleVideoSuccess(res, file,attrItem,index) {
-        console.log('res, file,fileList,attrItem',res, file,attrItem,index)
         this.isShowUploadVideo = true
         this.videoFlag = false
         this.videoUploadPercent = 0
         this.getVideoMsg(file.raw).then((videoinfo) => {
           const { duration, height, width } = videoinfo;
           //获取到视频的时长,高度,宽度
-          console.log(duration, height, width)
           res.data.imgWidth=width
           res.data.imgHeight=height
         });
@@ -272,7 +262,6 @@
       handleVideoCoverSuccess(res, file,fileList,index) {
         this.addAttrParam[index].videoCoverList=[]
         this.asyncImgChecked(file.raw).then(data => {
-          console.log(data,'成功')
           res.data.imgWidth = data.width
           res.data.imgHeight = data.height
         });
@@ -286,9 +275,7 @@
         this.addAttrParam[index].videoCoverList=[]
       },
       handleImageSuccess(res, file,fileList,index) {
-        console.log(res, file,fileList,index,'成功');
         this.asyncImgChecked(file.raw).then(data => {
-          console.log(data,'成功')
           res.data.imgWidth = data.width
           res.data.imgHeight = data.height
         });
@@ -296,11 +283,9 @@
         res.data.fileType = file.raw.type
         res.data.sort = this.fileSortImage++
         this.addAttrParam[index].imageList=this.addAttrParam[index].imageList.concat(res.data)
-        console.log(this.addAttrParam[index].imageList,this.addAttrParam)
         this.allFileList.push(res.data)
       },
       handleImageRemove(i,sub) {
-        console.log(i,sub)
         this.addAttrParam[sub].imageList.map((item,index)=>{
           if (item.groupId==i.groupId) {
             this.addAttrParam[sub].imageList.splice(index,1)
@@ -308,7 +293,6 @@
         })
       },
       beforeImageUpload(file) {
-        console.log(file)
         // this.loading = true
         const fileTypeVerify =
           file.type === 'image/jpeg' ||
@@ -329,7 +313,6 @@
         this.dialogVisible = true
       },
       showBigImg(url) {
-		  console.log('123456',url);
         this.dialogImageUrl = url
         this.dialogVisible = true
       },
@@ -338,15 +321,6 @@
         let goodsThemeRowList=[]
         let fileArr=[]
         let sort = 0
-        // that.videoList,
-        // that.videoCoverList,
-        // that.imageList,
-        // that.addAttrParam,
-        // that.fileList,
-        console.log('that.videoList',that.videoList);
-        console.log('that.videoCoverList',that.videoCoverList);
-        console.log('that.addAttrParam',that.addAttrParam);
-        console.log('that.fileList',that.allFileList);
         that.addAttrParam.forEach((item,index)=>{
           let obj = {
             goodsId:'',
@@ -358,7 +332,6 @@
             video:'',
             videoCover:'',
           }
-          console.log(item.imageList,item.videoCoverList,item.videoList)
           if (item.imageList.length<=0&&item.videoCoverList.length<=0&&item.videoList.length<=0) {
             let num=index+1
             this.$message({
@@ -369,7 +342,6 @@
           }
           if (item.type==1) {
             item.imageList.map((i,iIndex)=>{
-              console.log(item,i,iIndex,'i')
               obj = {
                 goodsId:i.goodsId,
                 goodsThemeId:that.goodsThemeId,
@@ -396,7 +368,6 @@
           }
           return false
         })
-        console.log('goodsThemeRowList',goodsThemeRowList,fileArr);
         let param = {
           fileList:fileArr,
           goodsThemeRowList:goodsThemeRowList
@@ -413,7 +384,6 @@
 
       },
       deleteAttrNameInput(attrItem,index){
-        console.log(attrItem,index)
         this.addAttrParam.splice(index,1)
 
       },
@@ -434,7 +404,6 @@
        getVideoMsg(file) {
                 return new Promise((resolve) => {
                   let videoElement = document.createElement("video");
-                  console.log(videoElement,file,'1111')
                   videoElement.src = URL.createObjectURL(file);
                   videoElement.addEventListener("loadedmetadata", function () {
                     resolve({

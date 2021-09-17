@@ -157,7 +157,6 @@ export default {
       this.showSave = true
     },
     deleteGoods(row){
-      console.log(row,'row')
       getMethod("/activity/marketing-goods/remove?id="+row.id).then(res => {
         this.$message({
           message: "操作成功",

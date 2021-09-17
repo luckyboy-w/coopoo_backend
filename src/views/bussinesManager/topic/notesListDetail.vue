@@ -72,7 +72,6 @@
   export default {
     computed: {},
     mounted() {
-      console.log(this.editData_)
       this.searchParam.subjectId=this.editData_.subjectId
       this.initLoad();
     },
@@ -135,7 +134,6 @@
         }
       },
       enable(val,row){
-        console.log(val,row)
         if (val=="1") {
           getMethod('/posts/disable', {postsId:row.postsId}).then(res => {
             this.$message({

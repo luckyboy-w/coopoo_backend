@@ -73,7 +73,6 @@ export default {
   },
   methods: {
     switchData(){
-      console.log(123)
       this.loadData()
     },
     changeContent(val){

@@ -107,7 +107,6 @@ export default {
         const lnglat = [e.lnglat.lng, e.lnglat.lat]
         this.marker.setPosition(lnglat)
         this.geocoder.getAddress(lnglat, (status, result) => {
-          console.log(result,'result')
           if (status === 'complete' && result.regeocode) {
             const res = result.regeocode
             const data = {
@@ -207,19 +206,16 @@ export default {
     // 按钮触发检索
     handelSearch() {
       this.placeSearch.search(this.searchValue, (status, info) => {
-        console.log(info,'info')
         this.searchInfoList = info.poiList.pois
       })
     },
     // 选择自动提示数据事件回调
     onSelectAutocomplete(e) {
-      console.log(e,'78789')
       this.searchValue = e.poi.name
       this.handelSearch()
     },
     // 选择检索数据结果事件回调
     onSelectSearch(e) {
-      console.log(e,'检索结果')
       const res = e.data
       this.formattedAddress = res.cityname + res.adname + res.address
       this.name = res.name

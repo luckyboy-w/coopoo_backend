@@ -496,7 +496,6 @@
       },
       //跳转订单详情
       toOrderDtl(row) {
-        console.log(row)
         let scope = this
         scope.orderNo=row.orderNo
         scope.showList = false
@@ -557,7 +556,6 @@
       },
       loadDtlList(row) {
         let scope = this;
-        console.log(row)
         scope.memberName=row.userName
         scope.searchDtlParam.memberId=row.pkMemberId
         postMethod('/order/goods-order-list', scope.searchDtlParam).then(res => {

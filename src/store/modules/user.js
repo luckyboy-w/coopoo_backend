@@ -57,7 +57,6 @@ const actions = {
   },
   // user login
   login({ commit }, userInfo) {
-	  console.log('进来',userInfo)
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
@@ -121,7 +120,6 @@ const actions = {
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {
-		console.log(123456)
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
       removeToken()

@@ -124,7 +124,6 @@
     mounted() {
       this.$nextTick(function() {
         if (this.editData.id) {
-          console.log(this.editData)
           this.dataForm = this.editData
           this.initDefaultImage()
           if (this.editData.disabled) {
@@ -157,7 +156,6 @@
              })
              return false;
            }
-           console.log(Number(this.dataForm.buyLimit)>Number(this.dataForm.stock))
            if (Number(this.dataForm.buyLimit)>Number(this.dataForm.stock)) {
              this.$message({
                message: '限购数不能大于库存',
@@ -166,7 +164,6 @@
              return false;
            }
           this.dataForm.imageList = this.uploadImgList
-           console.log('form',this.dataForm);
           if (this.editData.id) {
             this.dataForm.id=this.editData.id
             postMethod('/coupon/update-coupon-info', this.dataForm).then(

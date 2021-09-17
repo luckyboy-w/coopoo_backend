@@ -332,7 +332,6 @@
       changeDate(val) {
         this.weekValue=''
         this.monthValue=''
-        console.log(val)
         this.dateType = val
         this.searchParam = {
           type: val,
@@ -345,7 +344,6 @@
         this.weekValue = val
         let tempDate = new Date(val)
         let beforeDate = tempDate.setDate(tempDate.getDate() + 5)
-        console.log(beforeDate, 'beforeDate', formatDate(new Date(beforeDate), 'yyyy-MM-dd'))
         this.searchParam = {
           type: 4,
           date: formatDate(new Date(beforeDate), 'yyyy-MM-dd')
@@ -354,7 +352,6 @@
       },
       changeMonth(val) {
         this.weekValue=''
-        console.log(val)
         this.monthValue = val
         let date = new Date(val)
         let year = date.getFullYear()
@@ -368,7 +365,6 @@
         this.loadCharts()
       },
       dataType(val) {
-        console.log(val)
         this.radio1 = val
         if (val == '1') {
           let chartsData = {
@@ -413,7 +409,6 @@
       },
       loadCharts() {
         getMethod('/home/home-count-chart', this.searchParam).then(res => {
-          console.log(res)
           this.startCountTime = res.data.startCountTime
           this.endCountTime = res.data.endCountTime
           this.noteNum = res.data.noteNum
@@ -436,12 +431,9 @@
             this.noteNumList.push(item.noteNum)
           })
           this.dataType(this.radio1)
-          console.log(this.showText, this.orderPayNumList, this.orderPayMoneyList, this.registerMemberNumList, this
-            .settleMoneyList, this.noteNumList)
         })
       },
       chartData(data) {
-        console.log(data, 'data')
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('main'));
         // 绘制图表

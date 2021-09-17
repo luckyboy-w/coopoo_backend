@@ -606,7 +606,6 @@
     },
     computed: {},
     mounted() {
-      console.log(this.editData, 'this.editData.')
       if (this.editData.goodsThemeId) {
         this.dataEcho()
         this.changeImg()
@@ -628,7 +627,6 @@
       changeImg() {
         this.themeData.map(i => {
           if (this.form.type == i.value) {
-            console.log(123456)
             this.templateImg = i.url
             this.showNum = i.showNum
             this.showVideo = i.showVideo ? i.showVideo : false
@@ -646,7 +644,6 @@
       changeFileType(val) {
         let scope = this
         if (this.form.fileType == 1) {
-          console.log("图片")
           scope.modularVideo=''
           scope.uploadModularVideoList = []
           scope.uploadVideoCoverList = []
@@ -654,7 +651,6 @@
           scope.uploadSecondImageList = []
           scope.uploadThirdImageList = []
         } else if (this.form.fileType == 2) {
-          console.log("视频")
           scope.uploadMainImageList = []
           scope.uploadFirstImageList = []
           scope.uploadSecondImageList = []
@@ -679,7 +675,6 @@
             that.uploadMainImageList = i.imageUrlFileList
           }
           if (i.sort == 0 && that.editData.fileType == 2) {
-            console.log(i.videoUrlFileList, i.videoCoverImgUrlFileList)
             that.modularVideo = i.videoUrlFileList[0].url
             that.uploadModularVideoList = i.videoUrlFileList
             that.uploadVideoCoverList = i.videoCoverImgUrlFileList
@@ -698,7 +693,6 @@
       },
       // 关联商品
       relatedGoods() {
-        console.log("关联商品")
         this.loadGoodsList()
         if (this.form.goodsType == 1) {
           this.showGoodsList = true
@@ -721,7 +715,6 @@
                  }
                })
              })
-             console.log(this.multipleSelection,'this.multipleSelection')
             this.bindingList = this.bindingList.concat(this.multipleSelection)
           }
           this.showGoodsList = false
@@ -734,7 +727,6 @@
                  }
                })
              })
-             console.log(this.multipleSelection,'this.multipleSelection')
             this.bindingList_ = this.bindingList_.concat(this.multipleSelection)
           }
           this.showGoodsList_ = false
@@ -761,7 +753,6 @@
       },
       // 新建标签跳详情
       getGoodsDtl(row) {
-        console.log(row, 'row')
         if (this.form.goodsType == 1) {
           let newpage = this.$router.resolve({
             path: "/goods/list", //路径
@@ -769,7 +760,6 @@
               goodsId: row.goodsId, //商品id
             }
           })
-          console.log(newpage, 'newpage')
           window.open(newpage.href, '_blank');
         } else if (this.form.goodsType == 2) {
           let newpage = this.$router.resolve({
@@ -778,12 +768,10 @@
               id: row.id, //商品id
             }
           })
-          console.log(newpage, 'newpage')
           window.open(newpage.href, '_blank');
         }
       },
       submitUpdate(val) {
-        console.log(val)
         // return false
         this.$refs["form"].validate((valid) => {
           if (valid) {
@@ -793,7 +781,6 @@
             let themeItemList = []
             let goodsData = []
             // this.$refs["form"].validate((valid) => {
-            console.log(scope.form)
 
 
             fileList = fileList.concat(scope.uploadModularVideoList)
@@ -805,7 +792,6 @@
             videoFileImg = videoFileImg.concat(scope.uploadFirstImageList)
             videoFileImg = videoFileImg.concat(scope.uploadSecondImageList)
             videoFileImg = videoFileImg.concat(scope.uploadThirdImageList)
-            console.log(fileList, this.form.fileType, 'filelist')
 
             if (this.form.fileType == 1) {
               fileList.forEach(i => {
@@ -817,14 +803,12 @@
                 themeItemList = themeItemList.concat(obj)
               })
             } else if (this.form.fileType == 2) {
-              console.log(this.form)
               let obj = {
                 sort: 0,
                 type: 2,
                 video: scope.uploadModularVideoList.length >= 1 ? scope.uploadModularVideoList[0].groupId : '',
                 videoCoverImg: scope.uploadVideoCoverList.length >= 1 ? scope.uploadVideoCoverList[0].groupId : ''
               }
-              console.log(123456)
               themeItemList = themeItemList.concat(obj)
               videoFileImg.forEach(i => {
                 let obj_ = {
@@ -891,7 +875,6 @@
               });
               return false
             }
-            console.log(this.form);
             this.loading = true
             if (val == 1) {
               postMethod('/goods/theme/publish', this.form).then(res => {
@@ -950,7 +933,6 @@
         this.isShowUploadVideo = true
         this.videoFlag = false
         this.videoUploadPercent = 0
-        console.log(res, file, 'res')
         res.data.fileType = file.raw.type
         res.data.sort = this.fileSortImage++
         this.modularVideo = res.data.url
@@ -964,7 +946,6 @@
         }
       },
       handleGoodVideoRemove(res) {
-        console.log('res删除', res)
         this.modularVideo = ''
         this.uploadModularVideoList = []
       },
@@ -976,7 +957,6 @@
       },
       // 上传前校验
       beforeImageUpload(file) {
-        console.log("before")
         const fileTypeVerify =
           file.type === 'image/jpeg' ||
           file.type === 'image/png' ||
@@ -992,7 +972,6 @@
       },
       // 上传成功
       handleImageSuccess(res, file, fileList, d) {
-        console.log(res, file, fileList, d)
         this.loading = false
         res.data.fileType = file.raw.type
         if (d == 'mainImage') {
@@ -1072,7 +1051,6 @@
         this.block()
       },
       handleVideoCoverRemove(file, fileList) {
-        console.log(file, fileList)
         this.uploadVideoCoverList = []
         this.block()
       },
@@ -1099,7 +1077,6 @@
                  }
                })
              })
-             console.log(this.multipleSelection,'this.multipleSelection')
             this.bindingList = this.bindingList.concat(this.multipleSelection)
           }
           this.searchParam.status= '0'
@@ -1112,7 +1089,6 @@
                  }
                })
              })
-             console.log(this.multipleSelection,'this.multipleSelection')
             this.bindingList_ = this.bindingList_.concat(this.multipleSelection)
           }
           this.searchParam.status= ''
@@ -1122,7 +1098,6 @@
       },
       // 获取商品列表
       loadGoodsList() {
-        console.log(this.bindingList,this.bindingList_)
         if (this.form.goodsType == 1) {
           postMethod("/goods/list", this.searchParam).then(res => {
             this.tableData.list = res.data.records;
@@ -1167,7 +1142,6 @@
           })
       },
       selectThis(selection, row) {
-        console.log(selection,row);
         this.multipleSelection = selection
         if (this.form.goodsType == 1) {
           this.bindingList.forEach((item,index)=>{
@@ -1185,7 +1159,6 @@
 
       },
       selectioncChange(selection){
-        console.log(selection,'改变');
       },
       currentPage(pageNum) {
         if (this.form.goodsType == 1) {
@@ -1197,7 +1170,6 @@
                  }
                })
              })
-             console.log(this.multipleSelection,'this.multipleSelection')
             this.bindingList = this.bindingList.concat(this.multipleSelection)
           }
         } else if (this.form.goodsType == 2) {
@@ -1209,7 +1181,6 @@
                  }
                })
              })
-             console.log(this.multipleSelection,'this.multipleSelection')
             this.bindingList_ = this.bindingList_.concat(this.multipleSelection)
           }
         }

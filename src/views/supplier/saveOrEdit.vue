@@ -171,13 +171,11 @@ import addressData from "@/utils/address.json"
 export default {
   computed: {},
   mounted() {
-    console.log(addressData,'addressData');
     this.loadprovinceList();
     this.buildLicenseImgGroupId();
     this.buildPersonNoFrontImgGroupId();
     this.buildpersonNoSideImgGroupId();
     this.buildProtocalFileGroupId();
-        console.log(this.editData);
     this.$nextTick(function () {
       if (this.editData.id) {
         this.dataForm = this.editData;
@@ -351,7 +349,6 @@ export default {
   },
   methods: {
     handlePreview(file) {
-      console.log(file);
       window.open(file.url)
     },
     loadprovinceList() {
@@ -389,7 +386,6 @@ export default {
           imageCnt++;
         }
       }
-      console.log(imageCnt)
       if (imageCnt >= 1) {
         this.hideLicenseImgUpload = true;
       }
@@ -545,7 +541,6 @@ export default {
     handleProtocalFilePreview() {
     },
     handleProtocalFileRemove(res) {
-      console.log(res,this.uploadProtocalFileList);
       for (let i = 0; i < this.uploadProtocalFileList.length; i++) {
         if (
           this.uploadProtocalFileList[i].url == (res.url || res.response.data.url)
@@ -666,7 +661,6 @@ export default {
     saveObject() {
       this.submitLoading = true
       let scope = this;
-      console.log('dataform',this.dataForm);
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
           delete this.dataForm.createTime;
@@ -676,7 +670,6 @@ export default {
           Object.keys(this.dataForm).forEach(item=>{
               if(!this.dataForm[item])  delete this.dataForm[item]
           })
-          console.log('dataform',this.dataForm);
           let fileList = [];
           fileList = fileList.concat(this.uploadLicenseImgList);
           fileList = fileList.concat(this.uploadPersonNoFrontImgList);
@@ -684,7 +677,6 @@ export default {
           fileList = fileList.concat(this.uploadProtocalFileList);
           // this.dataForm.fileJsonStr = JSON.stringify(fileList);
           // this.dataForm.files = [];
-          console.log('11111',this.dataForm);
           if(this.dataForm.id&&this.dataForm.id!=''){
             postMethod("/supplier/update-supplier", this.dataForm).then(
               res => {

@@ -174,7 +174,6 @@
       this.buildAdvertGroupId();
       this.$nextTick(function () {
         if (this.editData.id) {
-          console.log(this.editData)
           this.dataForm = this.editData
           this.dataForm.sort = '1'
           this.dataForm.enable = this.editData.enable + ''
@@ -193,24 +192,20 @@
     created() {},
     methods: {
       changeType(val) {
-        console.log(val);
         getMethod("/operate/get-advert-redirect-value?type=" + val).then(res => {
           this.dataForm.url = ''
           if (val == 4) {
             this.$refs.refEditor.richText = ''
           }
           this.relationList = res.data
-          console.log(res);
         });
       },
       changeType_(val) {
-        console.log(val);
         getMethod("/operate/get-advert-redirect-value?type=" + val).then(res => {
           this.relationList = res.data
           if(this.relationList.length<=0){
             this.dataForm.url=''
           }
-          console.log(res);
         });
       },
       changeContent(val) {
@@ -236,7 +231,6 @@
           'block'
       },
       handleAdvertSuccess(res, file) {
-        console.log(res, file)
         this.dataForm.image = res.data.url
         res.data.fileType = file.raw.type;
         res.data.sort = this.fileSortImage++;
@@ -254,7 +248,6 @@
               .display = 'none'
           })
         }
-        console.log(this.uploadAdvertList)
       },
       beforeAdvertUpload(file) {
         const fileTypeVerify =
@@ -292,7 +285,6 @@
         //   fileList = fileList.concat(this.uploadAdvertList);
         //   this.dataForm.fileJsonStr = JSON.stringify(fileList);
         //   this.dataForm.files = [];
-        console.log(this.dataForm)
         // return false
         if (this.editData.id&&this.editData.id!='') {
           postMethod("/operate/update-advert", this.dataForm).then(
@@ -319,7 +311,6 @@
         }
       },
       validate() {
-        console.log(this.dataForm)
         let notNvl = ["name", "location",'image',];
         for (let i = 0; i < notNvl.length; i++) {
           if (this.dataForm[notNvl[i]] == "") {

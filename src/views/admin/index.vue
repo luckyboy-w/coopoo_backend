@@ -141,7 +141,6 @@
           });
           return;
         }
-        console.log(this.resetFrm,"resetFrm")
         let param= {
           id:this.resetFrm.id,
           newPwd:this.resetFrm.password
@@ -157,7 +156,6 @@
       },
       //  启用禁用
       enable(row) {
-        console.log("888",row)
         let scope = this
         if (row.enable=="1") {
           postMethod('/permission/enable-account', {id:row.id}).then(res => {
@@ -188,7 +186,6 @@
         this.resetFrm.id = row.id
       },
       editSysUser(row) {
-		  console.log(row)
         let param = {
           id: row.id
         }

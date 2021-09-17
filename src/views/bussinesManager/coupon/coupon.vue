@@ -117,7 +117,6 @@
     created() {},
     methods: {
       updateEnable(row) {
-        console.log(row.isSale)
         if (row.isSale == '1') {
           postMethod('/coupon/down-shelves',{id:row.id}).then(res => {
             this.loadList()

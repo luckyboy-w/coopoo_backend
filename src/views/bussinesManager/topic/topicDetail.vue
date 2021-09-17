@@ -50,7 +50,6 @@
       qEditor
     },
     mounted() {
-      console.log(this.editData)
       this.$nextTick(function() {
         if (this.editData.subjectId) {
           this.isDisabled=this.editData.isDisabled
@@ -109,7 +108,6 @@
         this.hideAdvertUpload=false
       },
       handleAdvertSuccess(res, file) {
-        console.log(res, file)
         this.dataForm.subjectImage = res.data.url
         res.data.fileType = file.raw.type;
         res.data.sort = this.fileSortImage++;
@@ -124,7 +122,6 @@
         if (this.uploadAdvertList.length >= 1) {
           this.hideAdvertUpload=true
         }
-        console.log(this.uploadAdvertList)
       },
       beforeAdvertUpload(file) {
         const fileTypeVerify =
@@ -148,7 +145,6 @@
           delete this.dataForm.createBy;
 		  delete this.dataForm.relPosts;
 		  delete this.dataForm.subjectStatus;
-          console.log(this.dataForm)
           // return false
           postMethod("/town-talk/add-or-update", this.dataForm).then(res => {
             this.$message({

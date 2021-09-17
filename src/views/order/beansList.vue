@@ -714,7 +714,6 @@
     mounted() {
       // this.getRoute()
       if (this.$route.query.orderStatus != undefined) {
-        console.log(11111)
             this.searchParam.orderStatus = this.$route.query.orderStatus
           }
       this.initLoad()
@@ -775,7 +774,6 @@
         })
       },
       settlement(row){
-        console.log(row)
         this.$confirm('是否确认结算?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -1072,7 +1070,6 @@
               spinner: 'el-icon-loading',
               background: 'rgba(0, 0, 0, 0.7)'
             })
-            console.log(this.sendOrderFrm)
             delete this.sendOrderFrm.sendAddress
             postMethod('/order/offline-send-order', this.sendOrderFrm).then(res => {
               if (res.errCode != 0) {
@@ -1101,7 +1098,6 @@
         const {
           data
         } = await getMethod("/operate/get-config-info-by-type?type=send_address")
-        console.log(data)
         this.sendOrderFrm.sendAddress = data.value
       },
       cancelStock() {

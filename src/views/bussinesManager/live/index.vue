@@ -115,7 +115,6 @@
       },
       //  刪除
       deleteLive(row) {
-        console.log("888",row)
         let scope = this
           postMethod('/live/delete-live?liveId='+row.liveId).then(res => {
             scope.loadLive()
@@ -128,7 +127,6 @@
 
       // 首页编辑和详情
       toLiveDetail(row,val){
-        console.log(row,val,'列表参数')
         if (val==1) {
           getMethod('/live/get-live-detail', {liveId:row.liveId}).then(res => {
           this.editData=res.data

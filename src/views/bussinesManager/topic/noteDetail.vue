@@ -105,11 +105,9 @@
       qEditor
     },
     mounted() {
-      console.log(this.editData)
       this.$nextTick(function() {
           this.dataForm = this.editData;
           this.postStatus=this.editData.postStatus
-          console.log(this.postStatus)
           this.hideAdvertUpload=true
       });
       this.loadList()
@@ -172,7 +170,6 @@
         }
       },
       enable(val,row){
-        console.log(val,row)
         if (val=="1") {
           postMethod('/posts-comment/disable?id='+row.id).then(res => {
             this.$message({

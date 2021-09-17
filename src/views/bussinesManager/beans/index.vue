@@ -223,7 +223,6 @@
       changeType() {
         getMethod("/operate/get-advert-redirect-value?type=3").then(res => {
           this.relationList = res.data
-          console.log(res);
         });
       },
       loadData() {
@@ -235,9 +234,7 @@
         );
       },
       submit(){
-        console.log(this.dataForm)
         postMethod("/operate/set-config",this.dataForm).then(res => {
-          console.log(res);
           this.$message({
             message: "操作成功",
             type: "success"

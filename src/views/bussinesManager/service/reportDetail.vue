@@ -87,7 +87,6 @@
       qEditor
     },
     mounted() {
-      console.log("123456", this.editData)
       this.$nextTick(function() {
         this.dataForm = this.editData;
         this.isDisabled = true
@@ -179,7 +178,6 @@
         }
       },
       enable(val){
-        console.log(val)
         if (val=="1") {
           postMethod('/posts-comment/disable?id='+this.dataForm.reportObjectId).then(res => {
             this.$message({

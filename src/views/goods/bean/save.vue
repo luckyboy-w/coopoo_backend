@@ -118,7 +118,6 @@
     },
     mounted() {
       const scope = this
-      console.log(this.editData);
       this.buildFrontImageGroupId()
       this.buildGoodsImageGroupId()
       this.loadGoodSaleDescList()
@@ -372,7 +371,6 @@
             fileList = fileList.concat(this.uploadFrontImageList)
             this.dataForm.goodsImageList=this.uploadGoodsImageList
             this.dataForm.frontImage=this.uploadFrontImageList[0]
-            console.log(this.dataForm);
 
             if (this.editData.goodsId) {
               this.dataForm.goodsId=this.editData.goodsId

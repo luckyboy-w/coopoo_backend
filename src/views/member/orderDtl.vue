@@ -299,7 +299,6 @@
       }
     },
     mounted() {
-      console.log(this.orderNo)
       this.initLoad()
     },
     created() {},

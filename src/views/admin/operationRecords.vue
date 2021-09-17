@@ -109,7 +109,6 @@
             }
           }
         }
-        console.log(this.menuList,'this.menuList')
       },
       search() {
         this.searchParam.pageSize = 10

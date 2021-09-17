@@ -92,10 +92,8 @@
     created() {},
     methods: {
       pickMonthDate(val){
-        console.log(val)
       },
       monthSubmit(){
-        console.log(this.monthDate);
         if (this.monthDate==''||!this.monthDate) {
           this.$message({
             message: "结算月份不能为空",
@@ -169,8 +167,6 @@
         );
       },
       saveObject() {
-        // console.log(this.dataForm.cash_store_date,this.dataForm.cash_supplier_date,'88888')
-        // console.log(this.format(this.dataForm.cash_store_date),this.format(this.dataForm.cash_supplier_date));
         let param = {
           cash_store_count: this.dataForm.cash_store_count,
           cash_store_date: this.format(this.dataForm.cash_store_date),

@@ -94,9 +94,7 @@
     computed: {},
     mounted() {
       this.loadRole()
-      console.log(this.editData,'this.editData')
       if (this.editData.id) {
-        console.log(this.editData.id)
         this.disabledLoginName = true
         this.form = this.editData
         this.showPwd = false
@@ -126,7 +124,6 @@
             }
             // this.loading = true
             delete this.form.reppwd
-            console.log(this.editData.id)
             if (!this.editData.id||this.editData.id=='') {
               postMethod('/permission/add-account', this.form).then(res => {
               this.loading = false

@@ -58,7 +58,6 @@
       qEditor
     },
     mounted() {
-      console.log(123456)
       this.$nextTick(function() {
         if (this.editData.id) {
           this.isDisabled=true
@@ -122,7 +121,6 @@
         this.hideAdvertUpload=false
       },
       handleAdvertSuccess(res, file) {
-        console.log(res, file)
         this.dataForm.img = res.data.url
         res.data.fileType = file.raw.type;
         res.data.sort = this.fileSortImage++;
@@ -137,7 +135,6 @@
         if (this.uploadAdvertList.length >= 1) {
           this.hideAdvertUpload=true
         }
-        console.log(this.uploadAdvertList)
       },
       beforeAdvertUpload(file) {
         const fileTypeVerify =
@@ -166,8 +163,6 @@
           }
           delete this.dataForm.createTime;
           delete this.dataForm.createBy;
-          console.log(this.dataForm)
-          // return false
           postMethod("/operate/send-active-info", this.dataForm).then(res => {
             this.$message({
               message: "操作成功",

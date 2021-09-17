@@ -222,7 +222,6 @@ export default {
   created() {},
   methods: {
     updateEnable(row) {
-      console.log(row.enable)
       if(row.enable=='0'){
       postMethod('/store/disable-store?id='+row.id).then(res => {
         this.loadList()
