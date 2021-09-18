@@ -5,34 +5,28 @@
         <div class="tabTd">
           <div>标题：</div>
           <div>
-            <el-select v-model="searchParam.postsTitle" placeholder="请选择">
-              <el-option value="" label="全部"></el-option>
-              <el-option value="1" label="已回复"></el-option>
-              <el-option value="0" label="未回复"></el-option>
-            </el-select>
+            <el-input v-model="searchParam.postsTitle" placeholder="请输入" width="180px" />
           </div>
         </div>
         <div class="tabTd">
           <div>用户名称：</div>
           <div>
-           <el-input v-model="searchParam.userName" placeholder="请输入" width="180px" />
+            <el-input v-model="searchParam.userName" placeholder="请输入" width="180px" />
           </div>
         </div>
-		<div class="tabTd">
-		  <div>发布时间：</div>
-		  <div>
-		    <el-date-picker v-model="searchParam.startCreateTime" value-format="yyyy-MM-dd" type="date"
-		                      placeholder="选择开始日期"
-		      /> &nbsp;&nbsp;至&nbsp;&nbsp;
-		      <el-date-picker v-model="searchParam.endCreateTime" value-format="yyyy-MM-dd" type="date"
-		                      placeholder="选择结束日期"
-		      />
-		  </div>
-		</div>
+        <div class="tabTd">
+          <div>发布时间：</div>
+          <div>
+            <el-date-picker v-model="searchParam.startCreateTime" value-format="yyyy-MM-dd" type="date"
+              placeholder="选择开始日期" /> &nbsp;&nbsp;至&nbsp;&nbsp;
+            <el-date-picker v-model="searchParam.endCreateTime" value-format="yyyy-MM-dd" type="date"
+              placeholder="选择结束日期" />
+          </div>
+        </div>
         <div class="tabTd">
           <el-button type="primary" @click="search()" icon="el-icon-search">搜索</el-button>
         </div>
-       </div>
+      </div>
       <div class="ly-table-panel">
         <div class="ly-data-list">
           <el-table ref="mainTable" :data="tableData.list" style="width: 100%;margin-bottom: 20px;" row-key="id" border
@@ -42,9 +36,9 @@
             <el-table-column prop="postTitle" label="标题"></el-table-column>
             <el-table-column prop="subjectName" label="话题"></el-table-column>
             <el-table-column prop="memberNickname" label="用户名称"></el-table-column>
-            <el-table-column prop="collectCount" label="收藏数" ></el-table-column>
-            <el-table-column prop="likesCount" label="点赞数" ></el-table-column>
-            <el-table-column prop="commentCount" label="评论数" ></el-table-column>
+            <el-table-column prop="collectCount" label="收藏数"></el-table-column>
+            <el-table-column prop="likesCount" label="点赞数"></el-table-column>
+            <el-table-column prop="commentCount" label="评论数"></el-table-column>
             <el-table-column prop="createTime" label="发布时间" width="150px">
               <template slot-scope="scope">
                 {{scope.row.createTime | fmtDateStr}}
@@ -54,8 +48,10 @@
               <template slot-scope="scope">
                 <el-button @click="addOrEdit('detail',scope.$index, tableData)" type="text" size="small">查看</el-button>
                 <el-divider direction="vertical"></el-divider>
-                <el-button v-if="scope.row.postStatus==1" @click="enable('1',scope.row)" type="text" size="small">禁用</el-button>
-                <el-button v-if="scope.row.postStatus==0" @click="enable('0',scope.row)" type="text" size="small">启用</el-button>
+                <el-button v-if="scope.row.postStatus==1" @click="enable('1',scope.row)" type="text" size="small">禁用
+                </el-button>
+                <el-button v-if="scope.row.postStatus==0" @click="enable('0',scope.row)" type="text" size="small">启用
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -108,10 +104,10 @@
         showPagination: false,
         editData: {},
         searchParam: {
-          startCreateTime:'',
-          endCreateTime:"",
-          postsTitle:'',
-          userName:'',
+          startCreateTime: '',
+          endCreateTime: "",
+          postsTitle: '',
+          userName: '',
           pageSize: 10,
           pageNum: 1
         },
@@ -143,23 +139,27 @@
           this.showAddOrEdit = true;
         }
       },
-      enable(val,row){
-        if (val=="1") {
-          getMethod('/posts/disable', {postsId:row.postsId}).then(res => {
+      enable(val, row) {
+        if (val == "1") {
+          getMethod('/posts/disable', {
+            postsId: row.postsId
+          }).then(res => {
             this.$message({
               message: "禁用成功",
               type: "success"
             });
             this.loadList();
           });
-        } else if(val=="0"){
-        getMethod('/posts/enable', {postsId:row.postsId}).then(res => {
-          this.$message({
-            message: "启用成功",
-            type: "success"
+        } else if (val == "0") {
+          getMethod('/posts/enable', {
+            postsId: row.postsId
+          }).then(res => {
+            this.$message({
+              message: "启用成功",
+              type: "success"
+            });
+            this.loadList();
           });
-          this.loadList();
-        });
         }
       },
       showListPanel(isCancel) {
@@ -206,12 +206,13 @@
         display: inline;
       }
     }
-    .tabTd {
-       display: flex;
-       flex-wrap: nowrap;
-       margin: 7px 10px;
-       align-items: center;
 
-     }
+    .tabTd {
+      display: flex;
+      flex-wrap: nowrap;
+      margin: 7px 10px;
+      align-items: center;
+
+    }
   }
 </style>
