@@ -36,6 +36,12 @@
                 label="靠谱家用户协议"
                 value="user_agreement"
             ></el-option>
+			<el-option
+			    key="posts_notice"
+			    value-key="posts_notice"
+			    label="帖子告示"
+			    value="posts_notice"
+			></el-option>
         </el-select>
       </el-form-item>
      <el-form-item label="内容">
