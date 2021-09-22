@@ -65,6 +65,7 @@
             @current-change="currentPage"
             @prev-click="currentPage"
             @next-click="currentPage"
+			:current-page="searchParam.pageNum" 
             :total="tableData.total"
           ></el-pagination>
         </div>

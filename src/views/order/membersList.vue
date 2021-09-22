@@ -153,6 +153,7 @@
             background
             layout="prev, pager, next"
             @current-change="currentPage"
+			:current-page="searchParam.pageNum"
             @prev-click="currentPage"
             @next-click="currentPage"
           />

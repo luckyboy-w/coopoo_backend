@@ -74,6 +74,7 @@
 						background
 						layout="prev, pager, next"
 						:total="tableData.total"
+						:current-page="searchParam.pageNum"
 						@current-change="currentPage"
 						@prev-click="currentPage"
 						@next-click="currentPage"

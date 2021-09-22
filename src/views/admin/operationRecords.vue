@@ -43,7 +43,7 @@
           </el-table>
         </div>
         <div class="ly-data-pagination">
-          <el-pagination v-show="!showPagination" :total="tableData.total" background layout="prev, pager, next"
+          <el-pagination v-show="!showPagination" :current-page="searchParam.pageNum"  :total="tableData.total" background layout="prev, pager, next"
             @current-change="currentPage" @prev-click="currentPage" @next-click="currentPage" />
         </div>
       </div>

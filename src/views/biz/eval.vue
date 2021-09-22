@@ -68,6 +68,7 @@
 						background
 						v-show="!showPagination"
 						layout="prev, pager, next"
+						:current-page="searchParam.pageNum" 
 						@current-change="currentPage"
 						@prev-click="currentPage"
 						@next-click="currentPage"

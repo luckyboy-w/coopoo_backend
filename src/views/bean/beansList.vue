@@ -182,7 +182,7 @@
               </el-table-column>
             </el-table>
             <el-pagination :total="detailsListData.total" background layout="prev, pager, next"
-              @current-change="currentPage_" @prev-click="currentPage_" @next-click="currentPage_" />
+              @current-change="currentPage_" :current-page="searchParams_.pageNum"  @prev-click="currentPage_" @next-click="currentPage_" />
           </div>
         </div>
       </el-tab-pane>

@@ -125,7 +125,7 @@
           </div>
           <div class="ly-data-pagination">
             <el-pagination :total="tableData.total" background layout="prev, pager, next" @current-change="currentPage"
-              @prev-click="currentPage" @next-click="currentPage" />
+              @prev-click="currentPage" :current-page="searchParam.pageNum"  @next-click="currentPage" />
           </div>
         </div>
       </div>

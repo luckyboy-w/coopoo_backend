@@ -174,6 +174,7 @@
             :total="tableData.total"
             @current-change="currentPage"
             @prev-click="currentPage"
+			:current-page="searchParam.pageNum"
             @next-click="currentPage"
           />
         </div>

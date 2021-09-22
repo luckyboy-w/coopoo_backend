@@ -74,6 +74,7 @@
 						layout="prev, pager, next"
 						@current-change="currentPage"
 						@prev-click="currentPage"
+						:current-page="searchParam.pageNum"
 						@next-click="currentPage"
 						:total="tableData.total"
 					></el-pagination>

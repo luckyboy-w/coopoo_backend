@@ -89,7 +89,7 @@
         </el-table-column>
       </el-table>
       <el-pagination :total="noBillData.total" background layout="prev, pager, next" @current-change="currentPage"
-        @prev-click="currentPage" @next-click="currentPage" />
+        @prev-click="currentPage" :current-page="searchParam.pageNum"  @next-click="currentPage" />
     </div>
     <billDetail v-if="!showList" ref="billDetail" :detail-data="detailData" @backToList="backToList" />
   </div>

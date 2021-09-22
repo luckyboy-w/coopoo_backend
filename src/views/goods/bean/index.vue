@@ -60,8 +60,8 @@
               @prev-click="currentPage"
               @next-click="currentPage"
               :total="tableData.total"
-              :page-size="this.searchParam.pageSize"
-              :current-page="this.searchParam.pageNum"
+              :page-size="searchParam.pageSize"
+              :current-page="searchParam.pageNum"
             />
           </div>
         </div>

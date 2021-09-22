@@ -16,6 +16,8 @@
               <el-option value="7" label="违法违规"></el-option>
               <el-option value="8" label="青少年不宜"></el-option>
               <el-option value="9" label="其他"></el-option>
+              <el-option value="10" label="谩骂攻击"></el-option>
+              <el-option value="11" label="笔记不相关"></el-option>
             </el-select>
           </div>
         </div>
@@ -64,7 +66,7 @@
         </div>
         <div class="ly-data-pagination">
           <el-pagination background v-show="!showPagination" layout="prev, pager, next" @current-change="currentPage"
-            @prev-click="currentPage" @next-click="currentPage" :total="tableData.total"></el-pagination>
+            :current-page="searchParam.pageNum"  @prev-click="currentPage" @next-click="currentPage" :total="tableData.total"></el-pagination>
         </div>
       </div>
       <div class="list-panel"></div>
@@ -114,6 +116,10 @@
           typeText = '青少年不宜'
         } else if (type == '9') {
           typeText = '其他'
+        } else if (type == '10') {
+          typeText = '谩骂攻击'
+        } else if (type == '11') {
+          typeText = '笔记不相关'
         }
         return typeText
       },

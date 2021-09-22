@@ -61,7 +61,7 @@
         </div>
         <div class="ly-data-pagination">
           <el-pagination v-show="!showPagination" background layout="prev, pager, next" :total="tableData.total"
-            @current-change="currentPage" @prev-click="currentPage" @next-click="currentPage" />
+            @current-change="currentPage" :current-page="searchParam.pageNum"  @prev-click="currentPage" @next-click="currentPage" />
         </div>
       </div>
       <div class="list-panel" />

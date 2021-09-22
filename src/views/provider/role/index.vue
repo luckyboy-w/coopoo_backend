@@ -58,6 +58,7 @@
             layout="prev, pager, next"
             :total="tableData.total"
             @current-change="currentPage"
+			:current-page="searchParam.pageNum"
             @prev-click="currentPage"
             @next-click="currentPage"
           />
@@ -84,7 +85,7 @@ export default {
       searchParam: {
         typeName: '',
         pageSize: 10,
-        pageNum: 0
+        pageNum: 1
       },
       tableData: {
         list: []

@@ -45,7 +45,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination :total="noBillData.total" background layout="prev, pager, next" @current-change="currentPage"
+      <el-pagination :current-page="searchParam.pageNum"  :total="noBillData.total" background layout="prev, pager, next" @current-change="currentPage"
         @prev-click="currentPage" @next-click="currentPage" />
     </div>
     <billDetail v-if="!showList" ref="billDetail" :detail-data="detailData" @backToList="backToList" />

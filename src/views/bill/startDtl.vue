@@ -58,7 +58,7 @@
       </el-table-column>
     </el-table>
     <el-pagination :total="dataList.total" background layout="prev, pager, next" @current-change="currentPage"
-      @prev-click="currentPage" @next-click="currentPage" />
+      @prev-click="currentPage" :current-page="searchParam.pageNum"  @next-click="currentPage" />
   </div>
 </template>
 <script>
