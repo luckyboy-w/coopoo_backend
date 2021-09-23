@@ -285,7 +285,7 @@
                 let obj = {
                   goodsId: item.goodsId,
                   sort: index+1,
-                  status: item.status ? item.status : '1'
+                  status: (item.status||item.status===0)? item.status : '1'
                 }
                 goodsData.push(obj)
               })
