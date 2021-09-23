@@ -27,7 +27,7 @@
             <el-select v-model="searchParam.reportObjectType" placeholder="请选择">
               <el-option value="" label="全部"></el-option>
               <el-option value="1" label="笔记"></el-option>
-              <el-option value="0" label="评论"></el-option>
+              <el-option value="2" label="评论"></el-option>
             </el-select>
           </div>
         </div>
