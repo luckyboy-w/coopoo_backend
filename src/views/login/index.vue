@@ -221,7 +221,7 @@
     min-width: 1000px;
     zoom: 1;
     background-color: #fff;
-    background: url(https://bucket.coopoo.cn/images/platform.png) no-repeat;
+    background: url(https://bucket.coopoo.com/images/platform.png) no-repeat;
     background-size: cover;
     -webkit-background-size: cover;
     -o-background-size: cover;
