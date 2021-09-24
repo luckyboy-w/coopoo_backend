@@ -7,7 +7,7 @@
         </el-form-item>
         <el-form-item label="直播时间">
                <el-date-picker
-                 v-model="liveDate" clearable :disabled="disabled"
+                 v-model="liveDate" clearable :disabled="disabledTime"
                  type="datetimerange"
                  start-placeholder="开始日期"
                  end-placeholder="结束日期"
@@ -145,7 +145,8 @@
       return {
         loading: false,
         disabled: false,
-        submitStatus: 1,
+        disabledTime:false,
+        submitStatus: '',
         showGoodsList: false,
         // 表单数据
         liveDate:'',
@@ -181,9 +182,11 @@
       if (this.editData.operation == "add") {
         this.submitStatus = 1
       } else if (this.editData.operation == "edit") {
+        this.disabledTime=true
         this.submitStatus = 2
         this.dataEcho()
       } else if (this.editData.operation == "detail") {
+        this.disabledTime=true
         this.disabled = true
         this.dataEcho()
       }
