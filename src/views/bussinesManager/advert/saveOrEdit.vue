@@ -205,7 +205,18 @@
           this.relationList = res.data
           if(this.relationList.length<=0){
             this.dataForm.url=''
+          }else if(this.relationList.length>0){
+            let display=''
+            this.relationList.forEach(i=>{
+               if (i.id==this.dataForm.url) {
+                 display='block'
+               }
+            })
+            if (display=='') {
+              this.dataForm.url=''
+            }
           }
+          
         });
       },
       changeContent(val) {
