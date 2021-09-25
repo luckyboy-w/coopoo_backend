@@ -299,7 +299,20 @@
         if (this.validate()) {
           delete this.dataForm.createTime
           delete this.dataForm.createBy
-
+          if (this.dataForm.phoneNo.length<11) {
+            this.$message({
+              message: '请输入正确的手机号',
+              type: 'warning'
+            })
+            return false
+          }
+          if (this.dataForm.phoneNo.length<11) {
+            this.$message({
+              message: '请输入正确的手机号',
+              type: 'warning'
+            })
+            return false
+          }
           let fileList = []
           fileList = fileList.concat(this.uploadStoreImgList)
           fileList = fileList.concat(this.uploadStoreImgDtlList)
@@ -330,7 +343,7 @@
         }
       },
       validate() {
-        if (this.dataForm.frontImg == '') {
+        if (this.dataForm.frontImg == ''||!this.dataForm.frontImg) {
           this.$message({
             message: '门店图片不能为空',
             type: 'warning'
@@ -378,15 +391,15 @@
         this.$emit('showListPanel', true)
       },
       buildStoreImgGroupId() {
-        if (this.dataForm.frontImg == '' ||
-          this.dataForm.frontImg == undefined) {
+        // if (this.dataForm.frontImg == '' ||
+        //   this.dataForm.frontImg == undefined) {
           getMethod('/oss/get-group-id', null).then(res => {
             this.uploadStoreImgUrl = getUploadUrl() + '?groupId=' + res.data
-            this.dataForm.frontImg = res.data
+            // this.dataForm.frontImg = res.data
           })
-        } else {
-          this.uploadStoreImgUrl = getUploadUrl() + '?groupId=' + this.dataForm.frontImg
-        }
+        // } else {
+        //   this.uploadStoreImgUrl = getUploadUrl() + '?groupId=' + this.dataForm.frontImg
+        // }
       },
       handleStoreImgPreview(file) {
         this.dialogImageUrl = file.url;
@@ -395,6 +408,7 @@
       handleStoreImgRemove(res) {
         for (let i = 0; i < this.uploadStoreImgList.length; i++) {
           if (this.uploadStoreImgList[i].url == (res.url || res.response.data.url)) {
+            this.dataForm.frontImg=''
             this.uploadStoreImgList.splice(i, 1)
             break
           }
