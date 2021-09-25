@@ -156,7 +156,7 @@
             </div>
           </el-radio>
         </div>
-        <div v-if="radio1==1" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
+        <div v-if="radio1==1" style="background-color: #409EFF;width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
       </div>
       <div @click="dataType('2')" class="card-panel-col2">
         <div class="card-panel">
@@ -173,7 +173,7 @@
             </div>
           </el-radio>
         </div>
-        <div v-if="radio1==2" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
+        <div v-if="radio1==2" style="background-color: #409EFF;width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
       </div>
       <div @click="dataType('3')" class="card-panel-col2">
         <div class="card-panel">
@@ -190,7 +190,7 @@
             </div>
           </el-radio>
         </div>
-        <div v-if="radio1==3" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
+        <div v-if="radio1==3" style="background-color: #409EFF;width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
       </div>
       <div @click="dataType('4')" class="card-panel-col2">
         <div class="card-panel">
@@ -207,7 +207,7 @@
             </div>
           </el-radio>
         </div>
-        <div v-if="radio1==4" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
+        <div v-if="radio1==4" style="background-color: #409EFF;width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
       </div>
       <div @click="dataType('5')" class="card-panel-col2">
         <div class="card-panel">
@@ -224,7 +224,7 @@
             </div>
           </el-radio>
         </div>
-        <div v-if="radio1==5" style="width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
+        <div v-if="radio1==5" style="background-color: #409EFF;width: 198px;border: 2px solid #409EFF;position: absolute;margin-top: -4px;"></div>
       </div>
     </div>
 
