@@ -60,6 +60,8 @@
             <el-table-column prop="id" label="操作"  width="150px">
               <template slot-scope="scope">
                 <el-button @click="addOrEdit('detail',scope.$index, tableData)" type="text" size="small">查看</el-button>
+              <el-divider direction="vertical"></el-divider>
+                <el-button @click="handle(scope.row)" type="text" size="small">处理</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -160,6 +162,15 @@
             this.showAddOrEdit = true;
           });
         }
+      },
+      handle(row){
+        console.log(row,'row')
+        let param = {
+          id: row.id
+        };
+        getMethod("/report/mark-handle", param).then(res => {
+          this.loadList();
+        });
       },
       showListPanel(isCancel) {
         this.showList = true;
