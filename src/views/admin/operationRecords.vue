@@ -126,6 +126,7 @@
         const scope = this
           getMethod('/permission/search-operation-list', this.searchParam).then(res => {
             scope.tableData.list = res.data.records
+            scope.tableData.total = res.data.total
             scope.sendOrder = false
             scope.showPagination =  res.data.total == 0
             this.loading = false
