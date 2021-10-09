@@ -39,7 +39,7 @@
       <div class="item">
         <div style="display: flex;flex-wrap: wrap;justify-content: center;">
           <div style="width: 100%;text-align: center;">点赞文章</div>
-          <div class="tip">每日仅能获得次数1次</div>
+          <div class="tip">每周仅能获得次数1次</div>
         </div>
       </div>
       <div class="item">
