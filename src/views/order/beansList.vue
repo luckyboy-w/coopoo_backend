@@ -270,6 +270,9 @@
                  取件门店：{{ ordDtl.memberStoreName }}
                </el-col>
              </el-row>
+			 <el-row :gutter="20" class="main-text">
+			   <el-col :span="6">核销时间：{{ ordDtl.exchangeDate }}</el-col>
+			 </el-row>
            </div>
 
       <div style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);padding:10px;margin:10px 0px;">
