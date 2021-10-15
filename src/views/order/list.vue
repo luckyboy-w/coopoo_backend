@@ -98,9 +98,9 @@
           <el-button icon="el-icon-search" type="primary" @click="search()">
             搜索
           </el-button>
-          <!-- <el-button icon="el-icon-download" type="primary" @click="expordivata()">
+          <el-button icon="el-icon-download" type="primary" @click="exportData()">
             导出
-          </el-button> -->
+          </el-button>
         </div>
       </div>
       <div class="ly-table-panel">
@@ -1191,7 +1191,7 @@
           exportParam.push(key + "=" + param[key]);
         }
         exportParam.push("token=" + getToken())
-        window.open(process.env.VUE_APP_BASE_API_NEW + "/order/export?" + exportParam.join("&"));
+        window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/order/export?" + exportParam.join("&"));
       },
       getOrdDtl(row) {
         let scope = this
