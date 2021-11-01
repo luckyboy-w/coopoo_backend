@@ -62,6 +62,9 @@
          >
            新建
          </el-button>
+         <el-button icon="el-icon-download" type="primary" @click="exportData()">
+           导出
+         </el-button>
        </div>
       </div>
       <div class="ly-table-panel">
@@ -241,9 +244,22 @@ export default {
       })
       }
     },
-    downQrcode(rowObj){
-      window.open( process.env.VUE_APP_BASE_API+'/backend/storeManage/storeQr?id='+rowObj.id+'&storeName='+rowObj.storeName+'&token='+ getToken())
+    exportData() {
+      let exportParam = [];
+    
+      let param = JSON.parse(JSON.stringify(this.searchParam));
+      delete param.pageSize
+      delete param.pageNum
+    
+      for (let key in param) {
+        exportParam.push(key + "=" + param[key]);
+      }
+      exportParam.push("token=" + getToken())
+      window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/store-list/export?" + exportParam.join("&"));
     },
+    // downQrcode(rowObj){
+    //   window.open( process.env.VUE_APP_BASE_API+'/backend/storeManage/storeQr?id='+rowObj.id+'&storeName='+rowObj.storeName+'&token='+ getToken())
+    // },
     showResetPwd(row){
       let param = {
         id:row.superAccount,
