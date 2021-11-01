@@ -249,7 +249,7 @@
                  收货人电话：{{ ordDtl.receiverPhone }}
                </el-col>
                <el-col :span="6">
-                 收货地址：{{ ordDtl.receiverAddress }}
+                 收货地址：{{ ordDtl.receiverProvince }}{{ ordDtl.receiverCity }}{{ ordDtl.receiverRegion }}{{ ordDtl.receiverAddress }}
                </el-col>
              </el-row>
            </div>

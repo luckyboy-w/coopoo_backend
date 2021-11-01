@@ -8,7 +8,7 @@
         奖励
       </div>
     </div>
-    <div class="listItem" >
+    <!-- <div class="listItem" >
       <div class="item" style="height: 100px;">
         <div style="display: flex;flex-wrap: wrap;justify-content: center;">
           <div style="width: 100%;text-align: center;">浏览商品50秒</div>
@@ -23,7 +23,7 @@
       <div class="item" style="height: 100px;">
         <el-input v-model="dataForm.browse_goods_fifty_seconds"></el-input>
       </div>
-    </div>
+    </div> -->
     <div class="listItem">
       <div class="item">
         <div style="display: flex;flex-wrap: wrap;justify-content: center;">
@@ -78,18 +78,26 @@
     </div>
     <div class="listItem">
       <div class="item">
-        签到-连续7天，第7天奖励
+        签到-连续5天，第5天奖励
       </div>
       <div class="item">
-        <el-input v-model="dataForm.continue_sign_in_seven"></el-input>
+        <el-input v-model="dataForm.continue_sign_in_five"></el-input>
       </div>
     </div>
     <div class="listItem">
       <div class="item">
-        签到-连续14天，第14天奖励
+        签到-连续10天，第10天奖励
       </div>
       <div class="item">
-        <el-input v-model="dataForm.continue_sign_in_fourteen"></el-input>
+        <el-input v-model="dataForm.continue_sign_in_ten"></el-input>
+      </div>
+    </div>
+    <div class="listItem">
+      <div class="item">
+        签到-连续15天，第15天奖励
+      </div>
+      <div class="item">
+        <el-input v-model="dataForm.continue_sign_in_fifteen"></el-input>
       </div>
     </div>
     <div class="listItem">
@@ -200,8 +208,9 @@
       relationList: [],
       dataForm:{
       browse_goods_fifty_seconds:'',
-      continue_sign_in_seven:'',
-      continue_sign_in_fourteen:'',
+      continue_sign_in_five:'',
+      continue_sign_in_ten:'',
+      continue_sign_in_fifteen	:'',
       continue_sign_in_twenty_one:'',
       continue_sign_in_thirty:'',
       order_evaluation:'',
