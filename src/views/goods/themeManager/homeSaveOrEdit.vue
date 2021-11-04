@@ -147,7 +147,7 @@
             <el-option label="商品" :value="1" />
             <el-option label="优惠券" :value="2" />
             <el-option label="门店列表" :value="3" />
-            
+
           </el-select>
         </el-form-item>
         <el-form-item v-if="form.goodsType==1" label="关联商品">
@@ -861,20 +861,20 @@
               });
               return false
             }
-            if (this.form.goodsType == 1&&this.form.goodsList.length <= 0) {
-              this.$message({
-                message: "请选择主题需要关联的商品",
-                type: "warning"
-              });
-              return false
-            }
-            if (this.form.goodsType == 2&&this.form.couponList.length <= 0) {
-              this.$message({
-                message: "请选择主题需要关联的优惠券",
-                type: "warning"
-              });
-              return false
-            }
+            // if (this.form.goodsType == 1&&this.form.goodsList.length <= 0) {
+            //   this.$message({
+            //     message: "请选择主题需要关联的商品",
+            //     type: "warning"
+            //   });
+            //   return false
+            // }
+            // if (this.form.goodsType == 2&&this.form.couponList.length <= 0) {
+            //   this.$message({
+            //     message: "请选择主题需要关联的优惠券",
+            //     type: "warning"
+            //   });
+            //   return false
+            // }
             this.loading = true
             if (val == 1) {
               postMethod('/goods/theme/publish', this.form).then(res => {
@@ -884,6 +884,8 @@
                   message: "保存成功",
                   type: "success"
                 });
+              }).catch(err=>{
+                this.loading = false
               })
             } else if (val == 2) {
               this.form.goodsThemeId = this.editData.goodsThemeId
@@ -894,6 +896,8 @@
                   message: "保存成功",
                   type: "success"
                 });
+              }).catch(err=>{
+                this.loading = false
               })
             }
 
