@@ -32,6 +32,9 @@
       <el-form-item label="门店后台账号">
         <el-input v-model="dataForm.loginAccount" :disabled="isDisabled"/>
       </el-form-item>
+      <el-form-item label="账户名称">
+        <el-input v-model="dataForm.bankAccountName"/>
+      </el-form-item>
       <el-form-item label="开户行">
         <el-input v-model="dataForm.bankName" />
       </el-form-item>
@@ -148,6 +151,7 @@
           startWorkTime: '',
           endWorkTime: '',
           loginAccount:'',
+          bankAccountName:'',
           bankName:'',
           bankCard:''
         }
@@ -360,6 +364,7 @@
           'startWorkTime',
           'endWorkTime',
           'loginAccount',
+          'bankAccountName',
           'bankName',
           'bankCard',
         ]
