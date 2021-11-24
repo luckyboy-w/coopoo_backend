@@ -280,7 +280,7 @@ export default {
         this.bindingList=this.bindingList.concat(this.multipleSelection)
 
       }
-      this.searchParam.pageNum='1'
+      this.searchParam.pageNum=1
       this.loadGoodsList();
     },
     // 获取商品列表

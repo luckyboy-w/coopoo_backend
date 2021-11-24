@@ -168,7 +168,7 @@
         window.open(process.env.VUE_APP_BASE_API + "/backend/orderBill/export?" + exportParam.join("&"));
       },
       search() {
-        this.searchParam.pageNum = '1'
+        this.searchParam.pageNum = 1
         this.loadList();
       },
       findBillDtl(row) {

@@ -247,7 +247,7 @@
         });
       },
       search() {
-        this.searchParam.pageNum='1'
+        this.searchParam.pageNum=1
         this.loadList();
       },
       showListPanel(isCancel) {

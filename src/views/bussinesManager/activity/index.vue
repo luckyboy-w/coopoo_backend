@@ -56,9 +56,9 @@
             <template slot-scope="scope">
               <el-button type="text" size="small" @click.native.prevent="addOrEdit('edit', scope.row)">修改</el-button>
               <el-button type="text" size="small" @click.native.prevent="addGood(scope.row)">管理商品</el-button>
-              <el-button v-if="scope.row.activityType==2&&scope.row.enable==1" @click="enable('1',scope.row)" type="text" size="small">禁用
+              <el-button v-if="scope.row.enable==1" @click="enable('1',scope.row)" type="text" size="small">禁用
               </el-button>
-              <el-button v-if="scope.row.activityType==2&&scope.row.enable==0" @click="enable('0',scope.row)" type="text" size="small">启用
+              <el-button v-if="scope.row.enable==0" @click="enable('0',scope.row)" type="text" size="small">启用
               </el-button>
               <el-button v-if="scope.row.activityType==2" @click="htmlShow(scope.row)" type="text" size="small">H5链接
               </el-button>
@@ -211,7 +211,7 @@
         activityDateTimePeriod: null,
         startDateTimePickerOptions: {
           disabledDate(time) {
-            return time.getTime() <= Date.now()
+            return time.getTime() < Date.now() - 8.64e7;
           }
         },
         tableData: {
@@ -352,7 +352,8 @@
           });
         } else if (val == "0") {
           getMethod('/activity/enable', {
-            id: row.id
+            id: row.id,
+            activityType:row.activityType,
           }).then(res => {
             this.$message({
               message: "启用成功",

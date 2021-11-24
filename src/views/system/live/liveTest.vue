@@ -55,7 +55,7 @@
 </template>
 
 <script>
-  import liveDetail from './liveDetail'
+  import liveDetail from './liveTestDetail'
   import {
     getMethod,
     postMethod
@@ -73,8 +73,8 @@
         editData: {
         },
         searchParam:{
+          liveType:3,
           liveName:'',
-          liveType:1,
           pageNum:1,
           pageSize:10,
         },

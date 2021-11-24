@@ -171,7 +171,7 @@
       },
       search() {
         let that = this
-        this.searchParam.pageNum = '1'
+        this.searchParam.pageNum = 1
         this.loadList();
       },
       backToList() {

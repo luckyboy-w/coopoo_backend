@@ -306,7 +306,7 @@
               liveBegin:this.form.liveBegin,
               liveEnd:this.form.liveEnd,
               liveName:this.form.liveName,
-              liveType:'1',
+              liveType:'3',
               relatedGoodsList:this.form.relatedGoodsList
             }
             if (this.form.relatedGoodsList.length <= 0) {

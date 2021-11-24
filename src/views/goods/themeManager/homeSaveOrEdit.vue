@@ -1097,7 +1097,7 @@
           }
           this.searchParam.status= ''
         }
-        this.searchParam.pageNum = '1'
+        this.searchParam.pageNum = 1
         this.loadGoodsList();
       },
       // 获取商品列表
