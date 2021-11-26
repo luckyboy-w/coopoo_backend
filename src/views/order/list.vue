@@ -92,8 +92,8 @@
           </div>
           <div style="padding: 0 6px;">至</div>
           <div>
-            <el-date-picker style="width:200px" value-format="yyyy-MM-dd" v-model="searchParam.orderCloseEndTime" type="date"
-              placeholder="结束时间">
+            <el-date-picker style="width:200px" value-format="yyyy-MM-dd" v-model="searchParam.orderCloseEndTime"
+              type="date" placeholder="结束时间">
             </el-date-picker>
           </div>
         </div>
@@ -220,7 +220,8 @@
 
         <div class="ly-data-pagination" style="margin: 10px 0;">
           <el-pagination v-show="!showPagination" :total="tableData.total" background layout="prev, pager, next"
-            @current-change="currentPage" :current-page="searchParam.pageNum" @prev-click="currentPage" @next-click="currentPage" />
+            @current-change="currentPage" :current-page="searchParam.pageNum" @prev-click="currentPage"
+            @next-click="currentPage" />
         </div>
       </div>
     </div>
@@ -323,48 +324,48 @@
         </el-row>
       </div>
 
-      <div v-if="ordDtl.deliveryMethod==1" style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);padding:10px;margin:10px 0px;">
-             <el-row :gutter="20" style="line-height:40px" class="main-title">
-               <el-col :span="6">
-                 收货人信息
-               </el-col>
-               <!-- <el-col :span="6">
-                 <el-button type="text" @click="addressDialog = true">修改收货地址</el-button>
-               </el-col> -->
-             </el-row>
-             <el-row :gutter="20" class="main-text">
-               <el-col :span="6">
-                 收货人：{{ ordDtl.receiverName }}
-               </el-col>
-               <el-col :span="6">
-                 收货人电话：{{ ordDtl.receiverPhone }}
-               </el-col>
-               <el-col :span="6">
-                 收货地址：{{ ordDtl.receiverAddress }}
-               </el-col>
-             </el-row>
-           </div>
-           <div v-if="ordDtl.deliveryMethod==2" style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);padding:10px;margin:10px 0px;">
-             <el-row :gutter="20" style="line-height:40px" class="main-title">
-               <el-col :span="6">
-                 提货信息
-               </el-col>
-             </el-row>
-             <el-row :gutter="20" class="main-text">
-               <el-col :span="6">
-                 预约时间：{{ ordDtl.appointmentDate }}
-               </el-col>
-               <el-col :span="6">
-                 预留手机号：{{ ordDtl.appointmentMobile }}
-               </el-col>
-               <el-col :span="6">
-                 取件门店：{{ ordDtl.memberStoreName }}
-               </el-col>
-             </el-row>
-			 <el-row :gutter="20" class="main-text">
-			   <el-col :span="6">核销时间：{{ ordDtl.exchangeDate }}</el-col>
-			 </el-row>
-           </div>
+      <div v-if="ordDtl.deliveryMethod==1"
+        style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);padding:10px;margin:10px 0px;">
+        <el-row :gutter="20" style="line-height:40px" class="main-title">
+          <el-col :span="6">
+            收货人信息
+                 <!-- <el-button type="text" @click="addressDialog = true">&nbsp;&nbsp;&nbsp; 修改收货地址</el-button> -->
+          </el-col>
+        </el-row>
+        <el-row :gutter="20" class="main-text">
+          <el-col :span="6">
+            收货人：{{ ordDtl.receiverName }}
+          </el-col>
+          <el-col :span="6">
+            收货人电话：{{ ordDtl.receiverPhone }}
+          </el-col>
+          <el-col :span="6">
+            收货地址：{{ ordDtl.receiverAddress }}
+          </el-col>
+        </el-row>
+      </div>
+      <div v-if="ordDtl.deliveryMethod==2"
+        style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);padding:10px;margin:10px 0px;">
+        <el-row :gutter="20" style="line-height:40px" class="main-title">
+          <el-col :span="6">
+            提货信息
+          </el-col>
+        </el-row>
+        <el-row :gutter="20" class="main-text">
+          <el-col :span="6">
+            预约时间：{{ ordDtl.appointmentDate }}
+          </el-col>
+          <el-col :span="6">
+            预留手机号：{{ ordDtl.appointmentMobile }}
+          </el-col>
+          <el-col :span="6">
+            取件门店：{{ ordDtl.memberStoreName }}
+          </el-col>
+        </el-row>
+        <el-row :gutter="20" class="main-text">
+          <el-col :span="6">核销时间：{{ ordDtl.exchangeDate }}</el-col>
+        </el-row>
+      </div>
       <div v-if="ordDtl.receiptId"
         style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);padding:10px;margin:10px 0px 10px 0;">
         <el-row :gutter="20" style="line-height:40px" class="main-title">
@@ -404,7 +405,8 @@
         <div style="width: 60%; box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
        padding:10px;margin:10px 15px 10px 0;">
 
-          <el-carousel v-if="ordDtl.expressRouteInfoList&&ordDtl.expressRouteInfoList.length>=1" trigger="click" style="padding-bottom: 30px;">
+          <el-carousel v-if="ordDtl.expressRouteInfoList&&ordDtl.expressRouteInfoList.length>=1" trigger="click"
+            style="padding-bottom: 30px;">
             <el-carousel-item v-for="expressItem in ordDtl.expressRouteInfoList">
               <el-row :gutter="20" style="line-height:40px" class="main-title">
                 <el-col v-if="expressItem.type==1" :span="18">
@@ -442,7 +444,8 @@
               </div>
             </el-carousel-item>
           </el-carousel>
-          <el-row :gutter="20" v-if="!ordDtl.expressRouteInfoList||ordDtl.expressRouteInfoList.length==0" style="line-height:40px" class="main-title">
+          <el-row :gutter="20" v-if="!ordDtl.expressRouteInfoList||ordDtl.expressRouteInfoList.length==0"
+            style="line-height:40px" class="main-title">
             <el-col :span="24">
               物流信息
             </el-col>
@@ -472,7 +475,7 @@
         <div style="display: flex;">
           <div style="border-right: 1px solid #9E9E9E;min-width: 100px;text-align: center;">原地址：</div>
           <div style="text-align: center;width: 100%;">
-            {{ordDtl.recArea}}&nbsp;&nbsp;{{ordDtl.recAddress}}&nbsp;,&nbsp;&nbsp;{{ordDtl.recUname}}&nbsp;,&nbsp;&nbsp;{{ordDtl.recPhone}}
+            {{ordDtl.receiverAddress}}&nbsp;,&nbsp;&nbsp;{{ordDtl.receiverName}}&nbsp;,&nbsp;&nbsp;{{ordDtl.receiverPhone}}
           </div>
         </div>
         <div style="display: flex;border-top: 1px solid #9E9E9E;">
@@ -517,12 +520,12 @@
     <el-dialog title="修改商品规格" :visible.sync="skuDialog" width="50%" destroy-on-close :before-close="skuClose">
       <div style="width: 100%;">
         <div style="display: flex;line-height: 40px;">
-          <div style="min-width: 200px;text-align: center;"><img style="height: 80px;" :src="goodDtlList.goodImage" />
+          <div style="min-width: 200px;text-align: center;"><img style="height: 80px;" :src="goodDtlList.goodsImage" />
           </div>
           <div style="width: 100%;">
-            <div>{{goodDtlList.goodName}}</div>
-            <div>{{goodDtlList.skuInfo}} &nbsp;&nbsp;&nbsp;&nbsp;单价：{{goodDtlList.goodSinglePrice}}
-              &nbsp;&nbsp;&nbsp;&nbsp;数量：{{goodDtlList.goodNum}}</div>
+            <div>{{goodDtlList.goodsName}}</div>
+            <div>{{goodDtlList.skuText}} &nbsp;&nbsp;&nbsp;&nbsp;单价：{{goodDtlList.goodsPrice}}
+              &nbsp;&nbsp;&nbsp;&nbsp;数量：{{goodDtlList.goodsNum}}</div>
           </div>
         </div>
         <div style="display: flex;border-top: 1px solid #9E9E9E;">
@@ -537,13 +540,13 @@
                         <p>{{ProductItem.name}}</p>
                         <ul class="product-footerlist clearfix">
                           <li style="list-style:none" v-for="(oItem,index) in ProductItem.item"
-                            v-on:click="specificationBtn(oItem.name,n,$event,index)"
+                            v-on:click="specificationBtn(oItem.name,n,$event,index,ProductItem.name)"
                             v-bind:class="[oItem.isShow?'':'noneActive',subIndex[n] == index?'productActive':'']">
                             {{oItem.name}}
                           </li>
                         </ul>
                       </div>
-                      <p v-if="price" class="price">¥{{price}}</p>
+                      <p v-if="price" class="price">价格：<span style="color: red;"> {{price}}</span></p>
                     </div>
                   </div>
                 </div>
@@ -569,8 +572,7 @@
             <el-option v-if="currentOrderState==7&&currentIsSendSevenDay==1" label="交易完成" value="8"></el-option>
           </el-select>
         </div>
-        <div
-          v-if="states==6&&currentOrderState==2">
+        <div v-if="states==6&&currentOrderState==2">
           <el-select v-model="currentPayChannel" placeholder="请选择支付方式">
             <el-option label="支付宝" value="1"></el-option>
             <el-option label="微信" value="2"></el-option>
@@ -595,7 +597,7 @@
   } from '@/api/request'
 
   import * as requestMethod from '@/api/request'
-
+  import addressData from "@/utils/address.json"
 
   import {
     formatDate
@@ -711,13 +713,15 @@
         shopItemInfo: {}, //存放要和选中的值进行匹配的数据
         subIndex: [], //是否选中 因为不确定是多规格还是单规格，所以这里定义数组来判断
         price: '',
+        addressData:addressData,
+
         menuId: '',
         operationModuleName: '',
         goodDtlList: {},
         currentOrderState: '',
         currentPayChannel: '',
         currentOrderNo: '',
-        currentIsSendSevenDay:'',
+        currentIsSendSevenDay: '',
         states: '',
         serialNumber: '',
         stateShow: false,
@@ -795,13 +799,13 @@
           stockNum: ''
         },
         searchParam: {
-          registerPhoneNo:"",
+          registerPhoneNo: "",
           buyerMobile: '',
           buyerName: '',
           goodsName: '',
           orderEndTime: '',
-          orderCloseStartTime:'',
-          orderCloseEndTime:'',
+          orderCloseStartTime: '',
+          orderCloseEndTime: '',
           orderNo: '',
           orderStartTime: '',
           orderStatus: '',
@@ -842,20 +846,23 @@
     computed: {},
     mounted() {
       if (this.$route.query.orderStatus != undefined) {
-            this.searchParam.orderStatus = this.$route.query.orderStatus
-          }
+        this.searchParam.orderStatus = this.$route.query.orderStatus
+      }
       this.initLoad()
+      console.log(addressData,'addressData')
       // this.loadProvinceList()
       //this.loadtypeIdList()
       // this.initSupplyList()
     },
     created() {
-      var that = this;
-      for (var i in that.simulatedDATA.difference) {
-        that.shopItemInfo[that.simulatedDATA.difference[i].difference] = that.simulatedDATA.difference[
-          i]; //修改数据结构格式，改成键值对的方式，以方便和选中之后的值进行匹配
-      }
-      that.checkItem();
+      // var that = this;
+      // console.log(that.simulatedDATA.difference, 'that.simulatedDATA.difference')
+      // for (var i in that.simulatedDATA.difference) {
+      //   that.shopItemInfo[that.simulatedDATA.difference[i].difference] = that.simulatedDATA.difference[i]
+      //   .difference; //修改数据结构格式，改成键值对的方式，以方便和选中之后的值进行匹配
+      //   console.log(that.shopItemInfo, 'that.shopItemInfo')
+      // }
+      // that.checkItem();
     },
     methods: {
       closeSendOrderDialog() {
@@ -877,43 +884,49 @@
       //修改SKU彈框
       modifySku(row) {
         this.skuDialog = true
+
+        console.log(row, 'sku信息')
         this.goodDtlList = row
-        getMethod('/backend/good/findById', {
-          goodId: row.goodId
+        getMethod('/goods/detail', {
+          goodsId: 'e59616564f8f4634a258eb6d0a857bc2' //row.orderItemId
         }).then(res => {
-          let skuSelList = res.data.skuSelList.reverse()
-          let skuPriceList = res.data.skuPriceList
+          let skuSelList = res.data.specificationList
+          let skuPriceList = res.data.skuList
           skuSelList.forEach((e, i) => {
-            e.skuTextArr = e.skuText.split(",")
+            e.skuTextArr = e.specificationValueList
             let arr = []
             let txtarr = e.skuTextArr
             txtarr.forEach((m, n) => {
               let ndatas = {
-                name: m,
+                name: m.specificationValue,
                 isShow: true
               }
               arr.push(ndatas)
             })
-            e.name = e.attrTitle
+            e.name = e.specificationName
             e.item = arr
           })
           skuPriceList.forEach((e, i) => {
-            e.price = e.saleMemPrice
+            e.price = e.salePrice
             e.difference = e.skuText
           })
           this.simulatedDATA = {
             'difference': skuPriceList,
             'specifications': skuSelList
           }
+
         })
       },
       enterSku() {
-        let skuText = this.selectArr.join(":")
+        console.log('wwww', this.selectArr);
+        let skuText = this.selectArr.join(";")
+        console.log(skuText, 'skuText')
         let arr = this.simulatedDATA.difference
         let skuId = ''
+        console.log(arr, skuText, 'arr');
         for (let j = 0; j < arr.length; j++) {
-          if (arr[j].skuCompareText == skuText) {
-            skuId = arr[j].id
+          if (arr[j].skuText == skuText) {
+            skuId = arr[j].skuId
           }
         }
         if (skuId != '') {
@@ -959,50 +972,66 @@
         this.price = ''
       },
 
-      specificationBtn: function(item, n, event, index) {
-        var that = this;
+      specificationBtn: function(item, n, event, index, name) {
+        console.log(item, n, event, index, name, '88888')
+        let that = this;
         if (that.selectArr[n] != item) {
-          that.selectArr[n] = item;
+          let arr = name + ":" + item
+          console.log(arr, 'arr')
+          that.selectArr[n] = arr;
           that.subIndex[n] = index;
         } else {
           that.selectArr[n] = "";
           that.subIndex[n] = -1; //去掉选中的颜色
         }
+        // that.$forceUpdate(); //重绘
         that.checkItem();
       },
       checkItem: function() {
-        var that = this;
-        var option = that.simulatedDATA.specifications;
-        var result = []; //定义数组储存被选中的值
-        for (var i in option) {
-          result[i] = that.selectArr[i] ? that.selectArr[i] : '';
-        }
-        for (var i in option) {
-          var last = result[i]; //把选中的值存放到字符串last去
-          for (var k in option[i].item) {
-            result[i] = option[i].item[k].name; //赋值，存在直接覆盖，不存在往里面添加name值
-            option[i].item[k].isShow = that.isMay(result); //在数据里面添加字段isShow来判断是否可以选择
-          }
-          result[i] = last; //还原，目的是记录点下去那个值，避免下一次执行循环时被覆盖
-        }
-        if (this.shopItemInfo[result]) {
-          this.price = this.shopItemInfo[result].price || ''
-        }
-        that.$forceUpdate(); //重绘
-      },
-      isMay: function(result) {
-        for (var i in result) {
-          if (result[i] == '') {
-            return true; //如果数组里有为空的值，那直接返回true
+        let skuText = this.selectArr.join(";")
+        let arr = this.simulatedDATA.difference
+        let skuId = ''
+        console.log(arr, skuText, 'arr');
+        for (let j = 0; j < arr.length; j++) {
+          if (arr[j].skuText == skuText) {
+            skuId = arr[j].skuId
+            this.price=arr[j].price
           }
         }
-        return true;
+        this.$forceUpdate(); //重绘
+        // var that = this;
+        // var option = that.simulatedDATA.specifications;
+        // var result = []; //定义数组储存被选中的值
+        // for (var i in option) {
+        //   result[i] = that.selectArr[i] ? that.selectArr[i] : '';
+        // }
+        // for (var i in option) {
+        //   var last = result[i]; //把选中的值存放到字符串last去
+        //   for (var k in option[i].item) {
+        //     result[i] = option[i].item[k].name; //赋值，存在直接覆盖，不存在往里面添加name值
+        //     option[i].item[k].isShow = that.isMay(result); //在数据里面添加字段isShow来判断是否可以选择
+        //   }
+        //   result[i] = last; //还原，目的是记录点下去那个值，避免下一次执行循环时被覆盖
+        // }
+        // console.log(this.shopItemInfo[result], 'this.shopItemInfo[result]')
+        // if (this.shopItemInfo[result]) {
+        //   this.price = this.shopItemInfo[result].price || ''
+        // }
+        // that.$forceUpdate(); //重绘
       },
+      // isMay: function(result) {
+      //   for (var i in result) {
+      //     if (result[i] == '') {
+      //       return true; //如果数组里有为空的值，那直接返回true
+      //     }
+      //   }
+      //   return true;
+      // },
 
       //修改订单状态
       modifyState(row) {
         this.currentOrderState = row.orderStatus,
-        this.currentIsSendSevenDay = row.isSendSevenDay
+          this.currentIsSendSevenDay = row.isSendSevenDay
         this.currentOrderNo = row.orderNo
         this.stateShow = true
       },
@@ -1014,27 +1043,27 @@
           })
           return
         }
-        if (this.states == 6&&this.currentOrderState==2) {
-          if(this.currentPayChannel==''){
+        if (this.states == 6 && this.currentOrderState == 2) {
+          if (this.currentPayChannel == '') {
             this.$message({
               message: '请选择支付方式',
               type: 'warning'
             })
             return false
           }
-          if(this.serialNumber==''){
+          if (this.serialNumber == '') {
             this.$message({
               message: '请填写支付流水号',
               type: 'warning'
             })
             return false
           }
-          let param={
-            orderNo:this.currentOrderNo,
-            payChannel:this.currentPayChannel,
-            tradeNo:this.serialNumber
+          let param = {
+            orderNo: this.currentOrderNo,
+            payChannel: this.currentPayChannel,
+            tradeNo: this.serialNumber
           }
-          getMethod('/order/modify-order-pay',param).then(res => {
+          getMethod('/order/modify-order-pay', param).then(res => {
             if (res.errCode == 0) {
               this.$message({
                 message: '修改成功',
@@ -1051,13 +1080,13 @@
             }
           })
         }
-        if (this.states == 6&&this.currentOrderState!=2) {
-          let param={
-            orderNo:this.currentOrderNo
+        if (this.states == 6 && this.currentOrderState != 2) {
+          let param = {
+            orderNo: this.currentOrderNo
           }
-          getMethod('/order/modify-order-waiting-send',param)
+          getMethod('/order/modify-order-waiting-send', param)
             .then(res => {
-            if (res.errCode == 0) {
+              if (res.errCode == 0) {
                 this.$message({
                   message: '修改成功',
                   type: 'success'
@@ -1074,10 +1103,10 @@
             })
         }
         if (this.states == 8) {
-          let param={
-            orderNo:this.currentOrderNo
+          let param = {
+            orderNo: this.currentOrderNo
           }
-          getMethod('/order/modify-order-finish',param).then(res => {
+          getMethod('/order/modify-order-finish', param).then(res => {
             if (res.errCode == 0) {
               this.$message({
                 message: '修改成功',
@@ -1096,12 +1125,12 @@
         }
       },
       stateClose() {
-        this.currentOrderState= ''
-        this.currentPayChannel=''
-        this.currentOrderNo= ''
-        this.currentIsSendSevenDay=''
-        this.states= ''
-        this.serialNumber= ''
+        this.currentOrderState = ''
+        this.currentPayChannel = ''
+        this.currentOrderNo = ''
+        this.currentIsSendSevenDay = ''
+        this.states = ''
+        this.serialNumber = ''
         this.stateShow = false
       },
       //修改地址彈框
@@ -1125,9 +1154,9 @@
       //省市区
       loadProvinceList() {
         const scope = this
-        getMethod('/backend/areas/getAllData').then(res => {
-          scope.city = res.data
-        })
+        // getMethod('/backend/areas/getAllData').then(res => {
+          scope.city = addressData.data
+        // })
       },
       selectProvinceFun(event) {
         this.selectCity = ''
@@ -1136,8 +1165,10 @@
         this.addressForm.areaText = ''
         if (event) {
           this.cityList = event.cityList
+          this.areaList = []
         } else {
           this.cityList = []
+          this.areaList = []
         }
         this.addressForm.provinceid = event.provinceid
         this.addressForm.provincetext = event.province
@@ -1216,66 +1247,66 @@
         }
         getMethod('/order/goods-order-detail', param).then(res => {
           scope.showOrdDtl = true
-          if(res.data.expressRouteInfoList&&res.data.expressRouteInfoList.length>=1){
+          if (res.data.expressRouteInfoList && res.data.expressRouteInfoList.length >= 1) {
             res.data.expressRouteInfoList.forEach(item => {
-            let arr = []
-            let text = ''
-            let title = ''
-            let status
-            item.traces.map(tracesItem => {
-              if (tracesItem.acceptTime) {
-                arr = tracesItem.acceptTime.split(" ")
-              }
-              tracesItem.time1 = arr[0].substring(0, 10)
-              tracesItem.time2 = arr[1].substring(0, 8)
-              status = tracesItem.action
-              if (status == 0) {
-                tracesItem.text = '暂无轨迹信息';
-              } else if (status == '1') {
-                tracesItem.text = '已揽收';
-              } else if (status == '2') {
-                tracesItem.text = '运输中';
-              } else if (status == 201) {
-                tracesItem.text = '到达派件城市';
-              } else if (status == 202) {
-                tracesItem.text = '派件中';
-              } else if (status == 211) {
-                tracesItem.text = '已放入快递柜或驿站';
-              } else if (status == 3) {
-                tracesItem.text = '已签收';
-              } else if (status == 301) {
-                tracesItem.text = '已签收';
-              } else if (status == 302) {
-                tracesItem.text = '派件异常后最终签收';
-              } else if (status == 304) {
-                tracesItem.text = '代收签收';
-              } else if (status == 311) {
-                tracesItem.text = '快递柜或驿站签收';
-              } else if (status == 4) {
-                tracesItem.text = '问题件';
-              } else if (status == 401) {
-                tracesItem.text = '发货无信息';
-              } else if (status == 402) {
-                tracesItem.text = '超时未签收';
-              } else if (status == 403) {
-                tracesItem.text = '超时未更新';
-              } else if (status == 404) {
-                tracesItem.text = '拒收（退件）';
-              } else if (status == 405) {
-                tracesItem.text = '派件异常';
-              } else if (status == 406) {
-                tracesItem.text = '退货签收';
-              } else if (status == 407) {
-                tracesItem.text = '退货未签收';
-              } else if (status == 412) {
-                tracesItem.text = '快递柜或驿站超时未取';
-              } else if (status == '001') {
-                tracesItem.text = '已下单';
-              } else if (status == '002') {
-                tracesItem.text = '已发货';
-              }
+              let arr = []
+              let text = ''
+              let title = ''
+              let status
+              item.traces.map(tracesItem => {
+                if (tracesItem.acceptTime) {
+                  arr = tracesItem.acceptTime.split(" ")
+                }
+                tracesItem.time1 = arr[0].substring(0, 10)
+                tracesItem.time2 = arr[1].substring(0, 8)
+                status = tracesItem.action
+                if (status == 0) {
+                  tracesItem.text = '暂无轨迹信息';
+                } else if (status == '1') {
+                  tracesItem.text = '已揽收';
+                } else if (status == '2') {
+                  tracesItem.text = '运输中';
+                } else if (status == 201) {
+                  tracesItem.text = '到达派件城市';
+                } else if (status == 202) {
+                  tracesItem.text = '派件中';
+                } else if (status == 211) {
+                  tracesItem.text = '已放入快递柜或驿站';
+                } else if (status == 3) {
+                  tracesItem.text = '已签收';
+                } else if (status == 301) {
+                  tracesItem.text = '已签收';
+                } else if (status == 302) {
+                  tracesItem.text = '派件异常后最终签收';
+                } else if (status == 304) {
+                  tracesItem.text = '代收签收';
+                } else if (status == 311) {
+                  tracesItem.text = '快递柜或驿站签收';
+                } else if (status == 4) {
+                  tracesItem.text = '问题件';
+                } else if (status == 401) {
+                  tracesItem.text = '发货无信息';
+                } else if (status == 402) {
+                  tracesItem.text = '超时未签收';
+                } else if (status == 403) {
+                  tracesItem.text = '超时未更新';
+                } else if (status == 404) {
+                  tracesItem.text = '拒收（退件）';
+                } else if (status == 405) {
+                  tracesItem.text = '派件异常';
+                } else if (status == 406) {
+                  tracesItem.text = '退货签收';
+                } else if (status == 407) {
+                  tracesItem.text = '退货未签收';
+                } else if (status == 412) {
+                  tracesItem.text = '快递柜或驿站超时未取';
+                } else if (status == '001') {
+                  tracesItem.text = '已下单';
+                } else if (status == '002') {
+                  tracesItem.text = '已发货';
+                }
+              })
             })
-          })
           }
           scope.ordDtl = res.data
           // that.logisticsList = result
@@ -1316,9 +1347,10 @@
   }
 </script>
 <style lang="scss" scoped>
-	.el-carousel__item {
-	    overflow-y: auto!important;
-	}
+  .el-carousel__item {
+    overflow-y: auto !important;
+  }
+
   .ly-container {
     padding: 10px 20px;
     font-size: 14px;

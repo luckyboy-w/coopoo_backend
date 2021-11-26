@@ -32,6 +32,13 @@
                     <span>{{scope.row.maxGoodsSalePrice?(scope.row.minGoodsSalePrice+'~'+scope.row.maxGoodsSalePrice):scope.row.minGoodsSalePrice}}</span>
                   </template>
                 </el-table-column>
+                <!-- <el-table-column label="直播价格">
+                  <template slot-scope="scope">
+                  <el-button type="primary" size="small" @click="modifySku(scope.row)">
+                    设置价格
+                  </el-button>
+                  </template>
+                </el-table-column> -->
                 <el-table-column prop="saleVolume" label="销量" width="80" />
                 <el-table-column prop="createTime" label="创建时间" width="170">
                   <template slot-scope="scope">
@@ -130,7 +137,30 @@
         </div>
       </div>
     </el-dialog>
-
+    <!-- 修改属性规格弹框 -->
+    <el-dialog title="修改商品直播价格" :visible.sync="skuDialog" width="50%" destroy-on-close :before-close="skuClose">
+      <div style="width: 100%;">
+        <el-table style="margin-top: 10px" :data="skuTableData.table" :span-method="objectSpanMethod" border>
+          <el-table-column
+            align="center"
+            v-for="(item,index) in skuTableData.columnList"
+            :key="index"
+            :label="item"
+            width=""
+          >
+            <template slot-scope="scope">
+              {{ scope.row.tdList[index].value }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="salePrice" label="会员价"></el-table-column>
+          <el-table-column align="center" prop="promotionPrice" label="活动价">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.promotionPrice"></el-input>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -140,6 +170,7 @@
     postMethod,
     getUploadUrl
   } from '@/api/request'
+  import {deepCopy} from '@/utils/util'
   export default {
     data() {
       return {
@@ -169,6 +200,8 @@
           pageSize: 10,
           pageNum: 1,
         },
+        skuDialog: false,
+        skuTableData:{},
       }
     },
     props: {
@@ -237,6 +270,117 @@
         });
         }
       },
+      //修改SKU价格彈框
+      modifySku(row) {
+        this.skuDialog = true
+        console.log(row, 'sku信息')
+
+        let table = this.loadTableList(row.skuList,row.goodsName,row.goodsId,{})
+        this.skuTableData=table
+        console.log('table',table);
+        // res.data.forEach(item=>{
+        // table.table.map(i=>{
+        //   i.maxStock=i.stock
+        // })
+        // this.tableList.push(table)
+        // })
+
+      },
+      skuClose() {
+        this.skuDialog = false
+      },
+
+      // 控制合并表格的行和列
+      objectSpanMethod({row, column, rowIndex, columnIndex}) {
+
+        if (row.tdList[columnIndex] === undefined) {
+          // 超出了 tdList 的长度 不属于动态列的范围 正常显示
+          return {
+            rowspan: 1,
+            colspan: 1
+          }
+        }
+
+        // 如果不展示 则把此单元格合并到0 即消掉 不显示
+        if (!row.tdList[columnIndex].rowSpanShow) {
+          return {
+            rowspan: 0,
+            colspan: 1
+          }
+        }
+
+        // 否则 按照计算好的行数来合并
+        return {
+          rowspan: row.tdList[columnIndex].rowSpan,
+          colspan: 1
+        }
+      },
+
+      // 加载SKU表格的数据
+      loadTableList(skuPriceList, goodsName, goodsId,objData) {
+        let tempTableList = []
+        let columnList = []
+        for (let i = 0; i < skuPriceList.length; i++) {
+          skuPriceList[i].goodsName = goodsName
+          tempTableList[i] = deepCopy(skuPriceList[i])
+          tempTableList[i].tdList = []
+
+          const attrName2ValueList = tempTableList[i].skuText.split(';')
+
+          for (let j = 0; j < attrName2ValueList.length; j++) {
+            const [specName, specValue] = attrName2ValueList[j].split(':')
+            // 填充一次动态列
+            if (i === 0) {
+              columnList.push(specName)
+            }
+            // 原理 本列上一行的值一样 合并行
+            let thisRowSpan = 1
+            let thisRowSpanShow = true
+
+            if (i > 0) {
+              let tempIndex = i - 1
+              let preData = tempTableList[tempIndex].tdList[j]
+
+              // 本行和同列上一行的值相等
+              if (preData.value === specValue) {
+                // 找到最近的上级节点
+                while (tempIndex >= 0) {
+                  preData = tempTableList[tempIndex].tdList[j]
+                  if (preData.rowSpanShow) {
+                    // 更改他的行数
+                    preData.rowSpan++
+                    break
+                  }
+
+                  tempIndex--
+                }
+
+                thisRowSpan = 1
+                thisRowSpanShow = false
+              }
+            }
+
+            tempTableList[i].tdList.push({
+              name: specName,
+              value: specValue,
+              rowSpan: thisRowSpan,
+              rowSpanShow: thisRowSpanShow
+            })
+          }
+        }
+
+        return {
+          id:objData.id?objData.id:null,
+          goodsId: goodsId,
+          goodsName: goodsName,
+          purchaseLimit: objData.purchaseLimit?objData.purchaseLimit:0,
+          supplierSettleRatio:objData.supplierSettleRatio?objData.supplierSettleRatio:0,
+          storeSettleRatio:objData.storeSettleRatio?objData.storeSettleRatio:0,
+          table: tempTableList,
+          columnList: columnList
+        }
+      },
+
       // 关联商品
       relatedGoods() {
         this.searchParam.pageNum = 1

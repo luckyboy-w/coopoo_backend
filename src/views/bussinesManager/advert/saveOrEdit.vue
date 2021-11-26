@@ -332,7 +332,7 @@
             return false;
           }
         }
-        if (this.dataForm.dataType==3||this.dataForm.dataType==4||this.dataForm.dataType==5||this.dataForm.dataType==6||this.dataForm.dataType==7||this.dataForm.dataType==8||this.dataForm.dataType==2) {
+        if (this.dataForm.dataType==3||this.dataForm.dataType==4||this.dataForm.dataType==6||this.dataForm.dataType==7||this.dataForm.dataType==8||this.dataForm.dataType==2) {
           if (this.dataForm.url=='') {
             this.$message({
               message: "字段不能为空",
