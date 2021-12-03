@@ -81,7 +81,7 @@
         <el-radio v-if="activity.isPermanent==1" disabled>永久有效</el-radio>
       </el-form-item>
       <el-divider content-position="left"/>
-      <el-button @click="submit" :loading="loading" style="display:block;margin:0 auto" type="primary">提交</el-button>
+      <el-button @click="submit" :loading="loading" :disabled="disabled" style="display:block;margin:0 auto" type="primary">提交</el-button>
     </el-form>
 
     <el-dialog :visible="showGoodsList" :before-close="showGoodsListClose" title="关联商品" width="90%">
@@ -176,6 +176,7 @@ export default {
       tableData: {
         list: []
       },
+      disabled:false,
       multipleSelection:[],
       bindingList:[],
       showGoodsList: false,
@@ -205,6 +206,9 @@ export default {
   },
 
   mounted() {
+    if(this.activity.enable==1){
+      this.disabled=true
+    }
     if (this.activity.preheatStartTime&&this.activity.preheatStartTime!='') {
       this.activityGoodForm.preheatStartTime = new Date(this.activity.preheatStartTime)
     } else{

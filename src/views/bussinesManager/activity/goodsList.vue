@@ -57,7 +57,7 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click.native.prevent="deleteGoods(scope.row)">删除</el-button>
+              <el-button type="text" size="small" :disabled="disabled" @click.native.prevent="deleteGoods(scope.row)">删除</el-button>
               <!-- <el-button type="text" size="small" @click.native.prevent="present(scope.row.supplierId, scope.row.supplierName)">查看</el-button>
               <el-button type="text" size="small" @click.native.prevent="update(scope.row.supplierId, scope.row.supplierName)">修改</el-button>
               <el-button type="text" size="small" v-if="scope.row.enable == 1" @click.native.prevent="disable(scope.row.id)">禁用</el-button>
@@ -100,6 +100,7 @@ export default {
   },
   data () {
     return {
+      disabled:false,
       isLoading: false,
       showActivityGoodList: true,
       showSave: false,
@@ -121,6 +122,9 @@ export default {
   beforeMount() {},
 
   mounted() {
+    if(this.activityData.enable==1){
+      this.disabled=true
+    }
     this.activity = this.activityData
     this.searchParam.activityId = this.activityData.id;
     this.loadList();
