@@ -54,7 +54,7 @@
           </el-table-column>
           <el-table-column label="操作" fixed="right" min-width="250px">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click.native.prevent="addOrEdit('edit', scope.row)">修改</el-button>
+              <el-button type="text" size="small" @click="addOrEdit('edit', scope.row)">修改</el-button>
               <el-button type="text" size="small" @click.native.prevent="addGood(scope.row)">管理商品</el-button>
               <el-button v-if="scope.row.enable==1" @click="enable('1',scope.row)" type="text" size="small">禁用
               </el-button>
@@ -119,7 +119,7 @@
 
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submit()">提交</el-button>
+          <el-button type="primary" :disabled="subDisabled" @click="submit()">提交</el-button>
           <el-button @click="closeActivityDialog">取消</el-button>
         </el-form-item>
       </el-form>
@@ -199,6 +199,7 @@
       }
       return {
         isLoading: true,
+        subDisabled:false,
         showSave: false,
         showActivityList: true,
         showGoodList: false,
@@ -300,6 +301,7 @@
         });
       },
       handleClose() {
+        this.subDisabled=false
         this.isShowQuotaDialog = false
         this.activity_new_user_purchase_limit=''
       },
@@ -387,6 +389,11 @@
       addOrEdit(oper, activity) {
         this.oper = oper
         this.activityTypeDisable = oper == "edit"
+          if(activity&&activity.enable==1){
+            this.subDisabled=true
+          }else{
+            this.subDisabled=false
+          }
         if (oper == "edit") {
           this.activityForm = JSON.parse(JSON.stringify(activity))
           this.activityForm.activityType = activity.activityType
