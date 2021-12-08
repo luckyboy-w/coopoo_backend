@@ -285,9 +285,9 @@
             <el-table-column prop="skuText" label="规格">
               <template slot-scope="scope">
                 {{ scope.row.skuText }}
-                <!-- <div style="text-align: center!important;width: 100%;">
+                <div v-if="ordDtl.orderStatus==5||ordDtl.orderStatus==6" style="text-align: center!important;width: 100%;">
                   <el-button type="text" @click="modifySku(scope.row)">修改订单属性</el-button>
-                </div> -->
+                </div>
               </template>
             </el-table-column>
             <el-table-column prop="goodsPrice" label="商品单价" />
@@ -329,7 +329,7 @@
         <el-row :gutter="20" style="line-height:40px" class="main-title">
           <el-col :span="6">
             收货人信息
-                 <!-- <el-button type="text" @click="addressDialog = true">&nbsp;&nbsp;&nbsp; 修改收货地址</el-button> -->
+            <el-button v-if="ordDtl.orderStatus==6" type="text" @click="addressDialog = true">&nbsp;&nbsp;&nbsp; 修改收货地址</el-button>
           </el-col>
         </el-row>
         <el-row :gutter="20" class="main-text">
@@ -503,7 +503,7 @@
                 <el-input v-model="addressForm.changeName"></el-input>
               </el-form-item>
               <el-form-item label="手机号" prop="changePhone">
-                <el-input v-model="addressForm.changePhone"></el-input>
+                <el-input maxlength="11" v-model="addressForm.changePhone"></el-input>
               </el-form-item>
               <el-form-item>
                 <div style="text-align: right;">
@@ -531,7 +531,7 @@
         <div style="display: flex;border-top: 1px solid #9E9E9E;">
           <div style="min-width: 200px"></div>
           <div style="padding-top: 20px;width: 100%;">
-            <el-form ref="form" :rules="addressRules" :model="addressForm" label-width="100px">
+            <el-form ref="form" :model="addressForm" label-width="100px">
               <div>
                 <div class="wrap wrap-sku">
                   <div class="product-box">
@@ -713,7 +713,7 @@
         shopItemInfo: {}, //存放要和选中的值进行匹配的数据
         subIndex: [], //是否选中 因为不确定是多规格还是单规格，所以这里定义数组来判断
         price: '',
-        addressData:addressData,
+        addressData: addressData,
 
         menuId: '',
         operationModuleName: '',
@@ -849,8 +849,8 @@
         this.searchParam.orderStatus = this.$route.query.orderStatus
       }
       this.initLoad()
-      console.log(addressData,'addressData')
-      // this.loadProvinceList()
+      console.log(addressData, 'addressData')
+      this.loadProvinceList()
       //this.loadtypeIdList()
       // this.initSupplyList()
     },
@@ -888,7 +888,7 @@
         console.log(row, 'sku信息')
         this.goodDtlList = row
         getMethod('/goods/detail', {
-          goodsId: 'e59616564f8f4634a258eb6d0a857bc2' //row.orderItemId
+          goodsId: row.goodsId //row.goodsId
         }).then(res => {
           let skuSelList = res.data.specificationList
           let skuPriceList = res.data.skuList
@@ -918,12 +918,9 @@
         })
       },
       enterSku() {
-        console.log('wwww', this.selectArr);
         let skuText = this.selectArr.join(";")
-        console.log(skuText, 'skuText')
         let arr = this.simulatedDATA.difference
         let skuId = ''
-        console.log(arr, skuText, 'arr');
         for (let j = 0; j < arr.length; j++) {
           if (arr[j].skuText == skuText) {
             skuId = arr[j].skuId
@@ -932,22 +929,23 @@
         if (skuId != '') {
           let param = {
             skuId: skuId,
-            ordDtlId: this.goodDtlList.ordDtlId
+            orderItemId: this.goodDtlList.orderItemId,
+            orderNo:this.ordDtl.orderNo
           }
-          postMethod('/order/changeSkuAttr', param).then(res => {
-            if (res.code == 200) {
+          postMethod('/order/modify-order-sku', param).then(res => {
+            if (res.errCode == 0) {
               this.$message({
                 message: '修改成功',
                 type: 'success'
               })
-              let datas = {
-                operationObject: this.ordDtl.orderNo,
-                operationContent: '修改商品规格'
-              }
-              this.saveOperation(datas)
+              // let datas = {
+              //   operationObject: this.ordDtl.orderNo,
+              //   operationContent: '修改商品规格'
+              // }
+              // this.saveOperation(datas)
               this.skuClose()
               let obj = {
-                orderId: this.ordDtl.orderId
+                orderNo: this.ordDtl.orderNo
               }
               this.getOrdDtl(obj)
             } else {
@@ -995,7 +993,7 @@
         for (let j = 0; j < arr.length; j++) {
           if (arr[j].skuText == skuText) {
             skuId = arr[j].skuId
-            this.price=arr[j].price
+            this.price = arr[j].price
           }
         }
         this.$forceUpdate(); //重绘
@@ -1155,7 +1153,7 @@
       loadProvinceList() {
         const scope = this
         // getMethod('/backend/areas/getAllData').then(res => {
-          scope.city = addressData.data
+        scope.city = addressData.data
         // })
       },
       selectProvinceFun(event) {
@@ -1193,28 +1191,28 @@
         this.$refs['form'].validate((valid) => {
           if (valid) {
             let param = {
-              orderId: this.ordDtl.orderId,
-              recAddress: this.addressForm.changeAddress,
-              recProvinceName: this.addressForm.provincetext,
-              recCityName: this.addressForm.citytext,
-              recAreaName: this.addressForm.areaText,
-              recPhone: this.addressForm.changePhone,
-              recUname: this.addressForm.changeName,
+              orderNo: this.ordDtl.orderNo,
+              receiverAddress: this.addressForm.changeAddress,
+              receiverProvince: this.addressForm.provincetext,
+              receiverCity: this.addressForm.citytext,
+              receiverRegion: this.addressForm.areaText,
+              receiverPhone: this.addressForm.changePhone,
+              receiverName: this.addressForm.changeName,
             }
-            postMethod('/order/changeAddress', param).then(res => {
-              if (res.code == 200) {
+            postMethod('/order/modify-order-address', param).then(res => {
+              if (res.errCode == 0) {
                 this.$message({
                   message: '修改成功',
                   type: 'success'
                 })
-                let datas = {
-                  operationObject: this.ordDtl.orderNo,
-                  operationContent: '修改收货地址'
-                }
-                this.saveOperation(datas)
+                // let datas = {
+                //   operationObject: this.ordDtl.orderNo,
+                //   operationContent: '修改收货地址'
+                // }
+                // this.saveOperation(datas)
                 this.adressClose()
                 let obj = {
-                  orderId: this.ordDtl.orderId
+                  orderNo: this.ordDtl.orderNo
                 }
                 this.getOrdDtl(obj)
               } else {

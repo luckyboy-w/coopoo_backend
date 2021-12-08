@@ -12,6 +12,12 @@
             <el-input v-model="dataForm.sellingPoint" style="width:260px" placeholder="请输入卖点" maxlength="50"
               show-word-limit  />
           </el-form-item>
+          <el-form-item label="供应商">
+            <el-select v-model="dataForm.supplierId" placeholder="请选择">
+              <el-option v-for="item in supplierList" :key="item.id" :label="item.supplierName" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+
           <el-form-item label="发货方式">
             <el-radio v-model="dataForm.deliveryMethod" label="2">邮寄到家</el-radio>
             <el-radio v-model="dataForm.deliveryMethod" label="3">到店自提</el-radio>
@@ -245,6 +251,7 @@
         token: {
           token: Cookies.get('token')
         },
+        supplierList:[],
         goodSaleDescImgVisible: false,
         goodSaleDescImgUrl: '',
         goodSaleDescList: [],
@@ -275,6 +282,7 @@
         },
         goodsVideoGroupId:'',
         dataForm: {
+          supplierId:'',
           postSaleId: '',
           goodsVideo: '',
           goodsName: '',
@@ -350,9 +358,17 @@
         // this.buildSkuImgGroupId()
         this.buildVideoUrlGroupId()
         this.loadGoodSaleDescList()
-
+        this.loadSupplierList()
         // this.loadEditData()
 
+      },
+      loadSupplierList() {
+        let scope = this;
+        getMethod("/supplier/search-supplier-list", {pageSize:50,pageNum:1}).then(
+          res => {
+            scope.supplierList = res.data.records;
+          }
+        );
       },
       buildVideoUrlGroupId(){
         getMethod('/oss/get-group-id', null).then(res => {
@@ -641,10 +657,10 @@
         return ''
       },
       async saveObject() {
-
+        console.log(this.dataForm,'this.dataForm')
         if (this.validate()) {
           let errorMsg = ''
-
+          
           if (this.uploadGoodImageList.length == 0) {
             errorMsg = '请上传商品图片'
           }
@@ -705,7 +721,7 @@
             this.$message.warning(feeMsg)
             return
           }
-
+          
 
           let fileList = []
           fileList = fileList.concat(this.uploadVideoList)
@@ -795,6 +811,13 @@
         if (dataFrm['sellingPoint'] == '') {
           this.$message({
             message: '卖点不能为空',
+            type: 'warning'
+          })
+          return false
+        }
+        if (dataFrm['supplierId'] == '') {
+          this.$message({
+            message: '供应商不能为空',
             type: 'warning'
           })
           return false

@@ -52,6 +52,9 @@
                 <el-button @click="resetMain()">
                   重置
                 </el-button>
+                <el-button icon="el-icon-download" type="primary" @click="exportData()">
+                  导出
+                </el-button>
               </div>
             </div>
             <el-table ref="noBillData" stripe border :data="noBillData.list" style="width: 100%; margin-bottom: 20px;"
@@ -127,7 +130,7 @@
                 <el-button type="primary" @click="search_()">
                   搜索
                 </el-button>
-                <el-button icon="el-icon-download" type="primary" @click="exportData()">
+                <el-button icon="el-icon-download" type="primary" @click="exportDetailData()">
                   导出
                 </el-button>
                 <el-button @click="reset()">
@@ -316,6 +319,19 @@
 
     methods: {
       exportData() {
+        let exportParam = [];
+
+        let param = JSON.parse(JSON.stringify(''));
+        delete param.pageSize
+        delete param.pageNum
+
+        for (let key in param) {
+          exportParam.push(key + "=" + param[key]);
+        }
+        exportParam.push("token=" + getToken())
+        window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/bean-rec-all-list/export?" + exportParam.join("&"));
+      },
+      exportDetailData() {
         let exportParam = [];
 
         let param = JSON.parse(JSON.stringify(this.searchParams_));

@@ -78,6 +78,29 @@
     </div>
     <div class="listItem">
       <div class="item">
+        <div style="display: flex;flex-wrap: wrap;justify-content: center;">
+          <div style="width: 100%;text-align: center;">邀请好友</div>
+          <div class="tip">每邀请1个好友可获得靠谱豆</div>
+        </div>
+      </div>
+      <div class="item">
+        <el-input placeholder="请输入奖励颗数..." v-model="dataForm.invite_member_reward_bean" clearable></el-input>&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;
+        <el-input placeholder="请输入每日限制次数..." v-model="dataForm.invite_member_count_per_day" clearable></el-input>
+      </div>
+    </div>
+   <!-- <div class="listItem">
+      <div class="item">
+        <div style="display: flex;flex-wrap: wrap;justify-content: center;">
+          <div style="width: 100%;text-align: center;">邀请上限</div>
+          <div class="tip">每天邀请好友个数上限</div>
+        </div>
+      </div>
+      <div class="item">
+        <el-input v-model="dataForm.invite_member_count_per_day"></el-input>
+      </div>
+    </div> -->
+    <div class="listItem">
+      <div class="item">
         签到-连续5天，第5天奖励
       </div>
       <div class="item">
@@ -215,6 +238,8 @@
       continue_sign_in_thirty:'',
       order_evaluation:'',
       favor_articles:'',
+      invite_member_reward_bean:'',
+      invite_member_count_per_day:'',
       grass_favor:'',
       share_articles:'',
       member_register:'',

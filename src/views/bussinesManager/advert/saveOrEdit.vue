@@ -203,9 +203,9 @@
       changeType_(val) {
         getMethod("/operate/get-advert-redirect-value?type=" + val).then(res => {
           this.relationList = res.data
-          if(this.relationList.length<=0){
+          if(this.relationList&&this.relationList.length<=0){
             this.dataForm.url=''
-          }else if(this.relationList.length>0){
+          }else if(this.relationList&&this.relationList.length>0){
             let display=''
             this.relationList.forEach(i=>{
                if (i.id==this.dataForm.url) {

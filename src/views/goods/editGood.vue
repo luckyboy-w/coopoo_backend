@@ -11,6 +11,11 @@
             <el-input v-model="dataForm.sellingPoint" style="width:260px" placeholder="请输入卖点" maxlength="50"
               :disabled="isDisabled" show-word-limit />
           </el-form-item>
+          <el-form-item label="供应商">
+            <el-select  v-model="dataForm.supplierId" :disabled="isDisabled" placeholder="请选择">
+              <el-option v-for="item in supplierList" :key="item.id" :label="item.supplierName" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="发货方式">
             <el-radio :disabled="isDisabled" v-model="dataForm.deliveryMethod" label="2">邮寄到家</el-radio>
             <el-radio :disabled="isDisabled" v-model="dataForm.deliveryMethod" label="3">到店自提</el-radio>
@@ -246,6 +251,7 @@
           token: Cookies.get('token')
         },
         isEdit: false,
+        supplierList:[],
         goodSaleDescImgVisible: false,
         goodSaleDescImgUrl: '',
         goodSaleDescList: [],
@@ -276,6 +282,7 @@
         goodsVideoUrl: '',
         dataForm: {
           postSaleId: '123',
+          supplierId:'',
           goodsVideo: '',
           goodsName: '',
           sellingPoint: '',
@@ -331,6 +338,7 @@
       this.initData()
       this.isEdit = this.isEditGood
       this.loadGoodSaleDescList()
+      this.loadSupplierList()
     },
     created() {},
     methods: {
@@ -343,6 +351,14 @@
       },
       backToList() {
         this.$emit("showListPanel", true);
+      },
+      loadSupplierList() {
+        let scope = this;
+        getMethod("/supplier/search-supplier-list", {pageSize:50,pageNum:1}).then(
+          res => {
+            scope.supplierList = res.data.records;
+          }
+        );
       },
       buildVideoUrlGroupId() {
         getMethod('/oss/get-group-id', null).then(res => {
@@ -814,6 +830,13 @@
           })
           return false
         }
+        if (dataFrm['supplierId'] == '') {
+          this.$message({
+            message: '请选择供应商',
+            type: 'warning'
+          })
+          return false
+        }
         return true
       },
       submitUpdate() {
@@ -830,6 +853,7 @@
             postSaleId: String(this.editData.postSaleId),
             goodsVideo: this.editData.goodsVideo ? this.editData.goodsVideo[0].groupId : '',
             goodsName: this.editData.goodsName,
+            supplierId: this.editData.supplierId,
             sellingPoint: this.editData.sellingPoint,
             deliveryMethod: String(this.editData.deliveryMethod),
             goodsImg: this.editData.goodsImg ? this.editData.goodsImg[0].groupId : '',
