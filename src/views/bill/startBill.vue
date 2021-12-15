@@ -24,7 +24,7 @@
             </el-select>
           </div>
         </div>
-        <div class="tabTd">
+        <!-- <div class="tabTd">
           <div>申请时间：</div>
           <div>
             <el-date-picker v-model="searchParam.startTime" value-format="yyyy-MM-dd" type="date" style="width:140px"
@@ -32,6 +32,17 @@
             &nbsp;&nbsp;至&nbsp;&nbsp;
             <el-date-picker v-model="searchParam.endTime" value-format="yyyy-MM-dd" type="date" style="width:140px"
               placeholder="结束日期" />
+          </div>
+        </div> -->
+        <div class="tabTd">
+          <div>入账月份：</div>
+          <div>
+            <el-date-picker
+                  v-model="searchParam.accountDate"
+                  type="month"
+                  value-format="yyyy-MM"
+                  placeholder="选择月">
+                </el-date-picker>
           </div>
         </div>
         <div class="tabTd">
@@ -47,11 +58,12 @@
         <!-- <el-table-column type="index" width="50" label="序号" /> -->
         <el-table-column prop="settleNo" label="结算单号" min-width="20%" />
         <el-table-column prop="supplierName" label="供应商名称" min-width="20%" />
-        <el-table-column prop="applySettleDate" label="申请时间" min-width="20%">
+        <el-table-column prop="accountDate" label="入账月份" min-width="20%" />
+        <!-- <el-table-column prop="applySettleDate" label="申请时间" min-width="20%">
           <template slot-scope="scope">
             {{ scope.row.applySettleDate | _formateDate }}
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="orderAmount" label="订单金额" min-width="24%">
           <template slot-scope="scope">
             {{ scope.row.orderAmount | fmtFee }}
@@ -143,6 +155,7 @@
           isConfirm:'',
           supplierName:'',
           settleNo	:'',
+          accountDate:"",
           pageSize: 10,
           pageNum: 1
         },

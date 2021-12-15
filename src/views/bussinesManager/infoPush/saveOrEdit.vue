@@ -161,6 +161,9 @@
             });
             return false
           }
+          if (this.dataForm.msgType==2) {
+            delete this.dataForm.img;
+          }
           delete this.dataForm.createTime;
           delete this.dataForm.createBy;
           postMethod("/operate/send-active-info", this.dataForm).then(res => {
