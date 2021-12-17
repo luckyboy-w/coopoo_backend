@@ -135,6 +135,7 @@
             scope.tableData.list = res.data.records;
             scope.tableData.total = res.data.total;
 					  scope.showPagination = scope.tableData.total == 0;
+            this.$forceUpdate()
         });
       }
     },

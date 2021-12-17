@@ -161,7 +161,7 @@
       </div>
     </el-dialog>
     <!-- 修改属性规格弹框 -->
-    <el-dialog title="修改商品直播价格" :visible.sync="skuDialog" width="50%" destroy-on-close :before-close="skuClose">
+    <el-dialog title="修改商品直播价格" :visible.sync="skuDialog" width="50%" destroy-on-close :close-on-click-modal="false" @close="skuClose()">
       <div style="width: 100%;">
         <el-table style="margin-top: 10px" :data="skuTableData.table" :span-method="objectSpanMethod" border>
           <el-table-column align="center" v-for="(item,index) in skuTableData.columnList" :key="index" :label="item"
@@ -184,6 +184,9 @@
             </template>
           </el-table-column>
         </el-table>
+      </div>
+      <div style="text-align: center;margin: 30px;">
+        <el-button type="primary" @click="enterSku()">保存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -230,6 +233,7 @@
         },
         skuDialog: false,
         skuTableData: {},
+        localSkuTableData: {},
       }
     },
     props: {
@@ -281,7 +285,7 @@
       testTop(row, index) {
         let scope = this
         if (row.status == "0") {
-          postMethod('/live/enable-live-goods?liveGoodsId=' + row.id).then(res => {
+          postMethod('/live/top-live-goods?liveGoodsId=' + row.id).then(res => {
             this.$set(this.bindingList[index], 'status', '1')
             this.$message({
               message: "置顶成功",
@@ -289,7 +293,7 @@
             });
           });
         } else if (row.status == "1") {
-          postMethod('/live/disable-live-goods?liveGoodsId=' + row.id).then(res => {
+          postMethod('/live/top-cancel-live-goods?liveGoodsId=' + row.id).then(res => {
             this.$set(this.bindingList[index], 'status', '0')
             this.$message({
               message: "取消成功",
@@ -318,35 +322,47 @@
           });
         }
       },
-      //修改SKU价格彈框
-      modifySku(row) {
-        this.skuDialog = true
-        console.log(row, 'sku信息')
+ //修改SKU价格彈框
+ modifySku(row) {
+   this.skuDialog = true
+   console.log(row, 'sku信息')
 
-        if (row.localSkuList) {
-          this.skuTableData = row.localSkuList
-        } else {
-          if (row.relatedSkuList) {
+   if (row.localSkuList) {
+     this.skuTableData = row.localSkuList
+     this.localSkuTableData=JSON.parse(JSON.stringify(row.localSkuList))
+   } else {
+     if (row.relatedSkuList) {
 
-            let table = this.loadTableList(row.relatedSkuList, row.goodsName, row.goodsId, row)
-            this.skuTableData = table
-          } else {
-            let table = this.loadTableList(row.skuList, row.goodsName, row.goodsId, row)
-            this.skuTableData = table
-          }
-        }
+       let table = this.loadTableList(row.relatedSkuList, row.goodsName, row.goodsId, row)
+       this.skuTableData = table
+       this.localSkuTableData=JSON.parse(JSON.stringify(table))
+     } else {
+       let table = this.loadTableList(row.skuList, row.goodsName, row.goodsId, row)
+       this.skuTableData = table
+       this.localSkuTableData=JSON.parse(JSON.stringify(table))
+     }
+   }
 
-      },
-      skuClose() {
-        console.log(this.skuTableData, this.bindingList, 'this.skuTableData')
-
-        for (let i = 0; i < this.bindingList.length; i++) {
-          if (this.skuTableData.goodsId == this.bindingList[i].goodsId) {
-            this.bindingList[i].localSkuList = this.skuTableData
-          }
-        }
-        this.skuDialog = false
-      },
+ },
+ skuClose() {
+   console.log(this.skuTableData, this.bindingList,this.localSkuTableData, 'this.skuTableData')
+   this.skuTableData=this.localSkuTableData
+   for (let i = 0; i < this.bindingList.length; i++) {
+     if (this.skuTableData.goodsId == this.bindingList[i].goodsId) {
+       this.bindingList[i].localSkuList = this.skuTableData
+     }
+   }
+   this.skuDialog = false
+ },
+ enterSku(){
+   for (let i = 0; i < this.bindingList.length; i++) {
+     if (this.skuTableData.goodsId == this.bindingList[i].goodsId) {
+       this.bindingList[i].localSkuList = this.skuTableData
+     }
+   }
+   this.localSkuTableData={}
+   this.skuDialog = false
+ },
 
       // 控制合并表格的行和列
       objectSpanMethod({

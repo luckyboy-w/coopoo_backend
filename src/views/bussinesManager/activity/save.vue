@@ -185,7 +185,7 @@
       </div>
     </el-dialog>
     <!-- 修改属性规格弹框 -->
-    <el-dialog title="修改活动商品价格" :visible.sync="skuDialog" width="50%" destroy-on-close :before-close="skuClose">
+    <el-dialog title="修改活动商品价格" :visible.sync="skuDialog" width="50%" destroy-on-close :close-on-click-modal="false" @close="skuClose()">
       <div style="width: 100%;">
         <el-table style="margin-top: 10px" :data="skuTableData.table" :span-method="objectSpanMethod" border>
           <el-table-column align="center" v-for="(item,index) in skuTableData.columnList" :key="index" :label="item"
@@ -208,6 +208,9 @@
             </template>
           </el-table-column>
         </el-table>
+      </div>
+      <div style="text-align: center;margin: 30px;">
+        <el-button type="primary" @click="enterSku()">保存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -249,7 +252,8 @@
         multipleSelection: [],
         bindingList: [],
         showGoodsList: false,
-
+        localSkuTableData: {},
+        
         isShowGoodDetail: false,
         isEditGood: false,
         loading: false,
@@ -315,22 +319,36 @@
         this.skuDialog = true
         if (row.localSkuList) {
           this.skuTableData = row.localSkuList
+          this.localSkuTableData=JSON.parse(JSON.stringify(row.localSkuList))
         } else {
           if (row.activityGoodsSkuList) {
             let table = this.loadTableList(row.activityGoodsSkuList, row.goodsName, row.goodsId, row)
             this.skuTableData = table
+            this.localSkuTableData=JSON.parse(JSON.stringify(table))
           } else {
             let table = this.loadTableList(row.skuList, row.goodsName, row.goodsId, row)
             this.skuTableData = table
+            this.localSkuTableData=JSON.parse(JSON.stringify(table))
           }
         }
       },
       skuClose() {
+        console.log(this.skuTableData, this.bindingList,this.localSkuTableData, 'this.skuTableData')
+        this.skuTableData=this.localSkuTableData
         for (let i = 0; i < this.bindingList.length; i++) {
           if (this.skuTableData.goodsId == this.bindingList[i].goodsId) {
             this.bindingList[i].localSkuList = this.skuTableData
           }
         }
+        this.skuDialog = false
+      },
+      enterSku(){
+        for (let i = 0; i < this.bindingList.length; i++) {
+          if (this.skuTableData.goodsId == this.bindingList[i].goodsId) {
+            this.bindingList[i].localSkuList = this.skuTableData
+          }
+        }
+        this.localSkuTableData={}
         this.skuDialog = false
       },
 
