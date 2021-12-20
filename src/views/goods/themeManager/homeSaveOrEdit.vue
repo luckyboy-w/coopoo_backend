@@ -606,16 +606,16 @@
     },
     computed: {},
     mounted() {
-      if (this.editData.goodsThemeId) {
-        this.dataEcho()
-        this.changeImg()
-      }
       if (this.editData.operation == "add") {
         this.submitStatus = 1
       } else if (this.editData.operation == "edit") {
         this.submitStatus = 2
       } else if (this.editData.operation == "detail") {
         this.disabled = true
+      }
+      if (this.editData.goodsThemeId) {
+        this.dataEcho()
+        this.changeImg()
       }
     },
     created() {},
