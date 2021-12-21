@@ -279,10 +279,12 @@
       selectPreheat(val) {
         if (val == 2) {
           this.selectPreheatDisabled = true
-        } else {
+        } else if (val == 1){
           this.selectPreheatDisabled = false
         }
-        this.activityForm.preheatStartTime = ''
+        this.$set(this.activityForm, "preheatStartTime", '')
+        // this.activityForm.preheatStartTime = ''
+        this.$forceUpdate()
       },
       selectRange(val) {
         if (val == 2) {
@@ -442,6 +444,13 @@
             delete this.activityForm.createTime
 
             if (this.activityForm.activityType == 1) {
+              if (this.radio == 1 && !this.activityForm.preheatStartTime) {
+                this.$message({
+                  message: '请选择活动预热时间',
+                  type: 'warning'
+                })
+                return false
+              }
               if (this.activityForm.startTime == '') {
                 this.$message({
                   message: '请选择活动有效期',
