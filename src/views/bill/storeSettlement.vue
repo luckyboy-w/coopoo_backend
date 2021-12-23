@@ -2,8 +2,8 @@
   <div class="bill-tab-list" >
     <div style="margin: 30px;" v-if="showList">
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="未分佣" name="readyBill">
-        <span slot="label" class="my-tab-label">未分佣</span>
+      <el-tab-pane label="未结算" name="readyBill">
+        <span slot="label" class="my-tab-label">未结算</span>
         <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
           <div class="tabTd">
             <div>门店名称：</div>
@@ -28,7 +28,7 @@
           </el-table-column>
           <el-table-column prop="orderPayAmount" label="实付金额" >
           </el-table-column>
-          <el-table-column prop="settleAmount" label="分佣金额" >
+          <el-table-column prop="settleAmount" label="结算金额" >
           </el-table-column>
           <el-table-column label="操作" >
             <template slot-scope="scope">
@@ -47,8 +47,8 @@
           :current-page="searchParam.pageNum"
         />
       </el-tab-pane>
-      <el-tab-pane label="待分佣" name="settleFinsh">
-        <span slot="label" class="my-tab-label">待分佣</span>
+      <el-tab-pane label="待结算" name="settleFinsh">
+        <span slot="label" class="my-tab-label">待结算</span>
         <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
           <div class="tabTd">
             <div>结算单号：</div>
@@ -100,7 +100,7 @@
           </el-table-column>
           <el-table-column prop="orderPayAmount" label="实付金额" >
           </el-table-column>
-          <el-table-column prop="settleAmount" label="分佣金额">
+          <el-table-column prop="settleAmount" label="结算金额">
           </el-table-column>
           <el-table-column prop="isConfirm" label="状态">
             <template slot-scope="scope">
@@ -125,8 +125,8 @@
           :current-page="searchParam.pageNum"
         />
       </el-tab-pane>
-      <el-tab-pane label="已分佣" name="settleEnd">
-        <span slot="label" class="my-tab-label">已分佣</span>
+      <el-tab-pane label="已结算" name="settleEnd">
+        <span slot="label" class="my-tab-label">已结算</span>
         <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
           <div class="tabTd">
             <div>结算单号：</div>
@@ -176,7 +176,7 @@
           </el-table-column>
           <el-table-column prop="orderPayAmount" label="实付金额" >
           </el-table-column>
-          <el-table-column prop="settleAmount" label="分佣金额" >
+          <el-table-column prop="settleAmount" label="结算金额" >
           </el-table-column>
           <el-table-column label="操作" >
             <template slot-scope="scope">
@@ -262,7 +262,7 @@
           </el-table-column>
           <el-table-column prop="orderPayAmount" label="实付金额" >
           </el-table-column>
-          <el-table-column prop="settleAmount" label="分佣金额" >
+          <el-table-column prop="settleAmount" label="结算金额" >
           </el-table-column>
           <el-table-column label="操作" >
             <template slot-scope="scope">
@@ -509,15 +509,15 @@ export default {
       this.back = false
       if (this.activeName == 'readyBill') {
         this.only = '0'
-        this.billMem = '未分佣'
+        this.billMem = '未结算'
         this.searchParam.settleStatus=1
       } else if (this.activeName == 'settleFinsh') {
         this.only = '1'
-        this.billMem = '待分佣'
+        this.billMem = '待结算'
         this.searchParam.settleStatus=2
       } else if (this.activeName == 'settleEnd') {
         this.only = '2'
-        this.billMem = '已分佣'
+        this.billMem = '已结算'
         this.searchParam.settleStatus=3
       }
       this.settleNo=row.settleNo?row.settleNo:''
