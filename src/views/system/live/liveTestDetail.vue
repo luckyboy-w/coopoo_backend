@@ -6,7 +6,7 @@
           <el-input v-model="form.liveName" placeholder="请输入" clearable :disabled="disabled" />
         </el-form-item>
         <el-form-item label="直播时间">
-          <el-date-picker v-model="liveDate" clearable :disabled="disabledTime" type="datetimerange"
+          <el-date-picker v-model="liveDate" :clearable="false" :disabled="disabledTime" type="datetimerange"
             start-placeholder="开始日期" end-placeholder="结束日期" @change="activityDateTimeChange"
             value-format="yyyy-MM-dd HH:mm:ss" :default-time="['00:00:00', '00:00:00']">
             <!-- :picker-options="startDateTimePickerOptions" -->
@@ -16,7 +16,7 @@
           <el-button type="success" @click="relatedGoods" :disabled="disabled">关联商品</el-button>
         </el-form-item>
         <el-form-item label="已关联商品">
-          <div class="ly-table-panel" style="min-width:1200px!important;">
+          <div class="ly-table-panel" style="min-width:1300px!important;">
             <div class="ly-data-list">
               <el-table ref="mainTable" :data="bindingList" style="width: 100%!important; margin-bottom: 20px;"
                 row-key="id" border>
@@ -26,7 +26,7 @@
                     <span>{{scope.row.maxGoodsSalePrice?(scope.row.minGoodsSalePrice+'~'+scope.row.maxGoodsSalePrice):scope.row.minGoodsSalePrice}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="直播价格">
+                <el-table-column label="直播价格" width="110">
                   <template slot-scope="scope">
                     <el-button type="primary" size="small" @click="modifySku(scope.row)">
                       设置价格
@@ -37,7 +37,7 @@
 
                 <el-table-column prop="purchaseLimit" label="限购" width="160">
                   <template slot-scope="scope">
-                    <el-input-number  :min="0" size="mini" placeholder="请输入" :disabled="disabled"
+                    <el-input-number :min="0" @change="changeVal($event)" size="mini" placeholder="0" :disabled="disabled"
                       v-model="scope.row.purchaseLimit" />
                   </template>
                 </el-table-column>
@@ -59,7 +59,7 @@
                     {{ scope.row.createTime}}
                   </template>
                 </el-table-column>
-                <el-table-column prop="id" label="操作">
+                <el-table-column prop="id" width="200" label="操作">
                   <template slot-scope="scope">
                     <el-button type="text" size="small" @click="getGoodsDtl(scope.row)">
                       详情
@@ -284,17 +284,19 @@
       },
       testTop(row, index) {
         let scope = this
-        if (row.status == "0") {
+        if (row.top == "0") {
           postMethod('/live/enable-live-goods?liveGoodsId=' + row.id).then(res => {
-            this.$set(this.bindingList[index], 'status', '1')
+            this.$set(this.bindingList[index], 'top', '1')
+            this.$forceUpdate()
             this.$message({
               message: "置顶成功",
               type: "success"
             });
           });
-        } else if (row.status == "1") {
+        } else if (row.top == "1") {
           postMethod('/live/disable-live-goods?liveGoodsId=' + row.id).then(res => {
-            this.$set(this.bindingList[index], 'status', '0')
+            this.$set(this.bindingList[index], 'top', '0')
+            this.$forceUpdate()
             this.$message({
               message: "取消成功",
               type: "success"
@@ -307,6 +309,7 @@
         if (row.status == "0") {
           postMethod('/live/enable-live-goods?liveGoodsId=' + row.id).then(res => {
             this.$set(this.bindingList[index], 'status', '1')
+            this.$forceUpdate()
             this.$message({
               message: "启售成功",
               type: "success"
@@ -315,6 +318,7 @@
         } else if (row.status == "1") {
           postMethod('/live/disable-live-goods?liveGoodsId=' + row.id).then(res => {
             this.$set(this.bindingList[index], 'status', '0')
+            this.$forceUpdate()
             this.$message({
               message: "禁售成功",
               type: "success"
@@ -459,7 +463,6 @@
           columnList: columnList
         }
       },
-
       // 关联商品
       relatedGoods() {
         this.searchParam.pageNum = 1
@@ -483,13 +486,15 @@
           this.bindingList.forEach(item => {
             if (item.purchaseLimit) {
               item.purchaseLimit = item.purchaseLimit
-            } else {
-              item.purchaseLimit = '0'
             }
-            // item.purchaseLimit=item.purchaseLimit?item.purchaseLimit:'1'
+            // item.purchaseLimit=item.purchaseLimit?item.purchaseLimit:0
           })
         }
+        console.log('this.bindingList',this.bindingList)
         this.showGoodsList = false
+      },
+      changeVal() {
+      this.$forceUpdate();
       },
       deleteGoods(row, val) {
         let that = this
@@ -512,6 +517,20 @@
       submitUpdate(val) {
         console.log(this.bindingList, 'this.bindingList')
         // return false
+        if (this.form.liveName=='') {
+          this.$message({
+            message: "直播名称不能为空",
+            type: "warning"
+          });
+          return false
+        }
+        if (this.liveDate =='') {
+          this.$message({
+            message: "直播时间不能为空",
+            type: "warning"
+          });
+          return false
+        }
         if (this.bindingList.length <= 0) {
           this.$message({
             message: "请选择直播需要关联的商品",
@@ -632,7 +651,7 @@
 
               goodsObj = {
                 goodsId: arr.goodsId,
-                purchaseLimit: arr.purchaseLimit,
+                purchaseLimit: arr.purchaseLimit?arr.purchaseLimit:0,
                 storeSettleRatio: arr.storeSettleRatio,
                 supplierSettleRatio: arr.supplierSettleRatio,
                 goodsId: arr.goodsId,

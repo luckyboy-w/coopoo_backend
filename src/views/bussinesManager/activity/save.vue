@@ -31,7 +31,7 @@
 
               <el-table-column prop="purchaseLimit" v-if="activity.activityType==1" label="限购" width="160">
                 <template slot-scope="scope">
-                  <el-input-number :disabled="disabled" :min="0" size="mini" placeholder="请输入"
+                  <el-input-number :disabled="disabled" :min="0" size="mini" placeholder="1"
                     v-model="scope.row.purchaseLimit" />
                 </template>
               </el-table-column>
@@ -253,7 +253,7 @@
         bindingList: [],
         showGoodsList: false,
         localSkuTableData: {},
-        
+
         isShowGoodDetail: false,
         isEditGood: false,
         loading: false,
@@ -476,8 +476,6 @@
           this.bindingList.forEach(item => {
             if (item.purchaseLimit || item.purchaseLimit == "0") {
               item.purchaseLimit = item.purchaseLimit
-            } else {
-              item.purchaseLimit = 1
             }
             // item.purchaseLimit=item.purchaseLimit?item.purchaseLimit:'1'
           })
@@ -715,7 +713,7 @@
           goodsObj = {
             id: arr.id ? arr.id : null,
             goodsId: arr.goodsId,
-            purchaseLimit: arr.purchaseLimit,
+            purchaseLimit:(arr.purchaseLimit!=null)?arr.purchaseLimit:1,
             storeSettleRatio: arr.storeSettleRatio,
             supplierSettleRatio: arr.supplierSettleRatio,
             marketingGoodsSkuList: marketingGoodsSkuList
