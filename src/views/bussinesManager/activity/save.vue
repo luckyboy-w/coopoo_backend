@@ -35,18 +35,26 @@
                     v-model="scope.row.purchaseLimit" />
                 </template>
               </el-table-column>
-              <el-table-column prop="supplierSettleRatio" label="供应商结算比例" width="160">
+              <el-table-column v-if="settleMethod==2" prop="supplierSettleRatio" label="供应商结算比例" width="160">
                 <template slot-scope="scope">
                   <el-input-number :disabled="disabled" :max="100" :min="0" size="mini" placeholder="请输入"
                     v-model="scope.row.supplierSettleRatio" />
                 </template>
               </el-table-column>
-              <el-table-column prop="storeSettleRatio" label="门店结算比例" width="160">
+              <el-table-column v-if="settleMethod==2" prop="storeSettleRatio" label="门店结算比例" width="160">
                 <template slot-scope="scope">
                   <el-input-number :disabled="disabled" :max="100" :min="0" size="mini" placeholder="请输入"
                     v-model="scope.row.storeSettleRatio" />
                 </template>
               </el-table-column>
+
+              <el-table-column v-if="settleMethod==1" prop="storeProfitRatio" label="门店利润比例" width="160">
+                <template slot-scope="scope">
+                <el-input-number :max="100" :min="100" size="mini" placeholder="100" :disabled="true"
+                  v-model="scope.row.storeProfitRatio" />
+                </template>
+              </el-table-column>
+
               <el-table-column prop="id" label="操作">
                 <template slot-scope="scope">
                   <el-button type="text" size="small" @click="getGoodsDtl(scope.row)">
@@ -240,6 +248,7 @@
     data() {
       return {
         flag: 'add',
+        settleMethod:'1',
         searchParam: {
           pageSize: 10,
           pageNum: 1,
@@ -281,6 +290,7 @@
     beforeMount() {},
 
     mounted() {
+      this.initSettlementMethod()
       if (this.activity.enable == 1) {
         this.disabled = true
       }
@@ -313,7 +323,13 @@
           // })
         });
       },
-
+      initSettlementMethod() {
+        getMethod("settlement/current-settle-method").then(
+          res => {
+            this.settleMethod = res.data.currentSettleMethod
+          }
+        );
+      },
       //修改SKU价格彈框
       modifySku(row) {
         this.skuDialog = true
@@ -688,14 +704,14 @@
               marketingGoodsSkuList.push(skuObj)
             }
           }
-          if (arr.supplierSettleRatio==null) {
+          if (arr.supplierSettleRatio==null&&this.settleMethod==2) {
             this.$message({
               message: arr.goodsName + "的供应商结算比例不能为空 ",
               type: 'warning'
             });
             return false;
           }
-          if (arr.storeSettleRatio==null) {
+          if (arr.storeSettleRatio==null&&this.settleMethod==2) {
             this.$message({
               message: arr.goodsName + "的门店结算比例不能为空 ",
               type: 'warning'
@@ -710,15 +726,28 @@
             return false;
           }
 
-          goodsObj = {
-            id: arr.id ? arr.id : null,
-            goodsId: arr.goodsId,
-            purchaseLimit:(arr.purchaseLimit!=null)?arr.purchaseLimit:1,
-            storeSettleRatio: arr.storeSettleRatio,
-            supplierSettleRatio: arr.supplierSettleRatio,
-            marketingGoodsSkuList: marketingGoodsSkuList
+          if (this.settleMethod==2) {
+            goodsObj = {
+              id: arr.id ? arr.id : null,
+              goodsId: arr.goodsId,
+              purchaseLimit:(arr.purchaseLimit!=null)?arr.purchaseLimit:1,
+              storeSettleRatio: arr.storeSettleRatio,
+              supplierSettleRatio: arr.supplierSettleRatio,
+              marketingGoodsSkuList: marketingGoodsSkuList
+            }
+            marketingGoodList.push(goodsObj)
+          } else if (this.settleMethod==1){
+            goodsObj = {
+              id: arr.id ? arr.id : null,
+              goodsId: arr.goodsId,
+              purchaseLimit:(arr.purchaseLimit!=null)?arr.purchaseLimit:1,
+              storeProfitRatio:"100",
+              marketingGoodsSkuList: marketingGoodsSkuList
+            }
+            marketingGoodList.push(goodsObj)
           }
-          marketingGoodList.push(goodsObj)
+
+
         }
         console.log(marketingGoodList)
         // return false

@@ -78,7 +78,12 @@
               </el-table-column>
               <el-table-column align="center" prop="stock" label="库存" width="250">
                 <template slot-scope="scope">
-                  <el-input-number v-model="scope.row.stock" :disabled="isDisabled" />
+                  <el-input-number :min="0" v-model="scope.row.stock" :disabled="isDisabled" />
+                </template>
+              </el-table-column>
+              <el-table-column v-if="dataForm.deliveryMethod==2"  align="center" prop="supplyPrice" label="供应价" width="250">
+                <template slot-scope="scope">
+                  <el-input-number :min="0" v-model="scope.row.supplyPrice" :disabled="isDisabled" />
                 </template>
               </el-table-column>
               <el-table-column align="center" prop="marketPrice" label="建议零售价">
@@ -729,14 +734,18 @@
           })
           this.dataForm.fileList = fileList
           this.dataForm.goodsDetailContent = this.detail.detailContent
-          this.tableList.forEach(i => {
+          this.dataForm.goodsSkuList = this.tableList
+          this.dataForm.goodsSkuList.forEach(i => {
             delete i.tdList
             delete i.skuCompareId
             delete i.skuCompareText
             delete i.goodsImgUrl
-            delete i.supplyPrice
           })
-          this.dataForm.goodsSkuList = this.tableList
+          if(this.dataForm.deliveryMethod==3){
+            this.dataForm.goodsSkuList.forEach(i => {
+              i.supplyPrice='0'
+            })
+          }
           // 把ID转换成Text
           // [{"name":"颜色","list":["1298268253058621441","1298268253058621441"]},{"name":"尺寸","list":["1298268035080642561"]}]
 

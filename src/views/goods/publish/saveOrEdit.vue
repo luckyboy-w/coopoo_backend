@@ -81,7 +81,12 @@
               </el-table-column>
               <el-table-column align="center" prop="stock" label="库存" width="250">
                 <template slot-scope="scope">
-                  <el-input-number v-model="scope.row.stock"  />
+                  <el-input-number :min="0" v-model="scope.row.stock"  />
+                </template>
+              </el-table-column>
+              <el-table-column v-if="dataForm.deliveryMethod==2"  align="center" prop="supplyPrice" label="供应价" width="250">
+                <template slot-scope="scope">
+                  <el-input-number :min="0" v-model="scope.row.supplyPrice"  />
                 </template>
               </el-table-column>
               <el-table-column align="center" prop="marketPrice" label="建议零售价">
@@ -660,7 +665,7 @@
         console.log(this.dataForm,'this.dataForm')
         if (this.validate()) {
           let errorMsg = ''
-          
+
           if (this.uploadGoodImageList.length == 0) {
             errorMsg = '请上传商品图片'
           }
@@ -696,6 +701,9 @@
             if (rowObj.stock < 0 || rowObj.stock == undefined) {
               errorMsg = '库存不能为负'
             }
+            if (rowObj.supplyPrice < 0) {
+              errorMsg = '供应价不能为负'
+            }
             if (rowObj.marketPrice == '') {
               errorMsg = '零售价不能为空'
             }
@@ -721,7 +729,7 @@
             this.$message.warning(feeMsg)
             return
           }
-          
+
 
           let fileList = []
           fileList = fileList.concat(this.uploadVideoList)
@@ -745,14 +753,18 @@
           this.dataForm.goodsImg=this.dataForm.goodsImg
           this.dataForm.goodsCoverImg=this.dataForm.goodsCoverImg
           this.dataForm.goodsDetailContent =this.detail.detailContent
-          this.tableList.forEach(i => {
+          this.dataForm.goodsSkuList = this.tableList
+          this.dataForm.goodsSkuList.forEach(i => {
             delete i.tdList
             delete i.skuCompareId
             delete i.skuCompareText
             delete i.goodsImgUrl
-            delete i.supplyPrice
           })
-          this.dataForm.goodsSkuList = this.tableList
+          if(this.dataForm.deliveryMethod==3){
+            this.dataForm.goodsSkuList.forEach(i => {
+              i.supplyPrice='0'
+            })
+          }
           // 把ID转换成Text
           // [{"name":"颜色","list":["1298268253058621441","1298268253058621441"]},{"name":"尺寸","list":["1298268035080642561"]}]
 
@@ -781,6 +793,8 @@
           const param = this.dataForm
           param.goodsCoverImg=String(param.goodsCoverImg)
           param.goodsImg=String(param.goodsImg)
+          console.log('param',param)
+          // return false
           try {
 
             await this.handleSaveAttrData()
@@ -1002,10 +1016,10 @@
               skuCompareText: specValue[i].skuText,
               skuCompareId: '',
               stock: '',
+              supplyPrice:'',
               marketPrice: '',
               salePrice: '',
               goodsCode: '',
-              supplyPrice: '',
               goodsImgUrl: ''
             })
             continue
@@ -1031,10 +1045,10 @@
               // supplyPrice: dataList[j].supplyPrice,
               // goodsImgUrl: dataList[j].goodsImgUrl
               stock: '',
+              supplyPrice:'',
               marketPrice: '',
               salePrice: '',
               goodsCode: '',
-              supplyPrice: '',
               goodsImgUrl: ''
             })
           }
@@ -1076,19 +1090,19 @@
             // 用老的数据替换新的这几个值
             let {
               stock,
+              supplyPrice,
               marketPrice,
               salePrice,
               goodsCode,
-              supplyPrice,
               goodsImgUrl
             } = oldData
             newDataList[i] = {
               ...newDataList[i],
               stock,
+              supplyPrice,
               marketPrice,
               salePrice,
               goodsCode,
-              supplyPrice,
               goodsImgUrl
             }
           }

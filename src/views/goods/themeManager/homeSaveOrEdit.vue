@@ -172,18 +172,26 @@
                     {{ scope.row.saleVolume}}
                   </template>
                 </el-table-column>
-                <el-table-column prop="supplierSettleRatio" label="供应商结算比例" width="160">
+                <el-table-column v-if="settleMethod==2" prop="supplierSettleRatio" label="供应商结算比例" width="160">
                   <template slot-scope="scope">
                     <el-input-number :max="100" :min="0" size="mini" placeholder="请输入" :disabled="disabled"
                       v-model="scope.row.supplierSettleRatio" />
                   </template>
                 </el-table-column>
-                <el-table-column prop="storeSettleRatio" label="门店结算比例" width="160">
+                <el-table-column v-if="settleMethod==2" prop="storeSettleRatio" label="门店结算比例" width="160">
                   <template slot-scope="scope">
                     <el-input-number :max="100" :min="0" size="mini" placeholder="请输入" :disabled="disabled"
                       v-model="scope.row.storeSettleRatio" />
                   </template>
                 </el-table-column>
+
+                <el-table-column v-if="settleMethod==1" prop="storeProfitRatio" label="门店利润比例" width="160">
+                  <template slot-scope="scope">
+                  <el-input-number :max="100" :min="100" size="mini" placeholder="100" :disabled="true"
+                    v-model="scope.row.storeProfitRatio" />
+                  </template>
+                </el-table-column>
+
                 <el-table-column prop="createTime" label="创建时间" width="170">
                   <template slot-scope="scope">
                     {{ scope.row.createTime}}
@@ -387,6 +395,7 @@
         loading: false,
         disabled: false,
         submitStatus: 1,
+        settleMethod:'1',
         themeData: [{
             name: '单图半屏展示',
             value: '0',
@@ -606,6 +615,7 @@
     },
     computed: {},
     mounted() {
+      this.initSettlementMethod()
       if (this.editData.operation == "add") {
         this.submitStatus = 1
       } else if (this.editData.operation == "edit") {
@@ -622,6 +632,13 @@
     methods: {
       cancelUpdate() {
         this.$emit('showListPanel', true)
+      },
+      initSettlementMethod() {
+        getMethod("settlement/current-settle-method").then(
+          res => {
+            this.settleMethod = res.data.currentSettleMethod
+          }
+        );
       },
       // 根据主题切换模板
       changeImg() {
@@ -822,12 +839,20 @@
 
             if (this.form.goodsType == 1) {
               this.bindingList.forEach(item => {
-                let obj = {
-                  goodsId: item.goodsId,
-                  storeSettleRatio: item.storeSettleRatio ? item.storeSettleRatio : "0",
-                  supplierSettleRatio: item.supplierSettleRatio ? item.supplierSettleRatio : "0"
+                if (this.settleMethod==2) {
+                  let obj = {
+                    goodsId: item.goodsId,
+                    storeSettleRatio: item.storeSettleRatio ? item.storeSettleRatio : "0",
+                    supplierSettleRatio: item.supplierSettleRatio ? item.supplierSettleRatio : "0",
+                  }
+                  goodsData.push(obj)
+                } else if (this.settleMethod==1){
+                  let obj = {
+                    goodsId: item.goodsId,
+                    storeProfitRatio:"100"
+                  }
+                  goodsData.push(obj)
                 }
-                goodsData.push(obj)
               })
               this.form.goodsList = goodsData
               this.form.couponList = []

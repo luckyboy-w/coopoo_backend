@@ -40,14 +40,19 @@
           </el-table-column>
           <el-table-column prop="goodsName" label="商品名称"/>
           <el-table-column prop="supplierName" label="供应商名称" />
-          <el-table-column prop="supplierSettleRatio" label="供应商比例" >
+          <el-table-column v-if="settleMethod==2" prop="supplierSettleRatio" label="供应商比例" >
             <template slot-scope="scope">
               {{ scope.row.supplierSettleRatio}}%
             </template>
           </el-table-column>
-          <el-table-column prop="storeSettleRatio" label="门店比例" >
+          <el-table-column v-if="settleMethod==2" prop="storeSettleRatio" label="门店比例" >
             <template slot-scope="scope">
               {{ scope.row.storeSettleRatio}}%
+            </template>
+          </el-table-column>
+          <el-table-column v-if="settleMethod==1" prop="storeProfitRatio" label="门店利润比例" >
+            <template slot-scope="scope">
+              {{ scope.row.storeProfitRatio}}%
             </template>
           </el-table-column>
           <el-table-column label="活动有效期" width="350px">
@@ -100,6 +105,7 @@ export default {
   },
   data () {
     return {
+      settleMethod:'1',
       disabled:false,
       isLoading: false,
       showActivityGoodList: true,
@@ -122,6 +128,7 @@ export default {
   beforeMount() {},
 
   mounted() {
+    this.initSettlementMethod()
     if(this.activityData.enable==1){
       this.disabled=true
     }
@@ -150,7 +157,13 @@ export default {
         scope.showPagination = scope.tableData.total == 0
       });
     },
-
+    initSettlementMethod() {
+      getMethod("settlement/current-settle-method").then(
+        res => {
+          this.settleMethod = res.data.currentSettleMethod
+        }
+      );
+    },
     search() {
 		this.searchParam.pageNum = 1;
       this.loadList();
