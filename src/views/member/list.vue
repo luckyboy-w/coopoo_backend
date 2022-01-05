@@ -41,6 +41,20 @@
           </div>
         </div>
         <div class="tabTd">
+          <div>注册时间：</div>
+          <div>
+            <el-date-picker style="width:200px" value-format="yyyy-MM-dd" v-model="searchParam.startRegisterTime"
+              type="date" placeholder="开始时间">
+            </el-date-picker>
+          </div>
+          <div style="padding: 0 6px;">至</div>
+          <div>
+            <el-date-picker style="width:200px" value-format="yyyy-MM-dd" v-model="searchParam.endRegisterTime" type="date"
+              placeholder="结束时间">
+            </el-date-picker>
+          </div>
+        </div>
+        <div class="tabTd">
           <div>
             <el-button icon="el-icon-search" type="primary" @click="search()">搜索</el-button>
             <el-button icon="el-icon-download" type="primary" @click="exportData()">
@@ -270,6 +284,8 @@
         searchParam: {
           accountType:'',
           enable:'',
+          endRegisterTime:'',
+          startRegisterTime:'',
           userName:'',
           phoneNo:'',
           storeName:'',
