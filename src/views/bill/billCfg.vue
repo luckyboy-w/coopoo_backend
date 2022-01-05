@@ -8,14 +8,14 @@
         ：
       </div>
       <el-form-item label-width="15px">
-        <el-radio v-model="currentSettleMethod" label="1">成本结算</el-radio>
-        <el-radio v-model="currentSettleMethod" label="2">比例结算</el-radio>
+        <el-radio v-model="currentSettleMethod" label="2">成本结算</el-radio>
+        <el-radio v-model="currentSettleMethod" label="1">比例结算</el-radio>
       </el-form-item>
       <el-form-item label="下月生效:">
-        {{nextSettleMethod==1?'成本结算':"比例结算"}}
+        {{nextSettleMethod==2?'成本结算':"比例结算"}}
       </el-form-item>
     </el-form>
-    <el-form v-if="currentSettleMethod==1" label-width="130px" style="display: flex;flex-wrap: nowrap;">
+    <el-form v-if="currentSettleMethod==2" label-width="130px" style="display: flex;flex-wrap: nowrap;">
       <div style="font-size: 18px;font-weight: 600;width: 130px;text-align: right;">平台服务比例：</div>
       <el-form-item label="供应商服务比例">
         <el-input-number :max="100" :min="0" style="width:150px" placeholder="请输入" v-model="supplierServiceRatio" />

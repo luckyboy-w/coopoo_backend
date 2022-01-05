@@ -40,21 +40,21 @@
           </el-table-column>
           <el-table-column prop="goodsName" label="商品名称"/>
           <el-table-column prop="supplierName" label="供应商名称" />
-          <el-table-column v-if="settleMethod==2" prop="supplierSettleRatio" label="供应商比例" >
+          <el-table-column v-if="settleMethod==1" prop="supplierSettleRatio" label="供应商比例" >
             <template slot-scope="scope">
               {{ scope.row.supplierSettleRatio}}%
             </template>
           </el-table-column>
-          <el-table-column v-if="settleMethod==2" prop="storeSettleRatio" label="门店比例" >
+          <el-table-column v-if="settleMethod==1" prop="storeSettleRatio" label="门店比例" >
             <template slot-scope="scope">
               {{ scope.row.storeSettleRatio}}%
             </template>
           </el-table-column>
-          <el-table-column v-if="settleMethod==1" prop="storeProfitRatio" label="门店利润比例" >
+          <!-- <el-table-column v-if="settleMethod==1" prop="storeProfitRatio" label="门店利润比例" >
             <template slot-scope="scope">
               {{ scope.row.storeProfitRatio}}%
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="活动有效期" width="350px">
             <template slot-scope="scope">
               {{ scope.row.startTime }} 至 {{scope.row.endTime }}
@@ -105,7 +105,7 @@ export default {
   },
   data () {
     return {
-      settleMethod:'1',
+      settleMethod:'2',
       disabled:false,
       isLoading: false,
       showActivityGoodList: true,

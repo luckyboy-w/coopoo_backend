@@ -35,25 +35,25 @@
                     v-model="scope.row.purchaseLimit" />
                 </template>
               </el-table-column>
-              <el-table-column v-if="settleMethod==2" prop="supplierSettleRatio" label="供应商结算比例" width="160">
+              <el-table-column v-if="settleMethod==1" prop="supplierSettleRatio" label="供应商结算比例" width="160">
                 <template slot-scope="scope">
                   <el-input-number :disabled="disabled" :max="100" :min="0" size="mini" placeholder="请输入"
                     v-model="scope.row.supplierSettleRatio" />
                 </template>
               </el-table-column>
-              <el-table-column v-if="settleMethod==2" prop="storeSettleRatio" label="门店结算比例" width="160">
+              <el-table-column v-if="settleMethod==1" prop="storeSettleRatio" label="门店结算比例" width="160">
                 <template slot-scope="scope">
                   <el-input-number :disabled="disabled" :max="100" :min="0" size="mini" placeholder="请输入"
                     v-model="scope.row.storeSettleRatio" />
                 </template>
               </el-table-column>
 
-              <el-table-column v-if="settleMethod==1" prop="storeProfitRatio" label="门店利润比例" width="160">
+              <!-- <el-table-column v-if="settleMethod==1" prop="storeProfitRatio" label="门店利润比例" width="160">
                 <template slot-scope="scope">
                 <el-input-number :max="100" :min="100" size="mini" placeholder="100" :disabled="true"
                   v-model="scope.row.storeProfitRatio" />
                 </template>
-              </el-table-column>
+              </el-table-column> -->
 
               <el-table-column prop="id" label="操作">
                 <template slot-scope="scope">
@@ -248,7 +248,7 @@
     data() {
       return {
         flag: 'add',
-        settleMethod:'1',
+        settleMethod:'2',
         searchParam: {
           pageSize: 10,
           pageNum: 1,
@@ -704,14 +704,14 @@
               marketingGoodsSkuList.push(skuObj)
             }
           }
-          if (arr.supplierSettleRatio==null&&this.settleMethod==2) {
+          if (arr.supplierSettleRatio==null&&this.settleMethod==1) {
             this.$message({
               message: arr.goodsName + "的供应商结算比例不能为空 ",
               type: 'warning'
             });
             return false;
           }
-          if (arr.storeSettleRatio==null&&this.settleMethod==2) {
+          if (arr.storeSettleRatio==null&&this.settleMethod==1) {
             this.$message({
               message: arr.goodsName + "的门店结算比例不能为空 ",
               type: 'warning'
@@ -726,7 +726,7 @@
             return false;
           }
 
-          if (this.settleMethod==2) {
+          if (this.settleMethod==1) {
             goodsObj = {
               id: arr.id ? arr.id : null,
               goodsId: arr.goodsId,
@@ -736,7 +736,7 @@
               marketingGoodsSkuList: marketingGoodsSkuList
             }
             marketingGoodList.push(goodsObj)
-          } else if (this.settleMethod==1){
+          } else if (this.settleMethod==2){
             goodsObj = {
               id: arr.id ? arr.id : null,
               goodsId: arr.goodsId,

@@ -172,25 +172,25 @@
                     {{ scope.row.saleVolume}}
                   </template>
                 </el-table-column>
-                <el-table-column v-if="settleMethod==2" prop="supplierSettleRatio" label="供应商结算比例" width="160">
+                <el-table-column v-if="settleMethod==1" prop="supplierSettleRatio" label="供应商结算比例" width="160">
                   <template slot-scope="scope">
                     <el-input-number :max="100" :min="0" size="mini" placeholder="请输入" :disabled="disabled"
                       v-model="scope.row.supplierSettleRatio" />
                   </template>
                 </el-table-column>
-                <el-table-column v-if="settleMethod==2" prop="storeSettleRatio" label="门店结算比例" width="160">
+                <el-table-column v-if="settleMethod==1" prop="storeSettleRatio" label="门店结算比例" width="160">
                   <template slot-scope="scope">
                     <el-input-number :max="100" :min="0" size="mini" placeholder="请输入" :disabled="disabled"
                       v-model="scope.row.storeSettleRatio" />
                   </template>
                 </el-table-column>
 
-                <el-table-column v-if="settleMethod==1" prop="storeProfitRatio" label="门店利润比例" width="160">
+               <!-- <el-table-column v-if="settleMethod==1" prop="storeProfitRatio" label="门店利润比例" width="160">
                   <template slot-scope="scope">
                   <el-input-number :max="100" :min="100" size="mini" placeholder="100" :disabled="true"
                     v-model="scope.row.storeProfitRatio" />
                   </template>
-                </el-table-column>
+                </el-table-column> -->
 
                 <el-table-column prop="createTime" label="创建时间" width="170">
                   <template slot-scope="scope">
@@ -395,7 +395,7 @@
         loading: false,
         disabled: false,
         submitStatus: 1,
-        settleMethod:'1',
+        settleMethod:'2',
         themeData: [{
             name: '单图半屏展示',
             value: '0',
@@ -839,14 +839,14 @@
 
             if (this.form.goodsType == 1) {
               this.bindingList.forEach(item => {
-                if (this.settleMethod==2) {
+                if (this.settleMethod==1) {
                   let obj = {
                     goodsId: item.goodsId,
                     storeSettleRatio: item.storeSettleRatio ? item.storeSettleRatio : "0",
                     supplierSettleRatio: item.supplierSettleRatio ? item.supplierSettleRatio : "0",
                   }
                   goodsData.push(obj)
-                } else if (this.settleMethod==1){
+                } else if (this.settleMethod==2){
                   let obj = {
                     goodsId: item.goodsId,
                     storeProfitRatio:"100"
