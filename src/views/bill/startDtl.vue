@@ -62,11 +62,11 @@
           {{ scope.row.settleAmount | fmtFee }}
         </template>
       </el-table-column>
-      <el-table-column prop="platformServiceAmount" label="服务金额" min-width="24%">
+      <!-- <el-table-column prop="platformServiceAmount" label="服务金额" min-width="24%">
         <template slot-scope="scope">
           {{ scope.row.platformServiceAmount | fmtFee }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <el-pagination :total="dataList.total" background layout="prev, pager, next" @current-change="currentPage"
       @prev-click="currentPage" :current-page="searchParam.pageNum"  @next-click="currentPage" />

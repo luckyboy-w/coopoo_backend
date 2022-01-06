@@ -32,11 +32,11 @@
             {{ scope.row.settleAmount | fmtFee }}
           </template>
         </el-table-column>
-        <el-table-column prop="platformServiceAmount" label="服务金额" min-width="24%">
+        <!-- <el-table-column prop="platformServiceAmount" label="服务金额" min-width="24%">
           <template slot-scope="scope">
             {{ scope.row.platformServiceAmount | fmtFee }}
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="pkBillId" label="操作" min-width="24%">
           <template slot-scope="scope">
             <el-link type="primary" @click="findBillDtl(scope.row)">
