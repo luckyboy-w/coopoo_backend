@@ -60,7 +60,7 @@
         <div class="tabTd">
           <div>支付方式：</div>
           <div>
-            <el-select v-model="searchParam.startWriteOffTime" placeholder="请选择">
+            <el-select v-model="searchParam.payChannel" placeholder="请选择">
               <el-option value="" label="全部"></el-option>
               <el-option value="2" label="微信"></el-option>
               <el-option value="1" label="支付宝"></el-option>
