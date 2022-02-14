@@ -19,8 +19,9 @@
           <div>
             <el-select v-model="searchParam.accountType" placeholder="请选择">
               <el-option label="全部" value="" />
-              <el-option label="会员" value="0" />
+              <el-option label="普通会员" value="0" />
               <el-option label="门店" value="3" />
+              <el-option label="专属会员" value="4" />
             </el-select>
           </div>
         </div>
@@ -312,10 +313,16 @@
       },
       memberType(data) {
         let typeText = ''
-        if (data != "3") {
-          typeText = "会员"
+        if (data == "0") {
+          typeText = "普通会员"
         } else if (data == "3") {
           typeText = "门店"
+        }else if (data == "4") {
+          typeText = "专属会员"
+        } else if (data == "1") {
+          typeText = "平台"
+        }else if (data == "2") {
+          typeText = "供应商"
         }
         return typeText
       },
