@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="ly-container">
+    <div class="ly-container" v-if="showList">
      <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
        <div class="tabTd">
          <div>评价状态：</div>
@@ -20,6 +20,7 @@
        </div>
        <div class="tabTd">
          <el-button type="primary" @click="search()" icon="el-icon-search">搜索</el-button>
+         <el-button type="primary" @click="addComment()" icon="el-icon-plus">新建</el-button>
        </div>
       </div>
       <div class="ly-table-panel">
@@ -116,14 +117,16 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <saveOrEdit v-if="showAddOrEdit" @showListPanel="showListPanel" :editData="editData"></saveOrEdit>
   </div>
 </template>
 
 <script>
 import { getMethod, postMethod } from '@/api/request'
+import saveOrEdit from './addComment.vue'
 
 export default {
-  computed: {},
+  components: { saveOrEdit },
   props: {
     replyMsgStatusParent: {
       type: String,
@@ -164,6 +167,8 @@ export default {
       replyFrm: {
 
       },
+      showList: true,
+      showAddOrEdit: false,
       searchParam: {
         replyStatus: '',
         pageSize: 10,
@@ -172,6 +177,7 @@ export default {
       tableData: {
         list: []
       },
+      editData: {},
     }
   },
   mounted() {
@@ -224,6 +230,15 @@ export default {
         });
       });
       }
+    },
+    addComment(){
+      this.showList = false;
+      this.showAddOrEdit = true;
+    },
+    showListPanel(isCancel) {
+      this.showList = true;
+      this.showAddOrEdit = false;
+      this.loadList();
     },
     replyMsg(row) {
       this.sendEval = true
