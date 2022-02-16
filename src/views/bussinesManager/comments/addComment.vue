@@ -4,9 +4,9 @@
       <el-form-item label="商品名称">
         <div>
 
-        <el-button type="success" @click="relatedGoods()">选择商品</el-button>
-        <span>&nbsp;&nbsp;&nbsp; {{dataForm.goodsName}}</span>
-        <!-- <el-input v-show="false" v-model="dataForm.goodsId" type="text" /> -->
+          <el-button type="success" @click="relatedGoods()">选择商品</el-button>
+          <span>&nbsp;&nbsp;&nbsp; {{dataForm.goodsName}}</span>
+          <!-- <el-input v-show="false" v-model="dataForm.goodsId" type="text" /> -->
         </div>
       </el-form-item>
       <el-form-item label="SKU选择">
@@ -28,7 +28,7 @@
         </div>
       </el-form-item>
       <el-form-item label="评价">
-        <textarea rows="6" cols="60" v-model="dataForm.commentContent" placeholder="请输入"></textarea>
+        <el-input  type="textarea" :rows="6" placeholder="请输入评论内容" v-model="dataForm.commentContent"> </el-input>
       </el-form-item>
       <el-form-item label="图片(最多6张)">
         <el-input v-show="false" />
@@ -154,8 +154,8 @@
           pageSize: 10,
           pageNum: 1,
         },
-        goodsName:'',
-        goodsSkuList:[],
+        goodsName: '',
+        goodsSkuList: [],
         uploadCommentImageUrl: '',
         hideCommentImageUpload: false,
         uploadCommentImageList: [],
@@ -167,11 +167,11 @@
         relationList: [],
         loading: false,
         dataForm: {
-          goodsName:'',
-          goodsId:'',
-          skuInfo:'',
-          memberNickname:'',
-          commentContent:'',
+          goodsName: '',
+          goodsId: '',
+          skuInfo: '',
+          memberNickname: '',
+          commentContent: '',
           memberAvatar: "",
           imagesUrl: '',
         }
@@ -196,11 +196,11 @@
           pageSize: 10,
           pageNum: 1,
         }
-        if (this.bindingList.length>0) {
-          this.dataForm.goodsName=this.bindingList[0].goodsName
-          this.dataForm.goodsId=this.bindingList[0].goodsId
-          this.goodsSkuList=this.bindingList[0].skuList
-          this.dataForm.skuInfo=''
+        if (this.bindingList.length > 0) {
+          this.dataForm.goodsName = this.bindingList[0].goodsName
+          this.dataForm.goodsId = this.bindingList[0].goodsId
+          this.goodsSkuList = this.bindingList[0].skuList
+          this.dataForm.skuInfo = ''
         }
         console.log('this.bindingList', this.bindingList)
         this.showGoodsList = false
@@ -352,10 +352,10 @@
       saveObject() {
         let scope = this;
 
-        this.uploadCommentImageList.forEach((item,index)=>{
+        this.uploadCommentImageList.forEach((item, index) => {
           this.imageList.push(item.url)
         })
-        this.dataForm.imagesUrl=this.imageList.join(',')
+        this.dataForm.imagesUrl = this.imageList.join(',')
         console.log('表单数据', this.dataForm);
         // console.log(this.uploadAvatarList, this.uploadCommentImageList);
         // return false;
@@ -373,7 +373,7 @@
         }
       },
       validate() {
-        let notNvl = ["memberNickname", "commentContent",  "memberAvatar", 'skuInfo','imagesUrl','goodsName'];
+        let notNvl = ["memberNickname", "commentContent", "memberAvatar", 'skuInfo', 'imagesUrl', 'goodsName'];
         for (let i = 0; i < notNvl.length; i++) {
           if (this.dataForm[notNvl[i]] == "") {
             this.$message({
