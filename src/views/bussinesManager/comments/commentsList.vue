@@ -31,7 +31,11 @@
             style="width: 100%; margin-bottom: 20px;"
             row-key="id" border
           >
-            <el-table-column prop="orderNo" label="订单号" ></el-table-column>
+            <el-table-column prop="orderNo" label="订单号" >
+              <template slot-scope="scope">
+                {{ scope.row.orderNo?scope.row.orderNo:'新建评论'}}
+              </template>
+            </el-table-column>
             <el-table-column prop="goodsName" label="商品名称"></el-table-column>
             <el-table-column prop="conform" label="描述相符评价">
               <template slot-scope="scope">

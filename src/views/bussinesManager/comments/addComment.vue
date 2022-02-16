@@ -10,13 +10,13 @@
         </div>
       </el-form-item>
       <el-form-item label="SKU选择">
-        <el-select style="width:450px;" v-model="dataForm.skuId">
+        <el-select style="width:450px;" v-model="dataForm.skuInfo">
           <el-option v-for="item in goodsSkuList" :key="item.skuId" :value-key="item.skuText" :label="item.skuText"
-            :value="item.skuId" />
+            :value="item.skuText" />
         </el-select>
       </el-form-item>
       <el-form-item label="用户昵称">
-        <el-input style="width:450px;" v-model="dataForm.name" placeholder="请输入" />
+        <el-input style="width:450px;" v-model="dataForm.memberNickname" placeholder="请输入" />
       </el-form-item>
       <el-form-item label="用户头像">
         <div id="front-img">
@@ -28,9 +28,9 @@
         </div>
       </el-form-item>
       <el-form-item label="评价">
-        <textarea rows="6" cols="60" v-model="dataForm.comment" placeholder="请输入"></textarea>
+        <textarea rows="6" cols="60" v-model="dataForm.commentContent" placeholder="请输入"></textarea>
       </el-form-item>
-      <el-form-item label="图片">
+      <el-form-item label="图片(最多6张)">
         <el-input v-show="false" />
         <el-upload :action="uploadCommentImageUrl" list-type="picture-card" :on-preview="handlePreview"
           :before-upload="beforeUpload" :on-success="handleCommentImageSuccess"
@@ -163,18 +163,17 @@
         hideAvatarUpload: false,
         uploadAvatarUrl: "",
         fileSortImage: 0,
-        image: "",
-        fileList: [],
-        goodList: [],
+        imageList: [],
         relationList: [],
         loading: false,
         dataForm: {
+          goodsName:'',
           goodsId:'',
-          skuId:'',
-          name:'',
-          comment:'',
-          image: "",
-          imageList: [],
+          skuInfo:'',
+          memberNickname:'',
+          commentContent:'',
+          memberAvatar: "",
+          imagesUrl: '',
         }
       };
     },
@@ -201,7 +200,7 @@
           this.dataForm.goodsName=this.bindingList[0].goodsName
           this.dataForm.goodsId=this.bindingList[0].goodsId
           this.goodsSkuList=this.bindingList[0].skuList
-          this.dataForm.skuId=''
+          this.dataForm.skuInfo=''
         }
         console.log('this.bindingList', this.bindingList)
         this.showGoodsList = false
@@ -305,7 +304,7 @@
         this.hideCommentImageUpload = false
       },
       handleAvatarSuccess(res, file) {
-        this.dataForm.image = res.data.url
+        this.dataForm.memberAvatar = res.data.url
         res.data.fileType = file.raw.type;
         res.data.sort = this.fileSortImage++;
         this.uploadAvatarList.push(res.data);
@@ -321,7 +320,6 @@
         }
       },
       handleCommentImageSuccess(res, file) {
-        this.dataForm.imageList.push(res.data.url)
         res.data.sort = this.fileSortImage++
         res.data.fileType = file.raw.type
         this.uploadCommentImageList.push(res.data)
@@ -353,11 +351,16 @@
       },
       saveObject() {
         let scope = this;
+
+        this.uploadCommentImageList.forEach((item,index)=>{
+          this.imageList.push(item.url)
+        })
+        this.dataForm.imagesUrl=this.imageList.join(',')
         console.log('表单数据', this.dataForm);
-        console.log(this.uploadAvatarList, this.uploadCommentImageList);
-        return false;
+        // console.log(this.uploadAvatarList, this.uploadCommentImageList);
+        // return false;
         if (this.validate()) {
-          postMethod("/operate/add-Avatar", this.dataForm).then(
+          postMethod("/goods-comment/add-comment", this.dataForm).then(
             res => {
               this.$message({
                 message: "操作成功",
@@ -370,24 +373,14 @@
         }
       },
       validate() {
-        let notNvl = ["name", "location", 'image', ];
+        let notNvl = ["memberNickname", "commentContent",  "memberAvatar", 'skuInfo','imagesUrl','goodsName'];
         for (let i = 0; i < notNvl.length; i++) {
           if (this.dataForm[notNvl[i]] == "") {
             this.$message({
-              message: "字段不能为空",
+              message: "必填项不能为空",
               type: "warning"
             });
             return false;
-          }
-        }
-        if (this.dataForm.dataType == 3 || this.dataForm.dataType == 4 || this.dataForm.dataType == 6 || this.dataForm
-          .dataType == 7 || this.dataForm.dataType == 8 || this.dataForm.dataType == 2) {
-          if (this.dataForm.url == '') {
-            this.$message({
-              message: "字段不能为空",
-              type: "warning"
-            });
-            return false
           }
         }
         return true;

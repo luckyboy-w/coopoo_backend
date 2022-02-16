@@ -69,7 +69,13 @@
                 <span>{{scope.row.maxGoodsSalePrice?(scope.row.minGoodsSalePrice+'~'+scope.row.maxGoodsSalePrice):scope.row.minGoodsSalePrice}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="saleVolume" label="销量" width="150px" />
+            <el-table-column prop="saleVolume" label="销量" width="150px">
+            <template slot-scope="scope">
+                <span>{{scope.row.saleVolume}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <el-button @click="onVolumePopup(scope.row)" size="mini" type="primary">设置
+            </el-button>
+              </template>
+            </el-table-column>
             <el-table-column prop="supplierName" label="供应商名称" width="150px" />
             <el-table-column prop="isSale" label="商品状态" width="150px">
               <template slot-scope="scope">
@@ -119,6 +125,19 @@
       </div>
     </div>
 
+    <el-dialog title="设置销量" width="30%" :visible="volumePopup" v-if="volumePopup" :before-close="volumePopupClose">
+      <el-form ref="form" label-width="80px">
+        <el-form-item label="虚拟销量">
+          <el-input type="number" style="width: 200px;" oninput="value=value.replace(/[^0-9.]/g,'')" placeholder="请输入" v-model="fakeSaleVolume">
+          </el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitVolume()">保存</el-button>
+          <el-button plain type="primary" @click="volumePopupClose()">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
     <saveOrEdit v-if="showAddOrEdit" :is-gift="isGift" :edit-data="editData" :is-edit-good="isEditGood"
       :is-disabled="isDisabled" @showListPanel="showListPanel" />
   </div>
@@ -157,6 +176,9 @@
     },
     data() {
       return {
+        volumePopup: false,
+        fakeSaleVolume:'',
+        goodsId:'',
         isDisabled: false,
         supplyList: [],
         isLoading: true,
@@ -208,6 +230,32 @@
     },
     created() {},
     methods: {
+
+     volumePopupClose(done) {
+        this.fakeSaleVolume= ''
+        this.goodsId= ''
+        this.volumePopup = false
+      },
+      onVolumePopup(row) {
+        this.volumePopup = true
+        this.fakeSaleVolume = row.fakeSaleVolume
+        this.goodsId = row.goodsId
+      },
+      submitVolume(){
+        let params={
+          fakeSaleVolume:this.fakeSaleVolume,
+          goodsId:this.goodsId
+        }
+        postMethod('/goods/set-fake-sale-volume', params).then(res => {
+          this.$message({
+            message: "保存成功",
+            type: "success"
+          });
+          this.loadList()
+          this.volumePopupClose()
+        })
+      },
+
       exportData() {
         let exportParam = [];
 
