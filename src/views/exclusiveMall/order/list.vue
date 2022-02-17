@@ -799,6 +799,8 @@
           stockNum: ''
         },
         searchParam: {
+          isRisk:'0',
+          isVipOrder: "1",
           registerPhoneNo: "",
           buyerMobile: '',
           buyerName: '',

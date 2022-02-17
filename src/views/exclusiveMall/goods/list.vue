@@ -31,7 +31,7 @@
           </div>
         </div>
         <div class="tabTd">
-          <div>商品状态：</div>
+          <div>商品类目：</div>
           <div>
             <el-select v-model="searchParam.testType" placeholder="请选择">
               <el-option label="全部" value=""></el-option>
@@ -59,6 +59,7 @@
                   <el-table-column prop="skuText" label="SKU属性" width="260px" />
                   <el-table-column prop="stock" label="库存" width="150px" />
                   <el-table-column prop="marketPrice" label="零售价" width="150px" />
+                  <el-table-column prop="supplyPrice" label="供应价" width="150px" />
                   <el-table-column prop="salePrice" label="会员价" width="150px" />
                   <el-table-column prop="goodsCode" label="物料编码" width="150px" />
                   <!-- <el-table-column prop="saleCount" label="销量" width="150px" ></el-table-column> -->
@@ -189,6 +190,7 @@
         },
         searchParam: {
           testType:'',
+          goodsType:'2',
           goodsName:'',
           goodsCode:'',
           supplierName:'',

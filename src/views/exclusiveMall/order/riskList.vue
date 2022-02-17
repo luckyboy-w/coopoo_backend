@@ -156,6 +156,7 @@
                       <div>
                         <el-button-group>
                           <el-button type="primary"
+                          size="mini"
                             @click="confirmSubmit(scope.row)">确认无误
                           </el-button>
                         </el-button-group>
@@ -722,6 +723,8 @@
           stockNum: ''
         },
         searchParam: {
+          isRisk:'1',
+          isVipOrder: "1",
           registerPhoneNo: "",
           buyerMobile: '',
           buyerName: '',
@@ -957,13 +960,13 @@
           type: 'warning'
         }).then(() => {
           console.log('确认');
-          // postMethod("/settlement/do-supplier-settlement?settleNo="+row.settleNo).then(res => {
-          //   this.$message({
-          //     message: '已完成结算',
-          //     type: 'success'
-          //   })
-          //   scope.loadList()
-          // });
+          postMethod("/order/confirm-risk-order?orderNo="+data.orderNo).then(res => {
+            this.$message({
+              message: '已确认订单无误',
+              type: 'success'
+            })
+            scope.loadList()
+          });
         }).catch(action => {
             if(action === 'cancel'){
               console.log('取消订单');
