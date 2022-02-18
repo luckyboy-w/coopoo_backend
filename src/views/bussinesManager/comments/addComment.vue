@@ -53,7 +53,7 @@
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
 
-    <el-dialog :visible="showGoodsList" :before-close="showGoodsListClose" title="关联商品" width="90%">
+    <el-dialog :visible="showGoodsList" :before-close="showGoodsListClose" title="选择商品" width="90%">
       <div class="ly-container">
         <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
           <div class="tabTd">
@@ -402,6 +402,13 @@
 
   /deep/.el-table__header-wrapper .el-checkbox {
     display: none
+  }
+  .tabTd {
+    display: flex;
+    flex-wrap: nowrap;
+    margin: 7px 10px;
+    align-items: center;
+
   }
 </style>
 <style lang="scss">
