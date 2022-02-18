@@ -2,33 +2,31 @@
   <div class="update-form-panel">
     <el-form ref="dataForm" :model="dataForm" :rules="rules" label-width="140px" width="1000px">
       <el-form-item prop="couponName" label="优惠券名称：">
-        <el-input style="width:260px" :disabled="disabled" v-model="dataForm.couponName" />
+        <el-input style="width:260px" :disabled="disabled" v-model="dataForm.couponName" placeholder="请输入" />
       </el-form-item>
-      <el-form-item prop="testCouponType" label="优惠券类型：">
-      <el-select v-model="dataForm.testCouponType" placeholder="请选择">
+      <el-form-item prop="useWay" label="优惠券类型：">
+      <el-select v-model="dataForm.useWay" placeholder="请选择">
         <el-option label="线上优惠券" value="0" />
         <el-option label="线下优惠券" value="1" />
       </el-select>
       </el-form-item>
       <el-form-item prop="applyClause" label="使用说明：">
-        <el-input style="width:260px" :disabled="disabled" v-model="dataForm.applyClause" />
+        <el-input style="width:260px" :disabled="disabled" v-model="dataForm.applyClause"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="buyPrice" label="购买价格：">
-        <el-input style="width:260px" type="number" :disabled="disabled" v-model="dataForm.buyPrice" />
+        <el-input style="width:260px" type="number" :disabled="disabled" v-model="dataForm.buyPrice"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="faceValue" label="抵用额：">
-        <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.faceValue" />
+        <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.faceValue"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="testThreshold" label="使用门槛：">
-        满 <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.testThreshold" />
+        满 <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.testThreshold"  placeholder="请输入"/>
       </el-form-item>
-      <el-form-item prop="testStockMethod" label="库存：">
-        <el-radio v-model="dataForm.testStockMethod" label="1">无库存</el-radio>
-        <el-radio v-model="dataForm.testStockMethod" label="2">有库存</el-radio>
-        <el-input v-if="dataForm.testStockMethod=='2'" style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.stock" />
+      <el-form-item prop="stock" label="库存：">
+        <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.stock"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="buyLimit" label="限购：">
-        <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.buyLimit" />
+        <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.buyLimit"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="testValidityPeriodType" label="有效期类型：">
       <el-select v-model="dataForm.testValidityPeriodType" placeholder="请选择">
@@ -114,9 +112,8 @@
           stock: '',
           validityPeriod: '',
           id:'',
-          testCouponType:'',
+          useWay:'',
           testThreshold:'',
-          testStockMethod:'',
           testValidityPeriodType:'',
           testValidityPeriod:'',
           testDeadline:'',
@@ -125,7 +122,7 @@
           couponName: [
             {required: true, message: '请输入优惠券名称', trigger: 'blur'},
           ],
-          testCouponType: [
+          useWay: [
             {required: true, message: '请选择优惠券类型', trigger: 'blur'},
           ],
           applyClause: [
@@ -137,8 +134,8 @@
           faceValue: [
             {required: true, message: '请输入抵用额', trigger: 'blur'},
           ],
-          testStockMethod: [
-            {required: true, message: '请选择库存类型', trigger: 'blur'},
+          stock: [
+            {required: true, message: '请输入库存', trigger: 'blur'},
           ],
           buyLimit: [
             {required: true, message: '请输入限购数', trigger: 'blur'},
