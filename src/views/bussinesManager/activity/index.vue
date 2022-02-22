@@ -38,6 +38,8 @@
             <template slot-scope="scope">
               <span v-if="scope.row.activityType == '1'">限时抢购</span>
               <span v-if="scope.row.activityType == '2'">新人礼</span>
+              <span v-if="scope.row.activityType == '3'">注册送优惠券</span>
+              <span v-if="scope.row.activityType == '4'">买vip送优惠券</span>
             </template>
           </el-table-column>
           <el-table-column label="预热开始时间" width="230px">
@@ -81,6 +83,8 @@
             :disabled="activityTypeDisable">
             <el-option label="限时抢购" :value="1" />
             <el-option label="新人礼" :value="2" />
+            <el-option label="注册送优惠券" :value="3" />
+            <el-option label="买vip送优惠券" :value="4" />
           </el-select>
         </el-form-item>
         <el-form-item label="活动名称" prop="activityName">
@@ -103,7 +107,8 @@
             value-format="yyyy-MM-dd HH:mm:ss" :default-time="['00:00:00', '00:00:00']">
           </el-date-picker>
         </el-form-item>
-        <el-form-item v-if="activityForm.activityType==2" label="活动有效期" prop="activityDateTimePeriod">
+        <el-form-item v-if="activityForm.activityType==2||activityForm.activityType==3||activityForm.activityType==4"
+          label="活动有效期" prop="activityDateTimePeriod">
           <el-radio-group @change="selectRange" style="display: flex;align-items: center;" v-model="radio_"
             size="small">
             <el-radio label="1" style="display: flex;align-items: center;">
@@ -113,7 +118,8 @@
                 :default-time="['00:00:00', '00:00:00']">
               </el-date-picker>
             </el-radio>
-            <el-radio v-if="activityForm.activityType==2" label="2">永久有效期</el-radio>
+            <el-radio v-if="activityForm.activityType==2||activityForm.activityType==3||activityForm.activityType==4"
+              label="2">永久有效期</el-radio>
           </el-radio-group>
 
 
@@ -152,13 +158,21 @@
     </el-dialog>
 
     <goodsList v-if="showGoodList" :activityData="activityData" @hiddenGoodsList="hiddenGoodsList"></goodsList>
-    <save v-if="showSave" :activity="activity" @hiddenSave="hiddenSave()"></save>
+    <editGood v-if="showSaveGood" :activity="activity" @hiddenSaveGood="hiddenSaveGood()"></editGood>
+
+    <couponsList v-if="showCouponList" :activityData="activityData" @hiddenCouponsList="hiddenCouponsList">
+    </couponsList>
+    <editCoupon v-if="showSaveCoupon" :activity="activity" @hiddenSaveCoupon="hiddenSaveCoupon()"></editCoupon>
+
+
   </div>
 </template>
 
 <script>
-  import save from "./save";
+  import editGood from "./editGood";
   import goodsList from "./goodsList";
+  import editCoupon from "./editCoupon";
+  import couponsList from "./couponsList";
   import {
     getUploadUrl,
     postMethod,
@@ -199,14 +213,18 @@
       }
       return {
         isLoading: true,
-        subDisabled:false,
-        showSave: false,
+        subDisabled: false,
+        showSaveGood: false,
         showActivityList: true,
         showGoodList: false,
+
+        showCouponList: false,
+        showSaveCoupon: false,
+
         showPagination: false,
         isShowActivityDialog: false,
         isShowQuotaDialog: false,
-        isShowHtmlDialog:false,
+        isShowHtmlDialog: false,
         hideActivityFrontImageUpload: false,
         // uploadActivityFrontImageList: [],
         activityDateTimePeriod: null,
@@ -252,13 +270,15 @@
         activity: null,
         oper: '',
         activity_new_user_purchase_limit: '',
-        htmlUrl:'',
-        htmlId:'',
+        htmlUrl: '',
+        htmlId: '',
       };
     },
     components: {
       goodsList,
-      save
+      editGood,
+      editCoupon,
+      couponsList,
     },
     beforeMount() {},
 
@@ -279,7 +299,7 @@
       selectPreheat(val) {
         if (val == 2) {
           this.selectPreheatDisabled = true
-        } else if (val == 1){
+        } else if (val == 1) {
           this.selectPreheatDisabled = false
         }
         this.$set(this.activityForm, "preheatStartTime", '')
@@ -298,18 +318,18 @@
       },
       firstActive() {
         getMethod('/operate/get-config-info').then(res => {
-        this.isShowQuotaDialog = true
-          this.activity_new_user_purchase_limit=res.data.activity_new_user_purchase_limit
+          this.isShowQuotaDialog = true
+          this.activity_new_user_purchase_limit = res.data.activity_new_user_purchase_limit
         });
       },
       handleClose() {
-        this.subDisabled=false
+        this.subDisabled = false
         this.isShowQuotaDialog = false
-        this.activity_new_user_purchase_limit=''
+        this.activity_new_user_purchase_limit = ''
       },
       enterQuota() {
         postMethod('/operate/set-config', {
-          activity_new_user_purchase_limit:this.activity_new_user_purchase_limit
+          activity_new_user_purchase_limit: this.activity_new_user_purchase_limit
         }).then(res => {
           this.$message({
             message: "操作成功",
@@ -318,22 +338,24 @@
           this.handleClose();
         });
       },
-      htmlShow(row){
-        this.htmlId=row.id
-        getMethod('/activity/get-h5-url',{activityId:row.id}).then(res => {
+      htmlShow(row) {
+        this.htmlId = row.id
+        getMethod('/activity/get-h5-url', {
+          activityId: row.id
+        }).then(res => {
           this.isShowHtmlDialog = true
-          this.htmlUrl=res.data.url
+          this.htmlUrl = res.data.url
         });
       },
       handleCloseHtml() {
         this.isShowHtmlDialog = false
-        this.htmlUrl=''
-        this.htmlId=''
+        this.htmlUrl = ''
+        this.htmlId = ''
       },
       enterHtml() {
         getMethod('/activity/update-h5-url', {
           id: this.htmlId,
-          url:this.htmlUrl
+          url: this.htmlUrl
         }).then(res => {
           this.$message({
             message: "操作成功",
@@ -357,7 +379,7 @@
         } else if (val == "0") {
           getMethod('/activity/enable', {
             id: row.id,
-            activityType:row.activityType,
+            activityType: row.activityType,
           }).then(res => {
             this.$message({
               message: "启用成功",
@@ -384,18 +406,18 @@
       },
 
       search() {
-		  this.searchParam.pageNum = 1;
+        this.searchParam.pageNum = 1;
         this.loadList();
       },
 
       addOrEdit(oper, activity) {
         this.oper = oper
         this.activityTypeDisable = oper == "edit"
-          if(activity&&activity.enable==1){
-            this.subDisabled=true
-          }else{
-            this.subDisabled=false
-          }
+        if (activity && activity.enable == 1) {
+          this.subDisabled = true
+        } else {
+          this.subDisabled = false
+        }
         if (oper == "edit") {
           this.activityForm = JSON.parse(JSON.stringify(activity))
           this.activityForm.activityType = activity.activityType
@@ -433,9 +455,18 @@
       },
 
       addGood(row) {
-        this.activityData = row
-        this.showGoodList = true
-        this.showActivityList = false
+        console.log(row);
+        if (row.activityType == 1 || row.activityType == 2) {
+          this.activityData = row
+          this.showGoodList = true
+          this.showActivityList = false
+        }
+        if (row.activityType == 3 || row.activityType == 4) {
+          this.activityData = row
+          this.showCouponList = true
+          this.showActivityList = false
+        }
+
       },
 
       submit() {
@@ -476,7 +507,7 @@
                     this.activity = res.data
                     this.closeActivityDialog()
                     this.showActivityList = false
-                    this.showSave = true
+                    this.showSaveGood = true
                   } else {
                     this.closeActivityDialog()
                     this.loadList()
@@ -511,7 +542,77 @@
                     this.activity = res.data
                     this.closeActivityDialog()
                     this.showActivityList = false
-                    this.showSave = true
+                    this.showSaveGood = true
+                  } else {
+                    this.closeActivityDialog()
+                    this.loadList()
+                  }
+                })
+            } else if (this.activityForm.activityType == 3) {
+              this.activityForm.isPermanent = '0'
+              if (this.radio_ == 1 && this.activityForm.startTime == '') {
+                this.$message({
+                  message: '请选择活动有效期',
+                  type: 'warning'
+                })
+                return false
+              } else if (this.radio_ == 2) {
+                this.activityForm.isPermanent = '1'
+              }
+              // return false
+              postMethod('/activity/add-or-update-coupon', this.activityForm).then(
+                res => {
+                  if (res.errCode != 0) {
+                    this.$message({
+                      message: res.message,
+                      type: 'warning'
+                    })
+                    return;
+                  }
+                  this.$message({
+                    message: '操作成功',
+                    type: 'success'
+                  })
+                  if (this.oper == 'add') {
+                    this.activity = res.data
+                    this.closeActivityDialog()
+                    this.showActivityList = false
+                    this.showSaveCoupon = true
+                  } else {
+                    this.closeActivityDialog()
+                    this.loadList()
+                  }
+                })
+            } else if (this.activityForm.activityType == 4) {
+              this.activityForm.isPermanent = '0'
+              if (this.radio_ == 1 && this.activityForm.startTime == '') {
+                this.$message({
+                  message: '请选择活动有效期',
+                  type: 'warning'
+                })
+                return false
+              } else if (this.radio_ == 2) {
+                this.activityForm.isPermanent = '1'
+              }
+              // return false
+              postMethod('/activity/add-or-update-coupon', this.activityForm).then(
+                res => {
+                  if (res.errCode != 0) {
+                    this.$message({
+                      message: res.message,
+                      type: 'warning'
+                    })
+                    return;
+                  }
+                  this.$message({
+                    message: '操作成功',
+                    type: 'success'
+                  })
+                  if (this.oper == 'add') {
+                    this.activity = res.data
+                    this.closeActivityDialog()
+                    this.showActivityList = false
+                    this.showSaveCoupon = true
                   } else {
                     this.closeActivityDialog()
                     this.loadList()
@@ -547,11 +648,23 @@
         this.showActivityList = true
         this.loadList();
       },
-      hiddenSave() {
-        this.showSave = false
+      hiddenSaveGood() {
+        this.showSaveGood = false
         this.showActivityList = true
         this.loadList();
       },
+
+      hiddenCouponsList() {
+        this.showCouponList = false
+        this.showActivityList = true
+        this.loadList();
+      },
+      hiddenSaveCoupon() {
+        this.showSaveCoupon = false
+        this.showActivityList = true
+        this.loadList();
+      },
+
       clearValidate(field) {
         let _field = this.$refs['activityForm'].fields
         _field.map(i => {
