@@ -6,8 +6,8 @@
       </el-form-item>
       <el-form-item prop="useWay" label="优惠券类型：">
       <el-select v-model="dataForm.useWay" placeholder="请选择">
-        <el-option label="线上优惠券" value="0" />
-        <el-option label="线下优惠券" value="1" />
+        <el-option label="线上优惠券" :value="2" />
+        <el-option label="线下优惠券" :value="1" />
       </el-select>
       </el-form-item>
       <el-form-item prop="applyClause" label="使用说明：">
@@ -19,8 +19,8 @@
       <el-form-item prop="faceValue" label="抵用额：">
         <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.faceValue"  placeholder="请输入"/>
       </el-form-item>
-      <el-form-item prop="testThreshold" label="使用门槛：">
-        满 <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.testThreshold"  placeholder="请输入"/>
+      <el-form-item v-if="dataForm.useWay=='2'" prop="fullMinusAmount" label="使用门槛：">
+        满 <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.fullMinusAmount"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="stock" label="库存：">
         <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.stock"  placeholder="请输入"/>
@@ -28,18 +28,18 @@
       <el-form-item prop="buyLimit" label="限购：">
         <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.buyLimit"  placeholder="请输入"/>
       </el-form-item>
-      <el-form-item prop="testValidityPeriodType" label="有效期类型：">
-      <el-select v-model="dataForm.testValidityPeriodType" placeholder="请选择">
-        <el-option label="有效期" value="0" />
-        <el-option label="截止时间" value="1" />
+      <el-form-item prop="validType" label="有效期类型：">
+      <el-select v-model="dataForm.validType" placeholder="请选择">
+        <el-option label="有效期" :value="2" />
+        <el-option label="截止时间" :value="1" />
       </el-select>
       </el-form-item>
-      <el-form-item v-if="dataForm.testValidityPeriodType=='0'" prop="testValidityPeriod" label="有效期：">
-        <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.testValidityPeriod" />
+      <el-form-item v-if="dataForm.validType=='2'" prop="validTime" label="有效期：">
+        <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.validTime" />
       </el-form-item>
-      <el-form-item v-if="dataForm.testValidityPeriodType=='1'" prop="testDeadline" label="截止时间：">
+      <el-form-item v-if="dataForm.validType=='1'" prop="validityPeriod" label="截止时间：">
         <el-date-picker  style="width:260px" :disabled="disabled"
-              v-model="dataForm.testDeadline"
+              v-model="dataForm.validityPeriod"
               value-format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
               placeholder="请选择到期时间">
@@ -113,10 +113,9 @@
           validityPeriod: '',
           id:'',
           useWay:'',
-          testThreshold:'',
-          testValidityPeriodType:'',
-          testValidityPeriod:'',
-          testDeadline:'',
+          fullMinusAmount:'',
+          validType:'',
+          validTime:'',
         },
         rules: {
           couponName: [
@@ -134,14 +133,23 @@
           faceValue: [
             {required: true, message: '请输入抵用额', trigger: 'blur'},
           ],
+          fullMinusAmount: [
+            {required: true, message: '请输入使用门槛', trigger: 'blur'},
+          ],
           stock: [
             {required: true, message: '请输入库存', trigger: 'blur'},
           ],
           buyLimit: [
             {required: true, message: '请输入限购数', trigger: 'blur'},
           ],
-          testValidityPeriodType: [
+          validType: [
             {required: true, message: '请选择有效期类型', trigger: 'blur'},
+          ],
+          validTime: [
+            {required: true, message: '请输入有效期', trigger: 'blur'},
+          ],
+          validityPeriod: [
+            {required: true, message: '请选择截止时间', trigger: 'blur'},
           ],
           context: [
             {required: true, message: "请输入商品详情", trigger: "blur"},
@@ -193,6 +201,27 @@
              return false;
            }
           this.dataForm.imageList = this.uploadImgList
+          if(this.dataForm.useWay==1){
+            this.dataForm.type=1
+            this.dataForm.fullMinusAmount='0'
+          }
+          if(this.dataForm.useWay==2){
+            this.dataForm.type=2
+          }
+          if(this.dataForm.validType==1){
+            this.dataForm.validTime=''
+          }
+          if(this.dataForm.validType==2){
+            this.dataForm.validityPeriod=''
+          }
+          // delete this.dataForm.createTime;
+          // delete this.dataForm.isSale;
+          // delete this.dataForm.totalSales;
+          // delete this.dataForm.uptTime;
+          // delete this.dataForm.virtualCode;
+
+        console.log('表单数据',this.dataForm);
+        // return false;
           if (this.editData.id) {
             this.dataForm.id=this.editData.id
             postMethod('/coupon/update-coupon-info', this.dataForm).then(
