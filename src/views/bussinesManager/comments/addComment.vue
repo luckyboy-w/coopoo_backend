@@ -373,7 +373,7 @@
         }
       },
       validate() {
-        let notNvl = ["memberNickname", "commentContent", "memberAvatar", 'skuInfo', 'imagesUrl', 'goodsName'];
+        let notNvl = ["memberNickname", "commentContent", "memberAvatar", 'skuInfo', 'goodsName'];
         for (let i = 0; i < notNvl.length; i++) {
           if (this.dataForm[notNvl[i]] == "") {
             this.$message({
