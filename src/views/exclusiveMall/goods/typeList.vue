@@ -5,7 +5,7 @@
         <div class="tabTd">
           <div>类目名称：</div>
           <div>
-            <el-input v-model="searchParam.testTypeName" placeholder="请输入" width="180px" />
+            <el-input v-model="searchParam.name" placeholder="请输入" width="180px" />
           </div>
         </div>
         <div class="tabTd">
@@ -14,7 +14,7 @@
           </el-button>
         </div>
         <div class="tabTd">
-          <el-button type="primary" @click="addType()" icon="el-icon-circle-plus-outline">新增</el-button>
+          <el-button type="primary" @click="addType('add')" icon="el-icon-circle-plus-outline">新增</el-button>
         </div>
       </div>
       <div class="ly-table-panel">
@@ -24,14 +24,16 @@
             :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
             <el-table-column type="index" width="50">
             </el-table-column>
-            <el-table-column prop="keyWord" label="类目名称" ></el-table-column>
-            <el-table-column prop="keyWord" label="修改时间" ></el-table-column>
+            <el-table-column prop="name" label="类目名称" ></el-table-column>
+            <el-table-column prop="updateTime" label="修改时间" ></el-table-column>
             <el-table-column fixed="right" prop="id" label="操作">
               <template slot-scope="scope">
-                <el-button @click="deleteOne(scope.row)" size="mini" type="text">編輯
+                <el-button @click="addType('edit',scope.row)" size="mini" type="text">編輯
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
-                <el-button @click="deleteOne(scope.row)" size="mini" type="text">禁用
+                <el-button v-if="scope.row.enable=='1'" @click="enable('1',scope.row)" size="mini" type="text">禁用
+                </el-button>
+                <el-button v-if="scope.row.enable=='0'" @click="enable('0',scope.row)" size="mini" type="text">启用
                 </el-button>
               </template>
             </el-table-column>
@@ -45,14 +47,14 @@
       </div>
       <div class="list-panel"></div>
     </div>
-    <el-dialog title="新增类目" width="400px"  :visible="sendEval" v-if="sendEval" :close-on-click-modal='false' :before-close="handleClose">
-      <el-form ref="form" :model="replyFrm">
+    <el-dialog title="新增类目" width="400px"  :visible="typePopup" v-if="typePopup" :close-on-click-modal='false' :before-close="handleClose">
+      <el-form ref="form">
         <el-form-item>
-          <el-input placeholder="类目名称" v-model="replyFrm.keyWord">
+          <el-input placeholder="类目名称" v-model="name">
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="sendReply()">确认</el-button>
+          <el-button type="primary" @click="addSubmit()">确认</el-button>
           <el-button plain type="primary" @click="handleClose">取消</el-button>
         </el-form-item>
       </el-form>
@@ -72,13 +74,13 @@
     created() {},
     data() {
       return {
-        sendEval: false,
+        typePopup: false,
         showPagination: false,
-        replyFrm: {
-          keyWord: ''
-        },
+        name:'',
+        state:'',
+        rowData:{},
         searchParam: {
-          testTypeName:'',
+          name:'',
           pageSize: 10,
           pageNum: 1
         },
@@ -92,22 +94,24 @@
     },
     methods: {
       handleClose() {
-        this.sendEval = false
-        this.replyFrm.keyWord = ''
+        this.typePopup = false
+        this.rowData = {}
+        this.name=''
       },
-      sendReply() {
+      addSubmit() {
         let scope = this
         let param = {
-          keyWord: this.replyFrm.keyWord
+          name: this.name
         }
-        if (param.keyWord == '') {
+        if (param.name == '') {
           this.$message({
             message: "内容不能为空",
             type: "success"
           });
           return false;
-        } else {
-          getMethod('/posts/filter-word/save', param).then(res => {
+        }
+        if (this.state=='add') {
+          postMethod('/goods/category/add', param).then(res => {
             this.$message({
               message: "添加成功",
               type: "success"
@@ -115,22 +119,43 @@
             this.loadList()
             scope.handleClose()
           })
+        } else if(this.state=='edit'){
+          param.id =this.rowData.id
+          postMethod('/goods/category/update', param).then(res => {
+            this.$message({
+              message: "保存成功",
+              type: "success"
+            });
+            this.loadList()
+            scope.handleClose()
+          })
         }
+
       },
-      deleteOne(row) {
+      enable(num,row) {
         let scope = this
-        getMethod('/posts/filter-word/delete', {
-          id: row.id
-        }).then(res => {
+        let params={
+          id:row.id
+        }
+        if (num=='1') {
+          params.enable='0'
+        } else if(num=='0'){
+          params.enable='1'
+        }
+        postMethod('/goods/category/update',params).then(res => {
           scope.loadList()
           scope.$message({
-            message: "删除成功",
+            message: "操作成功",
             type: "success"
           });
         });
       },
-      addType() {
-        this.sendEval = true
+      addType(state,row) {
+        if(row){
+          this.rowData=row
+        }
+        this.state=state
+        this.typePopup = true
       },
       search() {
         this.loadList()
@@ -144,7 +169,7 @@
       },
       loadList() {
         let scope = this
-        postMethod('/posts/filter-word/page', this.searchParam).then(
+        postMethod('/goods/category/list', this.searchParam).then(
           res => {
             scope.tableData.list = res.data.records
             scope.tableData.total = res.data.total

@@ -10,7 +10,7 @@
           </el-form-item>
           <el-form-item label="类目">
             <el-select v-model="dataForm.categoryId" placeholder="请选择">
-              <el-option v-for="item in testTypeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="商品卖点">
@@ -262,7 +262,7 @@
           token: Cookies.get('token')
         },
         supplierList:[],
-        testTypeList:[],
+        categoryList:[],
         goodSaleDescImgVisible: false,
         goodSaleDescImgUrl: '',
         goodSaleDescList: [],

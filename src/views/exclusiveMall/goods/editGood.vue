@@ -8,8 +8,8 @@
               maxlength="30" show-word-limit />
           </el-form-item>
           <el-form-item label="类目">
-            <el-select v-model="dataForm.testType" placeholder="请选择">
-              <el-option v-for="item in testTypeList" :key="item.id" :label="item.supplierName" :value="item.id"></el-option>
+            <el-select v-model="dataForm.categoryId" placeholder="请选择">
+              <el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="商品卖点">
@@ -262,7 +262,7 @@
         },
         isEdit: false,
         supplierList:[],
-        testTypeList:[],
+        categoryList:[],
         goodSaleDescImgVisible: false,
         goodSaleDescImgUrl: '',
         goodSaleDescList: [],
@@ -293,7 +293,8 @@
         goodsVideoUrl: '',
         dataForm: {
           postSaleId: '123',
-          testType:'',
+          categoryId:'',
+          goodsType:'2',
           supplierId:'',
           goodsVideo: '',
           goodsName: '',
@@ -375,9 +376,9 @@
       },
       loadTypeList() {
         let scope = this;
-        getMethod("/supplier/search-supplier-list", {pageSize:50,pageNum:1}).then(
+        postMethod("/goods/category/list", {pageSize:50,pageNum:1}).then(
           res => {
-            scope.testTypeList = res.data.records;
+            scope.categoryList = res.data.records;
           }
         );
       },
@@ -851,6 +852,13 @@
         if (dataFrm['sellingPoint'] == '') {
           this.$message({
             message: '卖点不能为空',
+            type: 'warning'
+          })
+          return false
+        }
+        if (dataFrm['categoryId'] == '') {
+          this.$message({
+            message: '请选择商品类目',
             type: 'warning'
           })
           return false

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!showOrdDtl" v-loading="loading" class="ly-container">
+    <div v-loading="loading" class="ly-container">
       <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
         <div class="tabTd">
           <div>订单编号：</div>
