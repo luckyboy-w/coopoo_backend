@@ -57,7 +57,9 @@
           </el-table-column> -->
           <el-table-column label="活动有效期" width="350px">
             <template slot-scope="scope">
-              {{ scope.row.startTime }} 至 {{scope.row.endTime }}
+              <span v-if="scope.row.startTime">{{ scope.row.startTime}} 至
+                {{ scope.row.endTime}}</span>
+              <span v-if="!scope.row.startTime">永久有效</span>
             </template>
           </el-table-column>
           <el-table-column label="操作">
@@ -77,7 +79,7 @@
       </div>
     </div>
 
-    <editGood v-if="showSave" :activity="activity" @hiddenSave="hiddenSave()"></editGood>
+    <editGood v-if="showSave" :activity="activity" @hiddenSaveGood="hiddenSaveGood()"></editGood>
 
 
   </div>
@@ -190,7 +192,7 @@ export default {
       this.loadList();
     },
 
-    hiddenSave() {
+    hiddenSaveGood() {
       this.showActivityGoodList = true
       this.showSave = false
       this.loadList()

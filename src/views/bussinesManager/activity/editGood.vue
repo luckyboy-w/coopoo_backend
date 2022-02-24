@@ -772,7 +772,7 @@
                 type: 'success'
               })
 
-              this.$emit('hiddenSave')
+              this.$emit('hiddenSaveGood')
             }
           ).catch(error => {
             this.loading = false
@@ -793,7 +793,7 @@
                 type: 'success'
               })
 
-              this.$emit('hiddenSave')
+              this.$emit('hiddenSaveGood')
             }
           ).catch(error => {
             this.loading = false
@@ -803,7 +803,7 @@
       },
 
       backToMarketingGoodsList() {
-        this.$emit('hiddenSave')
+        this.$emit('hiddenSaveGood')
       },
 
     },

@@ -421,13 +421,13 @@
         if (oper == "edit") {
           this.activityForm = JSON.parse(JSON.stringify(activity))
           this.activityForm.activityType = activity.activityType
-          if (activity.activityType == 2 && activity.isPermanent == 1) {
+          if ((activity.activityType == 2||activity.activityType == 3||activity.activityType == 4) && activity.isPermanent == 1) {
             this.activityDateTimePeriod = null
             this.activityForm.startTime = ''
             this.activityForm.endTime = ''
             this.radio_ = "2"
             this.selectRangeDisabled = true
-          } else if (activity.activityType == 2 && activity.isPermanent == 0) {
+          } else if ((activity.activityType == 2||activity.activityType == 3||activity.activityType == 4) && activity.isPermanent == 0) {
             this.activityDateTimePeriod = [new Date(activity.startTime), new Date(activity.endTime)]
             this.activityForm.startTime = formatDate(new Date(activity.startTime), 'yyyy-MM-dd hh:mm:ss')
             this.activityForm.endTime = formatDate(new Date(activity.endTime), 'yyyy-MM-dd hh:mm:ss')
@@ -559,6 +559,7 @@
               } else if (this.radio_ == 2) {
                 this.activityForm.isPermanent = '1'
               }
+              delete this.activityForm.preheatStartTime;
               // return false
               postMethod('/activity/add-or-update-coupon', this.activityForm).then(
                 res => {
@@ -594,6 +595,7 @@
               } else if (this.radio_ == 2) {
                 this.activityForm.isPermanent = '1'
               }
+              delete this.activityForm.preheatStartTime;
               // return false
               postMethod('/activity/add-or-update-coupon', this.activityForm).then(
                 res => {
