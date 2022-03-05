@@ -14,7 +14,7 @@
         <div class="tabTd">
           <el-button icon="el-icon-search" @click="search()">查询</el-button>
           <el-button plain type="primary" @click="addOrEdit('add')" icon="el-icon-document-add">新增</el-button>
-          <el-button plain type="primary" @click="firstActive()" icon="el-icon-document-add">活动配置</el-button>
+          <el-button plain type="primary" v-if="activityForm.activityType==2" @click="firstActive()" icon="el-icon-document-add">活动配置</el-button>
         </div>
       </div>
       <div class="ly-table-panel" v-loading="isLoading">
