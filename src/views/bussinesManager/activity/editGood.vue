@@ -29,10 +29,24 @@
               </el-table-column>
               <!-- <el-table-column prop="saleVolume" label="销量" width="80" /> -->
 
-              <el-table-column prop="purchaseLimit" v-if="activity.activityType==1" label="限购" width="160">
+              <el-table-column prop="purchaseLimit"
+                v-if="activity.activityType==1||activity.activityType==5||activity.activityType==6" label="限购"
+                width="160">
                 <template slot-scope="scope">
                   <el-input-number :disabled="disabled" :min="0" size="mini" placeholder="1"
                     v-model="scope.row.purchaseLimit" />
+                </template>
+              </el-table-column>
+              <el-table-column prop="personNum" v-if="activity.activityType==6" label="砍价人数" width="160">
+                <template slot-scope="scope">
+                  <el-input-number :disabled="disabled" :min="0" size="mini" placeholder="1"
+                    v-model="scope.row.personNum" />
+                </template>
+              </el-table-column>
+              <el-table-column prop="personNum" v-if="activity.activityType==5" label="拼团人数" width="160">
+                <template slot-scope="scope">
+                  <el-input-number :disabled="disabled" :min="0" size="mini" placeholder="1"
+                    v-model="scope.row.personNum" />
                 </template>
               </el-table-column>
               <el-table-column v-if="settleMethod==1" prop="supplierSettleRatio" label="供应商结算比例" width="160">
@@ -193,7 +207,8 @@
       </div>
     </el-dialog>
     <!-- 修改属性规格弹框 -->
-    <el-dialog title="修改活动商品价格" :visible.sync="skuDialog" width="50%" destroy-on-close :close-on-click-modal="false" @close="skuClose()">
+    <el-dialog title="修改活动商品价格" :visible.sync="skuDialog" width="50%" destroy-on-close :close-on-click-modal="false"
+      @close="skuClose()">
       <div style="width: 100%;">
         <el-table style="margin-top: 10px" :data="skuTableData.table" :span-method="objectSpanMethod" border>
           <el-table-column align="center" v-for="(item,index) in skuTableData.columnList" :key="index" :label="item"
@@ -203,11 +218,18 @@
             </template>
           </el-table-column>
           <el-table-column align="center" prop="salePrice" label="会员价"></el-table-column>
-          <el-table-column align="center" label="活动价格">
+          <el-table-column v-if="activity.activityType!=6" align="center" label="活动价格">
             <template slot-scope="scope">
               <el-input :disabled="disabled" type="number" v-model="scope.row.promotionPrice"></el-input>
             </template>
           </el-table-column>
+          <el-table-column v-if="activity.activityType==6" align="center" label="最低价格">
+            <template slot-scope="scope">
+              <el-input :disabled="disabled" type="number" v-model="scope.row.floorPrice"></el-input>
+            </template>
+          </el-table-column>
+
+
           <el-table-column align="center" label="限售">
             <template slot-scope="scope">
               <el-input-number :disabled="disabled" :min="0" :max="scope.row.maxStock" size="mini" placeholder="请输入"
@@ -248,7 +270,7 @@
     data() {
       return {
         flag: 'add',
-        settleMethod:'2',
+        settleMethod: '2',
         searchParam: {
           pageSize: 10,
           pageNum: 1,
@@ -335,22 +357,22 @@
         this.skuDialog = true
         if (row.localSkuList) {
           this.skuTableData = row.localSkuList
-          this.localSkuTableData=JSON.parse(JSON.stringify(row.localSkuList))
+          this.localSkuTableData = JSON.parse(JSON.stringify(row.localSkuList))
         } else {
           if (row.activityGoodsSkuList) {
             let table = this.loadTableList(row.activityGoodsSkuList, row.goodsName, row.goodsId, row)
             this.skuTableData = table
-            this.localSkuTableData=JSON.parse(JSON.stringify(table))
+            this.localSkuTableData = JSON.parse(JSON.stringify(table))
           } else {
             let table = this.loadTableList(row.skuList, row.goodsName, row.goodsId, row)
             this.skuTableData = table
-            this.localSkuTableData=JSON.parse(JSON.stringify(table))
+            this.localSkuTableData = JSON.parse(JSON.stringify(table))
           }
         }
       },
       skuClose() {
-        console.log(this.skuTableData, this.bindingList,this.localSkuTableData, 'this.skuTableData')
-        this.skuTableData=this.localSkuTableData
+        console.log(this.skuTableData, this.bindingList, this.localSkuTableData, 'this.skuTableData')
+        this.skuTableData = this.localSkuTableData
         for (let i = 0; i < this.bindingList.length; i++) {
           if (this.skuTableData.goodsId == this.bindingList[i].goodsId) {
             this.bindingList[i].localSkuList = this.skuTableData
@@ -358,13 +380,13 @@
         }
         this.skuDialog = false
       },
-      enterSku(){
+      enterSku() {
         for (let i = 0; i < this.bindingList.length; i++) {
           if (this.skuTableData.goodsId == this.bindingList[i].goodsId) {
             this.bindingList[i].localSkuList = this.skuTableData
           }
         }
-        this.localSkuTableData={}
+        this.localSkuTableData = {}
         this.skuDialog = false
       },
 
@@ -404,14 +426,17 @@
         // console.log(skuPriceList, goodsName, goodsId, objData, 'sku信息');
         let tempTableList = []
         let columnList = []
-        console.log(skuPriceList,'skuPriceList')
+        console.log(skuPriceList, 'skuPriceList')
         for (let i = 0; i < skuPriceList.length; i++) {
           skuPriceList[i].goodsName = goodsName
           skuPriceList[i].maxStock = skuPriceList[i].stock
-          skuPriceList[i].marketingStock = (skuPriceList[i].marketingStock!=null) ? skuPriceList[i].marketingStock :
+          skuPriceList[i].marketingStock = (skuPriceList[i].marketingStock != null) ? skuPriceList[i].marketingStock :
             skuPriceList[i].stock
-          skuPriceList[i].promotionPrice = (skuPriceList[i].promotionPrice!=null) ? skuPriceList[i].promotionPrice :
+          skuPriceList[i].promotionPrice = (skuPriceList[i].promotionPrice != null) ? skuPriceList[i].promotionPrice :
             skuPriceList[i].salePrice
+          skuPriceList[i].floorPrice = (skuPriceList[i].floorPrice != null) ? skuPriceList[i].floorPrice :
+            skuPriceList[i].salePrice
+
           tempTableList[i] = deepCopy(skuPriceList[i])
           tempTableList[i].tdList = []
 
@@ -492,6 +517,10 @@
           this.bindingList.forEach(item => {
             if (item.purchaseLimit || item.purchaseLimit == "0") {
               item.purchaseLimit = item.purchaseLimit
+            }
+            if ((this.activity.activityType == 5 || this.activity.activityType == 6) && (item.personNum || item
+                .personNum == "0")) {
+              item.personNum = item.personNum
             }
             // item.purchaseLimit=item.purchaseLimit?item.purchaseLimit:'1'
           })
@@ -629,20 +658,27 @@
         for (let i = 0; i < this.bindingList.length; i++) {
           let marketingGoodsSkuList = []
           let arr = this.bindingList[i]
-          console.log('arr',arr);
+          console.log('arr', arr);
           if (arr.localSkuList) {
             for (let j = 0; j < arr.localSkuList.table.length; j++) {
               let localArr = arr.localSkuList.table[j]
-              if (localArr.promotionPrice === '') {
+              if (this.activity.activityType != 6 && localArr.promotionPrice === '') {
                 this.$message({
-                  message: arr.goodsName+"的活动价不能为空",
+                  message: arr.goodsName + "的活动价不能为空",
                   type: 'warning'
                 });
                 return false;
               }
-              if (localArr.marketingStock === ''||localArr.marketingStock == null) {
+              if (this.activity.activityType == 6 && localArr.floorPrice === '') {
                 this.$message({
-                  message: arr.goodsName+"的限售不能为空",
+                  message: arr.goodsName + "的最低价不能为空",
+                  type: 'warning'
+                });
+                return false;
+              }
+              if (localArr.marketingStock === '' || localArr.marketingStock == null) {
+                this.$message({
+                  message: arr.goodsName + "的限售不能为空",
                   type: 'warning'
                 });
                 return false;
@@ -650,9 +686,15 @@
               skuObj = {
                 id: localArr.id ? localArr.id : null,
                 goodsSkuId: localArr.goodsSkuId ? localArr.goodsSkuId : localArr.skuId,
-                marketingStock: (localArr.marketingStock!=null) ? localArr.marketingStock : localArr.stock,
-                promotionPrice: (localArr.promotionPrice!=null) ? localArr.promotionPrice : localArr.salePrice,
+                marketingStock: (localArr.marketingStock != null) ? localArr.marketingStock : localArr.stock,
+                promotionPrice: (localArr.promotionPrice != null) ? localArr.promotionPrice : localArr.salePrice,
+                floorPrice: '',
                 salePrice: localArr.salePrice
+              }
+              if (this.activity.activityType == 6) {
+                skuObj.floorPrice = (localArr.floorPrice != null) ? localArr.floorPrice : localArr.salePrice
+              } else {
+                delete skuObj.floorPrice
               }
               marketingGoodsSkuList.push(skuObj)
             }
@@ -660,9 +702,16 @@
           if (!arr.localSkuList && arr.skuList) {
             for (let j = 0; j < arr.skuList.length; j++) {
               let localArr = arr.skuList[j]
-              if (localArr.promotionPrice === '') {
+              if (this.activity.activityType != 6 && localArr.promotionPrice === '') {
                 this.$message({
-                  message: arr.goodsName+"的活动价不能为空",
+                  message: arr.goodsName + "的活动价不能为空",
+                  type: 'warning'
+                });
+                return false;
+              }
+              if (this.activity.activityType == 6 && localArr.floorPrice === '') {
+                this.$message({
+                  message: arr.goodsName + "的最低价不能为空",
                   type: 'warning'
                 });
                 return false;
@@ -670,9 +719,15 @@
               skuObj = {
                 id: localArr.id ? localArr.id : null,
                 goodsSkuId: localArr.goodsSkuId ? localArr.goodsSkuId : localArr.skuId,
-                marketingStock: (localArr.marketingStock!=null) ? localArr.marketingStock : localArr.stock,
-                promotionPrice: (localArr.promotionPrice!=null) ? localArr.promotionPrice : localArr.salePrice,
+                marketingStock: (localArr.marketingStock != null) ? localArr.marketingStock : localArr.stock,
+                promotionPrice: (localArr.promotionPrice != null) ? localArr.promotionPrice : localArr.salePrice,
+                floorPrice: '',
                 salePrice: localArr.salePrice
+              }
+              if (this.activity.activityType == 6) {
+                skuObj.floorPrice = (localArr.floorPrice != null) ? localArr.floorPrice : localArr.salePrice
+              } else {
+                delete skuObj.floorPrice
               }
               marketingGoodsSkuList.push(skuObj)
             }
@@ -680,16 +735,23 @@
           if (!arr.localSkuList && arr.activityGoodsSkuList) {
             for (let j = 0; j < arr.activityGoodsSkuList.length; j++) {
               let localArr = arr.activityGoodsSkuList[j]
-              if (localArr.promotionPrice === '') {
+              if (this.activity.activityType != 6 && localArr.promotionPrice === '') {
                 this.$message({
-                  message: arr.goodsName+"的活动价不能为空",
+                  message: arr.goodsName + "的活动价不能为空",
                   type: 'warning'
                 });
                 return false;
               }
-              if (localArr.marketingStock === ''||localArr.marketingStock == null) {
+              if (this.activity.activityType == 6 && localArr.floorPrice === '') {
                 this.$message({
-                  message: arr.goodsName+"的限售不能为空",
+                  message: arr.goodsName + "的最低价不能为空",
+                  type: 'warning'
+                });
+                return false;
+              }
+              if (localArr.marketingStock === '' || localArr.marketingStock == null) {
+                this.$message({
+                  message: arr.goodsName + "的限售不能为空",
                   type: 'warning'
                 });
                 return false;
@@ -697,21 +759,27 @@
               skuObj = {
                 id: localArr.id ? localArr.id : null,
                 goodsSkuId: localArr.goodsSkuId ? localArr.goodsSkuId : localArr.skuId,
-                marketingStock: (localArr.marketingStock!=null) ? localArr.marketingStock : localArr.stock,
-                promotionPrice: (localArr.promotionPrice!=null) ? localArr.promotionPrice : localArr.salePrice,
+                marketingStock: (localArr.marketingStock != null) ? localArr.marketingStock : localArr.stock,
+                promotionPrice: (localArr.promotionPrice != null) ? localArr.promotionPrice : localArr.salePrice,
+                floorPrice: '',
                 salePrice: localArr.salePrice
+              }
+              if (this.activity.activityType == 6) {
+                skuObj.floorPrice = (localArr.floorPrice != null) ? localArr.floorPrice : localArr.salePrice
+              } else {
+                delete skuObj.floorPrice
               }
               marketingGoodsSkuList.push(skuObj)
             }
           }
-          if (arr.supplierSettleRatio==null&&this.settleMethod==1) {
+          if (arr.supplierSettleRatio == null && this.settleMethod == 1) {
             this.$message({
               message: arr.goodsName + "的供应商结算比例不能为空 ",
               type: 'warning'
             });
             return false;
           }
-          if (arr.storeSettleRatio==null&&this.settleMethod==1) {
+          if (arr.storeSettleRatio == null && this.settleMethod == 1) {
             this.$message({
               message: arr.goodsName + "的门店结算比例不能为空 ",
               type: 'warning'
@@ -726,23 +794,35 @@
             return false;
           }
 
-          if (this.settleMethod==1) {
+          if (this.settleMethod == 1) {
             goodsObj = {
               id: arr.id ? arr.id : null,
               goodsId: arr.goodsId,
-              purchaseLimit:(arr.purchaseLimit!=null)?arr.purchaseLimit:1,
+              purchaseLimit: (arr.purchaseLimit != null) ? arr.purchaseLimit : 1,
               storeSettleRatio: arr.storeSettleRatio,
               supplierSettleRatio: arr.supplierSettleRatio,
+              personNum: '',
               marketingGoodsSkuList: marketingGoodsSkuList
             }
+            if (this.activity.activityType == 5 || this.activity.activityType == 6) {
+              goodsObj.personNum = (arr.personNum != null) ? arr.personNum : 1
+            } else {
+              delete goodsObj.personNum
+            }
             marketingGoodList.push(goodsObj)
-          } else if (this.settleMethod==2){
+          } else if (this.settleMethod == 2) {
             goodsObj = {
               id: arr.id ? arr.id : null,
               goodsId: arr.goodsId,
-              purchaseLimit:(arr.purchaseLimit!=null)?arr.purchaseLimit:1,
-              storeProfitRatio:"100",
+              purchaseLimit: (arr.purchaseLimit != null) ? arr.purchaseLimit : 1,
+              storeProfitRatio: "100",
+              personNum: '',
               marketingGoodsSkuList: marketingGoodsSkuList
+            }
+            if (this.activity.activityType == 5 || this.activity.activityType == 6) {
+              goodsObj.personNum = (arr.personNum != null) ? arr.personNum : 1
+            } else {
+              delete goodsObj.personNum
             }
             marketingGoodList.push(goodsObj)
           }
@@ -772,7 +852,7 @@
                 type: 'success'
               })
 
-              this.$emit('hiddenSave')
+              this.$emit('hiddenSaveGood')
             }
           ).catch(error => {
             this.loading = false
@@ -793,7 +873,7 @@
                 type: 'success'
               })
 
-              this.$emit('hiddenSave')
+              this.$emit('hiddenSaveGood')
             }
           ).catch(error => {
             this.loading = false
@@ -803,7 +883,7 @@
       },
 
       backToMarketingGoodsList() {
-        this.$emit('hiddenSave')
+        this.$emit('hiddenSaveGood')
       },
 
     },

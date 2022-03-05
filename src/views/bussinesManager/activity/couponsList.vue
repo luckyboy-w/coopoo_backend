@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="padding:20px 10px" v-if="showActivityGoodList">
+    <div style="padding:20px 10px" v-if="showActivityCouponList">
       <div class="ly-tool-panel">
         <div class="tabTd">
         <el-button style="margin-bottom: 10px" @click="backToActivityList()" type="primary" icon="el-icon-back">返回活动列表</el-button>
@@ -8,15 +8,9 @@
       </div>
       <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
         <div class="tabTd">
-          <div>商品名称：</div>
+          <div>优惠券名称：</div>
           <div>
-            <el-input v-model="searchParam.goodsName" placeholder="请输入" width="180px" />
-          </div>
-        </div>
-        <div class="tabTd">
-          <div>供应商名称：</div>
-          <div>
-            <el-input v-model="searchParam.activityName" placeholder="请输入" width="180px" />
+            <el-input v-model="searchParam.couponName" placeholder="请输入" width="180px" />
           </div>
         </div>
         <div class="tabTd">
@@ -27,19 +21,9 @@
       <div class="ly-table-panel" :loading="isLoading">
         <el-table ref="mainTable" :data="tableData.list" row-key="id"
                   :header-cell-style="{'text-align':'center'}" :cell-style="{'text-align':'center'}"
-                  border :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-          <el-table-column type="expand">
-            <template slot-scope="props">
-              <el-table :data="props.row.activityGoodsSkuList" style="width: 100%; margin-bottom: 20px;" border>
-                <el-table-column prop="skuText" label="sku属性"/>
-                <el-table-column prop="marketingStock" label="活动库存"/>
-                <el-table-column prop="salePrice" label="会员价"/>
-                <el-table-column prop="promotionPrice" label="活动价"/>
-              </el-table>
-            </template>
-          </el-table-column>
-          <el-table-column prop="goodsName" label="商品名称"/>
-          <el-table-column prop="supplierName" label="供应商名称" />
+                  border >
+          <el-table-column prop="couponName" label="优惠券名称"/>
+          <el-table-column prop="couponPrice" label="优惠券价格"/>
           <el-table-column v-if="settleMethod==1" prop="supplierSettleRatio" label="供应商比例" >
             <template slot-scope="scope">
               {{ scope.row.supplierSettleRatio}}%
@@ -79,14 +63,14 @@
       </div>
     </div>
 
-    <editGood v-if="showSave" :activity="activity" @hiddenSaveGood="hiddenSaveGood()"></editGood>
+    <editCoupon v-if="showSave" :activity="activity" @hiddenSaveCoupon="hiddenSaveCoupon()"></editCoupon>
 
 
   </div>
 </template>
 
 <script>
-import editGood from "./editGood";
+import editCoupon from "./editCoupon";
 import { getMethod , postMethod } from '@/api/request'
 import { formatDate } from "@/api/tools.js"
 
@@ -112,7 +96,7 @@ export default {
       settleMethod:'2',
       disabled:false,
       isLoading: false,
-      showActivityGoodList: true,
+      showActivityCouponList: true,
       showSave: false,
       showUpdate: false,
       showPresent: false,
@@ -127,7 +111,7 @@ export default {
       }
     };
   },
-  components: {editGood},
+  components: {editCoupon},
   computed: {},
   beforeMount() {},
 
@@ -147,7 +131,7 @@ export default {
       if (!scope.isLoading) {
         scope.isLoading = true
       }
-      postMethod("/activity/marketing-goods-list", this.searchParam).then(res => {
+      postMethod("/activity/coupon-list", this.searchParam).then(res => {
         this.loading = false
         if (res.errCode != 0) {
           this.$message({
@@ -174,11 +158,11 @@ export default {
     },
 
     save() {
-      this.showActivityGoodList = false
+      this.showActivityCouponList = false
       this.showSave = true
     },
     deleteGoods(row){
-      getMethod("/activity/marketing-goods/remove?id="+row.id).then(res => {
+      getMethod("/activity/coupon-remove?id="+row.id).then(res => {
         this.$message({
           message: "操作成功",
           type: 'success'
@@ -192,13 +176,13 @@ export default {
       this.loadList();
     },
 
-    hiddenSaveGood() {
-      this.showActivityGoodList = true
+    hiddenSaveCoupon() {
+      this.showActivityCouponList = true
       this.showSave = false
       this.loadList()
     },
     backToActivityList() {
-      this.$emit('hiddenGoodsList')
+      this.$emit('hiddenCouponsList')
     }
 
   },
