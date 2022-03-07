@@ -135,8 +135,14 @@
             <el-table-column label="商品" align="center" width="400">
               <template slot-scope="scope">
                 <div v-for="(item, index) in scope.row.orderItemList" :key="index" class="mesSty">
-                  <div>
-                    <img class="imgSty" :src="item.goodsImage" alt="">
+                  <div style="position: relative;">
+                    <img class="imgSty"  :src="item.goodsImage" alt="">
+                    <div v-if="scope.row.marketingCollageId&&scope.row.marketingCollageId!=0" style="width: 50px;background-color: #409EFF;position: absolute;top: 0;right: 0;color:white;border-radius: 5px;">
+                      拼团
+                    </div>
+                    <div v-if="scope.row.marketingCutPriceId&&scope.row.marketingCutPriceId!=0" style="width: 50px;background-color: #409EFF;position: absolute;top: 0;right: 0;color:white;border-radius: 5px;">
+                      砍价
+                    </div>
                   </div>
                   <div class="mesFont">
                     <p>{{ item.goodsName }}</p>
