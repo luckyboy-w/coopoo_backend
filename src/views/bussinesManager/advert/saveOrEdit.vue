@@ -45,6 +45,8 @@
           <el-option label="新人礼" :value="9" />
           <el-option label="邀请好友" :value="10" />
           <el-option label="门店列表" :value="11" />
+          <el-option label="拼团" :value="12" />
+          <el-option label="砍价" :value="13" />
           <el-option label="无" :value='0' />
         </el-select>
       </el-form-item>
@@ -73,6 +75,22 @@
         <el-select v-model="dataForm.url" placeholder="请选择">
           <el-option v-for="item in relationList" :key="item.id" :label="item.text" :value="item.id"></el-option>
         </el-select>
+      </el-form-item>
+
+      <el-form-item v-if="dataForm.dataType == 13" label="砍价活动">
+        <el-select v-model="dataForm.url" placeholder="请选择">
+          <el-option v-for="item in relationList" :key="item.id" :label="item.text" :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="dataForm.dataType == 12" label="拼团活动">
+        <el-select v-model="dataForm.url" placeholder="请选择">
+          <el-option v-for="item in relationList" :key="item.id" :label="item.text" :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item v-if="dataForm.dataType == 12||dataForm.dataType == 13" label="富文本显示">
+        <qEditor style="width: 650px;" :content="dataForm.extra" ref="refEditor_" :module-name="moduleName"
+          @changeContent="changeContent_" />
       </el-form-item>
 
       <el-form-item v-if="dataForm.dataType == 4" label="编辑器">
@@ -162,7 +180,8 @@
           location: "",
           enable: 1,
           image: "",
-          id: ""
+          id: "",
+          extra:'',
         }
       };
     },
@@ -197,6 +216,10 @@
           if (val == 4) {
             this.$refs.refEditor.richText = ''
           }
+          if (val == 12||val == 13) {
+            this.dataForm.extra = ''
+            this.$refs.refEditor_.richText = ''
+          }
           this.relationList = res.data
         });
       },
@@ -216,11 +239,14 @@
               this.dataForm.url=''
             }
           }
-          
+
         });
       },
       changeContent(val) {
         this.dataForm.url = val
+      },
+      changeContent_(val) {
+        this.dataForm.extra = val
       },
       buildAdvertGroupId() {
         getMethod("/oss/get-group-id", null).then(res => {

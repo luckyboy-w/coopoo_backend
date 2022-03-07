@@ -41,6 +41,8 @@
                 <span v-if="scope.row.dataType==9">新人礼</span>
                 <span v-if="scope.row.dataType==10">邀请好友</span>
                 <span v-if="scope.row.dataType==11">门店列表</span>
+                <span v-if="scope.row.dataType==12">拼团</span>
+                <span v-if="scope.row.dataType==13">砍价</span>
               </template>
             </el-table-column>
             <el-table-column prop="image" label="BANNER图" width="350px">

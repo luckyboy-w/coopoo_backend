@@ -446,9 +446,9 @@
             this.activityForm.startTime = formatDate(new Date(activity.startTime), 'yyyy-MM-dd hh:mm:ss')
             this.activityForm.endTime = formatDate(new Date(activity.endTime), 'yyyy-MM-dd hh:mm:ss')
           }else if (activity.activityType == 5||activity.activityType == 6) {
-            // this.activityDateTimePeriod = [new Date(activity.startTime), new Date(activity.endTime)]
-            this.activityForm.startTime = formatDate(new Date(activity.startTime), 'yyyy-MM-dd hh:mm:ss')
-            this.activityForm.endTime = formatDate(new Date(activity.endTime), 'yyyy-MM-dd hh:mm:ss')
+            this.activityDateTimePeriod = [new Date(activity.startTime), new Date(activity.endTime)]
+            // this.activityForm.startTime = formatDate(new Date(activity.startTime), 'yyyy-MM-dd hh:mm:ss')
+            // this.activityForm.endTime = formatDate(new Date(activity.endTime), 'yyyy-MM-dd hh:mm:ss')
           }
           if (!this.activityForm.preheatStartTime || this.activityForm.preheatStartTime == '') {
             this.selectPreheatDisabled = true
