@@ -1,46 +1,123 @@
 <template>
   <div class="update-form-panel">
-    <el-form ref="dataForm" :model="dataForm" :rules="rules" label-width="140px" width="1000px">
-      <el-form-item prop="couponName" label="优惠券名称">
-        <el-input style="width:260px" :disabled="disabled" v-model="dataForm.couponName" />
+    <el-form
+      ref="dataForm"
+      :model="dataForm"
+      :rules="rules"
+      label-width="140px"
+      width="1000px"
+    >
+      <el-form-item
+        prop="couponName"
+        label="优惠券名称"
+      >
+        <el-input
+          v-model="dataForm.couponName"
+          style="width:260px"
+          :disabled="disabled"
+        />
       </el-form-item>
-      <el-form-item prop="applyClause" label="使用说明">
-        <el-input style="width:260px" :disabled="disabled" v-model="dataForm.applyClause" />
+      <el-form-item
+        prop="applyClause"
+        label="使用说明"
+      >
+        <el-input
+          v-model="dataForm.applyClause"
+          style="width:260px"
+          :disabled="disabled"
+        />
       </el-form-item>
-      <el-form-item prop="buyPrice" label="购买价格">
-        <el-input style="width:260px" type="number" :disabled="disabled" v-model="dataForm.buyPrice" />
+      <el-form-item
+        prop="buyPrice"
+        label="购买价格"
+      >
+        <el-input
+          v-model="dataForm.buyPrice"
+          style="width:260px"
+          type="number"
+          :disabled="disabled"
+        />
       </el-form-item>
-      <el-form-item prop="faceValue" label="抵用额">
-        <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.faceValue" />
+      <el-form-item
+        prop="faceValue"
+        label="抵用额"
+      >
+        <el-input
+          v-model="dataForm.faceValue"
+          style="width:260px"
+          type="number"
+          :disabled="disabled"
+        />
       </el-form-item>
-      <el-form-item prop="stock" label="库存">
-        <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.stock" />
+      <el-form-item
+        prop="stock"
+        label="库存"
+      >
+        <el-input
+          v-model="dataForm.stock"
+          style="width:260px"
+          type="number"
+          :disabled="disabled"
+        />
       </el-form-item>
-      <el-form-item prop="buyLimit" label="限购">
-        <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.buyLimit" />
+      <el-form-item
+        prop="buyLimit"
+        label="限购"
+      >
+        <el-input
+          v-model="dataForm.buyLimit"
+          style="width:260px"
+          type="number"
+          :disabled="disabled"
+        />
       </el-form-item>
-      <el-form-item prop="validityPeriod" label="有效期">
-        <el-date-picker  style="width:260px" :disabled="disabled"
-              v-model="dataForm.validityPeriod"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
-              placeholder="请选择到期时间">
-        </el-date-picker>
+      <el-form-item
+        prop="validityPeriod"
+        label="有效期"
+      >
+        <el-date-picker
+          v-model="dataForm.validityPeriod"
+          style="width:260px"
+          :disabled="disabled"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          type="datetime"
+          placeholder="请选择到期时间"
+        />
       </el-form-item>
       <el-form-item label="图片">
-        <el-upload :action="uploadImgUrl" list-type="picture-card" :disabled="disabled"
-          :on-preview="handleImgPreview" :before-upload="beforeImgUpload" :on-success="handleImgSuccess"
-          :class="{hideTrue:hideImgUpload}" :file-list="uploadImgList" :on-remove="handleImgRemove">
+        <el-upload
+          :action="uploadImgUrl"
+          list-type="picture-card"
+          :disabled="disabled"
+          :on-preview="handleImgPreview"
+          :before-upload="beforeImgUpload"
+          :on-success="handleImgSuccess"
+          :class="{hideTrue:hideImgUpload}"
+          :file-list="uploadImgList"
+          :on-remove="handleImgRemove"
+        >
           <i class="el-icon-plus" />
           <!-- <div slot="tip" class="el-upload__tip">推荐图片尺寸: 1000 * 528</div> -->
         </el-upload>
       </el-form-item>
-     <el-form-item prop="context" label="商品详情">
-       <qEditor ref="refEditor" :disabled="disabled"  :content="dataForm.context" module-name="detailContent"
-         @changeContent="changeContent" />
-     </el-form-item>
+      <el-form-item
+        prop="context"
+        label="商品详情"
+      >
+        <qEditor
+          ref="refEditor"
+          :disabled="disabled"
+          :content="dataForm.context"
+          module-name="detailContent"
+          @changeContent="changeContent"
+        />
+      </el-form-item>
       <el-form-item>
-        <el-button type="primary" :disabled="disabled" @click="submitUpdate">
+        <el-button
+          type="primary"
+          :disabled="disabled"
+          @click="submitUpdate"
+        >
           添加
         </el-button>
         <el-button @click="cancelUpdate">
@@ -49,7 +126,11 @@
       </el-form-item>
     </el-form>
     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt="">
+      <img
+        width="100%"
+        :src="dialogImageUrl"
+        alt=""
+      >
     </el-dialog>
   </div>
 </template>
@@ -113,6 +194,9 @@
           ],
           buyLimit: [
             {required: true, message: '请输入限购数', trigger: 'blur'},
+          ],
+          validityPeriod: [
+            {required: true, message: '请选择有效期', trigger: 'blur'},
           ],
           context: [
             {required: true, message: "请输入商品详情", trigger: "blur"},
