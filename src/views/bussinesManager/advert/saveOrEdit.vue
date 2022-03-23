@@ -87,7 +87,19 @@
           <el-option v-for="item in relationList" :key="item.id" :label="item.text" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-
+      <el-form-item v-if="dataForm.dataType == 12||dataForm.dataType == 13" label="活动分享图">
+        <div id="front-img_">
+          <el-input v-show="false" v-model="dataForm.activityImg" />
+          <el-upload :action="uploadAdvertUrl_" list-type="picture-card" :on-preview="handleAdvertPreview"
+            :before-upload="beforeAdvertUpload" :on-success="handleAdvertSuccess_" :class="{hideTrue:hideAdvertUpload}"
+            :file-list="uploadAdvertList_" :on-remove="handleAdvertRemove_">
+            <i class="el-icon-plus" />
+          </el-upload>
+          <el-dialog>
+            <img width="100%" :src="image" alt>
+          </el-dialog>
+        </div>
+      </el-form-item>
       <el-form-item v-if="dataForm.dataType == 12||dataForm.dataType == 13" label="富文本显示">
         <qEditor style="width: 650px;" :content="dataForm.extra" ref="refEditor_" :module-name="moduleName"
           @changeContent="changeContent_" />
@@ -164,8 +176,10 @@
           },
         ],
         uploadAdvertList: [],
+        uploadAdvertList_: [],
         hideAdvertUpload: false,
         uploadAdvertUrl: "",
+        uploadAdvertUrl_: "",
         fileSortImage: 0,
         image: "",
         fileList: [],
@@ -180,6 +194,7 @@
           location: "",
           enable: 1,
           image: "",
+          activityImg:'',
           id: "",
           extra:'',
         }
@@ -191,6 +206,7 @@
       // this.loadGoodActivity();
       // this.loadtypeIdList();
       this.buildAdvertGroupId();
+      this.buildAdvertGroupId_();
       this.$nextTick(function () {
         if (this.editData.id) {
           this.dataForm = this.editData
@@ -200,6 +216,14 @@
           if (this.editData.image) {
           this.dataForm.image = this.editData.image;
           this.uploadAdvertList.push({url:this.editData.image})
+          this.$nextTick(function() {
+            document.getElementById('front-img').getElementsByClassName('el-upload--picture-card')[0].style
+              .display = 'none'
+          })
+          }
+          if (this.editData.activityImg) {
+          this.dataForm.activityImg = this.editData.activityImg;
+          this.uploadAdvertList.push({url:this.editData.activityImg})
           this.$nextTick(function() {
             document.getElementById('front-img').getElementsByClassName('el-upload--picture-card')[0].style
               .display = 'none'
@@ -248,14 +272,14 @@
       changeContent_(val) {
         this.dataForm.extra = val
       },
+      handleAdvertPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
+      },
       buildAdvertGroupId() {
         getMethod("/oss/get-group-id", null).then(res => {
           this.uploadAdvertUrl = getUploadUrl() + "?groupId=" + res.data
         });
-      },
-      handleAdvertPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
       },
       handleAdvertRemove(res) {
         for (let i = 0; i < this.uploadAdvertList.length; i++) {
@@ -281,7 +305,41 @@
         }
         if (this.uploadAdvertList.length >= 1) {
           this.$nextTick(function() {
-            document.getElementById('front-img').getElementsByClassName('el-upload--picture-card')[0].style
+            document.getElementById('front-img_').getElementsByClassName('el-upload--picture-card')[0].style
+              .display = 'none'
+          })
+        }
+      },
+      buildAdvertGroupId_() {
+        getMethod("/oss/get-group-id", null).then(res => {
+          this.uploadAdvertUrl_ = getUploadUrl() + "?groupId=" + res.data
+        });
+      },
+      handleAdvertRemove_(res) {
+        for (let i = 0; i < this.uploadAdvertList_.length; i++) {
+          if (this.uploadAdvertList_[i].url == (res.url || res.response.data.url)) {
+            this.uploadAdvertList_.splice(i, 1);
+            break;
+          }
+        }
+        document.getElementById('front-img_').getElementsByClassName('el-upload--picture-card')[0].style.display =
+          'block'
+      },
+      handleAdvertSuccess_(res, file) {
+        this.dataForm.activityImg = res.data.url
+        res.data.fileType = file.raw.type;
+        res.data.sort = this.fileSortImage++;
+        this.uploadAdvertList_.push(res.data);
+        let groupId = res.data.groupId;
+        let imageCnt = 0;
+        for (let i = 0; i < this.uploadAdvertList_.length; i++) {
+          if (this.uploadAdvertList_[i].groupId == groupId) {
+            imageCnt++;
+          }
+        }
+        if (this.uploadAdvertList_.length >= 1) {
+          this.$nextTick(function() {
+            document.getElementById('front-img_').getElementsByClassName('el-upload--picture-card')[0].style
               .display = 'none'
           })
         }
@@ -300,18 +358,6 @@
           this.$message.error("上传文件大小不能超过 5MB!");
         }
         return fileTypeVerify && isLt2M;
-      },
-      initDefaultImage() {
-        this.fileList = this.dataForm.files;
-        for (let i = 0; i < this.dataForm.files.length; i++) {
-          let imageObj = this.dataForm.files[i];
-          if (imageObj.groupId == this.dataForm.advertImage) {
-            this.uploadAdvertList.push(imageObj);
-          }
-        }
-        if (this.uploadAdvertList.length >= 1) {
-          this.hideAdvertUpload = true;
-        }
       },
       saveObject() {
         let scope = this;
@@ -360,6 +406,15 @@
         }
         if (this.dataForm.dataType==3||this.dataForm.dataType==4||this.dataForm.dataType==6||this.dataForm.dataType==7||this.dataForm.dataType==8||this.dataForm.dataType==2) {
           if (this.dataForm.url=='') {
+            this.$message({
+              message: "字段不能为空",
+              type: "warning"
+            });
+            return false
+          }
+        }
+        if (this.dataForm.dataType==12||this.dataForm.dataType==13) {
+          if (this.dataForm.activityImg=='') {
             this.$message({
               message: "字段不能为空",
               type: "warning"
