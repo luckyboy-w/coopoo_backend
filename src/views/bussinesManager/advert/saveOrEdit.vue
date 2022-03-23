@@ -223,9 +223,9 @@
           }
           if (this.editData.activityImg) {
           this.dataForm.activityImg = this.editData.activityImg;
-          this.uploadAdvertList.push({url:this.editData.activityImg})
+          this.uploadAdvertList_.push({url:this.editData.activityImg})
           this.$nextTick(function() {
-            document.getElementById('front-img').getElementsByClassName('el-upload--picture-card')[0].style
+            document.getElementById('front-img_').getElementsByClassName('el-upload--picture-card')[0].style
               .display = 'none'
           })
           }
