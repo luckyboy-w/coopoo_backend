@@ -91,7 +91,7 @@
         <div id="front-img_">
           <el-input v-show="false" v-model="dataForm.activityImg" />
           <el-upload :action="uploadAdvertUrl_" list-type="picture-card" :on-preview="handleAdvertPreview"
-            :before-upload="beforeAdvertUpload" :on-success="handleAdvertSuccess_" :class="{hideTrue:hideAdvertUpload}"
+            :before-upload="beforeAdvertUpload_" :on-success="handleAdvertSuccess_" :class="{hideTrue:hideAdvertUpload}"
             :file-list="uploadAdvertList_" :on-remove="handleAdvertRemove_">
             <i class="el-icon-plus" />
           </el-upload>
@@ -356,6 +356,22 @@
         }
         if (!isLt2M) {
           this.$message.error("上传文件大小不能超过 5MB!");
+        }
+        return fileTypeVerify && isLt2M;
+      },
+      beforeAdvertUpload_(file) {
+        console.log(file)
+        const fileTypeVerify =
+          file.type === "image/jpeg" ||
+          file.type === "image/png" ||
+          file.type === "application/pdf";
+        const isLt2M = file.size / 1024  < 128;
+console.log(isLt2M)
+        if (!fileTypeVerify) {
+          this.$message.error("上传文件格式错误!");
+        }
+        if (!isLt2M) {
+          this.$message.error("上传文件大小不能超过 128KB!");
         }
         return fileTypeVerify && isLt2M;
       },
