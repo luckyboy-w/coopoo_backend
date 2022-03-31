@@ -164,6 +164,7 @@
                   <span v-if="scope.row.type == '14'">点赞笔记</span>
                   <span v-if="scope.row.type == '15'">评论商品</span>
                   <span v-if="scope.row.type == '16'">获赞</span>
+                  <span v-if="scope.row.type == '17'">邀请好友注册</span>
                   <span v-if="scope.row.type == '9'">购买靠谱豆商品</span>
                 </template>
               </el-table-column>
@@ -264,6 +265,10 @@
           {
             id: 16,
             typeName: '获赞'
+          },
+          {
+            id: 17,
+            typeName: '邀请好友注册'
           },
           {
             id: 9,
