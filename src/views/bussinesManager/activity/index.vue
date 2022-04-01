@@ -5,7 +5,7 @@
         <div class="tabTd" @click="getActivityList('1')">
           <div style="width: 100px;height: 100px;">
             <img style="width: 100%;height: 100%;"
-              src="https://bucket.coopoo.com/2021-07-02/20210702143733wTIhIAetaroVmRLvErQuPyUhgUsKrATR.png" />
+              src="../../../assets/image/flashSale.png" />
           </div>
           <div style="padding-left: 25px;">
             <div style="line-height: 40px;font-size: 20px;font-weight: 600;">
@@ -19,7 +19,7 @@
         <div class="tabTd" @click="getActivityList('2')">
           <div style="width: 100px;height: 100px;">
             <img style="width: 100%;height: 100%;"
-              src="https://bucket.coopoo.com/2021-07-02/20210702143733wTIhIAetaroVmRLvErQuPyUhgUsKrATR.png" />
+              src="../../../assets/image/newPeople.png" />
           </div>
           <div style="padding-left: 25px;">
             <div style="line-height: 40px;font-size: 20px;font-weight: 600;">
@@ -33,7 +33,7 @@
         <!-- <div class="tabTd" @click="getActivityList('3')">
           <div style="width: 100px;height: 100px;">
             <img style="width: 100%;height: 100%;"
-              src="https://bucket.coopoo.com/2021-07-02/20210702143733wTIhIAetaroVmRLvErQuPyUhgUsKrATR.png" />
+              src="../../../assets/image/coupon.png" />
           </div>
           <div style="padding-left: 25px;">
             <div style="line-height: 40px;font-size: 20px;font-weight: 600;">
@@ -47,7 +47,7 @@
         <div class="tabTd" @click="getActivityList('4')">
           <div style="width: 100px;height: 100px;">
             <img style="width: 100%;height: 100%;"
-              src="https://bucket.coopoo.com/2021-07-02/20210702143733wTIhIAetaroVmRLvErQuPyUhgUsKrATR.png" />
+              src="../../../assets/image/member.png" />
           </div>
           <div style="padding-left: 25px;">
             <div style="line-height: 40px;font-size: 20px;font-weight: 600;">
@@ -61,7 +61,7 @@
         <div class="tabTd" @click="getActivityList('6')">
           <div style="width: 100px;height: 100px;">
             <img style="width: 100%;height: 100%;"
-              src="https://bucket.coopoo.com/2021-07-02/20210702143733wTIhIAetaroVmRLvErQuPyUhgUsKrATR.png" />
+              src="../../../assets/image/bargain.png" />
           </div>
           <div style="padding-left: 25px;">
             <div style="line-height: 40px;font-size: 20px;font-weight: 600;">
@@ -75,7 +75,7 @@
         <div class="tabTd" @click="getActivityList('5')">
           <div style="width: 100px;height: 100px;">
             <img style="width: 100%;height: 100%;"
-              src="https://bucket.coopoo.com/2021-07-02/20210702143733wTIhIAetaroVmRLvErQuPyUhgUsKrATR.png" />
+              src="../../../assets/image/groupBuying.png" />
           </div>
           <div style="padding-left: 25px;">
             <div style="line-height: 40px;font-size: 20px;font-weight: 600;">
