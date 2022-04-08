@@ -14,8 +14,10 @@
             <el-table-column prop="goodsPrice" label="商品金额" width="170px"></el-table-column>
             <el-table-column prop="isSuccess" label="状态" width="170px">
               <template slot-scope="scope">
-                <span v-if="scope.row.isSuccess==1">拼团成功</span>
-                <span v-if="scope.row.isSuccess===0">拼团失败</span>
+                <span v-if="scope.row.isSuccess===0">发起中</span>
+                <span v-if="scope.row.isSuccess===1">发起成功</span>
+                 <span v-if="scope.row.isSuccess===2">拼团成功</span>
+                  <span v-if="scope.row.isSuccess===3">拼团失败</span>
               </template>
             </el-table-column>
             <el-table-column prop="collageNum" label="所需开团人数" width="170px"></el-table-column>
@@ -31,8 +33,9 @@
             <el-table-column prop="goodsPrice" label="商品金额" width="170px"></el-table-column>
             <el-table-column prop="isSuccess" label="订单状态" width="170px">
               <template slot-scope="scope">
-                <span v-if="scope.row.isSuccess==1">已下单</span>
-                <span v-if="scope.row.isSuccess===0">未下单</span>
+                <span v-if="scope.row.isSuccess===0">进行中</span>
+                <span v-if="scope.row.isSuccess===1">已完成</span>
+                <span v-if="scope.row.isSuccess===2">已取消</span>
               </template>
             </el-table-column>
             <el-table-column prop="cutPersonNum" label="所需砍价人数" width="170px"></el-table-column>
