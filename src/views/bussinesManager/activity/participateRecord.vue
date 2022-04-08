@@ -8,7 +8,7 @@
         <div v-if="rowData.activityType == 5">
           <el-table :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id"
             border>
-            <el-table-column prop="activityName" label="团长昵称" width="170px"></el-table-column>
+            <el-table-column prop="userName" label="团长昵称" width="170px"></el-table-column>
             <el-table-column prop="storeName" label="门店名称" width="200px"></el-table-column>
             <el-table-column prop="goodsName" label="商品名称"></el-table-column>
             <el-table-column prop="goodsPrice" label="商品金额" width="170px"></el-table-column>
@@ -25,7 +25,7 @@
         <div v-if="rowData.activityType == 6">
           <el-table :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id"
             border>
-            <el-table-column prop="activityName" label="团长昵称" width="170px"></el-table-column>
+            <el-table-column prop="userName" label="团长昵称" width="170px"></el-table-column>
             <el-table-column prop="storeName" label="门店名称" width="200px"></el-table-column>
             <el-table-column prop="goodsName" label="商品名称"></el-table-column>
             <el-table-column prop="goodsPrice" label="商品金额" width="170px"></el-table-column>
