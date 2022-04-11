@@ -1025,7 +1025,7 @@
                   sort: i + 1,
                   status: (arr.status || arr.status === 0) ? arr.status : '1',
                   top: (arr.top != null) ? arr.top : '0',
-                  storeProfitRatio: "100",
+                  storeSettleRatio: "100",
                   buyLivePrice: arr.buyLivePrice ? arr.buyLivePrice : arr.buyPrice
                 }
                 couponModelList.push(couponObj)
