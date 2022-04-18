@@ -33,27 +33,6 @@
           </div>
         </div>
         <div class="tabTd">
-          <div>订单状态：</div>
-          <div>
-            <!-- 订单状态 0:已取消 1:已提交 2:待支付 3:退款中 4:退款完成 5:待取件 6:待发货 7:待收货 8:交易完成 9:拒收 10:拒收完成 11:退货中 12:退货完成 -->
-            <el-select v-model="searchParam.orderStatus" placeholder="请选择">
-              <el-option value="" label="全部" />
-              <el-option value="0" label="已取消" />
-              <el-option value="2" label="待支付" />
-              <el-option value="3" label="退款中" />
-              <el-option value="4" label="退款完成" />
-              <el-option value="5" label="待自提" />
-              <el-option value="6" label="待发货" />
-              <el-option value="7" label="待收货" />
-              <el-option value="8" label="交易完成" />
-              <el-option value="9" label="拒收" />
-              <el-option value="10" label="拒收完成" />
-              <el-option value="11" label="退货中" />
-              <el-option value="12" label="退货完成" />
-            </el-select>
-          </div>
-        </div>
-        <div class="tabTd">
           <div>支付方式：</div>
           <div>
             <el-select v-model="searchParam.payType" placeholder="请选择">
@@ -84,31 +63,6 @@
           </div>
         </div>
         <div class="tabTd">
-          <div>交易关闭时间：</div>
-          <div>
-            <el-date-picker style="width:200px" value-format="yyyy-MM-dd" v-model="searchParam.orderCloseStartTime"
-              type="date" placeholder="开始时间">
-            </el-date-picker>
-          </div>
-          <div style="padding: 0 6px;">至</div>
-          <div>
-            <el-date-picker style="width:200px" value-format="yyyy-MM-dd" v-model="searchParam.orderCloseEndTime"
-              type="date" placeholder="结束时间">
-            </el-date-picker>
-          </div>
-        </div>
-        <!-- <div class="tabTd">
-          <div>是否需要开发票：</div>
-          <div>
-            <el-select v-model="searchParam.receiptStatus" placeholder="请选择">
-              <el-option value="" label="全部"></el-option>
-              <el-option value="1" label="无需开票"></el-option>
-              <el-option value="2" label="未开票"></el-option>
-              <el-option value="3" label="已开票"></el-option>
-            </el-select>
-          </div>
-        </div> -->
-        <div class="tabTd">
           <el-button icon="el-icon-search" type="primary" @click="search()">
             搜索
           </el-button>
@@ -135,14 +89,8 @@
             <el-table-column label="商品" align="center" width="400">
               <template slot-scope="scope">
                 <div v-for="(item, index) in scope.row.orderItemList" :key="index" class="mesSty">
-                  <div style="position: relative;">
-                    <img class="imgSty"  :src="item.goodsImage" alt="">
-                    <div v-if="scope.row.marketingCollageId&&scope.row.marketingCollageId!=0" style="width: 50px;background-color: #409EFF;position: absolute;top: 0;right: 0;color:white;border-radius: 5px;">
-                      拼团
-                    </div>
-                    <div v-if="scope.row.marketingCutPriceId&&scope.row.marketingCutPriceId!=0" style="width: 50px;background-color: #409EFF;position: absolute;top: 0;right: 0;color:white;border-radius: 5px;">
-                      砍价
-                    </div>
+                  <div>
+                    <img class="imgSty" :src="item.goodsImage" alt="">
                   </div>
                   <div class="mesFont">
                     <p>{{ item.goodsName }}</p>
@@ -207,12 +155,9 @@
                       </div>
                       <div>
                         <el-button-group>
-                          <!-- <el-button v-if="scope.row.status == 10" type="primary"
-                            @click="sendOrd(scope.row)">发货
-                          </el-button> -->
-                          <el-button size="mini" v-if="scope.row.orderStatus == 2||scope.row.orderStatus == 7"
-                            type="primary" @click="modifyState(scope.row)">
-                            修改订单
+                          <el-button type="primary"
+                          size="mini"
+                            @click="confirmSubmit(scope.row)">确认无误
                           </el-button>
                         </el-button-group>
                       </div>
@@ -251,33 +196,6 @@
         <el-col :span="6" />
         <el-col :span="6" />
       </el-row>
-
-      <!-- <el-row :gutter="20" style="line-height:40px;padding:25px 0px;">
-        <el-col :span="24">
-          <el-steps v-if="ptStep" :active="ordStep" align-center>
-            <el-step title="待发货" />
-            <el-step title="待收货" />
-            <el-step title="待支付" />
-            <el-step :title="isCancelTitle" />
-          </el-steps>
-
-          <el-steps v-if="lpStep" :active="ordStep" align-center>
-            <el-step title="待支付" />
-            <el-step title="待发货" />
-            <el-step title="待收货" />
-            <el-step title="已完成" />
-          </el-steps>
-
-          <el-steps v-if="dzStep" :active="ordStep" align-center>
-            <el-step title="待沟通" />
-            <el-step title="待发货" />
-            <el-step title="待收货" />
-            <el-step title="待支付" />
-            <el-step title="已完成" />
-          </el-steps>
-        </el-col>
-      </el-row> -->
-      <!-- <div style="font-size: 20px;padding-top: 20px;font-weight: 600;">供应商：{{ ordDtl.tenantName }}</div> -->
       <div style="padding:10px;margin:10px 0px 10px 0;">
         <el-row :gutter="20">
           <el-table :data="ordDtl.orderItemList" :header-cell-style="{'text-align':'center'}"
@@ -805,19 +723,16 @@
           stockNum: ''
         },
         searchParam: {
-          isVipOrder: "0",
+          isRisk:'1',
+          isVipOrder: "1",
           registerPhoneNo: "",
           buyerMobile: '',
           buyerName: '',
           goodsName: '',
           orderEndTime: '',
-          orderCloseStartTime: '',
-          orderCloseEndTime: '',
           orderNo: '',
           orderStartTime: '',
-          orderStatus: '',
           payType: '',
-          receiptStatus: '',
           storeName: '',
           pageSize: 10,
           pageNum: 1
@@ -1034,6 +949,35 @@
       //   }
       //   return true;
       // },
+
+      confirmSubmit(data){
+        console.log(data)
+        let scope = this
+        this.$confirm('是否确认该订单无误?', '提示', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消订单',
+          type: 'warning'
+        }).then(() => {
+          console.log('确认');
+          postMethod("/order/confirm-risk-order?orderNo="+data.orderNo).then(res => {
+            this.$message({
+              message: '已确认订单无误',
+              type: 'success'
+            })
+            scope.loadList()
+          });
+        }).catch(action => {
+            if(action === 'cancel'){
+              console.log('取消订单');
+            }else{
+              console.log('返回');
+            }
+          });
+
+
+      },
+
 
       //修改订单状态
       modifyState(row) {

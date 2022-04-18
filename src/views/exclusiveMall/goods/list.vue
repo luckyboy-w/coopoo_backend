@@ -5,28 +5,48 @@
         <div class="tabTd">
           <div>商品名称：</div>
           <div>
-            <el-input v-model="searchParam.goodsName"  placeholder="请输入" width="180px" />
+            <el-input v-model="searchParam.goodsName" placeholder="请输入" width="180px" />
           </div>
         </div>
         <div class="tabTd">
           <div>物料编码：</div>
           <div>
-            <el-input v-model="searchParam.goodsCode"  placeholder="请输入" width="180px" />
+            <el-input v-model="searchParam.goodsCode" placeholder="请输入" width="180px" />
           </div>
         </div>
         <div class="tabTd">
           <div>供应商名称：</div>
           <div>
-           <el-input v-model="searchParam.supplierName" placeholder="请输入" width="180px" />
+            <el-input v-model="searchParam.supplierName" placeholder="请输入" width="180px" />
           </div>
         </div>
+        <div class="tabTd">
+          <div>商品状态：</div>
+          <div>
+            <el-select v-model="searchParam.status" placeholder="请选择">
+              <el-option value="" label="全部" />
+              <el-option value="1" label="已上架" />
+              <el-option value="0" label="未上架" />
+            </el-select>
+          </div>
+        </div>
+        <div class="tabTd">
+          <div>商品类目：</div>
+          <div>
+            <el-select v-model="searchParam.testType" placeholder="请选择">
+              <el-option label="全部" value=""></el-option>
+              <el-option v-for="item in testTypeList" :key="item.id" :label="item.supplierName" :value="item.id"></el-option>
+            </el-select>
+          </div>
+        </div>
+
         <div class="tabTd">
           <el-button icon="el-icon-search" type="primary" @click="search()">
             搜索
           </el-button>
-          <!-- <el-button plain type="normal" icon="el-icon-download" @click="exportData()">
+          <el-button plain type="normal" icon="el-icon-download" @click="exportData()">
             导出
-          </el-button> -->
+          </el-button>
         </div>
       </div>
       <div class="ly-table-panel">
@@ -82,23 +102,22 @@
                     type="text" size="small" @click.native.prevent="onLine(scope.row)">
                     上架
                   </el-button>
-                 <!-- <el-button v-if="scope.row.isSale == 1" type="text" size="small"
+                  <el-button v-if="scope.row.isSale == 1" type="text" size="small"
                     @click.native.prevent="offLine(scope.row)">
                     下架
-                  </el-button> -->
+                  </el-button>
                   <el-divider direction="vertical"></el-divider>
-                  <!-- <el-button v-if="scope.row.isSale == 1" type="text" size="small" @click.native.prevent="editGood(scope.row,true)">
+                  <el-button v-if="scope.row.isSale == 1" type="text" size="small" @click.native.prevent="editGood(scope.row,true)">
                     详情
-                  </el-button> -->
+                  </el-button>
                   <el-button v-if="scope.row.isSale == 0" type="text" size="small"
                     @click.native.prevent="editGood(scope.row)">
                     编辑
                   </el-button>
-                  <el-divider direction="vertical"></el-divider>
-                  <el-button type="text" size="small"
+                <!--  <el-button type="text" size="small"
                     @click.native.prevent="deleteGoods(scope.row)">
                    删除
-                  </el-button>
+                  </el-button> -->
                 </div>
               </template>
             </el-table-column>
@@ -150,7 +169,7 @@
     data() {
       return {
         isDisabled: false,
-        supplyList: [],
+        testTypeList:[],
         isLoading: true,
         showAddOrEdit: false,
         showResult: false,
@@ -170,8 +189,12 @@
           dataId: ""
         },
         searchParam: {
-          goodsType:'1',
-          status:'0',
+          testType:'',
+          goodsType:'2',
+          goodsName:'',
+          goodsCode:'',
+          supplierName:'',
+          status:'',
           pageSize: 10,
           pageNum: 1
         },
@@ -188,19 +211,29 @@
       if (this.isSale != '') {
         this.searchParam.isSale = this.isSale
       }
+      if(this.$route.query.goodsId){
+        let row={
+          goodsId:this.$route.query.goodsId
+        }
+        this.editGood(row, true)
+      }
       this.initLoad()
+      this.loadTypeList()
     },
     created() {},
     methods: {
       exportData() {
         let exportParam = [];
-        for (let key in this.searchParam) {
-          if (this.searchParam[key] != undefined) {
-            exportParam.push(key + "=" + this.searchParam[key]);
-          }
+
+        let param = JSON.parse(JSON.stringify(this.searchParam));
+        delete param.pageSize
+        delete param.pageNum
+
+        for (let key in param) {
+          exportParam.push(key + "=" + param[key]);
         }
         exportParam.push("token=" + getToken())
-        window.open(process.env.VUE_APP_BASE_API + '/backend/good/export?' + exportParam.join("&"))
+        window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/goods-sku/export?" + exportParam.join("&"));
       },
       editGood(row, disabled) {
         let scope = this
@@ -214,6 +247,14 @@
           scope.editData = res.data
           this.showAddOrEdit = true
         });
+      },
+      loadTypeList() {
+        let scope = this;
+        getMethod("/supplier/search-supplier-list", {pageSize:50,pageNum:1}).then(
+          res => {
+            scope.testTypeList = res.data.records;
+          }
+        );
       },
       offLine(row, isSale) {
         getMethod("/goods/off-sale-goods?goodsId="+row.goodsId).then(res => {
@@ -238,11 +279,6 @@
         });
       },
       deleteGoods(row){
-        this.$confirm("是否删除该商品?", "提示", {
-          confirmButtonText: "确认",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(() => {
         getMethod("/goods/remove?goodsId="+row.goodsId).then(res => {
           if(res.errCode==0){
             this.$message({
@@ -252,8 +288,6 @@
           this.loadList()
           }
         });
-        });
-        
       },
       search() {
         this.searchParam.pageNum=1

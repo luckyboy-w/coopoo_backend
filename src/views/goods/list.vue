@@ -49,6 +49,7 @@
                   <el-table-column prop="skuText" label="SKU属性" width="260px" />
                   <el-table-column prop="stock" label="库存" width="150px" />
                   <el-table-column prop="marketPrice" label="零售价" width="150px" />
+                  <el-table-column prop="supplyPrice" label="供应价" width="150px" />
                   <el-table-column prop="salePrice" label="会员价" width="150px" />
                   <el-table-column prop="goodsCode" label="物料编码" width="150px" />
                   <!-- <el-table-column prop="saleCount" label="销量" width="150px" ></el-table-column> -->
@@ -200,6 +201,7 @@
           dataId: ""
         },
         searchParam: {
+          goodsType:'1',
           goodsName:'',
           goodsCode:'',
           supplierName:'',

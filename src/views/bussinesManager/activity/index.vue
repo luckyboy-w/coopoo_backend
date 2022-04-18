@@ -30,7 +30,7 @@
             </div>
           </div>
         </div>
-        <!-- <div class="tabTd" @click="getActivityList('3')">
+        <div class="tabTd" @click="getActivityList('3')">
           <div style="width: 100px;height: 100px;">
             <img style="width: 100%;height: 100%;"
               src="../../../assets/image/coupon.png" />
@@ -57,7 +57,7 @@
               买VIP就送优惠券，提高购买率
             </div>
           </div>
-        </div> -->
+        </div>
         <div class="tabTd" @click="getActivityList('6')">
           <div style="width: 100px;height: 100px;">
             <img style="width: 100%;height: 100%;"
@@ -133,7 +133,6 @@
         this.showActivityList = false
         this.showIndex = true
       },
-
     },
   }
 </script>
