@@ -47,10 +47,14 @@
       </div>
       <div class="list-panel"></div>
     </div>
-    <el-dialog title="新增类目" width="400px"  :visible="typePopup" v-if="typePopup" :close-on-click-modal='false' :before-close="handleClose">
+    <el-dialog title="新增一级类目" width="400px"  :visible="typePopup" v-if="typePopup" :close-on-click-modal='false' :before-close="handleClose">
       <el-form ref="form">
-        <el-form-item>
-          <el-input placeholder="类目名称" v-model="name">
+        <el-form-item label="类目名称">
+          <el-input placeholder="一级类目名称" v-model="name">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="排序">
+          <el-input placeholder="排序" v-model="sort">
           </el-input>
         </el-form-item>
         <el-form-item>
@@ -77,6 +81,7 @@
         typePopup: false,
         showPagination: false,
         name:'',
+        sort:'',
         state:'',
         rowData:{},
         searchParam: {
@@ -101,7 +106,10 @@
       addSubmit() {
         let scope = this
         let param = {
-          name: this.name
+          name: this.name,
+          sort:this.sort,
+          enable:1,
+          parentId:1
         }
         if (param.name == '') {
           this.$message({
