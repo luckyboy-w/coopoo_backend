@@ -47,16 +47,16 @@
       </div>
       <div class="list-panel"></div>
     </div>
-    <el-dialog title="新增一级类目" width="400px"  :visible="typePopup" v-if="typePopup" :close-on-click-modal='false' :before-close="handleClose">
-      <el-form ref="form">
-        <el-form-item label="类目名称">
+    <el-dialog title="新增一级类目" width="500px"  :visible="typePopup" v-if="typePopup" :close-on-click-modal='false' :before-close="handleClose">
+      <el-form ref="form" label-width="100px">
+        <el-form-item label="类目名称" >
           <el-input placeholder="一级类目名称" v-model="name">
           </el-input>
         </el-form-item>
-        <el-form-item label="排序">
+        <!-- <el-form-item label="排序">
           <el-input placeholder="排序" v-model="sort">
           </el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" @click="addSubmit()">确认</el-button>
           <el-button plain type="primary" @click="handleClose">取消</el-button>
@@ -81,7 +81,7 @@
         typePopup: false,
         showPagination: false,
         name:'',
-        sort:'',
+        // sort:'',
         state:'',
         rowData:{},
         searchParam: {
@@ -103,23 +103,24 @@
         this.rowData = {}
         this.name=''
       },
-      addSubmit() {
+      addSubmit(row) {
         let scope = this
         let param = {
           name: this.name,
-          sort:this.sort,
-          enable:1,
-          parentId:1
         }
         if (param.name == '') {
           this.$message({
             message: "内容不能为空",
-            type: "success"
+            type: "warning"
           });
           return false;
         }
+        let categoryList =[]
         if (this.state=='add') {
-          postMethod('/goods/category/add', param).then(res => {
+         param.enable=1
+         param.sort=1
+        categoryList.push(param)
+          postMethod('/goods/category/add', categoryList).then(res => {
             this.$message({
               message: "添加成功",
               type: "success"
@@ -129,7 +130,8 @@
           })
         } else if(this.state=='edit'){
           param.id =this.rowData.id
-          postMethod('/goods/category/update', param).then(res => {
+          categoryList.push(param)
+          postMethod('/goods/category/update', categoryList).then(res => {
             this.$message({
               message: "保存成功",
               type: "success"
@@ -177,7 +179,7 @@
       },
       loadList() {
         let scope = this
-        postMethod('/goods/category/list', this.searchParam).then(
+        postMethod('/exclusive/category/list', this.searchParam).then(
           res => {
             scope.tableData.list = res.data.records
             scope.tableData.total = res.data.total
