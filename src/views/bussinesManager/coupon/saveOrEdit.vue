@@ -5,7 +5,7 @@
         <el-input style="width:260px" :disabled="disabled" v-model="dataForm.couponName" placeholder="请输入" />
       </el-form-item>
       <el-form-item prop="useWay" label="优惠券类型：">
-      <el-select v-model="dataForm.useWay" placeholder="请选择">
+      <el-select v-model="dataForm.useWay" :disabled="disabled" placeholder="请选择">
         <el-option label="线上优惠券" :value="2" />
         <el-option label="线下优惠券" :value="1" />
       </el-select>
@@ -29,7 +29,7 @@
         <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.buyLimit"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="validType" label="有效期类型：">
-      <el-select v-model="dataForm.validType" placeholder="请选择">
+      <el-select v-model="dataForm.validType" :disabled="disabled" placeholder="请选择">
         <el-option label="有效期" :value="2" />
         <el-option label="截止时间" :value="1" />
       </el-select>
@@ -46,7 +46,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item prop="useGoodsType" label="适用场景：">
-      <el-select v-model="dataForm.useGoodsType" @change="changeUseGoodsType" placeholder="请选择">
+      <el-select v-model="dataForm.useGoodsType" :disabled="disabled" @change="changeUseGoodsType" placeholder="请选择">
         <el-option label="普通商城" :value="1" />
         <el-option label="专属商城" :value="2" />
       </el-select>
@@ -279,7 +279,7 @@
           if (this.editData.disabled) {
             this.disabled=true
           }
-          if (this.dataForm.couponGoodsList.length>=1) {
+          if (this.dataForm.couponGoodsList&&this.dataForm.couponGoodsList.length>=1) {
             this.bindingList=this.dataForm.couponGoodsList
           }
           // this.$refs.refEditor.richText = this.dataForm.context
@@ -347,6 +347,7 @@
           }
 
           this.dataForm.couponGoodsList=couponListArr
+          this.dataForm.storeProfitRatio=100,
         console.log('表单数据',this.dataForm);
         // return false;
           if (this.editData.id) {
