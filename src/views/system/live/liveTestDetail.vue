@@ -618,7 +618,7 @@
       testTop_(row, index) {
         let scope = this
         if (row.top == "0") {
-          postMethod('/live/top-live-coupon?liveCouponId=' + row.id).then(res => {
+          postMethod('/live/top-live-coupon?liveCouponId=' + row.liveCouponId).then(res => {
             this.$set(this.bindingList_[index], 'top', '1')
             this.$forceUpdate()
             this.$message({
@@ -627,7 +627,7 @@
             });
           });
         } else if (row.top == "1") {
-          postMethod('/live/top-cancel-live-coupon?liveCouponId=' + row.id).then(res => {
+          postMethod('/live/top-cancel-live-coupon?liveCouponId=' + row.liveCouponId).then(res => {
             this.$set(this.bindingList_[index], 'top', '0')
             this.$forceUpdate()
             this.$message({
@@ -640,7 +640,7 @@
       enable_(row, index) {
         let scope = this
         if (row.status == "0") {
-          postMethod('/live/enable-live-coupon?liveCouponId=' + row.id).then(res => {
+          postMethod('/live/enable-live-coupon?liveCouponId=' + row.liveCouponId).then(res => {
             this.$set(this.bindingList_[index], 'status', '1')
             this.$forceUpdate()
             this.$message({
@@ -649,7 +649,7 @@
             });
           });
         } else if (row.status == "1") {
-          postMethod('/live/disable-live-coupon?liveCouponId=' + row.id).then(res => {
+          postMethod('/live/disable-live-coupon?liveCouponId=' + row.liveCouponId).then(res => {
             this.$set(this.bindingList_[index], 'status', '0')
             this.$forceUpdate()
             this.$message({
@@ -1019,7 +1019,7 @@
                 console.log(i)
                 let arr = this.bindingList_[i]
                 couponObj = {
-                  couponTypeId: arr.couponTypeId,
+                  couponTypeId: arr.id,
                   liveCouponId: arr.liveCouponId?arr.liveCouponId:'',
                   purchaseLimit: arr.purchaseLimit ? arr.purchaseLimit : '0',
                   sort: i + 1,
