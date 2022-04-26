@@ -20,14 +20,14 @@
           </div>
         </div>
       </div>
-      <div class="content" style="margin-left: 50px;width: 800px;">
+      <div class="content" style="margin-left: 50px;width: 900px;">
         <div style="width: 100%;margin-bottom: 20px;">
           <el-button style="margin:0 20px 0 0" @click="backToList()" type="primary" plain icon="el-icon-back">返回列表
           </el-button>
           <el-button type="danger" @click="deleteTemplate()">删除模块</el-button>
         </div>
         <el-table ref="dragTable" :data="list" @selection-change="selectioncChange"
-          style="width: 100%; margin-bottom: 20px;" row-key="onlyId" border>
+          style=" margin-bottom: 20px;" row-key="onlyId" border>
           <el-table-column type="selection" width="55">
           </el-table-column>
           <el-table-column label="模块">
@@ -73,6 +73,12 @@
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
                 <el-button @click="deleteRow(scope.row,item_,scope.$index,index_)" size="mini" type="text">删除
+                </el-button>
+                <el-divider v-if="index_!==0" direction="vertical"></el-divider>
+                <el-button v-if="index_!==0" @click="moveUp(scope.row,item_,scope.$index,index_)" size="mini" type="text">上移
+                </el-button>
+                <el-divider v-if="index_ != scope.row.pageItemVOList.length - 1" direction="vertical"></el-divider>
+                <el-button v-if="index_ != scope.row.pageItemVOList.length - 1" @click="moveDown(scope.row,item_,scope.$index,index_)" size="mini" type="text">下移
                 </el-button>
               </div>
             </template>
@@ -196,6 +202,17 @@
           }
         }
       },
+
+      moveUp(row, item, index, idx) {
+        var temp = this.list[index].pageItemVOList[idx - 1]
+        this.$set(this.list[index].pageItemVOList, idx - 1, this.list[index].pageItemVOList[idx]);
+        this.$set(this.list[index].pageItemVOList, idx, temp);
+      },
+      moveDown(row, item, index, idx) {
+        var temp = this.list[index].pageItemVOList[idx + 1]
+        this.$set(this.list[index].pageItemVOList, idx + 1, this.list[index].pageItemVOList[idx]);
+        this.$set(this.list[index].pageItemVOList, idx, temp);
+      },
       //合并列表格
       objectSpanMethod({
         row,
@@ -294,11 +311,11 @@
           return
         }
         let categoryPageDTOList = this.list
-        let status=false
+        let status = false
         for (let i = 0; i < categoryPageDTOList.length; i++) {
           let arr = categoryPageDTOList[i]
-          if(arr.id&&arr.id!=''){
-            status=true
+          if (arr.id && arr.id != '') {
+            status = true
           }
           let index = i + 1
           delete arr.onlyId
@@ -325,7 +342,7 @@
           }
         }
         console.log('categoryPageDTOList', categoryPageDTOList)
-        if(status){
+        if (status) {
           postMethod('/exclusive/category-page/update', {
             categoryPageList: categoryPageDTOList
           }).then(
@@ -338,7 +355,7 @@
               this.backToList()
             }
           )
-        }else{
+        } else {
           postMethod('/exclusive/category-page/add', {
             categoryPageDTOList: categoryPageDTOList
           }).then(
@@ -429,7 +446,7 @@
               for (let j = 0; j < res.data.length; j++) {
                 let dates = new Date();
                 let times = dates.getTime(); //时间戳
-                res.data[j].onlyId = times+j
+                res.data[j].onlyId = times + j
                 console.log(888)
               }
             }

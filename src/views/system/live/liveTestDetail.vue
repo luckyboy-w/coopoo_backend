@@ -1019,8 +1019,8 @@
                 console.log(i)
                 let arr = this.bindingList_[i]
                 couponObj = {
-                  couponTypeId: arr.id,
-                  couponId: arr.couponId?arr.couponId:'',
+                  couponTypeId: arr.couponTypeId,
+                  liveCouponId: arr.liveCouponId?arr.liveCouponId:'',
                   purchaseLimit: arr.purchaseLimit ? arr.purchaseLimit : '0',
                   sort: i + 1,
                   status: (arr.status || arr.status === 0) ? arr.status : '1',

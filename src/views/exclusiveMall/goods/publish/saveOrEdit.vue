@@ -366,13 +366,13 @@
     methods: {
       // 初始化整个页面数据
       initData() {
+        this.loadTypeList()
         this.buildGoodImageGroupId()
         this.buildGoodsCoverImageGroupId()
         // this.buildSkuImgGroupId()
         this.buildVideoUrlGroupId()
         this.loadGoodSaleDescList()
         this.loadSupplierList()
-        this.loadTypeList()
         // this.loadEditData()
 
       },

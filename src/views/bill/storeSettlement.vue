@@ -327,6 +327,7 @@ export default {
         settleNo:'',
         startTime: '',
         endTime: '',
+        isVipOrder:0,
         pageSize: 10,
         pageNum: 1
       },
@@ -406,7 +407,8 @@ export default {
       let param = {
         startTime: this.searchParam.startTime,
         endTime: this.searchParam.endTime,
-        orderNo: this.searchParam.orderNo
+        orderNo: this.searchParam.orderNo,
+        isVipOrder:this.searchParam.isVipOrder,
       }
       let exportParam = []
       for (let key in param) {
@@ -442,7 +444,8 @@ export default {
         billType: this.searchParam.billType,
         startTime: this.searchParam.startTime,
         endTime: this.searchParam.endTime,
-        orderNo: this.searchParam.orderNo
+        orderNo: this.searchParam.orderNo,
+        isVipOrder:this.searchParam.isVipOrder
       }
       let exportParam = []
       for (let key in param) {
@@ -465,7 +468,8 @@ export default {
         endTime: this.searchParam.endTime,
         billNo: this.searchParam.billNo,
         billMem: this.billMem,
-        billType: this.searchParam.billType
+        billType: this.searchParam.billType,
+        isVipOrder:this.searchParam.isVipOrder
       }
       let exportParam = []
       for (let key in param) {
@@ -542,6 +546,7 @@ export default {
         startTime: '',
         endTime: '',
         pageSize: 10,
+        isVipOrder:0,
         pageNum: 1
       }
       if (this.only == '0') {
@@ -565,6 +570,7 @@ export default {
         startTime: '',
         endTime: '',
         pageSize: 10,
+        isVipOrder:0,
         pageNum: 1
       },
       this.tabIndex = tab.index

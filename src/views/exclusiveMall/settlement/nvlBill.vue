@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:20px 10px">
+  <div style="padding:0px 10px">
     <div v-if="showList">
       <div style="display: flex;flex-wrap: wrap;">
         <div class="tabTd">
@@ -95,7 +95,7 @@
         //10:未结算;20:结算中;30:已结算
         searchParam: {
           supplierName: '',
-          isVipOrder:0,
+          isVipOrder:1,
           pageSize: 10,
           pageNum: 1
         },

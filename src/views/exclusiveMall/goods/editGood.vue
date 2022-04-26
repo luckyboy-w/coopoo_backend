@@ -348,11 +348,11 @@
       }
     },
     mounted() {
+      this.loadTypeList()
       this.initData()
       this.isEdit = this.isEditGood
       this.loadGoodSaleDescList()
       this.loadSupplierList()
-      this.loadTypeList()
     },
     created() {},
     methods: {
@@ -891,6 +891,7 @@
             deliveryMethod: String(this.editData.deliveryMethod),
             goodsImg: this.editData.goodsImg ? this.editData.goodsImg[0].groupId : '',
             goodsCoverImg: this.editData.goodsCoverImg ? this.editData.goodsCoverImg[0].groupId : '',
+            categoryId:this.editData.categoryId ? this.editData.categoryId : '',
             // goodsDetailContent:  this.editData.goodsDetailContent,
           }
           // this.dbAttrList

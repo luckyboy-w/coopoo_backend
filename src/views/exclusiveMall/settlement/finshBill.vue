@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:20px 10px">
+  <div style="padding:0px 10px">
     <div v-if="showList">
      <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
        <div class="tabTd">
@@ -131,7 +131,7 @@
         tabIndex: 0,
         //10:未结算;20:结算中;30:已结算
         searchParam: {
-          isVipOrder:0,
+          isVipOrder:1,
           settleStatus: 2,
           startTime: '',
           endTime: '',
@@ -173,7 +173,7 @@
           billNo: this.searchParam.billNo,
           startTime: this.searchParam.startTime,
           endTime: this.searchParam.endTime,
-          isVipOrder:0,
+          isVipOrder:1,
         }
         let exportParam = [];
         for (let key in param) {

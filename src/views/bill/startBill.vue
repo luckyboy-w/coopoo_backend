@@ -156,6 +156,7 @@
           supplierName:'',
           settleNo	:'',
           accountDate:"",
+          isVipOrder:0,
           pageSize: 10,
           pageNum: 1
         },

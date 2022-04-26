@@ -7,7 +7,7 @@
     </div>
     <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
       <!-- <div class="tabTd">
-        <div>申请时间：</div>
+        <div>结算时间：</div>
         <div>
           <el-date-picker v-model="searchParam.startTime" value-format="yyyy-MM-dd" type="date" placeholder="开始日期" />
            &nbsp;&nbsp;至&nbsp;&nbsp;
@@ -29,9 +29,9 @@
         <el-button @click="search()" type="primary">
             搜索
           </el-button>
-          <el-button @click="exportData()" type="primary">
+          <!-- <el-button @click="exportData()" type="primary">
             导出Excel
-          </el-button>
+          </el-button> -->
       </div>
      </div>
      <div class="ly-tool-panel">
@@ -116,12 +116,11 @@
         tabIndex: 0,
         //10:未结算;20:结算中;30:已结算
         searchParam: {
-			settleNo:'',
-          settleStatus:2,
+          isVipOrder:1,
+          settleStatus:3,
           startTime: '',
           endTime: '',
           accountDate:'',
-          isVipOrder:0,
           pageSize: 10,
           pageNum: 1
         },
@@ -163,16 +162,40 @@
         if (this.searchParam.endTime == null) {
           this.searchParam.endTime = ''
         }
+        let param = {
+          billNo: this.searchParam.billNo,
+          startTime: this.searchParam.startTime,
+          endTime: this.searchParam.endTime,
+          billMem: this.billMem,
+          billType: this.billType,
+          isVipOrder:1,
+        }
         let exportParam = [];
-
-        let param = JSON.parse(JSON.stringify(this.searchParam));
-        delete param.pageSize
-        delete param.pageNum
         for (let key in param) {
           exportParam.push(key + "=" + param[key]);
         }
         exportParam.push("token=" + getToken())
-		window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/supplier-wait-detail-list/export?" + exportParam.join("&"));
+        window.open(process.env.VUE_APP_BASE_API + "/backend/orderBill/exportDtl?" + exportParam.join("&"));
+      },
+      exportData_() {
+        if (this.searchParam.startTime == null) {
+          this.searchParam.startTime = ''
+        }
+        if (this.searchParam.endTime == null) {
+          this.searchParam.endTime = ''
+        }
+        let param = {
+          startTime: this.searchParam.startTime,
+          endTime: this.searchParam.endTime,
+          billMem: this.billMem,
+          tenantId: this.tenantId
+        }
+        let exportParam = [];
+        for (let key in param) {
+          exportParam.push(key + "=" + param[key]);
+        }
+        exportParam.push("token=" + getToken())
+        window.open(process.env.VUE_APP_BASE_API + "/backend/orderBill/exportWaitingDtl?" + exportParam.join("&"));
       },
       backToList() {
         this.$emit("backToList");

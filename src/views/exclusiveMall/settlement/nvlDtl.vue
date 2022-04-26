@@ -6,45 +6,34 @@
     </el-button>
     </div>
     <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
-      <!-- <div class="tabTd">
-        <div>申请时间：</div>
+      <div class="tabTd">
+        <div>入账时间：</div>
         <div>
           <el-date-picker v-model="searchParam.startTime" value-format="yyyy-MM-dd" type="date" placeholder="开始日期" />
            &nbsp;&nbsp;至&nbsp;&nbsp;
            <el-date-picker v-model="searchParam.endTime" value-format="yyyy-MM-dd" type="date" placeholder="结束日期" />
-        </div>
-      </div> -->
-      <div class="tabTd">
-        <div>入账月份：</div>
-        <div>
-          <el-date-picker
-                v-model="searchParam.accountDate"
-                type="month"
-                value-format="yyyy-MM"
-                placeholder="选择月">
-              </el-date-picker>
         </div>
       </div>
       <div class="tabTd">
         <el-button @click="search()" type="primary">
             搜索
           </el-button>
-          <el-button @click="exportData()" type="primary">
+          <!-- <el-button @click="exportData()" type="primary">
             导出Excel
-          </el-button>
+          </el-button> -->
       </div>
      </div>
      <div class="ly-tool-panel">
        <div class="tabTd">
-        供应商名称：{{supplierName}}&nbsp;&nbsp;&nbsp;&nbsp;结算单号：{{settleNo}}
+        供应商名称：{{supplierName}}
        </div>
      </div>
     <el-table border ref="dtlTable" :data="dataList.list" style="width: 100%; margin-bottom: 20px;" row-key="id">
       <!-- <el-table-column type="index" width="50" label="序号" /> -->
       <el-table-column prop="orderNo" label="订单编号" min-width="20%" />
-      <el-table-column prop="accountTime" label="入账月份" min-width="15%">
+      <el-table-column prop="accountTime" label="入账时间" min-width="15%">
         <template slot-scope="scope">
-          {{ scope.row.accountTime }}
+          {{ scope.row.accountTime | _formateDate }}
         </template>
       </el-table-column>
       <el-table-column prop="orderAmount" label="订单金额" min-width="24%">
@@ -116,31 +105,27 @@
         tabIndex: 0,
         //10:未结算;20:结算中;30:已结算
         searchParam: {
-			settleNo:'',
-          settleStatus:2,
+          settleStatus:1,
           startTime: '',
           endTime: '',
-          accountDate:'',
-          isVipOrder:0,
+          isVipOrder:1,
           pageSize: 10,
           pageNum: 1
         },
         supplierName:'蓝丝羽',
         dataList:{
           list:[]
-        },
-        settleNo:''
+        }
       };
     },
     mounted() {
         this.loadList()
         this.supplierName=this.detailData.supplierName
-        this.settleNo=this.detailData.settleNo
     },
     methods: {
       // 未结算
       loadList(){
-        this.searchParam.settleNo=this.detailData.settleNo
+        this.searchParam.supplierId=this.detailData.supplierId
         getMethod("/settlement/supplier-wait-detail-list", this.searchParam).then(res => {
           let scope = this
           scope.dataList.list = res.data.records
@@ -163,16 +148,40 @@
         if (this.searchParam.endTime == null) {
           this.searchParam.endTime = ''
         }
+        let param = {
+          billNo: this.searchParam.billNo,
+          startTime: this.searchParam.startTime,
+          endTime: this.searchParam.endTime,
+          billMem: this.billMem,
+          billType: this.billType,
+          isVipOrder:1,
+        }
         let exportParam = [];
-
-        let param = JSON.parse(JSON.stringify(this.searchParam));
-        delete param.pageSize
-        delete param.pageNum
         for (let key in param) {
           exportParam.push(key + "=" + param[key]);
         }
         exportParam.push("token=" + getToken())
-		window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/supplier-wait-detail-list/export?" + exportParam.join("&"));
+        window.open(process.env.VUE_APP_BASE_API + "/backend/orderBill/exportDtl?" + exportParam.join("&"));
+      },
+      exportData_() {
+        if (this.searchParam.startTime == null) {
+          this.searchParam.startTime = ''
+        }
+        if (this.searchParam.endTime == null) {
+          this.searchParam.endTime = ''
+        }
+        let param = {
+          startTime: this.searchParam.startTime,
+          endTime: this.searchParam.endTime,
+          billMem: this.billMem,
+          tenantId: this.tenantId
+        }
+        let exportParam = [];
+        for (let key in param) {
+          exportParam.push(key + "=" + param[key]);
+        }
+        exportParam.push("token=" + getToken())
+        window.open(process.env.VUE_APP_BASE_API + "/backend/orderBill/exportWaitingDtl?" + exportParam.join("&"));
       },
       backToList() {
         this.$emit("backToList");

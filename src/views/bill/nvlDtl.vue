@@ -108,6 +108,7 @@
           settleStatus:1,
           startTime: '',
           endTime: '',
+          isVipOrder:0,
           pageSize: 10,
           pageNum: 1
         },
@@ -152,7 +153,8 @@
           startTime: this.searchParam.startTime,
           endTime: this.searchParam.endTime,
           billMem: this.billMem,
-          billType: this.billType
+          billType: this.billType,
+          isVipOrder:0,
         }
         let exportParam = [];
         for (let key in param) {

@@ -116,6 +116,7 @@
         tabIndex: 0,
         //10:未结算;20:结算中;30:已结算
         searchParam: {
+          isVipOrder:0,
           settleStatus:3,
           startTime: '',
           endTime: '',
@@ -166,7 +167,8 @@
           startTime: this.searchParam.startTime,
           endTime: this.searchParam.endTime,
           billMem: this.billMem,
-          billType: this.billType
+          billType: this.billType,
+          isVipOrder:0,
         }
         let exportParam = [];
         for (let key in param) {

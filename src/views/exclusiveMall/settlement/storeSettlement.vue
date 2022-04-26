@@ -327,6 +327,7 @@ export default {
         settleNo:'',
         startTime: '',
         endTime: '',
+        isVipOrder:1,
         pageSize: 10,
         pageNum: 1
       },
@@ -542,7 +543,8 @@ export default {
         startTime: '',
         endTime: '',
         pageSize: 10,
-        pageNum: 1
+        pageNum: 1,
+        isVipOrder:1
       }
       if (this.only == '0') {
         this.activeName = 'readyBill'
@@ -564,6 +566,7 @@ export default {
         settleNo:'',
         startTime: '',
         endTime: '',
+        isVipOrder:1,
         pageSize: 10,
         pageNum: 1
       },
