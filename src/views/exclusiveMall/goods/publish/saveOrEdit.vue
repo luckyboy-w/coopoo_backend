@@ -10,7 +10,7 @@
           </el-form-item>
           <el-form-item label="类目">
             <el-select v-model="dataForm.categoryId" placeholder="请选择">
-              <el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-option v-for="item in categoryList" :key="item.id" :disabled="item.categoryLevel==1" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="商品卖点">
@@ -386,9 +386,9 @@
       },
       loadTypeList() {
         let scope = this;
-        postMethod("/goods/category/list", {pageSize:50,pageNum:1}).then(
+        postMethod("/exclusive/category/all/query").then(
           res => {
-            scope.categoryList = res.data.records;
+            scope.categoryList = res.data;
           }
         );
       },

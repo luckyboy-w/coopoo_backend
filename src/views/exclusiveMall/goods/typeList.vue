@@ -36,9 +36,9 @@
                 <el-button @click="addType('edit',scope.row)" size="mini" type="text">编辑
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
-                <el-button v-if="scope.row.enable=='1'" @click="enable('1',scope.row)" size="mini" type="text">禁用
+                <el-button v-if="scope.row.enable=='1'" @click="disable(scope.row)" size="mini" type="text">禁用
                 </el-button>
-                <el-button v-if="scope.row.enable=='0'" @click="enable('0',scope.row)" size="mini" type="text">启用
+                <el-button v-if="scope.row.enable=='0'" @click="enable(scope.row)" size="mini" type="text">启用
                 </el-button>
                 <el-divider v-if="scope.row.categoryLevel=='1'" direction="vertical"></el-divider>
                 <el-button v-if="scope.row.categoryLevel=='1'" @click="secondType(scope.row)" size="mini" type="text">
@@ -259,20 +259,22 @@
         }
 
       },
-      enable(num, row) {
+      enable(row) {
         let scope = this
-        let params = {
-          id: row.id
-        }
-        if (num == '1') {
-          params.enable = '0'
-        } else if (num == '0') {
-          params.enable = '1'
-        }
-        postMethod('/goods/category/update', params).then(res => {
+        getMethod('/exclusive/category/enable', {id:row.id}).then(res => {
           scope.loadList()
           scope.$message({
-            message: "操作成功",
+            message: "启用成功",
+            type: "success"
+          });
+        });
+      },
+      disable(row) {
+        let scope = this
+        getMethod('/exclusive/category/disable', {id:row.id}).then(res => {
+          scope.loadList()
+          scope.$message({
+            message: "禁用成功",
             type: "success"
           });
         });
