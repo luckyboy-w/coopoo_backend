@@ -1,7 +1,8 @@
 <template>
   <div v-loading="loading">
 
-    <div style="display: flex;flex-wrap: nowrap;margin-top: 30px;">
+    <div style="display: flex;flex-wrap: nowrap;margin-top: 30px;    width: 100%;
+    overflow-x: scroll;">
       <div class="templateContent">
         <div class="title">
           模块
@@ -30,7 +31,7 @@
           style=" margin-bottom: 20px;" row-key="onlyId" border>
           <el-table-column type="selection" width="55">
           </el-table-column>
-          <el-table-column label="模块">
+          <el-table-column label="模块" width="180px">
             <template slot-scope="scope">
               {{scope.row.moduleName}}
             </template>
@@ -46,7 +47,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="类目图片">
+          <el-table-column label="类目图片" width="150px">
             <template slot-scope="scope">
               <div class="tabItem" style="height: 80px;line-height: 80px;display: flex;" :key="index_"
                 v-for="(item_,index_) in scope.row.pageItemVOList">
@@ -65,7 +66,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" fixed="right" width="200px" >
             <template slot-scope="scope">
               <div class="tabItem" style="height: 80px;line-height: 80px;" :key="index_"
                 v-for="(item_,index_) in scope.row.pageItemVOList">
@@ -325,13 +326,13 @@
             let arrItem = arr.pageItemVOList[j]
             let idx = j + 1
             arrItem.sort = j
-            if (arrItem.categoryId == '') {
-              this.$message({
-                message: "请选择第" + index + "个模块的第" + idx + "个的类目名称",
-                type: "warning"
-              });
-              return
-            }
+            // if (arrItem.categoryId == '') {
+            //   this.$message({
+            //     message: "请选择第" + index + "个模块的第" + idx + "个的类目名称",
+            //     type: "warning"
+            //   });
+            //   return
+            // }
             if (arrItem.img == '') {
               this.$message({
                 message: "请上传第" + index + "个模块的第" + idx + "个的类目图片",
@@ -498,7 +499,7 @@
     border-radius: 5px;
   }
 </style>
-<style>
+<style scoped>
   .templateContent {
     min-width: 450px;
     max-width: 450px;

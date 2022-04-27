@@ -26,7 +26,8 @@
             </el-table-column> -->
             <el-table-column label="类目名称">
               <template slot-scope="scope">
-                <span v-if="scope.row.categoryLevel=='2'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span v-if="scope.row.categoryLevel=='1'">{{scope.row.sort}}、</span>
+                <span v-if="scope.row.categoryLevel=='2'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <span>{{scope.row.name}}</span>
               </template>
             </el-table-column>
@@ -60,17 +61,17 @@
       </div>
       <div class="list-panel"></div>
     </div>
-    <el-dialog title="新增类目" width="500px" :visible="typePopup" v-if="typePopup" :close-on-click-modal='false'
+    <el-dialog title="类目" width="500px" :visible="typePopup" v-if="typePopup" :close-on-click-modal='false'
       :before-close="handleClose">
       <el-form ref="form" label-width="100px">
         <el-form-item label="类目名称">
           <el-input placeholder="类目名称" v-model="name">
           </el-input>
         </el-form-item>
-        <!-- <el-form-item label="排序">
-          <el-input placeholder="排序" v-model="sort">
+        <el-form-item label="排序" v-if="rowData.categoryLevel!=2">
+          <el-input placeholder="排序" oninput="value=value.replace(/^(0+)|[^\d]+/g,'')" v-model="sort">
           </el-input>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="addSubmit()">确认</el-button>
           <el-button plain type="primary" @click="handleClose">取消</el-button>
@@ -134,7 +135,7 @@
           sort: 1,
         }],
         name: '',
-        // sort:'',
+        sort:'',
         state: '',
         rowData: {},
         searchParam: {
@@ -197,6 +198,7 @@
         this.typePopup = false
         this.rowData = {}
         this.name = ''
+        this.sort = ''
       },
       handleClose_() {
         this.secondTypePopup = false
@@ -220,10 +222,18 @@
         let scope = this
         let param = {
           name: this.name,
+          sort:this.sort
         }
         if (param.name == '') {
           this.$message({
-            message: "内容不能为空",
+            message: "请输入类目名称",
+            type: "warning"
+          });
+          return false;
+        }
+        if (param.sort == '') {
+          this.$message({
+            message: "请输入序号",
             type: "warning"
           });
           return false;
@@ -231,7 +241,6 @@
         let categoryList = []
         if (this.state == 'add') {
           param.enable = 1
-          param.sort = 1
           categoryList.push(param)
           postMethod('/exclusive/category/add', {
             categoryList: categoryList
@@ -245,10 +254,7 @@
           })
         } else if (this.state == 'edit') {
           param.id = this.rowData.id
-          categoryList.push(param)
-          postMethod('/exclusive/category/update', {
-            categoryList: categoryList
-          }).then(res => {
+          postMethod('/exclusive/category/update',param).then(res => {
             this.$message({
               message: "保存成功",
               type: "success"
@@ -283,6 +289,7 @@
         if (row) {
           this.rowData = row
           this.name = row.name.replace('|--', '')
+          this.sort = row.sort
         }
         this.state = state
         this.typePopup = true

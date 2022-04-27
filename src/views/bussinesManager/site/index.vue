@@ -36,6 +36,12 @@
                 label="靠谱家用户协议"
                 value="user_agreement"
             ></el-option>
+            <el-option
+                key="test"
+                value-key="test"
+                label="靠谱家专属会员协议"
+                value="test"
+            ></el-option>
 			<el-option
 			    key="posts_notice"
 			    value-key="posts_notice"
