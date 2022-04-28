@@ -231,7 +231,7 @@
           });
           return false;
         }
-        if (param.sort == '') {
+        if (param.sort == ''&&this.rowData.categoryLevel!=2) {
           this.$message({
             message: "请输入序号",
             type: "warning"
@@ -253,6 +253,9 @@
             scope.handleClose()
           })
         } else if (this.state == 'edit') {
+          // if(this.rowData.categoryLevel==2){
+          //   delete param.sort
+          // }
           param.id = this.rowData.id
           postMethod('/exclusive/category/update',param).then(res => {
             this.$message({

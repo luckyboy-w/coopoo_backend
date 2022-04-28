@@ -87,7 +87,7 @@
         <div style="display: flex;flex-wrap: wrap;justify-content: center;">
           <div style="width: 100%;margin-bottom: 10px;"><el-input placeholder="请输入奖励颗数..." v-model="dataForm.invite_member_reward_bean" clearable></el-input></div>
           <div style="width: 100%;margin-bottom: 10px;"><el-input placeholder="请输入每日限制次数..." v-model="dataForm.invite_member_count_per_day" clearable></el-input></div>
-          <div style="width: 100%;"><el-input placeholder="请输入被邀请人浏览时间（分钟）..." v-model="dataForm.test" clearable></el-input></div>
+          <div style="width: 100%;"><el-input placeholder="请输入被邀请人浏览时间（分钟）..." v-model="dataForm.invite_member_app_browsing_time" clearable></el-input></div>
         </div>
         <!-- <el-input placeholder="请输入奖励颗数..." v-model="dataForm.invite_member_reward_bean" clearable></el-input>&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;
         <el-input placeholder="请输入每日限制次数..." v-model="dataForm.invite_member_count_per_day" clearable></el-input>&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;
@@ -256,7 +256,7 @@
       invite_reward_bean_2000_2500:'',
       invite_reward_bean_2500:'',
       browse_goods_redirect_theme:'',
-      test:''
+      invite_member_app_browsing_time:''
       }
       };
     },
