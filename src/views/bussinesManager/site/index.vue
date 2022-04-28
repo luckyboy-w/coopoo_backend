@@ -37,10 +37,10 @@
                 value="user_agreement"
             ></el-option>
             <el-option
-                key="test"
-                value-key="test"
+                key="vip_agreement"
+                value-key="vip_agreement"
                 label="靠谱家专属会员协议"
-                value="test"
+                value="vip_agreement"
             ></el-option>
 			<el-option
 			    key="posts_notice"
