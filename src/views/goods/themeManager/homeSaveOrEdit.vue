@@ -1128,7 +1128,9 @@
       // 获取商品列表
       loadGoodsList() {
         if (this.form.goodsType == 1) {
-          postMethod("/goods/list", this.searchParam).then(res => {
+          let param =this.searchParam
+          param.goodsType=1
+          postMethod("/goods/list", param).then(res => {
             this.tableData.list = res.data.records;
             this.tableData.total = res.data.total;
             this.showPagination = this.tableData.total == 0;
