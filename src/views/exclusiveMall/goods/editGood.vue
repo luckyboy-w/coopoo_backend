@@ -8,7 +8,7 @@
               maxlength="30" show-word-limit />
           </el-form-item>
           <el-form-item label="类目">
-            <el-select v-model="dataForm.categoryId" placeholder="请选择">
+            <el-select v-model="dataForm.toAppGoodsCategoryList" placeholder="请选择">
               <el-option v-for="item in categoryList" :disabled="item.categoryLevel==1" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
@@ -293,7 +293,7 @@
         goodsVideoUrl: '',
         dataForm: {
           postSaleId: '123',
-          categoryId:'',
+          toAppGoodsCategoryList:[],
           goodsType:'2',
           supplierId:'',
           goodsVideo: '',
@@ -856,7 +856,7 @@
           })
           return false
         }
-        if (dataFrm['categoryId'] == '') {
+        if (dataFrm['toAppGoodsCategoryList'].length <=0) {
           this.$message({
             message: '请选择商品类目',
             type: 'warning'
@@ -891,7 +891,7 @@
             deliveryMethod: String(this.editData.deliveryMethod),
             goodsImg: this.editData.goodsImg ? this.editData.goodsImg[0].groupId : '',
             goodsCoverImg: this.editData.goodsCoverImg ? this.editData.goodsCoverImg[0].groupId : '',
-            categoryId:this.editData.categoryId ? this.editData.categoryId : '',
+            toAppGoodsCategoryList:this.editData.toAppGoodsCategoryList ? this.editData.toAppGoodsCategoryList : [],
             // goodsDetailContent:  this.editData.goodsDetailContent,
           }
           // this.dbAttrList

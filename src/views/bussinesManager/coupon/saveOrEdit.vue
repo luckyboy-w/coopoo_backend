@@ -14,19 +14,19 @@
         <el-input style="width:260px" :disabled="disabled" v-model="dataForm.applyClause"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="buyPrice" label="购买价格：">
-        <el-input style="width:260px" type="number" :disabled="disabled" v-model="dataForm.buyPrice"  placeholder="请输入"/>
+        <el-input style="width:260px"  oninput="value=value.replace(/[^0-9.]/g,'')" :disabled="disabled" v-model="dataForm.buyPrice"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="faceValue" label="抵用额：">
-        <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.faceValue"  placeholder="请输入"/>
+        <el-input style="width:260px"  oninput="value=value.replace(/[^0-9.]/g,'')" :disabled="disabled"  v-model="dataForm.faceValue"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item v-if="dataForm.useWay=='2'" prop="fullMinusAmount" label="使用门槛：">
-        满 <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.fullMinusAmount"  placeholder="请输入"/>
+        满 <el-input style="width:260px"  oninput="value=value.replace(/[^0-9.]/g,'')" :disabled="disabled"  v-model="dataForm.fullMinusAmount"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="stock" label="库存：">
-        <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.stock"  placeholder="请输入"/>
+        <el-input style="width:260px" type="number" oninput="this.value=this.value.replace(/\D/g,'')" :disabled="disabled"  v-model="dataForm.stock"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="buyLimit" label="限购：">
-        <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.buyLimit"  placeholder="请输入"/>
+        <el-input style="width:260px" type="number" oninput="this.value=this.value.replace(/\D/g,'')" :disabled="disabled"  v-model="dataForm.buyLimit"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="validType" label="有效期类型：">
       <el-select v-model="dataForm.validType" :disabled="disabled" placeholder="请选择">
@@ -35,7 +35,7 @@
       </el-select>
       </el-form-item>
       <el-form-item v-if="dataForm.validType=='2'" prop="validTime" label="有效期：">
-        <el-input style="width:260px" type="number" :disabled="disabled"  v-model="dataForm.validTime" />
+        <el-input style="width:260px" type="number" oninput="this.value=this.value.replace(/\D/g,'')" :disabled="disabled"  v-model="dataForm.validTime" />
       </el-form-item>
       <el-form-item v-if="dataForm.validType=='1'" prop="validityPeriod" label="截止时间：">
         <el-date-picker  style="width:260px" :disabled="disabled"
@@ -238,19 +238,19 @@
             {required: true, message: '请输入卖点', trigger: 'blur'},
           ],
           buyPrice: [
-            {required: true, message: '请输入购买价格', trigger: 'blur'},
+            {required: true, message: '请输入购买价格', trigger: 'change'},
           ],
           faceValue: [
-            {required: true, message: '请输入抵用额', trigger: 'blur'},
+            {required: true, message: '请输入抵用额', trigger: 'change'},
           ],
           fullMinusAmount: [
-            {required: true, message: '请输入使用门槛', trigger: 'blur'},
+            {required: true, message: '请输入使用门槛', trigger: 'change'},
           ],
           stock: [
-            {required: true, message: '请输入库存', trigger: 'blur'},
+            {required: true, message: '请输入库存', trigger: 'change'},
           ],
           buyLimit: [
-            {required: true, message: '请输入限购数', trigger: 'blur'},
+            {required: true, message: '请输入限购数', trigger: 'change'},
           ],
           validType: [
             {required: true, message: '请选择有效期类型', trigger: 'change'},
@@ -259,7 +259,7 @@
             {required: true, message: '请选择适用场景', trigger: 'change'},
           ],
           validTime: [
-            {required: true, message: '请输入有效期', trigger: 'blur'},
+            {required: true, message: '请输入有效期', trigger: 'change'},
           ],
           validityPeriod: [
             {required: true, message: '请选择截止时间', trigger: 'change'},
