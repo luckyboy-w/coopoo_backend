@@ -575,7 +575,7 @@
           <el-select v-model="states" placeholder="请选择">
             <el-option v-if="currentOrderState==7" label="待发货" value="6"></el-option>
             <el-option v-if="currentOrderState==2" label="已付款" value="6"></el-option>
-            <el-option v-if="currentOrderState==7&&currentIsSendSevenDay==1" label="交易完成" value="8"></el-option>
+            <el-option v-if="currentOrderState==7" label="交易完成" value="8"></el-option>
           </el-select>
         </div>
         <div v-if="states==6&&currentOrderState==2">
@@ -727,7 +727,7 @@
         currentOrderState: '',
         currentPayChannel: '',
         currentOrderNo: '',
-        currentIsSendSevenDay: '',
+        // currentIsSendSevenDay: '',
         states: '',
         serialNumber: '',
         stateShow: false,
@@ -1038,7 +1038,7 @@
       //修改订单状态
       modifyState(row) {
         this.currentOrderState = row.orderStatus,
-          this.currentIsSendSevenDay = row.isSendSevenDay
+          // this.currentIsSendSevenDay = row.isSendSevenDay
         this.currentOrderNo = row.orderNo
         this.stateShow = true
       },
@@ -1135,7 +1135,7 @@
         this.currentOrderState = ''
         this.currentPayChannel = ''
         this.currentOrderNo = ''
-        this.currentIsSendSevenDay = ''
+        // this.currentIsSendSevenDay = ''
         this.states = ''
         this.serialNumber = ''
         this.stateShow = false
