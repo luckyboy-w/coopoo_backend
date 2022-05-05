@@ -27,8 +27,8 @@
           </el-button>
           <el-button type="danger" @click="deleteTemplate()">删除模块</el-button>
         </div>
-        <el-table ref="dragTable" :data="list" @selection-change="selectioncChange"
-          style=" margin-bottom: 20px;" row-key="onlyId" border>
+        <el-table ref="dragTable" :data="list" @selection-change="selectioncChange" style=" margin-bottom: 20px;"
+          row-key="onlyId" border>
           <el-table-column type="selection" width="55">
           </el-table-column>
           <el-table-column label="模块" width="180px">
@@ -36,17 +36,20 @@
               {{scope.row.moduleName}}
             </template>
           </el-table-column>
+
           <el-table-column label="类目名称" width="200px">
             <template slot-scope="scope">
               <div class="tabItem" style="height: 80px;line-height: 80px;" :key="index_"
                 v-for="(item_,index_) in scope.row.pageItemVOList">
-                <el-select v-model="item_.categoryId" clearable  placeholder="请选择">
+                <el-select v-model="item_.categoryId" clearable placeholder="请选择">
+                  <el-option label="无" :value="0"></el-option>
                   <el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id"
                     :disabled="item.enable===0"></el-option>
                 </el-select>
               </div>
             </template>
           </el-table-column>
+
           <el-table-column label="类目图片" width="150px">
             <template slot-scope="scope">
               <div class="tabItem" style="height: 80px;line-height: 80px;display: flex;" :key="index_"
@@ -66,7 +69,10 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" fixed="right" width="200px" >
+
+
+
+          <el-table-column label="操作" fixed="right" width="200px">
             <template slot-scope="scope">
               <div class="tabItem" style="height: 80px;line-height: 80px;" :key="index_"
                 v-for="(item_,index_) in scope.row.pageItemVOList">
@@ -76,10 +82,12 @@
                 <el-button @click="deleteRow(scope.row,item_,scope.$index,index_)" size="mini" type="text">删除
                 </el-button>
                 <el-divider v-if="index_!==0" direction="vertical"></el-divider>
-                <el-button v-if="index_!==0" @click="moveUp(scope.row,item_,scope.$index,index_)" size="mini" type="text">上移
+                <el-button v-if="index_!==0" @click="moveUp(scope.row,item_,scope.$index,index_)" size="mini"
+                  type="text">上移
                 </el-button>
                 <el-divider v-if="index_ != scope.row.pageItemVOList.length - 1" direction="vertical"></el-divider>
-                <el-button v-if="index_ != scope.row.pageItemVOList.length - 1" @click="moveDown(scope.row,item_,scope.$index,index_)" size="mini" type="text">下移
+                <el-button v-if="index_ != scope.row.pageItemVOList.length - 1"
+                  @click="moveDown(scope.row,item_,scope.$index,index_)" size="mini" type="text">下移
                 </el-button>
               </div>
             </template>
@@ -326,13 +334,14 @@
             let arrItem = arr.pageItemVOList[j]
             let idx = j + 1
             arrItem.sort = j
-            // if (arrItem.categoryId == '') {
-            //   this.$message({
-            //     message: "请选择第" + index + "个模块的第" + idx + "个的类目名称",
-            //     type: "warning"
-            //   });
-            //   return
-            // }
+            console.log(arrItem.categoryId)
+            if (arrItem.categoryId === '') {
+              this.$message({
+                message: "请选择第" + index + "个模块的第" + idx + "个的类目名称",
+                type: "warning"
+              });
+              return
+            }
             if (arrItem.img == '') {
               this.$message({
                 message: "请上传第" + index + "个模块的第" + idx + "个的类目图片",
