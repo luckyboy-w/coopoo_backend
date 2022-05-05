@@ -35,7 +35,7 @@
       </el-select>
       </el-form-item>
       <el-form-item v-if="dataForm.validType=='2'" prop="validTime" label="有效期：">
-        <el-input style="width:260px" type="number" oninput="this.value=this.value.replace(/\D/g,'')" :disabled="disabled"  v-model="dataForm.validTime" />
+        <el-input style="width:260px" type="number" oninput="this.value=this.value.replace(/\D/g,'')" :disabled="disabled"  v-model="dataForm.validTime" />&nbsp;&nbsp; 天
       </el-form-item>
       <el-form-item v-if="dataForm.validType=='1'" prop="validityPeriod" label="截止时间：">
         <el-date-picker  style="width:260px" :disabled="disabled"
