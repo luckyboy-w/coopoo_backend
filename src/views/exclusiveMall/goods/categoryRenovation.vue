@@ -40,9 +40,9 @@
             <template slot-scope="scope">
               <div class="tabItem" style="height: 80px;line-height: 80px;" :key="index_"
                 v-for="(item_,index_) in scope.row.pageItemVOList">
-                <el-select v-model="item_.categoryId" placeholder="请选择">
+                <el-select v-model="item_.categoryId" clearable  placeholder="请选择">
                   <el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id"
-                    :disabled="item_.categoryLevel==1"></el-option>
+                    :disabled="item.enable===0"></el-option>
                 </el-select>
               </div>
             </template>
