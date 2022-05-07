@@ -866,13 +866,13 @@
           });
           return false
         }
-        if (this.bindingList.length <= 0) {
-          this.$message({
-            message: "请选择直播需要关联的商品",
-            type: "warning"
-          });
-          return false
-        }
+        // if (this.bindingList.length <= 0) {
+        //   this.$message({
+        //     message: "请选择直播需要关联的商品",
+        //     type: "warning"
+        //   });
+        //   return false
+        // }
         this.$refs["form"].validate((valid) => {
           if (valid) {
             let relatedGoodsList = []
