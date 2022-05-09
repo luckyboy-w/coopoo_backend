@@ -66,6 +66,11 @@
            实付金额：{{ ordDtl.orderPayAmount }}
          </el-col>
        </el-row>
+	   <el-row :gutter="20" class="main-text">
+	     <el-col :span="6">
+	       优惠券金额：{{ ordDtl.couponFaceValue }}
+	     </el-col>
+	   </el-row>
      </div>
 
      <div v-if="ordDtl.deliveryMethod==1" style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);padding:10px;margin:10px 0px;">

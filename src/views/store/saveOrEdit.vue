@@ -1,19 +1,28 @@
 <template>
   <div class="update-form-panel">
-    <el-form ref="dataForm" :model="dataForm" label-width="140px" width="500px">
-      <el-form-item label="门店编号">
+    <el-form ref="dataForm" :model="dataForm" :rules="rules" label-width="140px" width="500px">
+      <el-form-item prop="storeNo" label="门店编号">
         <el-input v-model="dataForm.storeNo" :disabled="isDisabled"/>
       </el-form-item>
-      <el-form-item label="门店名称">
+      <el-form-item prop="storeLevel" label="门店类型">
+      <el-select
+        v-model="dataForm.storeLevel"
+        placeholder="请选择门店类型" 
+      >
+        <el-option label="普通门店" :value="0" />
+        <el-option label="专属门店" :value="1" />
+      </el-select>
+      </el-form-item>
+      <el-form-item prop="storeName" label="门店名称">
         <el-input v-model="dataForm.storeName" />
       </el-form-item>
-	  <el-form-item label="联系方式">
+	  <el-form-item prop="contact" label="联系方式">
 	    <el-input maxlength="15" oninput="if(value.length>15) value=value.slice(0,15)" type="number" v-model="dataForm.contact" />
 	  </el-form-item>
-      <el-form-item label="店主姓名">
+      <el-form-item prop="userName" label="店主姓名">
         <el-input v-model="dataForm.userName" />
       </el-form-item>
-      <el-form-item label="店主手机号">
+      <el-form-item prop="phoneNo" label="店主手机号">
         <el-input maxlength="11" v-model="dataForm.phoneNo" type="number" oninput="if(value.length>11) value=value.slice(0,11)" :disabled="isDisabled" />
       </el-form-item>
       <el-form-item label="营业时间">
@@ -29,16 +38,16 @@
           </el-time-picker>
         </div>
       </el-form-item>
-      <el-form-item label="门店后台账号">
+      <el-form-item prop="loginAccount" label="门店后台账号">
         <el-input v-model="dataForm.loginAccount" :disabled="isDisabled"/>
       </el-form-item>
-      <el-form-item label="账户名称">
+      <el-form-item prop="bankAccountName" label="账户名称">
         <el-input v-model="dataForm.bankAccountName"/>
       </el-form-item>
-      <el-form-item label="开户行">
+      <el-form-item prop="bankName" label="开户行">
         <el-input v-model="dataForm.bankName" />
       </el-form-item>
-      <el-form-item label="银行账号">
+      <el-form-item prop="bankCard" label="银行账号">
         <el-input v-model="dataForm.bankCard" />
       </el-form-item>
       <el-form-item label="门店列表图片" prop="frontImg">
@@ -122,7 +131,7 @@
             <img width="100%" :src="imageUrl" alt/>
           </el-dialog>
         </el-form-item>
-      <el-form-item label="详细地址">
+      <el-form-item prop="address" label="详细地址">
         <el-input v-model="dataForm.address" />
       </el-form-item>
      <!-- <el-form-item label="">
@@ -225,6 +234,7 @@
         fileList: [],
         dataForm: {
           storeNo:'',
+          storeLevel:0,
           storeName: '',
           frontImg: '',
           licenseImg: "",
@@ -244,7 +254,56 @@
           bankAccountName:'',
           bankName:'',
           bankCard:''
-        }
+        },
+        rules: {
+          // 'storeNo',
+          // 'storeLevel',
+          // 'storeName',
+          // 'userName',
+          // 'phoneNo',
+          // 'contact',
+          // 'address',
+          // 'startWorkTime',
+          // 'endWorkTime',
+          // 'loginAccount',
+          // 'bankAccountName',
+          // 'bankName',
+          // 'bankCard',
+          storeNo: [
+            {required: true, message: '请输入门店编号', trigger: 'blur'},
+          ],
+          storeLevel: [
+            {required: true, message: '请选择门店类型', trigger: 'change'},
+          ],
+          storeName: [
+            {required: true, message: '请输入门店名称', trigger: 'blur'},
+          ],
+          contact: [
+            {required: true, message: '请输入联系方式', trigger: 'change'},
+          ],
+          userName: [
+            {required: true, message: '请输入店主姓名', trigger: 'change'},
+          ],
+          phoneNo: [
+            {required: true, message: '请输入店主手机号码', trigger: 'change'},
+          ],
+          loginAccount: [
+            {required: true, message: '请输入门店后台账号', trigger: 'change'},
+          ],
+          bankAccountName: [
+            {required: true, message: '请输入账户名称', trigger: 'change'},
+          ],
+          bankName: [
+            {required: true, message: '请输入开户行', trigger: 'change'},
+          ],
+          bankCard: [
+            {required: true, message: '请输入银行账号', trigger: 'change'},
+          ],
+          address: [
+            {required: true, message: '请输入详细地址', trigger: 'change'},
+          ],
+
+        },
       }
     },
     computed: {},
@@ -385,15 +444,15 @@
         if (this.uploadLicenseImgList.length >= 1) {
           this.hideLicenseImgUpload = true;
         }
-        
+
         if (this.uploadPersonNoFrontImgList.length >= 1) {
           this.hidePersonNoFrontImgUpload = true;
         }
-        
+
         if (this.uploadpersonNoSideImgList.length >= 1) {
           this.hidepersonNoSideImgUpload = true;
         }
-        
+
         if (this.uploadProtocalFileList.length >= 1) {
           this.hideProtocalFileUpload = true;
         }
@@ -401,17 +460,14 @@
       },
       saveObject() {
         const scope = this
+        this.$refs["dataForm"].validate((valid) => {
+          if (valid) {
+
+
           console.log('。。。',this.dataForm);
         if (this.validate()) {
           delete this.dataForm.createTime
           delete this.dataForm.createBy
-          if (this.dataForm.phoneNo.length<11) {
-            this.$message({
-              message: '请输入正确的手机号',
-              type: 'warning'
-            })
-            return false
-          }
           if (this.dataForm.phoneNo.length<11) {
             this.$message({
               message: '请输入正确的手机号',
@@ -447,11 +503,19 @@
           )
           }
         }
+          }})
       },
       validate() {
         if (this.dataForm.frontImg == ''||!this.dataForm.frontImg) {
           this.$message({
             message: '门店图片不能为空',
+            type: 'warning'
+          })
+          return false;
+        }
+        if (this.dataForm.protocolFile == ''||!this.dataForm.protocolFile) {
+          this.$message({
+            message: '协议文件不能为空',
             type: 'warning'
           })
           return false;
@@ -477,42 +541,27 @@
           })
           return false;
         }
-        const notNvl = [
-          'storeNo',
-          'storeName',
-          'userName',
-          'phoneNo',
-          'contact',
-          'address',
-          'startWorkTime',
-          'endWorkTime',
-          'loginAccount',
-          'bankAccountName',
-          'bankName',
-          'bankCard',
-        ]
-
-        for (let i = 0; i < notNvl.length; i++) {
-          if (this.dataForm[notNvl[i]] == '') {
-            this.$message({
-              message: '必填字段不能为空',
-              type: 'warning'
-            })
-            return false
-          }
+        if (this.dataForm.startWorkTime == ''||this.dataForm.startWorkTime==null) {
+          this.$message({
+            message: '营业开始时间不能为空',
+            type: 'warning'
+          })
+          return false
         }
-
-        const needInt = []
-        for (let i = 0; i < needInt.length; i++) {
-          if (!isInteger(this.dataForm[needInt[i]])) {
-            this.$message({
-              message: '请输入正整数',
-              type: 'warning'
-            })
-            return false
-          }
+        if (this.dataForm.endWorkTime == ''||this.dataForm.endWorkTime==null) {
+          this.$message({
+            message: '营业结束时间不能为空',
+            type: 'warning'
+          })
+          return false
         }
-
+        if (this.dataForm.lat== ''||this.dataForm.lng=='') {
+          this.$message({
+            message: '请选择门店在地图所在经纬度',
+            type: 'warning'
+          })
+          return false
+        }
         return true
       },
       cancelUpdate() {
@@ -574,7 +623,7 @@
         getMethod("/oss/get-group-id", null).then(res => {
           this.uploadLicenseImgUrl =
             getUploadUrl() + "?groupId=" + res.data;
-          this.dataForm.licenseImg = this.dataForm.licenseImg || res.data;
+          // this.dataForm.licenseImg = this.dataForm.licenseImg || res.data;
         });
       },
       handleLicenseImgPreview() {
@@ -632,7 +681,7 @@
       buildPersonNoFrontImgGroupId() {
         getMethod("/oss/get-group-id", null).then(res => {
           this.uploadPersonNoFrontImgUrl = getUploadUrl() + "?groupId=" + res.data;
-          this.dataForm.personFrontImg = this.dataForm.personFrontImg || res.data;
+          // this.dataForm.personFrontImg = this.dataForm.personFrontImg || res.data;
         });
       },
       handlePersonNoFrontImgPreview() {
@@ -690,8 +739,8 @@
         getMethod("/oss/get-group-id", null).then(res => {
           this.uploadpersonNoSideImgUrl =
             getUploadUrl() + "?groupId=" + res.data;
-          this.dataForm.personSideImg =
-            this.dataForm.personSideImg || res.data;
+          // this.dataForm.personSideImg =
+          //   this.dataForm.personSideImg || res.data;
         });
       },
       handlepersonNoSideImgPreview() {
@@ -745,17 +794,17 @@
         return fileTypeVerify && isLt2M;
       },
       buildProtocalFileGroupId() {
-        if (this.dataForm.protocolFile == "") {
+        // if (this.dataForm.protocolFile == "") {
           getMethod("/oss/get-group-id", null).then(res => {
             this.uploadProtocalFileUrl =
               getUploadUrl() + "?groupId=" + res.data;
-            this.dataForm.protocolFile =
-              this.dataForm.protocolFile || res.data;
+            // this.dataForm.protocolFile =
+            //   this.dataForm.protocolFile || res.data;
           });
-        } else {
-          this.uploadProtocalFileUrl =
-            getUploadUrl() + "?groupId=" + this.dataForm.protocolFile;
-        }
+        // } else {
+        //   this.uploadProtocalFileUrl =
+        //     getUploadUrl() + "?groupId=" + this.dataForm.protocolFile;
+        // }
       },
       handleProtocalFilePreview(file) {
           window.open(file.url)
