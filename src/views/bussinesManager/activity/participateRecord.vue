@@ -6,7 +6,7 @@
       </div>
       <div>
         <div v-if="rowData.activityType == 5">
-          <el-table :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id"
+          <el-table :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="index"
             border>
             <el-table-column prop="userName" label="团长昵称" width="170px"></el-table-column>
             <el-table-column prop="storeName" label="门店名称" width="200px"></el-table-column>
@@ -25,7 +25,7 @@
           </el-table>
         </div>
         <div v-if="rowData.activityType == 6">
-          <el-table :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id"
+          <el-table :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="index"
             border>
             <el-table-column prop="userName" label="团长昵称" width="170px"></el-table-column>
             <el-table-column prop="storeName" label="门店名称" width="200px"></el-table-column>
@@ -73,8 +73,8 @@
       return {
         showPagination: true,
         tableData: {
-          list: null,
-          total: null
+          list: [],
+          total: 0
         },
         activityData: {},
         searchParam: {
@@ -104,7 +104,7 @@
         //拼團
         if (this.rowData.activityType == 5) {
           getMethod("/activity/marketing-goods/collage/part-record", this.searchParam).then(res => {
-            scope.tableData.list = res.data;
+            scope.tableData.list = res.data.records;
             scope.tableData.total = res.data.total;
             scope.showPagination = scope.tableData.total == 0;
             this.$forceUpdate()
@@ -113,7 +113,7 @@
         //砍价
         if (this.rowData.activityType == 6) {
           getMethod("/activity/marketing-goods/cut-price/part-record", this.searchParam).then(res => {
-            scope.tableData.list = res.data;
+            scope.tableData.list = res.data.records;
             scope.tableData.total = res.data.total;
             scope.showPagination = scope.tableData.total == 0;
             this.$forceUpdate()
