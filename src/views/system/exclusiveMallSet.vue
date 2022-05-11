@@ -19,7 +19,7 @@
         </el-tooltip>
       </div>
       <el-form-item label="" >
-        <el-input style="width:280px" type="number" v-model="purchase_quantity" placeholder="请输入" clearable />
+        <el-input style="width:280px" type="number" oninput="this.value=this.value.replace(/\D/g,'')" v-model="purchase_quantity" placeholder="请输入" clearable />
       </el-form-item>
       </div>
       <el-form-item label-width="180px">
@@ -31,7 +31,7 @@
     <el-divider></el-divider>
     <el-form label-width="180px">
       <el-form-item label="专属商城会员有效年限：">
-        <el-input v-model="exclusive_validity_period" type="number" placeholder="请输入" clearable />
+        <el-input v-model="exclusive_validity_period" type="number" oninput="this.value=this.value.replace(/\D/g,'')" placeholder="请输入" clearable />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="saveObject('3')">
