@@ -1064,7 +1064,9 @@
           })
           return
         }
-        if (this.states == 6 && this.currentOrderState == 2) {
+        if(this.isEnjoyBeforePay!=1){
+          
+        if (this.states == 8 && this.currentOrderState == 2) {
           if (this.currentPayChannel == '') {
             this.$message({
               message: '请选择支付方式',
@@ -1143,6 +1145,90 @@
               return false;
             }
           })
+        }
+        }else if(this.isEnjoyBeforePay==1){
+          
+          if (this.states == 8 && this.currentOrderState == 2) {
+            if (this.currentPayChannel == '') {
+              this.$message({
+                message: '请选择支付方式',
+                type: 'warning'
+              })
+              return false
+            }
+            if (this.serialNumber == '') {
+              this.$message({
+                message: '请填写支付流水号',
+                type: 'warning'
+              })
+              return false
+            }
+            let param = {
+              orderNo: this.currentOrderNo,
+              payChannel: this.currentPayChannel,
+              tradeNo: this.serialNumber
+            }
+            getMethod('/order/modify-order-finish', param).then(res => {
+              if (res.errCode == 0) {
+                this.$message({
+                  message: '修改成功',
+                  type: 'success'
+                })
+                this.stateClose()
+                this.loadList()
+              } else {
+                this.$message({
+                  message: res.message,
+                  type: 'error'
+                })
+                return false;
+              }
+            })
+          }
+          if (this.states == 6 && this.currentOrderState == 7) {
+            let param = {
+              orderNo: this.currentOrderNo
+            }
+            getMethod('/order/modify-order-waiting-send', param)
+              .then(res => {
+                if (res.errCode == 0) {
+                  this.$message({
+                    message: '修改成功',
+                    type: 'success'
+                  })
+                  this.stateClose()
+                  this.loadList()
+                } else {
+                  this.$message({
+                    message: res.message,
+                    type: 'error'
+                  })
+                  return false;
+                }
+              })
+          }
+          if (this.states == 2&&this.currentOrderState == 7) {
+            let param = {
+              orderNo: this.currentOrderNo
+            }
+            getMethod('/order/modify-order-waiting_pay', param).then(res => {
+              if (res.errCode == 0) {
+                this.$message({
+                  message: '修改成功',
+                  type: 'success'
+                })
+                this.stateClose()
+                this.loadList()
+              } else {
+                this.$message({
+                  message: res.message,
+                  type: 'error'
+                })
+                return false;
+              }
+            })
+          }
+          
         }
       },
       stateClose() {
