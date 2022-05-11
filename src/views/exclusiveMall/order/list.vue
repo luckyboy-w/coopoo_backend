@@ -169,7 +169,7 @@
             <el-table-column align="center" min-width="70" label="实付金额">
               <template slot-scope="scope">
                 <div v-for="(item, index) in scope.row.orderItemList" :key="index" class="mesSty2">
-                  <div>{{ item.orderItemPayAmount}}</div>
+                  <div>{{ item.orderItemPayAmount}}<br /><div v-if="scope.row.isEnjoyBeforePay==1" >先享后付</div>  </div>
                 </div>
               </template>
             </el-table-column>
@@ -571,13 +571,25 @@
     <el-dialog title="修改订单状态" :visible.sync="stateShow" width="25%" destroy-on-close :before-close="stateClose">
       <div style="width: 100%;line-height: 50px;">
         <div>
-          <el-select v-model="states" placeholder="请选择">
+          <el-select v-if="isEnjoyBeforePay!=1" v-model="states" placeholder="请选择">
             <el-option v-if="currentOrderState==7" label="待发货" value="6"></el-option>
             <el-option v-if="currentOrderState==2" label="已付款" value="6"></el-option>
             <el-option v-if="currentOrderState==7" label="交易完成" value="8"></el-option>
           </el-select>
+          <el-select v-if="isEnjoyBeforePay==1" v-model="states" placeholder="请选择">
+            <el-option v-if="currentOrderState==7" label="待发货" value="6"></el-option>
+            <el-option v-if="currentOrderState==7" label="待支付" value="2"></el-option>
+            <el-option v-if="currentOrderState==2" label="交易完成" value="8"></el-option>
+          </el-select>
         </div>
-        <div v-if="states==6&&currentOrderState==2">
+        <div v-if="states==6&&currentOrderState==2&&isEnjoyBeforePay!=1">
+          <el-select v-model="currentPayChannel" placeholder="请选择支付方式">
+            <el-option label="支付宝" value="1"></el-option>
+            <el-option label="微信" value="2"></el-option>
+          </el-select>
+          <el-input v-model="serialNumber" placeholder="请输入支付流水号"></el-input>
+        </div>
+        <div v-if="states==8&&currentOrderState==2&&isEnjoyBeforePay==1">
           <el-select v-model="currentPayChannel" placeholder="请选择支付方式">
             <el-option label="支付宝" value="1"></el-option>
             <el-option label="微信" value="2"></el-option>
@@ -723,6 +735,7 @@
         menuId: '',
         operationModuleName: '',
         goodDtlList: {},
+        isEnjoyBeforePay:'',
         currentOrderState: '',
         currentPayChannel: '',
         currentOrderNo: '',
@@ -1038,6 +1051,7 @@
       //修改订单状态
       modifyState(row) {
         this.currentOrderState = row.orderStatus,
+        this.isEnjoyBeforePay = row.isEnjoyBeforePay,
           // this.currentIsSendSevenDay = row.isSendSevenDay
         this.currentOrderNo = row.orderNo
         this.stateShow = true
