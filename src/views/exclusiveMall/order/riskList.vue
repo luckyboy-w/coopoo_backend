@@ -491,30 +491,6 @@
         </div>
       </div>
     </el-dialog>
-    <!-- 修改订单状态弹框 -->
-    <el-dialog title="修改订单状态" :visible.sync="stateShow" width="25%" destroy-on-close :before-close="stateClose">
-      <div style="width: 100%;line-height: 50px;">
-        <div>
-          <el-select v-model="states" placeholder="请选择">
-            <el-option v-if="currentOrderState==7" label="待发货" value="6"></el-option>
-            <el-option v-if="currentOrderState==2" label="已付款" value="6"></el-option>
-            <el-option v-if="currentOrderState==7&&currentIsSendSevenDay==1" label="交易完成" value="8"></el-option>
-          </el-select>
-        </div>
-        <div v-if="states==6&&currentOrderState==2">
-          <el-select v-model="currentPayChannel" placeholder="请选择支付方式">
-            <el-option label="支付宝" value="1"></el-option>
-            <el-option label="微信" value="2"></el-option>
-          </el-select>
-          <el-input v-model="serialNumber" placeholder="请输入支付流水号"></el-input>
-        </div>
-        <div style="text-align: right;">
-          <el-button @click="stateClose">取 消</el-button>
-          <el-button type="primary" @click="enterState">确 定</el-button>
-        </div>
-      </div>
-    </el-dialog>
-
     <br>
   </div>
 </template>
@@ -975,119 +951,24 @@
         }).catch(action => {
             if(action === 'cancel'){
               console.log('取消订单');
+              let param={
+                orderNo:data.orderNo,
+                newStatus:0,
+                orderType:0
+              }
+              postMethod("/order/modify-order-status",param).then(res => {
+                this.$message({
+                  message: '取消订单成功',
+                  type: 'success'
+                })
+                scope.loadList()
+              });
             }else{
               console.log('返回');
             }
           });
 
 
-      },
-
-
-      //修改订单状态
-      modifyState(row) {
-        this.currentOrderState = row.orderStatus,
-          this.currentIsSendSevenDay = row.isSendSevenDay
-        this.currentOrderNo = row.orderNo
-        this.stateShow = true
-      },
-      enterState() {
-        if (this.states == '') {
-          this.$message({
-            message: '请选择要修改的状态',
-            type: 'warning'
-          })
-          return
-        }
-        if (this.states == 6 && this.currentOrderState == 2) {
-          if (this.currentPayChannel == '') {
-            this.$message({
-              message: '请选择支付方式',
-              type: 'warning'
-            })
-            return false
-          }
-          if (this.serialNumber == '') {
-            this.$message({
-              message: '请填写支付流水号',
-              type: 'warning'
-            })
-            return false
-          }
-          let param = {
-            orderNo: this.currentOrderNo,
-            payChannel: this.currentPayChannel,
-            tradeNo: this.serialNumber
-          }
-          getMethod('/order/modify-order-pay', param).then(res => {
-            if (res.errCode == 0) {
-              this.$message({
-                message: '修改成功',
-                type: 'success'
-              })
-              this.stateClose()
-              this.loadList()
-            } else {
-              this.$message({
-                message: res.message,
-                type: 'error'
-              })
-              return false;
-            }
-          })
-        }
-        if (this.states == 6 && this.currentOrderState != 2) {
-          let param = {
-            orderNo: this.currentOrderNo
-          }
-          getMethod('/order/modify-order-waiting-send', param)
-            .then(res => {
-              if (res.errCode == 0) {
-                this.$message({
-                  message: '修改成功',
-                  type: 'success'
-                })
-                this.stateClose()
-                this.loadList()
-              } else {
-                this.$message({
-                  message: res.message,
-                  type: 'error'
-                })
-                return false;
-              }
-            })
-        }
-        if (this.states == 8) {
-          let param = {
-            orderNo: this.currentOrderNo
-          }
-          getMethod('/order/modify-order-finish', param).then(res => {
-            if (res.errCode == 0) {
-              this.$message({
-                message: '修改成功',
-                type: 'success'
-              })
-              this.stateClose()
-              this.loadList()
-            } else {
-              this.$message({
-                message: res.message,
-                type: 'error'
-              })
-              return false;
-            }
-          })
-        }
-      },
-      stateClose() {
-        this.currentOrderState = ''
-        this.currentPayChannel = ''
-        this.currentOrderNo = ''
-        this.currentIsSendSevenDay = ''
-        this.states = ''
-        this.serialNumber = ''
-        this.stateShow = false
       },
       //修改地址彈框
       adressClose() {
