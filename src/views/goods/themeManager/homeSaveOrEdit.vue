@@ -858,10 +858,20 @@
               this.form.couponList = []
             } else if (this.form.goodsType == 2) {
               this.bindingList_.forEach(item => {
-                let obj = {
-                  id: item.id,
+                if (this.settleMethod==1) {
+                  let obj = {
+                    id: item.id,
+                    storeSettleRatio: item.storeSettleRatio ? item.storeSettleRatio : "0",
+                    supplierSettleRatio: item.supplierSettleRatio ? item.supplierSettleRatio : "0",
+                  }
+                  goodsData.push(obj)
+                } else if (this.settleMethod==2){
+                  let obj = {
+                    id: item.id,
+                    storeProfitRatio:"100"
+                  }
+                  goodsData.push(obj)
                 }
-                goodsData.push(obj)
               })
               this.form.couponList = goodsData
               this.form.goodsList = []
