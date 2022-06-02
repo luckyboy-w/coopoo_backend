@@ -10,12 +10,16 @@
             :value="item.value" />
         </el-select>
       </el-form-item>
+      <el-form-item label="排序">
+        <el-input v-model="dataForm.sort" style="width: 200px;" placeholder="请输入" />
+      </el-form-item>
       <el-form-item label="广告banner">
-        <div id="front-img">
-          <el-input v-show="false" v-model="dataForm.image" />
-          <el-upload :action="uploadAdvertUrl" list-type="picture-card" :on-preview="handleAdvertPreview"
-            :before-upload="beforeAdvertUpload" :on-success="handleAdvertSuccess" :class="{hideTrue:hideAdvertUpload}"
-            :file-list="uploadAdvertList" :on-remove="handleAdvertRemove">
+        <div style="display: flex;">
+        <div id="front-imgFirst">
+          <el-input v-show="false" v-model="imgObj.firstImg" />
+          <el-upload :action="uploadAdvertUrlFirst" list-type="picture-card" :on-preview="handleAdvertPreview"
+            :before-upload="beforeAdvertUpload" :on-success="handleAdvertSuccessFirst" :class="{hideTrue:hideAdvertUpload}"
+            :file-list="uploadAdvertListFirst" :on-remove="handleAdvertRemoveFirst">
             <i class="el-icon-plus" />
             <div slot="tip" v-if="dataForm.location==1" class="el-upload__tip">推荐尺寸：1000*1133
             </div>
@@ -24,12 +28,26 @@
             <div slot="tip" v-if="dataForm.location==4" class="el-upload__tip">推荐尺寸：1000*516
             </div>
           </el-upload>
-          <el-dialog>
-            <img width="100%" :src="image" alt>
-          </el-dialog>
+        </div>
+        <div id="front-imgSecond" v-if="dataForm.location==9" style="margin-left: 20px;">
+          <el-input v-show="false" v-model="imgObj.secondImg" />
+          <el-upload :action="uploadAdvertUrlSecond" list-type="picture-card" :on-preview="handleAdvertPreview"
+            :before-upload="beforeAdvertUpload" :on-success="handleAdvertSuccessSecond" :class="{hideTrue:hideAdvertUpload}"
+            :file-list="uploadAdvertListSecond" :on-remove="handleAdvertRemoveSecond">
+            <i class="el-icon-plus" />
+          </el-upload>
+        </div>
+        <div id="front-imgThird" v-if="dataForm.location==9" style="margin-left: 20px;">
+          <el-input v-show="false" v-model="imgObj.thirdImg" />
+          <el-upload :action="uploadAdvertUrlThird" list-type="picture-card" :on-preview="handleAdvertPreview"
+            :before-upload="beforeAdvertUpload" :on-success="handleAdvertSuccessThird" :class="{hideTrue:hideAdvertUpload}"
+            :file-list="uploadAdvertListThird" :on-remove="handleAdvertRemoveThird">
+            <i class="el-icon-plus" />
+          </el-upload>
+        </div>
         </div>
       </el-form-item>
-      <el-form-item label="跳转类型">
+      <el-form-item label="跳转类型" v-if="dataForm.location==1||dataForm.location==2||dataForm.location==4||dataForm.location==5">
         <el-select @change="changeType" v-model="dataForm.dataType" placeholder="请选择">
           <el-option label="商品主题" :value="3" />
           <!-- <el-option
@@ -95,9 +113,6 @@
             :file-list="uploadAdvertList_" :on-remove="handleAdvertRemove_">
             <i class="el-icon-plus" />
           </el-upload>
-          <el-dialog>
-            <img width="100%" :src="image" alt>
-          </el-dialog>
         </div>
       </el-form-item>
       <el-form-item v-if="dataForm.dataType == 12||dataForm.dataType == 13" label="富文本显示">
@@ -174,11 +189,31 @@
             value: 4,
             label: "我的-线下门店"
           },
+          {
+            value: 6,
+            label: "新人礼"
+          },
+          {
+            value: 7,
+            label: "靠谱豆商城"
+          },
+          {
+            value: 8,
+            label: "直播回放"
+          },
+          {
+            value: 9,
+            label: "邀请好友"
+          },
         ],
-        uploadAdvertList: [],
+        uploadAdvertListFirst: [],
+        uploadAdvertListSecond: [],
+        uploadAdvertListThird: [],
         uploadAdvertList_: [],
         hideAdvertUpload: false,
-        uploadAdvertUrl: "",
+        uploadAdvertUrlFirst: "",
+        uploadAdvertUrlSecond: "",
+        uploadAdvertUrlThird: "",
         uploadAdvertUrl_: "",
         fileSortImage: 0,
         image: "",
@@ -186,11 +221,16 @@
         goodList: [],
         relationList: [],
         loading: false,
+        imgObj:{
+          firstImg:'',
+          secondImg:'',
+          thirdImg:'',
+        },
         dataForm: {
           dataType: 0,
           name: "",
           url: "",
-          sort: "1",
+          sort: "",
           location: "",
           enable: 1,
           image: "",
@@ -205,19 +245,20 @@
       // this.loodGoodList();
       // this.loadGoodActivity();
       // this.loadtypeIdList();
-      this.buildAdvertGroupId();
+      this.buildAdvertGroupIdFirst();
+      this.buildAdvertGroupIdSecond();
+      this.buildAdvertGroupIdThird();
       this.buildAdvertGroupId_();
       this.$nextTick(function () {
         if (this.editData.id) {
           this.dataForm = this.editData
-          this.dataForm.sort = '1'
           this.dataForm.enable = this.editData.enable + ''
           this.changeType_(this.editData.dataType)
           if (this.editData.image) {
-          this.dataForm.image = this.editData.image;
-          this.uploadAdvertList.push({url:this.editData.image})
+          this.imgObj.firstImg = this.editData.image;
+          this.uploadAdvertListFirst.push({url:this.editData.image})
           this.$nextTick(function() {
-            document.getElementById('front-img').getElementsByClassName('el-upload--picture-card')[0].style
+            document.getElementById('front-imgFirst').getElementsByClassName('el-upload--picture-card')[0].style
               .display = 'none'
           })
           }
@@ -276,36 +317,107 @@
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
       },
-      buildAdvertGroupId() {
+      buildAdvertGroupIdFirst() {
         getMethod("/oss/get-group-id", null).then(res => {
-          this.uploadAdvertUrl = getUploadUrl() + "?groupId=" + res.data
+          this.uploadAdvertUrlFirst = getUploadUrl() + "?groupId=" + res.data
         });
       },
-      handleAdvertRemove(res) {
-        for (let i = 0; i < this.uploadAdvertList.length; i++) {
-          if (this.uploadAdvertList[i].url == (res.url || res.response.data.url)) {
-            this.uploadAdvertList.splice(i, 1);
+      buildAdvertGroupIdSecond() {
+        getMethod("/oss/get-group-id", null).then(res => {
+          this.uploadAdvertUrlSecond = getUploadUrl() + "?groupId=" + res.data
+        });
+      },
+      buildAdvertGroupIdThird() {
+        getMethod("/oss/get-group-id", null).then(res => {
+          this.uploadAdvertUrlThird = getUploadUrl() + "?groupId=" + res.data
+        });
+      },
+      handleAdvertRemoveFirst(res) {
+        for (let i = 0; i < this.uploadAdvertListFirst.length; i++) {
+          if (this.uploadAdvertListFirst[i].url == (res.url || res.response.data.url)) {
+            this.uploadAdvertListFirst.splice(i, 1);
+            this.imgObj.firstImg=''
             break;
           }
         }
-        document.getElementById('front-img').getElementsByClassName('el-upload--picture-card')[0].style.display =
+        document.getElementById('front-imgFirst').getElementsByClassName('el-upload--picture-card')[0].style.display =
           'block'
       },
-      handleAdvertSuccess(res, file) {
-        this.dataForm.image = res.data.url
+      handleAdvertRemoveSecond(res) {
+        for (let i = 0; i < this.uploadAdvertListSecond.length; i++) {
+          if (this.uploadAdvertListSecond[i].url == (res.url || res.response.data.url)) {
+            this.uploadAdvertListSecond.splice(i, 1);
+            this.imgObj.secondImg=''
+            break;
+          }
+        }
+        document.getElementById('front-imgSecond').getElementsByClassName('el-upload--picture-card')[0].style.display =
+          'block'
+      },
+      handleAdvertRemoveThird(res) {
+        for (let i = 0; i < this.uploadAdvertListThird.length; i++) {
+          if (this.uploadAdvertListThird[i].url == (res.url || res.response.data.url)) {
+            this.uploadAdvertListThird.splice(i, 1);
+            this.imgObj.thirdImg=''
+            break;
+          }
+        }
+        document.getElementById('front-imgThird').getElementsByClassName('el-upload--picture-card')[0].style.display =
+          'block'
+      },
+      handleAdvertSuccessFirst(res, file) {
+        this.imgObj.firstImg = res.data.url
         res.data.fileType = file.raw.type;
         res.data.sort = this.fileSortImage++;
-        this.uploadAdvertList.push(res.data);
+        this.uploadAdvertListFirst.push(res.data);
         let groupId = res.data.groupId;
         let imageCnt = 0;
-        for (let i = 0; i < this.uploadAdvertList.length; i++) {
-          if (this.uploadAdvertList[i].groupId == groupId) {
+        for (let i = 0; i < this.uploadAdvertListFirst.length; i++) {
+          if (this.uploadAdvertListFirst[i].groupId == groupId) {
             imageCnt++;
           }
         }
-        if (this.uploadAdvertList.length >= 1) {
+        if (this.uploadAdvertListFirst.length >= 1) {
           this.$nextTick(function() {
-            document.getElementById('front-img_').getElementsByClassName('el-upload--picture-card')[0].style
+            document.getElementById('front-imgFirst').getElementsByClassName('el-upload--picture-card')[0].style
+              .display = 'none'
+          })
+        }
+      },
+      handleAdvertSuccessSecond(res, file) {
+        this.imgObj.secondImg = res.data.url
+        res.data.fileType = file.raw.type;
+        res.data.sort = this.fileSortImage++;
+        this.uploadAdvertListSecond.push(res.data);
+        let groupId = res.data.groupId;
+        let imageCnt = 0;
+        for (let i = 0; i < this.uploadAdvertListSecond.length; i++) {
+          if (this.uploadAdvertListSecond[i].groupId == groupId) {
+            imageCnt++;
+          }
+        }
+        if (this.uploadAdvertListSecond.length >= 1) {
+          this.$nextTick(function() {
+            document.getElementById('front-imgSecond').getElementsByClassName('el-upload--picture-card')[0].style
+              .display = 'none'
+          })
+        }
+      },
+      handleAdvertSuccessThird(res, file) {
+        this.imgObj.thirdImg = res.data.url
+        res.data.fileType = file.raw.type;
+        res.data.sort = this.fileSortImage++;
+        this.uploadAdvertListThird.push(res.data);
+        let groupId = res.data.groupId;
+        let imageCnt = 0;
+        for (let i = 0; i < this.uploadAdvertListThird.length; i++) {
+          if (this.uploadAdvertListThird[i].groupId == groupId) {
+            imageCnt++;
+          }
+        }
+        if (this.uploadAdvertListThird.length >= 1) {
+          this.$nextTick(function() {
+            document.getElementById('front-imgThird').getElementsByClassName('el-upload--picture-card')[0].style
               .display = 'none'
           })
         }
@@ -366,7 +478,7 @@
           file.type === "image/png" ||
           file.type === "application/pdf";
         const isLt2M = file.size / 1024  < 128;
-console.log(isLt2M)
+        console.log(isLt2M)
         if (!fileTypeVerify) {
           this.$message.error("上传文件格式错误!");
         }
@@ -385,6 +497,21 @@ console.log(isLt2M)
         //   this.dataForm.fileJsonStr = JSON.stringify(fileList);
         //   this.dataForm.files = [];
         // return false
+        this.dataForm.image=this.imgObj.firstImg
+        if (this.dataForm.image=='') {
+          this.$message({
+            message: "广告banner不能为空",
+            type: "warning"
+          });
+          return false
+        }
+        if (this.dataForm.location==9&&(this.imgObj.secondImg==''||this.imgObj.thirdImg=='')) {
+          this.$message({
+            message: "广告banner不能为空",
+            type: "warning"
+          });
+          return false
+        }
         if (this.editData.id&&this.editData.id!='') {
           postMethod("/operate/update-advert", this.dataForm).then(
             res => {
@@ -410,7 +537,7 @@ console.log(isLt2M)
         }
       },
       validate() {
-        let notNvl = ["name", "location",'image',];
+        let notNvl = ["name", "location",];
         for (let i = 0; i < notNvl.length; i++) {
           if (this.dataForm[notNvl[i]] == "") {
             this.$message({

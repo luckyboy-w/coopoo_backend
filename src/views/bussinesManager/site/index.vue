@@ -42,6 +42,12 @@
                 label="靠谱家专属会员协议"
                 value="vip_agreement"
             ></el-option>
+            <el-option
+                key="test"
+                value-key="test"
+                label="靠谱家充值协议"
+                value="test"
+            ></el-option>
 			<el-option
 			    key="posts_notice"
 			    value-key="posts_notice"

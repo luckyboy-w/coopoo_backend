@@ -37,7 +37,7 @@
                 </template>
               </el-table-column>
               <el-table-column label="创建时间" width="180" prop="createTime"></el-table-column>
-              <el-table-column label="操作" width="280">
+              <el-table-column label="操作" width="320">
                 <template slot-scope="scope">
                 <el-link v-if="scope.row.isSale=='0'" type="primary" @click="enable(scope.row)">上架</el-link>
                 <el-link v-else type="primary" @click="enable(scope.row)">下架</el-link>
@@ -47,6 +47,11 @@
                       <el-divider v-if="scope.row.goodsType!='3'" direction="vertical"></el-divider>
                   <el-link v-if="scope.row.isSale=='0'&&scope.row.goodsType!='3'" type="primary" @click="insideEdit(scope.row,1)">内页编辑</el-link>
                   <el-link v-if="scope.row.isSale=='1'&&scope.row.goodsType!='3'" type="primary" @click="insideEdit(scope.row,2)">内页详情</el-link>
+                <!-- v-if="scope.$index!==0" -->
+                <el-divider v-if="scope.$index!==0" direction="vertical"></el-divider>
+                <el-link v-if="scope.$index!==0" type="primary" @click="move(scope.row,'up')">上移</el-link>
+                <el-divider  direction="vertical"></el-divider>
+                <el-link  type="primary" @click="move(scope.row,'dowm')">下移</el-link>
                 </template>
               </el-table-column>
             </el-table>
