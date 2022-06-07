@@ -14,6 +14,10 @@
         <div class="tabTd">
           <el-button icon="el-icon-search" @click="search()">查询</el-button>
           <el-button plain type="primary" @click="addOrEdit('add')" icon="el-icon-document-add">新增</el-button>
+          <el-button plain type="primary" v-if="activityForm.activityType==6" @click="changeTheme('6')" icon="el-icon-document-add">更换主题</el-button>
+          <el-button plain type="primary" v-if="activityForm.activityType==6" @click="addFalseData('6')" icon="el-icon-document-add">砍价假数据</el-button>
+          <el-button plain type="primary" v-if="activityForm.activityType==5" @click="changeTheme('5')" icon="el-icon-document-add">更换主题</el-button>
+          <el-button plain type="primary" v-if="activityForm.activityType==5" @click="addFalseData('5')" icon="el-icon-document-add">拼团假数据</el-button>
           <el-button plain type="primary" v-if="activityForm.activityType==2" @click="firstActive()" icon="el-icon-document-add">活动配置</el-button>
         </div>
       </div>
@@ -164,6 +168,9 @@
 
     <recordList v-if="showRecord" :rowData="rowData" @hiddenRecord="hiddenRecord()"></recordList>
 
+    <activityFalseData v-if="showFalseData" :activityType="activityForm.activityType" @hiddenFalseData="hiddenFalseData()"></activityFalseData>
+    <themeImg v-if="showThemeImg" :activityType="activityForm.activityType" @hiddenThemeImg="hiddenThemeImg()"></themeImg>
+
 
   </div>
 </template>
@@ -174,6 +181,8 @@
   import editCoupon from "./editCoupon";
   import couponsList from "./couponsList";
   import recordList from "./participateRecord";
+  import activityFalseData from "./activityFalseData";
+  import themeImg from "./themeImg";
   import {
     getUploadUrl,
     postMethod,
@@ -220,6 +229,9 @@
         showSaveGood: false,
         showActivityList: true,
         showGoodList: false,
+
+        showFalseData:false,
+        showThemeImg:false,
 
         showCouponList: false,
         showSaveCoupon: false,
@@ -286,6 +298,8 @@
       editCoupon,
       couponsList,
       recordList,
+      themeImg,
+      activityFalseData
     },
     beforeMount() {},
 
@@ -297,6 +311,24 @@
     },
 
     methods: {
+      addFalseData(type){
+        console.log(type+'配置假数据')
+        this.showFalseData=true
+        this.showActivityList=false
+      },
+      changeTheme(type){
+        console.log(type+'更换主题')
+        this.showThemeImg=true
+        this.showActivityList=false
+      },
+      hiddenFalseData(){
+        this.showFalseData=false
+        this.showActivityList=true
+      },
+      hiddenThemeImg(){
+        this.showThemeImg=false
+        this.showActivityList=true
+      },
       closeActivityDialog() {
         this.activityForm = {};
         this.activityForm.activityType=Number(this.type)
