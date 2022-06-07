@@ -117,15 +117,15 @@
           },
           {
             value: 6,
-            label: "新人礼"
+            label: "首页-新人礼"
           },
           {
             value: 7,
-            label: "靠谱豆商城"
+            label: "首页-靠谱豆商城"
           },
           {
             value: 8,
-            label: "直播回放"
+            label: "首页-直播回放"
           },
           {
             value: 9,
