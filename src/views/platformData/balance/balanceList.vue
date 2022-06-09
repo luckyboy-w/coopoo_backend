@@ -11,7 +11,7 @@
         <div class="tabTd">
           <div>手机号：</div>
           <div>
-            <el-input v-model="searchParam.phoneNo" placeholder="请输入" width="180px" />
+            <el-input v-model="searchParam.phone" placeholder="请输入" width="180px" />
           </div>
         </div>
         <div class="tabTd">
@@ -23,7 +23,7 @@
         <div class="tabTd">
           <div>上级手机号：</div>
           <div>
-            <el-input v-model="searchParam.phoneNo" placeholder="请输入" width="180px" />
+            <el-input v-model="searchParam.inviteMemberPhone" placeholder="请输入" width="180px" />
           </div>
         </div>
         <div class="tabTd">
@@ -40,10 +40,10 @@
           <el-table ref="mainTable" :data="tableData" style="width: 100%; margin-bottom: 20px;" row-key="id"
             :header-cell-style="{'text-align':'center'}" :cell-style="{'text-align':'center'}" border>
             <el-table-column prop="userName" label="会员昵称"></el-table-column>
-            <el-table-column prop="phoneNo" label="手机号" width="150px"></el-table-column>
-            <el-table-column prop="phoneNo" label="上级手机号" width="150px">
+            <el-table-column prop="phone" label="手机号" width="150px"></el-table-column>
+            <el-table-column prop="inviteMemberPhone" label="上级手机号" width="150px">
               <template slot-scope="scope">
-                {{ scope.row.phoneNo?scope.row.phoneNo:"暂无" }}
+                {{ scope.row.inviteMemberPhone?scope.row.inviteMemberPhone:"暂无" }}
               </template>
             </el-table-column>
             <el-table-column prop="storeName" label="所属门店" >
@@ -51,7 +51,7 @@
                 {{ scope.row.storeName?scope.row.storeName:"暂无" }}
               </template>
             </el-table-column>
-            <el-table-column prop="orderPayAmount" label="当前余额"></el-table-column>
+            <el-table-column prop="currentBalance" label="当前余额"></el-table-column>
             <el-table-column label="操作" fixed="right" width="250px">
               <template slot-scope="scope">
                 <el-link @click="toBalanceDtl(scope.row)" type="primary">查看明细</el-link>
@@ -66,7 +66,7 @@
         </div>
       </div>
       </div>
-    <balanceDtl v-if="showDtlList" ref="balanceDtl" :pkMemberId="pkMemberId" @backToList="backToList" />
+    <balanceDtl v-if="showDtlList" ref="balanceDtl" :onlyId="onlyId" @backToList="backToList" />
   </div>
 </template>
 
@@ -91,11 +91,13 @@
     created() {},
     data() {
       return {
-        pkMemberId:'',
+        onlyId:'',
         showDtlList: false,
         searchParam: {
-          phoneNo:'',
+          inviteMemberPhone:'',
+          phone:'',
           storeName:'',
+          userName:'',
           pageSize: 10,
           pageNum: 1
         },
@@ -106,22 +108,22 @@
     },
     methods: {
       exportData() {
-        let exportParam = [];
+        // let exportParam = [];
 
-        let param = JSON.parse(JSON.stringify(this.searchParam));
-        delete param.pageSize
-        delete param.pageNum
+        // let param = JSON.parse(JSON.stringify(this.searchParam));
+        // delete param.pageSize
+        // delete param.pageNum
 
-        for (let key in param) {
-          exportParam.push(key + "=" + param[key]);
-        }
-        exportParam.push("token=" + getToken())
-        window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/member-list/export?" + exportParam.join("&"));
+        // for (let key in param) {
+        //   exportParam.push(key + "=" + param[key]);
+        // }
+        // exportParam.push("token=" + getToken())
+        // window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/member-list/export?" + exportParam.join("&"));
       },
       //跳转详情
       toBalanceDtl(row) {
         let scope = this
-        scope.pkMemberId=row.pkMemberId
+        scope.onlyId=row.id
         scope.showDtlList = true
       },
       search() {
@@ -137,7 +139,7 @@
       },
       loadList() {
         let scope = this;
-        getMethod("/member/search-member-list", this.searchParam).then(
+       postMethod("/balance/get-balance", this.searchParam).then(
           res => {
             scope.tableData = res.data.records;
             scope.tableData.total = res.data.total

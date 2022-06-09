@@ -10,7 +10,7 @@
         <div class="tabTd">
           <div>交易路径：</div>
           <div>
-            <el-select v-model="searchParam.type" clearable placeholder="请选择">
+            <el-select v-model="searchParam.accountRecordType" clearable placeholder="请选择">
               <el-option v-for="item in typeList" :key="item.id" :label="item.typeName" :value="item.id" />
             </el-select>
           </div>
@@ -18,7 +18,7 @@
         <div class="tabTd">
           <div>交易方式：</div>
           <div>
-            <el-select v-model="searchParam.opType" clearable placeholder="请选择">
+            <el-select v-model="searchParam.operation" clearable placeholder="请选择">
               <el-option v-for="item in opTypeList" :key="item.id" :label="item.opTypeName" :value="item.id" />
             </el-select>
           </div>
@@ -26,10 +26,10 @@
         <div class="tabTd">
           <div>交易时间：</div>
           <div>
-            <el-date-picker v-model="searchParam.startCreateTime" clearable value-format="yyyy-MM-dd" type="date"
+            <el-date-picker v-model="searchParam.startTradeTime" clearable value-format="yyyy-MM-dd" type="date"
               width="60px" placeholder="选择开始日期" />
             -
-            <el-date-picker v-model="searchParam.endCreateTime" clearable value-format="yyyy-MM-dd" type="date"
+            <el-date-picker v-model="searchParam.endTradeTime" clearable value-format="yyyy-MM-dd" type="date"
               width="60px" placeholder="选择结束日期" />
           </div>
         </div>
@@ -93,7 +93,8 @@
   export default {
     computed: {},
     mounted() {
-      console.log(this.pkMemberId)
+      console.log(this.onlyId)
+      this.searchParam.id=this.onlyId
       this.initLoad();
     },
     created() {},
@@ -101,7 +102,11 @@
       return {
         showDtlList: false,
         searchParam: {
-
+          id:'',
+          accountRecordType:'',
+          endTradeTime:'',
+          startTradeTime:'',
+          operation:'',
           pageSize: 10,
           pageNum: 1
         },
@@ -115,11 +120,11 @@
             typeName: '返利'
           },
           {
-            id: 3,
+            id: 4,
             typeName: '购买商品'
           },
           {
-            id: 4,
+            id: 5,
             typeName: '退货'
           },
         ],
@@ -138,11 +143,7 @@
     filters: {
     },
     props: {
-      pkMemberId: {
-        type: String,
-        required: false,
-        default: null
-      }
+      onlyId:[String,Number]
     },
     methods: {
       search() {
@@ -158,7 +159,7 @@
       },
       loadList() {
         let scope = this;
-        getMethod("/member/search-member-list", this.searchParam).then(
+        postMethod("/balance/get-balance-detail", this.searchParam).then(
           res => {
             scope.tableData = res.data.records;
             scope.tableData.total = res.data.total
