@@ -14,7 +14,7 @@
               </div>
               <div>
                 <el-input-number :max="100" :min="0" style="width:150px;margin-left: 20px;" placeholder="请输入"
-                  v-model="scope.row.testPrice" />
+                  v-model="scope.row.rechargeAmount" />
               </div>
             </div>
           </template>
@@ -38,7 +38,7 @@
 
         <el-table-column label="备注">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.remarks" clearable placeholder="请输入" width="180px" />
+            <el-input v-model="scope.row.remark" clearable placeholder="请输入" width="180px" />
           </template>
         </el-table-column>
       </el-table>
@@ -124,14 +124,16 @@
     computed: {},
     mounted() {
       // this.initLoad();
+       this.getRechargeConfiguration()
     },
     created() {},
     data() {
       return {
         priceTableData: [{
-          testPrice: null,
+          rechargeAmount: null,
+          goodsId: '',
           goodsName: '',
-          remarks: ''
+          remark: ''
         }],
         searchParam: {
           status: 1,
@@ -152,10 +154,10 @@
       addRow() {
         console.log('添加行')
         let itemObj = {
-          testPrice: null,
+          rechargeAmount: null,
           goodsName: '',
           goodsId: '',
-          remarks: ''
+          remark: ''
         }
         this.priceTableData.push(itemObj)
       },
@@ -169,7 +171,28 @@
         })
       },
       enterRechargeConfiguration() {
-      console.log('priceTableData',this.priceTableData)
+        console.log('priceTableData', this.priceTableData)
+        for (let j = 0; j < this.priceTableData.length; j++) {
+          let item = this.priceTableData[j]
+          if (item.rechargeAmount === '' || !item.rechargeAmount || item.rechargeAmount === 0) {
+            this.$message({
+              message: "第" + (j + 1) + "行的充值金额不能为空或0",
+              type: 'warning'
+            });
+            return false;
+          }
+        }
+        postMethod("/balance/update-recharge-config", this.priceTableData).then(res => {
+          console.log(res)
+        });
+      },
+      getRechargeConfiguration(){
+        getMethod("/balance/get-recharge-config").then(res => {
+          console.log(res)
+          if (res.data.length>0) {
+            this.priceTableData=res.data
+          }
+        })
       },
       // 关联商品
       relatedGoods(goodsId, index) {
