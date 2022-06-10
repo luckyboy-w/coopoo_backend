@@ -41,34 +41,39 @@
       </div>
       <div style="display: flex;flex-wrap: wrap;color: #686868;font-size: 15px;">
         <div class="tabTd">
-          <div>会员名称：{{ memberName?memberName:'暂无' }}</div>
+          <div>会员名称：{{ userName?userName:'暂无' }}</div>
         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div class="tabTd">
-          <div>剩余余额：{{ test?test:'0' }}</div>
+          <div>剩余余额：{{ remainingBalance?remainingBalance:'0' }}</div>
         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div class="tabTd">
-          <div>收入余额：{{ test?test:'0' }}</div>
+          <div>收入余额：{{ incomeBalance?incomeBalance:'0' }}</div>
         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div class="tabTd">
-          <div>支出余额：{{ test?test:'0' }}</div>
+          <div>支出余额：{{ expenditureBalance?expenditureBalance:'0' }}</div>
         </div>
       </div>
       <div class="ly-table-panel">
         <div class="ly-data-list">
           <el-table ref="mainTable" :data="tableData" style="width: 100%; margin-bottom: 20px;" row-key="id"
             :header-cell-style="{'text-align':'center'}" :cell-style="{'text-align':'center'}" border>
-            <el-table-column prop="userName" label="交易路径">
+            <el-table-column prop="accountRecordType" label="交易路径">
               <template slot-scope="scope">
-                {{ scope.row.userName?scope.row.userName:"暂无" }}
+                {{ scope.row.accountRecordType | recordType }}
               </template>
             </el-table-column>
-            <el-table-column prop="phoneNo" label="交易方式" width="150px">
+            <el-table-column prop="operation" label="交易方式" width="150px">
               <template slot-scope="scope">
-                {{ scope.row.phoneNo?scope.row.phoneNo:"暂无" }}
+                <span v-if="scope.row.operation==1">收入</span>
+                <span v-if="scope.row.operation==2">支出</span>
               </template>
             </el-table-column>
-            <el-table-column prop="orderPayAmount" label="金额"></el-table-column>
-            <el-table-column prop="createTime" label="交易时间"></el-table-column>
+            <el-table-column prop="amount" label="金额"></el-table-column>
+            <el-table-column prop="tradeTime" label="交易时间">
+              <template slot-scope="scope">
+                {{ scope.row.tradeTime | _formateDate}}
+              </template>
+            </el-table-column>
           </el-table>
         </div>
         <div class="ly-data-pagination">
@@ -135,12 +140,36 @@
           id: 2,
           opTypeName: '支出'
         }],
-        memberName:'',
-        test:'',
+        expenditureBalance: 0,
+        incomeBalance: 0,
+        remainingBalance: 0,
+        userName: "",
         tableData: [],
       };
     },
     filters: {
+      _formateDate(time) {
+        if (time == undefined) {
+          return '';
+        }
+        let date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
+      },
+      recordType(data) {
+        let typeText = ''
+        if (data == "1") {
+          typeText = "充值"
+        } else if (data == "2") {
+          typeText = "返利已结算"
+        }else if (data == "3") {
+          typeText = "返利未结算"
+        }else if (data == "4") {
+          typeText = "购买商品"
+        }else if (data == "5") {
+          typeText = "退货"
+        }
+        return typeText
+      },
     },
     props: {
       onlyId:[String,Number]
@@ -161,8 +190,12 @@
         let scope = this;
         postMethod("/balance/get-balance-detail", this.searchParam).then(
           res => {
-            scope.tableData = res.data.records;
-            scope.tableData.total = res.data.total
+            scope.tableData = res.data.balanceDetailVOPage.records;
+            scope.expenditureBalance=res.data.expenditureBalance
+            scope.incomeBalance=res.data.incomeBalance
+            scope.remainingBalance=res.data.remainingBalance
+            scope.userName=res.data.userName
+            scope.tableData.total = res.data.balanceDetailVOPage.total
           }
         );
       },
