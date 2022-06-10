@@ -9,8 +9,8 @@
         v-model="dataForm.storeLevel"
         placeholder="请选择门店类型" 
       >
-        <el-option label="普通门店" :value="0" />
-        <el-option label="专属门店" :value="1" />
+        <el-option label="蓝丝羽普通门店" :value="0" />
+        <el-option label="靠谱家专属门店" :value="1" />
       </el-select>
       </el-form-item>
       <el-form-item prop="storeName" label="门店名称">
