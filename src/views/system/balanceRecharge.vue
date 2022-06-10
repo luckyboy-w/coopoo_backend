@@ -13,7 +13,7 @@
                   style="font-size: 30px;"></i>
               </div>
               <div>
-                <el-input-number :max="100" :min="0" style="width:150px;margin-left: 20px;" placeholder="请输入"
+                <el-input-number  :min="0" style="width:150px;margin-left: 20px;" placeholder="请输入"
                   v-model="scope.row.rechargeAmount" />
               </div>
             </div>
@@ -24,13 +24,14 @@
           <template slot-scope="scope">
             <div style="text-align: left;">
               <div>
-                <el-button type="success" size="mini" @click="relatedGoods(scope.row.goodsId,scope.$index)">指定商品
+                <el-button type="success" size="mini" @click="relatedGoods(scope.row.goodsId,scope.row.goodsSkuId,scope.$index)">指定商品
                 </el-button>
               </div>
               <div>
                 <span
                   style="display: -webkit-box;word-break: break-all;text-overflow: ellipsis;overflow: hidden;-webkit-box-orient: vertical;-webkit-line-clamp: 5;">{{scope.row.goodsName}}</span>
-                <span v-show="false">{{scope.row.goodsId}}</span>
+                <span v-show="true">{{scope.row.goodsId}}</span>
+                <span v-show="true">{{scope.row.goodsSkuId}}</span>
               </div>
             </div>
           </template>
@@ -67,10 +68,24 @@
         </div>
         <div class="ly-table-panel">
           <div class="ly-data-list">
-            <el-table ref="multipleTable" :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id"
-              border @select="selectThis">
-              <!-- // :selectable="checkSelectable" -->
-              <el-table-column type="selection" width="55">
+            <!-- <el-table ref="multipleTable" :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id"
+              border @select="selectThis"> -->
+              <el-table ref="mainTable_" :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="goodsId" border
+                :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+                <el-table-column type="expand">
+                  <template slot-scope="props">
+                    <el-table ref="multipleTable" :data="props.row.skuList" @select="selectThis" style="width: 100%; margin-bottom: 20px;" row-key="skuId" border>
+                      <el-table-column type="selection" width="55"/>
+                      <el-table-column prop="skuText" label="SKU属性" width="260px" />
+                      <el-table-column prop="stock" label="库存" width="150px" />
+                      <el-table-column prop="marketPrice" label="零售价" width="150px" />
+                      <el-table-column prop="supplyPrice" label="供应价" width="150px" />
+                      <el-table-column prop="salePrice" label="会员价" width="150px" />
+                      <el-table-column prop="goodsCode" label="物料编码" width="150px" />
+                      <!-- <el-table-column prop="saleCount" label="销量" width="150px" ></el-table-column> -->
+                    </el-table>
+                  </template>
+                </el-table-column>
               </el-table-column>
               <el-table-column prop="goodsName" label="商品名称" />
               <el-table-column label="商品价格">
@@ -132,6 +147,7 @@
         priceTableData: [{
           rechargeAmount: null,
           goodsId: '',
+          goodsSkuId:'',
           goodsName: '',
           remark: ''
         }],
@@ -146,6 +162,7 @@
         tableData: {
           list: []
         },
+        selectGoodsSkuId: '',
         selectGoodsId: '',
         selectIndex: ''
       };
@@ -155,6 +172,7 @@
         console.log('添加行')
         let itemObj = {
           rechargeAmount: null,
+          goodsSkuId:'',
           goodsName: '',
           goodsId: '',
           remark: ''
@@ -184,6 +202,10 @@
         }
         postMethod("/balance/update-recharge-config", this.priceTableData).then(res => {
           console.log(res)
+          this.$message({
+            message: "保存成功",
+            type:'success'
+          });
         });
       },
       getRechargeConfiguration(){
@@ -195,9 +217,9 @@
         })
       },
       // 关联商品
-      relatedGoods(goodsId, index) {
-        console.log(goodsId, index)
-        this.selectGoodsId = goodsId
+      relatedGoods(goodsId,goodsSkuId, index) {
+        console.log(goodsId,goodsSkuId, index)
+        this.selectGoodsSkuId = goodsSkuId
         this.selectIndex = index
         this.searchParam.pageNum = 1
         this.loadGoodsList()
@@ -211,6 +233,7 @@
           status: 1,
         }
         this.showGoodsList = false
+        console.log('',this.selectGoodsSkuId)
       },
       search() {
         this.searchParam.pageNum = 1
@@ -222,34 +245,45 @@
           this.tableData.list = res.data.records;
           this.tableData.total = res.data.total;
           this.showPagination = this.tableData.total == 0;
-          if (this.selectGoodsId != '' && this.selectGoodsId) {
+          if (this.selectGoodsSkuId != '' && this.selectGoodsSkuId) {
             this.testF()
           }
         });
 
       },
       testF() {
-        this.$nextTick(() => {
-          this.tableData.list.forEach((item, index) => {
-            if (this.selectGoodsId == item.goodsId) {
-              this.$refs.multipleTable.toggleRowSelection(this.tableData.list[index], true)
-            }
+        let that= this
+        that.$nextTick(() => {
+          that.tableData.list.forEach((item, index) => {
+            // if (this.selectGoodsId==item.goodsId) {
+
+            item.skuList.forEach((i, idx) => {
+              if (that.selectGoodsSkuId == i.skuId) {
+                console.log('888',that.tableData.list[index].skuList[idx])
+                that.$refs.multipleTable.toggleRowSelection(that.tableData.list[index].skuList[idx], true)
+              }
+            })
+            // }
+
           })
         })
       },
       // 选择商品
       selectThis(selection, row) {
         let that = this
-        console.log(selection, row, that.selectGoodsId)
+        console.log(selection, row, that.selectGoodsSkuId)
         that.priceTableData.map((item, index) => {
           if (index == that.selectIndex) {
-            if (that.selectGoodsId == row.goodsId) {
+            if (that.selectGoodsSkuId == row.skuId) {
               item.goodsName = ''
               item.goodsId = ''
-              that.selectGoodsId == ''
+              item.goodsSkuId = ''
+              that.selectGoodsSkuId =''
+              that.selectGoodsId=''
             } else {
               item.goodsName = row.goodsName
               item.goodsId = row.goodsId
+              item.goodsSkuId = row.skuId
               this.showGoodsListClose()
             }
           }
