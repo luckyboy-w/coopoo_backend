@@ -60,6 +60,7 @@
               <el-option value="" label="全部"></el-option>
               <el-option value="2" label="微信"></el-option>
               <el-option value="1" label="支付宝"></el-option>
+              <el-option value="3" label="余额"></el-option>
             </el-select>
           </div>
         </div>
@@ -325,6 +326,9 @@
 		<el-row :gutter="20" class="main-text">
 		  <el-col :span="6">
 		    优惠券金额：{{ ordDtl.couponFaceValue }}
+		  </el-col>
+		  <el-col :span="6">
+		    余额：{{ ordDtl.balance }}
 		  </el-col>
 		</el-row>
       </div>
