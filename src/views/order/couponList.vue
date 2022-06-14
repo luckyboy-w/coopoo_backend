@@ -263,8 +263,14 @@
     methods: {
       exportData() {
         let exportParam = [];
-
-        let param = JSON.parse(JSON.stringify(this.searchParam));
+        let params =Object.assign({}, this.searchParam)
+        if (params.payChannel==3) {
+          params.isBalanceOrder=1
+          params.payChannel=''
+        }else{
+          params.isBalanceOrder=''
+        }
+        let param = JSON.parse(JSON.stringify(params));
         delete param.pageSize
         delete param.pageNum
 
@@ -288,8 +294,15 @@
       },
       loadList() {
         const scope = this
+        let params =Object.assign({}, scope.searchParam)
+        if (params.payChannel==3) {
+          params.isBalanceOrder=1
+          params.payChannel=''
+        }else{
+          params.isBalanceOrder=''
+        }
         // requestMethod
-        getMethod('/order/virtual-order-list', this.searchParam).then(res => {
+        getMethod('/order/virtual-order-list', params).then(res => {
           scope.tableData.list = res.data.records
           scope.tableData.total = res.data.total
           scope.showPagination = scope.tableData.total == 0

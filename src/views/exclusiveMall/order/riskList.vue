@@ -1070,8 +1070,14 @@
       },
       exportData() {
         let exportParam = [];
-
-        let param = JSON.parse(JSON.stringify(this.searchParam));
+        let params =Object.assign({}, this.searchParam)
+        if (params.payType==3) {
+          params.isBalanceOrder=1
+          params.payType=''
+        }else{
+          params.isBalanceOrder=''
+        }
+        let param = JSON.parse(JSON.stringify(params));
         delete param.pageSize
         delete param.pageNum
 
@@ -1176,7 +1182,14 @@
       loadList() {
         const scope = this
         // requestMethod
-        postMethod('/order/goods-order-list', this.searchParam).then(res => {
+        let params =Object.assign({}, scope.searchParam)
+        if (params.payType==3) {
+          params.isBalanceOrder=1
+          params.payType=''
+        }else{
+          params.isBalanceOrder=''
+        }
+        postMethod('/order/goods-order-list', params).then(res => {
           scope.tableData.list = res.data.records
           scope.tableData.total = res.data.total
           scope.sendOrder = false
