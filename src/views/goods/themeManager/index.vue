@@ -132,6 +132,20 @@
         this.searchParam.pageNum = pageNum;
         this.loadTheme();
       },
+      move(row,type){
+        console.log(row,type)
+        let params ={
+          goodsThemeId:row.id,
+          operation:type=='up'?'0':'1'
+        }
+        postMethod('/goods/theme/set-goods-theme-order', params).then(res => {
+          this.loadTheme()
+          this.$message({
+            message: "操作成功",
+            type: "success"
+          });
+        });
+      },
       //  上架下架
       enable(row) {
         let scope = this
