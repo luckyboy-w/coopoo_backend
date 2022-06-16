@@ -10,44 +10,48 @@
             :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item label="排序">
+      <el-form-item label="排序" v-if="dataForm.location==1">
         <el-input v-model="dataForm.sort" style="width: 200px;" placeholder="请输入" />
       </el-form-item>
       <el-form-item label="广告banner">
         <div style="display: flex;">
-        <div id="front-imgFirst">
-          <el-input v-show="false" v-model="imgObj.firstImg" />
-          <el-upload :action="uploadAdvertUrlFirst" list-type="picture-card" :on-preview="handleAdvertPreview"
-            :before-upload="beforeAdvertUpload" :on-success="handleAdvertSuccessFirst" :class="{hideTrue:hideAdvertUpload}"
-            :file-list="uploadAdvertListFirst" :on-remove="handleAdvertRemoveFirst">
-            <i class="el-icon-plus" />
-            <div slot="tip" v-if="dataForm.location==1" class="el-upload__tip">推荐尺寸：1000*1133
-            </div>
-            <div slot="tip" v-if="dataForm.location==2||dataForm.location==5" class="el-upload__tip">推荐尺寸：1000*600
-            </div>
-            <div slot="tip" v-if="dataForm.location==4" class="el-upload__tip">推荐尺寸：1000*516
-            </div>
-          </el-upload>
-        </div>
-        <div id="front-imgSecond" v-if="dataForm.location==9" style="margin-left: 20px;">
-          <el-input v-show="false" v-model="imgObj.secondImg" />
-          <el-upload :action="uploadAdvertUrlSecond" list-type="picture-card" :on-preview="handleAdvertPreview"
-            :before-upload="beforeAdvertUpload" :on-success="handleAdvertSuccessSecond" :class="{hideTrue:hideAdvertUpload}"
-            :file-list="uploadAdvertListSecond" :on-remove="handleAdvertRemoveSecond">
-            <i class="el-icon-plus" />
-          </el-upload>
-        </div>
-        <div id="front-imgThird" v-if="dataForm.location==9" style="margin-left: 20px;">
-          <el-input v-show="false" v-model="imgObj.thirdImg" />
-          <el-upload :action="uploadAdvertUrlThird" list-type="picture-card" :on-preview="handleAdvertPreview"
-            :before-upload="beforeAdvertUpload" :on-success="handleAdvertSuccessThird" :class="{hideTrue:hideAdvertUpload}"
-            :file-list="uploadAdvertListThird" :on-remove="handleAdvertRemoveThird">
-            <i class="el-icon-plus" />
-          </el-upload>
-        </div>
+          <div id="front-imgFirst">
+            <el-input v-show="false" v-model="imgObj.firstImg" />
+            <el-upload :action="uploadAdvertUrlFirst" list-type="picture-card" :on-preview="handleAdvertPreview"
+              :before-upload="beforeAdvertUpload" :on-success="handleAdvertSuccessFirst"
+              :class="{hideTrueFirst:hideAdvertUploadFirst}" :file-list="uploadAdvertListFirst"
+              :on-remove="handleAdvertRemoveFirst">
+              <i class="el-icon-plus" />
+              <div slot="tip" v-if="dataForm.location==1" class="el-upload__tip">推荐尺寸：1000*1133
+              </div>
+              <div slot="tip" v-if="dataForm.location==2||dataForm.location==5" class="el-upload__tip">推荐尺寸：1000*600
+              </div>
+              <div slot="tip" v-if="dataForm.location==4" class="el-upload__tip">推荐尺寸：1000*516
+              </div>
+            </el-upload>
+          </div>
+          <div id="front-imgSecond" v-if="dataForm.location==9" style="margin-left: 20px;">
+            <el-input v-show="false" v-model="imgObj.secondImg" />
+            <el-upload :action="uploadAdvertUrlSecond" list-type="picture-card" :on-preview="handleAdvertPreview"
+              :before-upload="beforeAdvertUpload" :on-success="handleAdvertSuccessSecond"
+              :class="{hideTrueSecond:hideAdvertUploadSecond}" :file-list="uploadAdvertListSecond"
+              :on-remove="handleAdvertRemoveSecond">
+              <i class="el-icon-plus" />
+            </el-upload>
+          </div>
+          <div id="front-imgThird" v-if="dataForm.location==9" style="margin-left: 20px;">
+            <el-input v-show="false" v-model="imgObj.thirdImg" />
+            <el-upload :action="uploadAdvertUrlThird" list-type="picture-card" :on-preview="handleAdvertPreview"
+              :before-upload="beforeAdvertUpload" :on-success="handleAdvertSuccessThird"
+              :class="{hideTrueThird:hideAdvertUploadThird}" :file-list="uploadAdvertListThird"
+              :on-remove="handleAdvertRemoveThird">
+              <i class="el-icon-plus" />
+            </el-upload>
+          </div>
         </div>
       </el-form-item>
-      <el-form-item label="跳转类型" v-if="dataForm.location==1||dataForm.location==2||dataForm.location==4||dataForm.location==5">
+      <el-form-item label="跳转类型"
+        v-if="dataForm.location==1||dataForm.location==2||dataForm.location==4||dataForm.location==5">
         <el-select @change="changeType" v-model="dataForm.dataType" placeholder="请选择">
           <el-option label="商品主题" :value="3" />
           <!-- <el-option
@@ -68,20 +72,28 @@
           <el-option label="无" :value='0' />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="dataForm.dataType == 3" label="商品主题">
-          <el-select v-model="dataForm.url" placeholder="请选择">
-            <el-option v-for="item in relationList" :key="item.id"  :label="item.text" :value="item.id"></el-option>
-          </el-select>
-      </el-form-item>
-	  <el-form-item v-if="dataForm.dataType == 2" label="链接地址">
-	    <el-input v-model="dataForm.url" placeholder="请输入"></el-input>
-	  </el-form-item>
-      <el-form-item v-if="dataForm.dataType == 7" label="平台直播">
+      <el-form-item
+        v-if="dataForm.dataType == 3&&(dataForm.location==1||dataForm.location==2||dataForm.location==4||dataForm.location==5)"
+        label="商品主题">
         <el-select v-model="dataForm.url" placeholder="请选择">
-          <el-option v-for="item in relationList" :key="item.id"  :label="item.text" :value="item.id"></el-option>
+          <el-option v-for="item in relationList" :key="item.id" :label="item.text" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item v-if="dataForm.dataType == 6" label="大佬说">
+      <el-form-item
+        v-if="dataForm.dataType == 2&&(dataForm.location==1||dataForm.location==2||dataForm.location==4||dataForm.location==5)"
+        label="链接地址">
+        <el-input v-model="dataForm.url" placeholder="请输入"></el-input>
+      </el-form-item>
+      <el-form-item
+        v-if="dataForm.dataType == 7&&(dataForm.location==1||dataForm.location==2||dataForm.location==4||dataForm.location==5)"
+        label="平台直播">
+        <el-select v-model="dataForm.url" placeholder="请选择">
+          <el-option v-for="item in relationList" :key="item.id" :label="item.text" :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item
+        v-if="dataForm.dataType == 6&&(dataForm.location==1||dataForm.location==2||dataForm.location==4||dataForm.location==5)"
+        label="大佬说">
         <el-select v-model="dataForm.url" placeholder="请选择">
           <el-option v-for="item in relationList" :key="item.id" :label="item.text" :value="item.id"></el-option>
         </el-select>
@@ -89,38 +101,50 @@
       <!-- <el-form-item v-show="false" label="限时抢购">
         <el-input v-model="dataForm.url" value=""></el-input>
       </el-form-item> -->
-      <el-form-item v-if="dataForm.dataType == 8" label="优惠券">
+      <el-form-item
+        v-if="dataForm.dataType == 8&&(dataForm.location==1||dataForm.location==2||dataForm.location==4||dataForm.location==5)"
+        label="优惠券">
         <el-select v-model="dataForm.url" placeholder="请选择">
           <el-option v-for="item in relationList" :key="item.id" :label="item.text" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
 
-      <el-form-item v-if="dataForm.dataType == 13" label="砍价活动">
+      <el-form-item
+        v-if="dataForm.dataType == 13&&(dataForm.location==1||dataForm.location==2||dataForm.location==4||dataForm.location==5)"
+        label="砍价活动">
         <el-select v-model="dataForm.url" placeholder="请选择">
           <el-option v-for="item in relationList" :key="item.id" :label="item.text" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item v-if="dataForm.dataType == 12" label="拼团活动">
+      <el-form-item
+        v-if="dataForm.dataType == 12&&(dataForm.location==1||dataForm.location==2||dataForm.location==4||dataForm.location==5)"
+        label="拼团活动">
         <el-select v-model="dataForm.url" placeholder="请选择">
           <el-option v-for="item in relationList" :key="item.id" :label="item.text" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item v-if="dataForm.dataType == 12||dataForm.dataType == 13" label="活动分享图">
+      <el-form-item
+        v-if="(dataForm.dataType == 12||dataForm.dataType == 13)&&(dataForm.location==1||dataForm.location==2||dataForm.location==4||dataForm.location==5)"
+        label="活动分享图">
         <div id="front-img_">
           <el-input v-show="false" v-model="dataForm.activityImg" />
           <el-upload :action="uploadAdvertUrl_" list-type="picture-card" :on-preview="handleAdvertPreview"
-            :before-upload="beforeAdvertUpload_" :on-success="handleAdvertSuccess_" :class="{hideTrue:hideAdvertUpload}"
+            :before-upload="beforeAdvertUpload_" :on-success="handleAdvertSuccess_" :class="{hideTrue_:hideAdvertUpload_}"
             :file-list="uploadAdvertList_" :on-remove="handleAdvertRemove_">
             <i class="el-icon-plus" />
           </el-upload>
         </div>
       </el-form-item>
-      <el-form-item v-if="dataForm.dataType == 12||dataForm.dataType == 13" label="富文本显示">
+      <el-form-item
+        v-if="(dataForm.dataType == 12||dataForm.dataType == 13)&&(dataForm.location==1||dataForm.location==2||dataForm.location==4||dataForm.location==5)"
+        label="富文本显示">
         <qEditor style="width: 650px;" :content="dataForm.extra" ref="refEditor_" :module-name="moduleName"
           @changeContent="changeContent_" />
       </el-form-item>
 
-      <el-form-item v-if="dataForm.dataType == 4" label="编辑器">
+      <el-form-item
+        v-if="dataForm.dataType == 4&&(dataForm.location==1||dataForm.location==2||dataForm.location==4||dataForm.location==5)"
+        label="编辑器">
         <qEditor style="width: 650px;" :content="dataForm.url" ref="refEditor" :module-name="moduleName"
           @changeContent="changeContent" />
       </el-form-item>
@@ -210,7 +234,10 @@
         uploadAdvertListSecond: [],
         uploadAdvertListThird: [],
         uploadAdvertList_: [],
-        hideAdvertUpload: false,
+        hideAdvertUpload_: false,
+        hideAdvertUploadFirst: false,
+        hideAdvertUploadSecond: false,
+        hideAdvertUploadThird: false,
         uploadAdvertUrlFirst: "",
         uploadAdvertUrlSecond: "",
         uploadAdvertUrlThird: "",
@@ -221,10 +248,10 @@
         goodList: [],
         relationList: [],
         loading: false,
-        imgObj:{
-          firstImg:'',
-          secondImg:'',
-          thirdImg:'',
+        imgObj: {
+          firstImg: '',
+          secondImg: '',
+          thirdImg: '',
         },
         dataForm: {
           dataType: 0,
@@ -249,26 +276,49 @@
       this.buildAdvertGroupIdSecond();
       this.buildAdvertGroupIdThird();
       this.buildAdvertGroupId_();
-      this.$nextTick(function () {
+      this.$nextTick(function() {
         if (this.editData.id) {
           this.dataForm = this.editData
+          console.log(this.editData)
+          if (this.editData.location == 9) {
+            let arr = []
+            arr = this.editData.extra.split(',')
+            this.imgObj.firstImg = arr[0]
+            this.imgObj.secondImg = arr[1]
+            this.imgObj.thirdImg = arr[2]
+            this.uploadAdvertListFirst.push({
+              url: this.imgObj.firstImg
+            })
+            this.uploadAdvertListSecond.push({
+              url: this.imgObj.secondImg
+            })
+            this.uploadAdvertListThird.push({
+              url: this.imgObj.thirdImg
+            })
+            this.$nextTick(function() {
+             this.hideAdvertUploadFirst=true
+             this.hideAdvertUploadSecond=true
+             this.hideAdvertUploadThird=true
+            })
+            console.log('99', arr, this.imgObj, this.uploadAdvertListFirst, this.uploadAdvertListSecond, this
+              .uploadAdvertListThird)
+          }
           this.dataForm.enable = this.editData.enable + ''
           this.changeType_(this.editData.dataType)
           if (this.editData.image) {
-          this.imgObj.firstImg = this.editData.image;
-          this.uploadAdvertListFirst.push({url:this.editData.image})
-          this.$nextTick(function() {
-            document.getElementById('front-imgFirst').getElementsByClassName('el-upload--picture-card')[0].style
-              .display = 'none'
-          })
+            this.imgObj.firstImg = this.editData.image;
+            this.uploadAdvertListFirst.push({
+              url: this.editData.image
+            })
+            this.hideAdvertUploadFirst=true
           }
+
           if (this.editData.activityImg) {
-          this.dataForm.activityImg = this.editData.activityImg;
-          this.uploadAdvertList_.push({url:this.editData.activityImg})
-          this.$nextTick(function() {
-            document.getElementById('front-img_').getElementsByClassName('el-upload--picture-card')[0].style
-              .display = 'none'
-          })
+            this.dataForm.activityImg = this.editData.activityImg;
+            this.uploadAdvertList_.push({
+              url: this.editData.activityImg
+            })
+            this.hideAdvertUpload_=true
           }
         }
       });
@@ -281,7 +331,7 @@
           if (val == 4) {
             this.$refs.refEditor.richText = ''
           }
-          if (val == 12||val == 13) {
+          if (val == 12 || val == 13) {
             this.dataForm.extra = ''
             this.$refs.refEditor_.richText = ''
           }
@@ -291,17 +341,17 @@
       changeType_(val) {
         getMethod("/operate/get-advert-redirect-value?type=" + val).then(res => {
           this.relationList = res.data
-          if(this.relationList&&this.relationList.length<=0){
-            this.dataForm.url=''
-          }else if(this.relationList&&this.relationList.length>0){
-            let display=''
-            this.relationList.forEach(i=>{
-               if (i.id==this.dataForm.url) {
-                 display='block'
-               }
+          if (this.relationList && this.relationList.length <= 0) {
+            this.dataForm.url = ''
+          } else if (this.relationList && this.relationList.length > 0) {
+            let display = ''
+            this.relationList.forEach(i => {
+              if (i.id == this.dataForm.url) {
+                display = 'block'
+              }
             })
-            if (display=='') {
-              this.dataForm.url=''
+            if (display == '') {
+              this.dataForm.url = ''
             }
           }
 
@@ -336,34 +386,31 @@
         for (let i = 0; i < this.uploadAdvertListFirst.length; i++) {
           if (this.uploadAdvertListFirst[i].url == (res.url || res.response.data.url)) {
             this.uploadAdvertListFirst.splice(i, 1);
-            this.imgObj.firstImg=''
+            this.imgObj.firstImg = ''
             break;
           }
         }
-        document.getElementById('front-imgFirst').getElementsByClassName('el-upload--picture-card')[0].style.display =
-          'block'
+        this.hideAdvertUploadFirst=false
       },
       handleAdvertRemoveSecond(res) {
         for (let i = 0; i < this.uploadAdvertListSecond.length; i++) {
           if (this.uploadAdvertListSecond[i].url == (res.url || res.response.data.url)) {
             this.uploadAdvertListSecond.splice(i, 1);
-            this.imgObj.secondImg=''
+            this.imgObj.secondImg = ''
             break;
           }
         }
-        document.getElementById('front-imgSecond').getElementsByClassName('el-upload--picture-card')[0].style.display =
-          'block'
+        this.hideAdvertUploadSecond=false
       },
       handleAdvertRemoveThird(res) {
         for (let i = 0; i < this.uploadAdvertListThird.length; i++) {
           if (this.uploadAdvertListThird[i].url == (res.url || res.response.data.url)) {
             this.uploadAdvertListThird.splice(i, 1);
-            this.imgObj.thirdImg=''
+            this.imgObj.thirdImg = ''
             break;
           }
         }
-        document.getElementById('front-imgThird').getElementsByClassName('el-upload--picture-card')[0].style.display =
-          'block'
+        this.hideAdvertUploadThird=false
       },
       handleAdvertSuccessFirst(res, file) {
         this.imgObj.firstImg = res.data.url
@@ -378,10 +425,7 @@
           }
         }
         if (this.uploadAdvertListFirst.length >= 1) {
-          this.$nextTick(function() {
-            document.getElementById('front-imgFirst').getElementsByClassName('el-upload--picture-card')[0].style
-              .display = 'none'
-          })
+          this.hideAdvertUploadFirst=true
         }
       },
       handleAdvertSuccessSecond(res, file) {
@@ -397,10 +441,7 @@
           }
         }
         if (this.uploadAdvertListSecond.length >= 1) {
-          this.$nextTick(function() {
-            document.getElementById('front-imgSecond').getElementsByClassName('el-upload--picture-card')[0].style
-              .display = 'none'
-          })
+          this.hideAdvertUploadSecond=true
         }
       },
       handleAdvertSuccessThird(res, file) {
@@ -416,10 +457,7 @@
           }
         }
         if (this.uploadAdvertListThird.length >= 1) {
-          this.$nextTick(function() {
-            document.getElementById('front-imgThird').getElementsByClassName('el-upload--picture-card')[0].style
-              .display = 'none'
-          })
+          this.hideAdvertUploadThird=true
         }
       },
       buildAdvertGroupId_() {
@@ -434,8 +472,7 @@
             break;
           }
         }
-        document.getElementById('front-img_').getElementsByClassName('el-upload--picture-card')[0].style.display =
-          'block'
+        this.hideAdvertUpload_=false
       },
       handleAdvertSuccess_(res, file) {
         this.dataForm.activityImg = res.data.url
@@ -450,10 +487,7 @@
           }
         }
         if (this.uploadAdvertList_.length >= 1) {
-          this.$nextTick(function() {
-            document.getElementById('front-img_').getElementsByClassName('el-upload--picture-card')[0].style
-              .display = 'none'
-          })
+          this.hideAdvertUpload_=true
         }
       },
       beforeAdvertUpload(file) {
@@ -477,7 +511,7 @@
           file.type === "image/jpeg" ||
           file.type === "image/png" ||
           file.type === "application/pdf";
-        const isLt2M = file.size / 1024  < 128;
+        const isLt2M = file.size / 1024 < 128;
         console.log(isLt2M)
         if (!fileTypeVerify) {
           this.$message.error("上传文件格式错误!");
@@ -490,65 +524,90 @@
       saveObject() {
         let scope = this;
         if (this.validate()) {
-        //   delete this.dataForm.createTime;
-        //   delete this.dataForm.createBy;
-        //   let fileList = [];
-        //   fileList = fileList.concat(this.uploadAdvertList);
-        //   this.dataForm.fileJsonStr = JSON.stringify(fileList);
-        //   this.dataForm.files = [];
-        // return false
-        this.dataForm.image=this.imgObj.firstImg
-        if (this.dataForm.image=='') {
-          this.$message({
-            message: "广告banner不能为空",
-            type: "warning"
-          });
-          return false
-        }
-        if (this.dataForm.location==9&&(this.imgObj.secondImg==''||this.imgObj.thirdImg=='')) {
-          this.$message({
-            message: "广告banner不能为空",
-            type: "warning"
-          });
-          return false
-        }
-        if (this.editData.id&&this.editData.id!='') {
-          postMethod("/operate/update-advert", this.dataForm).then(
-            res => {
-              this.$message({
-                message: "操作成功",
-                type: "success"
-              });
-              this.$emit("showListPanel", true);
-            }
-          );
-        } else{
-          postMethod("/operate/add-advert", this.dataForm).then(
-          res => {
+          //   delete this.dataForm.createTime;
+          //   delete this.dataForm.createBy;
+          //   let fileList = [];
+          //   fileList = fileList.concat(this.uploadAdvertList);
+          //   this.dataForm.fileJsonStr = JSON.stringify(fileList);
+          //   this.dataForm.files = [];
+          // return false
+          
+            this.dataForm.image = this.imgObj.firstImg
+          if (this.dataForm.image == '') {
             this.$message({
-              message: "操作成功",
-              type: "success"
+              message: "广告banner不能为空",
+              type: "warning"
             });
-            this.$emit("showListPanel", true);
+            return false
           }
-        );
-        }
+          if (this.dataForm.location == 9 && (this.imgObj.secondImg == '' || this.imgObj.thirdImg == '')) {
+            this.$message({
+              message: "广告banner不能为空",
+              type: "warning"
+            });
+            return false
+          }
+          if (this.dataForm.location == 9) {
+            let arr = []
+            this.dataForm.image = ''
+            arr.push(this.imgObj.firstImg)
+            arr.push(this.imgObj.secondImg)
+            arr.push(this.imgObj.thirdImg)
+            this.dataForm.extra = String(arr)
+            console.log('噼噼啪啪铺', this.dataForm, arr)
+          }
+          if (this.editData.id && this.editData.id != '') {
+            postMethod("/operate/update-advert", this.dataForm).then(
+              res => {
+                this.$message({
+                  message: "操作成功",
+                  type: "success"
+                });
+                this.$emit("showListPanel", true);
+              }
+            );
+          } else {
+
+            // return false
+            postMethod("/operate/add-advert", this.dataForm).then(
+              res => {
+                this.$message({
+                  message: "操作成功",
+                  type: "success"
+                });
+                this.$emit("showListPanel", true);
+              }
+            );
+          }
 
         }
       },
       validate() {
-        let notNvl = ["name", "location",];
-        for (let i = 0; i < notNvl.length; i++) {
-          if (this.dataForm[notNvl[i]] == "") {
-            this.$message({
-              message: "字段不能为空",
-              type: "warning"
-            });
-            return false;
-          }
+        if (this.dataForm.name == '') {
+          this.$message({
+            message: "广告名称不能为空",
+            type: "warning"
+          });
+          return false
         }
-        if (this.dataForm.dataType==3||this.dataForm.dataType==4||this.dataForm.dataType==6||this.dataForm.dataType==7||this.dataForm.dataType==8||this.dataForm.dataType==2) {
-          if (this.dataForm.url=='') {
+        if (this.dataForm.location == '') {
+          this.$message({
+            message: "广告位置不能为空",
+            type: "warning"
+          });
+          return false
+        }
+        if (this.dataForm.location == 1 && this.dataForm.sort == '') {
+          this.$message({
+            message: "排序不能为空",
+            type: "warning"
+          });
+          return false
+        }
+        if ((this.dataForm.dataType == 3 || this.dataForm.dataType == 4 || this.dataForm.dataType == 6 || this.dataForm
+          .dataType == 7 || this.dataForm.dataType == 8 || this.dataForm.dataType == 2 )&& (this.dataForm.location ==
+            1 || this.dataForm.location == 2 || this.dataForm.location == 4 || this.dataForm.location == 5)) {
+          if (this.dataForm.url == '') {
             this.$message({
               message: "字段不能为空",
               type: "warning"
@@ -556,10 +615,11 @@
             return false
           }
         }
-        if (this.dataForm.dataType==12||this.dataForm.dataType==13) {
-          if (this.dataForm.activityImg=='') {
+        if ((this.dataForm.dataType == 12 || this.dataForm.dataType == 13)&& (this.dataForm.location ==
+            1 || this.dataForm.location == 2 || this.dataForm.location == 4 || this.dataForm.location == 5)) {
+          if (this.dataForm.activityImg == '') {
             this.$message({
-              message: "字段不能为空",
+              message: "活动分享图不能为空",
               type: "warning"
             });
             return false
@@ -603,7 +663,16 @@
   }
 </style>
 <style lang="scss">
-  .hideTrue .el-upload--picture-card {
+  .hideTrue_ .el-upload--picture-card {
+    display: none;
+  }
+  .hideTrueFirst .el-upload--picture-card {
+    display: none;
+  }
+  .hideTrueSecond .el-upload--picture-card {
+    display: none;
+  }
+  .hideTrueThird .el-upload--picture-card {
     display: none;
   }
 </style>

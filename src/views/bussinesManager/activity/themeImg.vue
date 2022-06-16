@@ -98,18 +98,90 @@
       this.buildAdvertGroupIdFirst();
       this.buildAdvertGroupIdSecond();
       this.buildAdvertGroupIdThird();
+      this.initData()
       // this.activityData = this.rowData
       // this.searchParam.activityId = this.rowData.id
       // this.initRecordData();
 
     },
     methods: {
-      
-      submitThemeImg(){
-        console.log(this.imgObj)
+      initData(){
+        postMethod("/activity/get-collage-and-cut-price-theme").then(res => {
+         console.log(res)
+         if (this.activityType==5) {
+             this.imgObj.secondImg=res.data.collageBackGroundColorImages
+             this.imgObj.firstImg=res.data.collageThemeImages
+             this.imgObj.thirdImg=res.data.collageValueImages
+         } else if(this.activityType==6){
+             this.imgObj.secondImg=res.data.cutPriceBackGroundColorImages
+             this.imgObj.firstImg=res.data.cutPriceThemeImages
+             this.imgObj.thirdImg=res.data.cutPriceValueImages
+         }
+         this.uploadAdvertListFirst.push({
+           url: this.imgObj.firstImg
+         })
+         this.uploadAdvertListSecond.push({
+           url: this.imgObj.secondImg
+         })
+         this.uploadAdvertListThird.push({
+           url: this.imgObj.thirdImg
+         })
+         this.$nextTick(function() {
+          this.hideAdvertUploadFirst=true
+          this.hideAdvertUploadSecond=true
+          this.hideAdvertUploadThird=true
+         })
+        });
       },
-      
-      
+      submitThemeImg(){
+        if (this.imgObj.firstImg == '') {
+          this.$message({
+            message: "主题主图不能为空",
+            type: "warning"
+          });
+          return false
+        }
+        if (this.imgObj.secondImg == '') {
+          this.$message({
+            message: "底色主图不能为空",
+            type: "warning"
+          });
+          return false
+        }
+        if (this.imgObj.thirdImg == '') {
+          this.$message({
+            message: "价格主图不能为空",
+            type: "warning"
+          });
+          return false
+        }
+        console.log(this.imgObj)
+        let params
+        if (this.activityType==5) {
+          params={
+            collageBackGroundColorImages:this.imgObj.secondImg,
+            collageThemeImages:this.imgObj.firstImg,
+            collageValueImages:this.imgObj.thirdImg,
+          }
+        } else if(this.activityType==6){
+          params={
+            cutPriceBackGroundColorImages:this.imgObj.secondImg,
+            cutPriceThemeImages:this.imgObj.firstImg,
+            cutPriceValueImages:this.imgObj.thirdImg,
+          }
+        }
+        postMethod("/activity/set-collage-and-cut-price-theme", params).then(res => {
+         console.log(res)
+         this.$message({
+           message: "保存成功",
+           type: "success"
+         });
+         this.$emit('hiddenThemeImg')
+        });
+
+      },
+
+
       handleAdvertPreview(file) {
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;

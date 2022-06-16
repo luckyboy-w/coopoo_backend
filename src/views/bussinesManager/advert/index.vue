@@ -50,6 +50,10 @@
                   <span v-if="scope.row.location==2">首页-限时抢购</span>
                   <span v-if="scope.row.location==5">首页-靠谱豆商城</span>
                   <span v-if="scope.row.location==4">我的-线下门店</span>
+                  <span v-if="scope.row.location==6">首页-新人礼</span>
+                  <span v-if="scope.row.location==7">首页-靠谱豆商城</span>
+                  <span v-if="scope.row.location==8">首页-直播回放</span>
+                  <span v-if="scope.row.location==9">邀请好友</span>
                 </template>
               </el-table-column>
               <el-table-column prop="id" label="操作" width="200px">
