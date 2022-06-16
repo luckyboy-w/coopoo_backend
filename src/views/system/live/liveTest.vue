@@ -129,13 +129,13 @@
       // 首页编辑和详情
       toLiveDetail(row,val){
         if (val==1) {
-          getMethod('/live/get-live-detail', {liveId:row.liveId}).then(res => {
+          getMethod('/live/get-manger-live-detail', {liveId:row.liveId}).then(res => {
           this.editData=res.data
           this.editData.operation="edit"
           this.showHome=true
           });
         } else if(val==2){
-          getMethod('/live/get-live-detail', {liveId:row.liveId}).then(res => {
+          getMethod('/live/get-manger-live-detail', {liveId:row.liveId}).then(res => {
           this.editData=res.data
           this.editData.operation="detail"
           this.showHome=true
