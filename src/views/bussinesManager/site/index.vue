@@ -43,10 +43,10 @@
                 value="vip_agreement"
             ></el-option>
             <el-option
-                key="test"
-                value-key="test"
+                key="recharge_agreement"
+                value-key="recharge_agreement"
                 label="靠谱家充值协议"
-                value="test"
+                value="recharge_agreement"
             ></el-option>
 			<el-option
 			    key="posts_notice"

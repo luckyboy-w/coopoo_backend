@@ -71,10 +71,10 @@
     <el-form label-width="130px" style="display: flex;flex-wrap: nowrap;">
       <div style="font-size: 18px;font-weight: 600;width: 130px;text-align: right;margin-top: 7px;">分销比例：</div>
       <el-form-item label="普通商品分销比例">
-        <el-input-number :max="100" :min="0" style="width:150px" placeholder="请输入" v-model="testGoodsRatio" />
+        <el-input-number :max="100" :min="0" style="width:150px" placeholder="请输入" v-model="commonGoodsCommissionRatio" />
       </el-form-item>
       <el-form-item label="专属商品分销比例">
-        <el-input-number :max="100" :min="0" style="width:150px" placeholder="请输入" v-model="testExclusiveGoodsRatio" />
+        <el-input-number :max="100" :min="0" style="width:150px" placeholder="请输入" v-model="vipGoodsCommissionRatio" />
       </el-form-item>
     </el-form>
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
@@ -235,8 +235,8 @@
         bindingList_: [],
         showGoodsList: false,
 
-        testGoodsRatio:'',
-        testExclusiveGoodsRatio:'',
+        commonGoodsCommissionRatio:'',
+        vipGoodsCommissionRatio:'',
 
         supplierServiceRatio: '',
         storeServiceRatio: '',
@@ -264,9 +264,52 @@
     mounted() {
       this.loadData()
       this.initSettlementMethod()
+      this.initDistribution()
     },
     created() {},
     methods: {
+      enterDistribution(){
+        console.log(this.commonGoodsCommissionRatio,this.vipGoodsCommissionRatio,this.bindingList,this.bindingList_)
+        let params = {
+          commonGoodsCommissionRatio:this.commonGoodsCommissionRatio,
+          vipGoodsCommissionRatio:this.vipGoodsCommissionRatio,
+          commonGoodsIdList:[],
+          vipGoodsIdList:[]
+        }
+        if(this.bindingList.length>=1){
+          this.bindingList.forEach(item=>{
+            params.commonGoodsIdList.push(item.goodsId)
+          })
+        }
+        if(this.bindingList_.length>=1){
+          this.bindingList_.forEach(item=>{
+            params.vipGoodsIdList.push(item.goodsId)
+          })
+        }
+        console.log('参数',params)
+        // return false
+        postMethod("/settlement/set-goods-commission-config",params).then(
+          res => {
+            console.log(res)
+            this.$message({
+              message: "保存成功",
+              type: "success"
+            });
+            this.$forceUpdate()
+          }
+        );
+      },
+      initDistribution(){
+        getMethod("/settlement/get-goods-commission-config").then(
+          res => {
+            this.commonGoodsCommissionRatio = res.data.commonGoodsCommissionRatio
+            this.vipGoodsCommissionRatio = res.data.vipGoodsCommissionRatio
+            this.bindingList = res.data.commonGoodsIdList?res.data.commonGoodsIdList:[]
+            this.bindingList_ = res.data.vipGoodsIdList?res.data.vipGoodsIdList:[]
+
+          }
+        );
+      },
       initSettlementMethod() {
         getMethod("settlement/current-settle-method").then(
           res => {
