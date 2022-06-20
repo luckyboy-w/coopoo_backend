@@ -20,7 +20,7 @@
           <div class="ly-data-list">
             <el-table ref="mainTable" :data="tableData.list" style="width: 100%;margin-bottom: 20px;" row-key="id"
               border default-expand-all :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-
+              <el-table-column prop="sort" label="序号" width="55px"></el-table-column>
               <el-table-column prop="name" label="广告名称" width="150px"></el-table-column>
               <el-table-column label="关联数据" width="220px">
                 <template slot-scope="scope">
