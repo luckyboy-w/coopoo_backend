@@ -41,8 +41,8 @@
      </div>
     <el-table border ref="dtlTable" :data="dataList.list" style="width: 100%; margin-bottom: 20px;" row-key="id">
       <!-- <el-table-column type="index" width="50" label="序号" /> -->
-      <el-table-column prop="orderNo" label="订单编号" min-width="20%" />
-      <el-table-column prop="accountTime" label="入账月份" min-width="15%">
+      <el-table-column prop="orderNo" label="订单编号" min-width="24%" />
+      <el-table-column prop="accountTime" label="入账月份" min-width="20%">
         <template slot-scope="scope">
           {{ scope.row.accountTime }}
         </template>
@@ -57,24 +57,19 @@
           {{ scope.row.orderPayAmount | fmtFee }}
         </template>
       </el-table-column>
-      <el-table-column prop="test" label="预计结算金额">
+      <el-table-column prop="preSettleAmount" label="预计结算金额" min-width="24%">
         <template slot-scope="scope">
-          {{ scope.row.test | fmtFee }}
+          {{ scope.row.preSettleAmount | fmtFee }}
         </template>
       </el-table-column>
-      <el-table-column prop="test" label="平台服务费">
+      <el-table-column prop="platformServiceAmount" label="平台服务费" min-width="24%">
         <template slot-scope="scope">
-          {{ scope.row.test | fmtFee }}
+          {{ scope.row.platformServiceAmount | fmtFee }}
         </template>
       </el-table-column>
-      <el-table-column prop="test" label="分销佣金">
+      <el-table-column prop="actualSettleAmount" label="实际结算金额" min-width="24%">
         <template slot-scope="scope">
-          {{ scope.row.test | fmtFee }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="test" label="实际结算金额">
-        <template slot-scope="scope">
-          {{ scope.row.test | fmtFee }}
+          {{ scope.row.actualSettleAmount | fmtFee }}
         </template>
       </el-table-column>
     </el-table>

@@ -64,24 +64,19 @@
             {{ scope.row.orderPayAmount | fmtFee }}
           </template>
         </el-table-column>
-        <el-table-column prop="test" label="预计结算金额">
+        <el-table-column prop="preSettleAmount" label="预计结算金额" min-width="24%">
           <template slot-scope="scope">
-            {{ scope.row.test | fmtFee }}
+            {{ scope.row.preSettleAmount | fmtFee }}
           </template>
         </el-table-column>
-        <el-table-column prop="test" label="平台服务费">
+        <el-table-column prop="platformServiceAmount" label="平台服务费" min-width="24%">
           <template slot-scope="scope">
-            {{ scope.row.test | fmtFee }}
+            {{ scope.row.platformServiceAmount | fmtFee }}
           </template>
         </el-table-column>
-        <el-table-column prop="test" label="分销佣金">
+        <el-table-column prop="actualSettleAmount" label="实际结算金额" min-width="24%">
           <template slot-scope="scope">
-            {{ scope.row.test | fmtFee }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="test" label="实际结算金额">
-          <template slot-scope="scope">
-            {{ scope.row.test | fmtFee }}
+            {{ scope.row.actualSettleAmount | fmtFee }}
           </template>
         </el-table-column>
         <el-table-column prop="pkBillId" label="操作" min-width="24%">

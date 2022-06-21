@@ -73,10 +73,10 @@
           </el-table-column> -->
             <el-table-column prop="orderAmount" label="订单金额" />
             <el-table-column prop="orderPayAmount" label="实付金额" />
-            <el-table-column prop="test" label="预计结算金额" />
-            <el-table-column prop="test" label="平台服务费" />
-            <el-table-column prop="test" label="分销佣金" />
-            <el-table-column prop="test" label="实际结算金额" />
+            <el-table-column prop="preSettleAmount" label="预计结算金额"></el-table-column>
+            <el-table-column prop="platformServiceAmount" label="平台服务费"></el-table-column>
+            <el-table-column prop="commissionPrice" label="分销佣金"></el-table-column>
+            <el-table-column prop="actualSettleAmount" label="实际结算金额"></el-table-column>
             <el-table-column prop="isConfirm" label="状态">
               <template slot-scope="scope">
                 {{ scope.row.isConfirm == 1 ? '已确认' : '未确认' }}
@@ -135,10 +135,10 @@
             <el-table-column prop="accountDate" label="入账月份" />
             <el-table-column prop="orderAmount" label="订单金额" />
             <el-table-column prop="orderPayAmount" label="实付金额" />
-            <el-table-column prop="test" label="预计结算金额" />
-            <el-table-column prop="test" label="平台服务费" />
-            <el-table-column prop="test" label="分销佣金" />
-            <el-table-column prop="test" label="实际结算金额" />
+            <el-table-column prop="preSettleAmount" label="预计结算金额"></el-table-column>
+            <el-table-column prop="platformServiceAmount" label="平台服务费"></el-table-column>
+            <el-table-column prop="commissionPrice" label="分销佣金"></el-table-column>
+            <el-table-column prop="actualSettleAmount" label="实际结算金额"></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button size="mini" type="primary" @click="showBillDetail(scope.row)">查看明细</el-button>
@@ -203,10 +203,10 @@
           </el-table-column> -->
             <el-table-column prop="orderAmount" label="订单金额" />
             <el-table-column prop="orderPayAmount" label="实付金额" />
-            <el-table-column prop="test" label="预计结算金额"></el-table-column>
-            <el-table-column prop="test" label="平台服务费"></el-table-column>
-            <el-table-column prop="test" label="分销佣金"></el-table-column>
-            <el-table-column prop="test" label="实际结算金额"></el-table-column>
+            <el-table-column prop="preSettleAmount" label="预计结算金额"></el-table-column>
+            <el-table-column prop="platformServiceAmount" label="平台服务费"></el-table-column>
+            <el-table-column prop="commissionPrice" label="分销佣金"></el-table-column>
+            <el-table-column prop="actualSettleAmount" label="实际结算金额"></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button size="mini" type="primary" @click="orderDtl(scope.row)">订单详情</el-button>
