@@ -1,7 +1,7 @@
 <template>
-  <div class="bill-tab-list">
+  <div>
     <div v-if="showList" style="margin: 30px;">
-      <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="未结算" name="readyBill">
           <span slot="label" class="my-tab-label">未结算</span>
           <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
@@ -571,56 +571,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/styles/variables.scss';
-
-$table-list-height: 6vh;
-
-.my-tab-label {
-  font-family: PingFang SC;
-  font-weight: 400;
-  line-height: 30px;
-  //color: $fontColor;
-  font-size: 16px;
-  padding: 0px 10px;
-}
-
-.bill-tab-list > .el-tabs__nav-wrap {
-  overflow: hidden;
-  margin-bottom: -1px;
-  position: relative;
-  background: #f6f6f6;
-}
-
-.bill-tab-list > .el-tabs__nav-wrap::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 0px;
-  z-index: 1;
-}
-
-.bill-tab-list > .el-tabs__nav-scroll {
-  overflow: hidden;
-  height: $table-list-height;
-  padding-left: 10px;
-}
-
-.bill-tab-list > .el-tabs__item {
-  padding: 0 20px;
-  height: $table-list-height;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  line-height: $table-list-height;
-  display: inline-block;
-  list-style: none;
-  font-family: PingFang SC;
-  font-size: 14px;
-  font-weight: 600;
-  //color: #939393;
-  position: relative;
-}
+  .my-tab-label {
+    font-family: PingFang SC;
+    font-weight: 400;
+    line-height: 30px;
+    //color: $fontColor;
+    font-size: 16px;
+    padding: 0px 10px;
+  }
 .tabTd {
   display: flex;
   flex-wrap: nowrap;
