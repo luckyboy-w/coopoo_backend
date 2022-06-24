@@ -377,6 +377,7 @@
           pageNum: 1,
         },
         searchParam_: {
+          isSale:1,
           pageSize: 10,
           pageNum: 1,
         },
