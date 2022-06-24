@@ -195,15 +195,19 @@ export default {
       for (let i = 0; i < this.tableData.list.length; i++) {
         if (
           this.tableData.list[i].avatar != '' &&
+          this.tableData.list[i].avatar &&
           this.tableData.list[i].goodsName != '' &&
+          this.tableData.list[i].goodsName &&
           this.tableData.list[i].userName != '' &&
+          this.tableData.list[i].userName &&
           this.tableData.list[i].price != '' &&
+          this.tableData.list[i].price &&
           this.tableData.list[i].orderTime != ''
         ) {
         } else if (
           this.tableData.list[i].avatar == '' &&
           this.tableData.list[i].goodsName == '' &&
-          this.tableData.list[i].userName != '' &&
+          this.tableData.list[i].userName == '' &&
           this.tableData.list[i].price == '' &&
           this.tableData.list[i].orderTime == ''
         ) {
