@@ -155,6 +155,7 @@
           remark: ''
         }],
         searchParam: {
+          deliveryMethod:2,
           status: 1,
           goodsType: 1,
           pageSize: 10,
