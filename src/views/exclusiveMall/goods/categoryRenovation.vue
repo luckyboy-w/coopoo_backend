@@ -43,7 +43,7 @@
                 v-for="(item_,index_) in scope.row.pageItemVOList">
                 <el-select v-model="item_.categoryId" clearable placeholder="请选择">
                   <el-option label="无" :value="0"></el-option>
-                  <el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id"
+                  <el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id" v-show="item.enable===1"
                     :disabled="item.enable===0"></el-option>
                 </el-select>
               </div>

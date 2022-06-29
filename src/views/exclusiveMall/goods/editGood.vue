@@ -9,7 +9,7 @@
           </el-form-item>
           <el-form-item label="类目">
             <el-select v-model="dataForm.toAppGoodsCategoryList"  style="width:260px" multiple placeholder="请选择">
-              <el-option v-for="item in categoryList" :disabled="item.categoryLevel==1" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-option v-for="item in categoryList" :disabled="item.categoryLevel==1" :key="item.id" v-show="item.enable===1" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="商品卖点">
