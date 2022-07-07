@@ -469,8 +469,8 @@
     }
   }
 </script>
-<style scoped>
-  /deep/.el-table__header-wrapper .el-checkbox {
+<style scoped lang="scss">
+  >>>.el-table__header-wrapper .el-checkbox {
     display: none
   }
 

@@ -29,7 +29,7 @@
             <!-- <el-radio v-model="dataForm.deliveryMethod" label="1">邮寄/自提</el-radio> -->
           </el-form-item>
           <el-form-item label="属性选择">
-            <template v-for="item in dbAttrList">
+            <div v-for="(item,i) in dbAttrList" :key="i">
               <div class="attr-title">{{ item.specName }}:</div>
               <div class="attr-save">
                 <el-input style="width:200px;margin-right: 30px" :disabled="item.id === undefined"
@@ -39,19 +39,19 @@
                 </el-button>
               </div>
               <div class="attr-content">
-                <el-checkbox v-for="(valItem,index) in item.skuObj" :key="valItem.skuId" :label="valItem.skuId"
+                <el-checkbox v-for="(valItem,index) in item.skuObj" :key="index" :label="valItem.skuId"
                   :checked="valItem.isChecked" @change="changeAttrList(valItem)" >
                   {{ valItem.skuText }}
                 </el-checkbox>
               </div>
-            </template>
+            </div>
             <template>
               <div class="attr-title">自定义规格:</div>
               <div class="attr-save">
                 <el-button @click="addAttrNameInput" type="primary" >添加</el-button>
               </div>
 
-              <template v-for="(attrItem,index) in addAttrParam">
+              <div v-for="(attrItem,index) in addAttrParam">
                 <div class="attr-content">
                   <el-input style="width:200px;margin-right: 30px" :disabled="attrItem.disabled" placeholder="请输入规格名称"
                     v-model="attrItem.specName" @blur="disableSpecNameInput(attrItem,index)" />
@@ -72,7 +72,7 @@
                       icon="el-icon-delete"></el-button>
                   </el-input>
                 </div>
-              </template>
+              </div>
             </template>
           </el-form-item>
           <el-form-item label="新SKU配置">
