@@ -4,20 +4,20 @@
       <el-col :xs="24" :sm="24" :lg="24" class="card-panel-col">
         <el-form ref="dataForm" :model="dataForm" label-width="100px" label-position="left">
           <el-form-item label="商品名称">
-            <el-input v-model="dataForm.goodsName" style="width:260px" placeholder="请输入商品名称" :disabled="isDisabled"
+            <el-input v-model="dataForm.goodsName" style="width:360px" placeholder="请输入商品名称" type="textarea" :disabled="isDisabled"
               maxlength="30" show-word-limit />
           </el-form-item>
           <el-form-item label="类目">
-            <el-select v-model="dataForm.toAppGoodsCategoryList"  style="width:260px" multiple placeholder="请选择">
+            <el-select v-model="dataForm.toAppGoodsCategoryList"  style="width:360px" multiple filterable placeholder="请选择">
               <el-option v-for="item in categoryList" :disabled="item.categoryLevel==1" :key="item.id" v-show="item.enable===1" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="商品卖点">
-            <el-input v-model="dataForm.sellingPoint" style="width:260px" placeholder="请输入卖点" maxlength="50"
+            <el-input v-model="dataForm.sellingPoint" style="width:360px" placeholder="请输入卖点" type="textarea" maxlength="50"
               :disabled="isDisabled" show-word-limit />
           </el-form-item>
           <el-form-item label="供应商">
-            <el-select  v-model="dataForm.supplierId" :disabled="isDisabled" placeholder="请选择">
+            <el-select  v-model="dataForm.supplierId" style="width:360px" :disabled="isDisabled" placeholder="请选择">
               <el-option v-for="item in supplierList" :key="item.id" :label="item.supplierName" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
