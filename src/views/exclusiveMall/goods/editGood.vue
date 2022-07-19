@@ -23,7 +23,7 @@
           </el-form-item>
           <el-form-item label="发货方式">
             <el-radio :disabled="isDisabled" v-model="dataForm.deliveryMethod" label="2">邮寄到家</el-radio>
-            <el-radio :disabled="isDisabled" v-model="dataForm.deliveryMethod" label="3">到店自提</el-radio>
+            <!-- <el-radio :disabled="isDisabled" v-model="dataForm.deliveryMethod" label="3">到店自提</el-radio> -->
             <!-- <el-radio :disabled="isDisabled" v-model="dataForm.deliveryMethod" label="1">邮寄/自提</el-radio> -->
           </el-form-item>
           <el-form-item label="属性选择">
@@ -639,7 +639,7 @@
         return fileTypeVerify && isLt2M
       },
       initDefaultImage(data) {
-        this.uploadGoodImageList = data.goodsImg
+        this.uploadGoodImageList = data.goodsImg?data.goodsImg:[]
         this.uploadGoodsCoverImageList = data.goodsCoverImg ? data.goodsCoverImg : [],
         this.goodsVideoUrl = data.goodsVideo ? data.goodsVideo[0].url : ''
         this.uploadVideoList = data.goodsVideo ? data.goodsVideo : []

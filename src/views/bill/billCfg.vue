@@ -433,6 +433,16 @@
       handleClick(tab, event) {
         console.log(tab, event);
       },
+      // 新建标签跳详情
+      getGoodsDtl(row) {
+        let newpage = this.$router.resolve({
+          path: "/goods/list", //路径
+          query: {
+            goodsId: row.goodsId, //商品id
+          }
+        })
+        window.open(newpage.href, '_blank');
+      },
       // 关联商品
       relatedGoods(goodsType) {
       console.log(goodsType)
