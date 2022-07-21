@@ -734,7 +734,7 @@
           })
           this.dataForm.fileList = fileList
           this.dataForm.goodsDetailContent = this.detail.detailContent
-          this.dataForm.goodsSkuList = this.tableList
+          this.dataForm.goodsSkuList =  JSON.parse(JSON.stringify(this.tableList))
           this.dataForm.goodsSkuList.forEach(i => {
             delete i.tdList
             delete i.skuCompareId
