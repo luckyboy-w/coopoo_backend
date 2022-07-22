@@ -14,10 +14,10 @@
           <div>入账时间：</div>
           <div><el-date-picker v-model="searchParam.accountTime" type="month" value-format="yyyy-MM" placeholder="选择月" /></div>
         </div>
-        <div class="tabTd">
+        <!-- <div class="tabTd">
           <div>商品名称：</div>
           <div><el-input v-model="searchParam.goodsName" width="180px" placeholder="请输入" /></div>
-        </div>
+        </div> -->
         <div class="tabTd">
           <el-button type="primary" icon="el-icon-search" @click="search()">搜索</el-button>
           <el-button type="primary" icon="el-icon-download" style="margin-left:20px" @click="exportData()">导出明细</el-button>
