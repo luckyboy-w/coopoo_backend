@@ -3,6 +3,24 @@
     <div class="ly-container" v-if="showList">
      <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
        <div class="tabTd">
+         <div>商品名称：</div>
+         <div>
+          <el-input v-model="searchParam.goodsName" placeholder="请输入" width="180px" />
+         </div>
+       </div>
+       <div class="tabTd">
+         <div>用户名称：</div>
+         <div>
+          <el-input v-model="searchParam.userName" placeholder="请输入" width="180px" />
+         </div>
+       </div>
+       <div class="tabTd">
+         <div>供应商名称：</div>
+         <div>
+          <el-input v-model="searchParam.supplierName" placeholder="请输入" width="180px" />
+         </div>
+       </div>
+       <div class="tabTd">
          <div>评价状态：</div>
          <div>
            <el-select v-model="searchParam.replyStatus" placeholder="请选择">
@@ -13,9 +31,13 @@
          </div>
        </div>
        <div class="tabTd">
-         <div>供应商名称：</div>
+         <div>评价类型：</div>
          <div>
-          <el-input v-model="searchParam.supplierName" placeholder="请输入" width="180px" />
+           <el-select v-model="searchParam.replyType" placeholder="请选择">
+             <el-option value="" label="全部"></el-option>
+             <el-option value="1" label="真实评价"></el-option>
+             <el-option value="2" label="自建评价"></el-option>
+           </el-select>
          </div>
        </div>
        <div class="tabTd">
