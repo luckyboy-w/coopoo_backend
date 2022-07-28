@@ -47,8 +47,8 @@
           :current-page="searchParam.pageNum"
         />
       </el-tab-pane>
-      <el-tab-pane label="待结算" name="settleFinsh">
-        <span slot="label" class="my-tab-label">待结算</span>
+      <el-tab-pane label="可结算" name="settleFinsh">
+        <span slot="label" class="my-tab-label">可结算</span>
         <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
           <div class="tabTd">
             <div>结算单号：</div>
@@ -56,16 +56,10 @@
              <el-input @keyup.enter.native="searchOne()" v-model="searchParam.settleNo" width="180px"/>
             </div>
           </div>
-          <!-- <div class="tabTd">
-            <div>申请时间：</div>
-            <div>
-             <el-date-picker v-model="searchParam.startTime" value-format="yyyy-MM-dd" type="date" placeholder="开始日期">
-               </el-date-picker>
-             至
-               <el-date-picker v-model="searchParam.endTime" value-format="yyyy-MM-dd" type="date" placeholder="结束日期">
-               </el-date-picker>
-            </div>
-          </div> -->
+         <div class="tabTd">
+           <div>门店名称：</div>
+           <div><el-input v-model="searchParam.storeName" width="180px" placeholder="请输入" /></div>
+         </div>
           <div class="tabTd">
             <div>入账月份：</div>
             <div>
@@ -135,6 +129,10 @@
             <div>
              <el-input @keyup.enter.native="searchTwo()" v-model="searchParam.settleNo" width="180px"/>
             </div>
+          </div>
+          <div class="tabTd">
+            <div>门店名称：</div>
+            <div><el-input v-model="searchParam.storeName" width="180px" placeholder="请输入" /></div>
           </div>
           <div class="tabTd">
             <div>结算时间：</div>
@@ -523,7 +521,7 @@ export default {
         this.searchParam.settleStatus=1
       } else if (this.activeName == 'settleFinsh') {
         this.only = '1'
-        this.billMem = '待结算'
+        this.billMem = '可结算'
         this.searchParam.settleStatus=2
       } else if (this.activeName == 'settleEnd') {
         this.only = '2'
