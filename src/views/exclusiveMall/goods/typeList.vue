@@ -87,7 +87,7 @@
         <div class="attr-content">
           <el-button @click="addAttrNameInput" type="primary">添加行</el-button>
         </div>
-        <div v-for="(attrItem,index) in addAttrParam">
+        <div v-for="(attrItem,index) in addAttrParam"  :key="index">
           <div class="attr-content" style="display: ;">
             <div style="width: 100px;">二级类目名称</div>
             <el-input placeholder="类目名称" v-model="attrItem.name" style="width: 200px;">
