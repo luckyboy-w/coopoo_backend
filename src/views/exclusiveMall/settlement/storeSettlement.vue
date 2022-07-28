@@ -36,23 +36,17 @@
             @next-click="currentPage"
           />
         </el-tab-pane>
-        <el-tab-pane label="待结算" name="settleFinsh">
-          <span slot="label" class="my-tab-label">待结算</span>
+        <el-tab-pane label="可结算" name="settleFinsh">
+          <span slot="label" class="my-tab-label">可结算</span>
           <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
             <div class="tabTd">
               <div>结算单号：</div>
               <div><el-input v-model="searchParam.settleNo" width="180px" @keyup.enter.native="searchOne()" /></div>
             </div>
-            <!-- <div class="tabTd">
-            <div>申请时间：</div>
-            <div>
-             <el-date-picker v-model="searchParam.startTime" value-format="yyyy-MM-dd" type="date" placeholder="开始日期">
-               </el-date-picker>
-             至
-               <el-date-picker v-model="searchParam.endTime" value-format="yyyy-MM-dd" type="date" placeholder="结束日期">
-               </el-date-picker>
+            <div class="tabTd">
+              <div>门店名称：</div>
+              <div><el-input v-model="searchParam.storeName" width="180px" placeholder="请输入" /></div>
             </div>
-          </div> -->
             <div class="tabTd">
               <div>入账月份：</div>
               <div><el-date-picker v-model="searchParam.accountDate" type="month" value-format="yyyy-MM" placeholder="选择月" /></div>
@@ -66,11 +60,6 @@
             <el-table-column prop="settleNo" label="结算单号" />
             <el-table-column prop="storeName" label="门店名称" />
             <el-table-column prop="accountDate" label="入账月份" />
-            <!-- <el-table-column prop="applySettleDate" label="申请时间">
-            <template slot-scope="scope">
-              {{ scope.row.applySettleDate | _formateDate }}
-            </template>
-          </el-table-column> -->
             <el-table-column prop="orderAmount" label="订单金额" />
             <el-table-column prop="orderPayAmount" label="实付金额" />
             <el-table-column prop="preSettleAmount" label="预计结算金额"></el-table-column>
@@ -106,6 +95,10 @@
             <div class="tabTd">
               <div>结算单号：</div>
               <div><el-input v-model="searchParam.settleNo" width="180px" @keyup.enter.native="searchTwo()" /></div>
+            </div>
+            <div class="tabTd">
+              <div>门店名称：</div>
+              <div><el-input v-model="searchParam.storeName" width="180px" placeholder="请输入" /></div>
             </div>
             <div class="tabTd">
               <div>结算时间：</div>
@@ -444,7 +437,7 @@ export default {
         this.searchParam.settleStatus = 1;
       } else if (this.activeName == 'settleFinsh') {
         this.only = '1';
-        this.billMem = '待结算';
+        this.billMem = '可结算';
         this.searchParam.settleStatus = 2;
       } else if (this.activeName == 'settleEnd') {
         this.only = '2';
