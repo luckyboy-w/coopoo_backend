@@ -622,7 +622,7 @@
         return fileTypeVerify && isLt2M
       },
       initDefaultImage(data) {
-        this.uploadGoodImageList = data.goodsImg
+        this.uploadGoodImageList = data.goodsImg?data.goodsImg:[]
         this.uploadGoodsCoverImageList = data.goodsCoverImg ? data.goodsCoverImg : [],
         this.goodsVideoUrl = data.goodsVideo ? data.goodsVideo[0].url : ''
         this.uploadVideoList = data.goodsVideo ? data.goodsVideo : []
@@ -734,7 +734,7 @@
           })
           this.dataForm.fileList = fileList
           this.dataForm.goodsDetailContent = this.detail.detailContent
-          this.dataForm.goodsSkuList = this.tableList
+          this.dataForm.goodsSkuList =  JSON.parse(JSON.stringify(this.tableList))
           this.dataForm.goodsSkuList.forEach(i => {
             delete i.tdList
             delete i.skuCompareId

@@ -753,7 +753,7 @@
           this.dataForm.goodsImg=this.dataForm.goodsImg
           this.dataForm.goodsCoverImg=this.dataForm.goodsCoverImg
           this.dataForm.goodsDetailContent =this.detail.detailContent
-          this.dataForm.goodsSkuList = this.tableList
+          this.dataForm.goodsSkuList = JSON.parse(JSON.stringify(this.tableList)) 
           this.dataForm.goodsSkuList.forEach(i => {
             delete i.tdList
             delete i.skuCompareId
@@ -975,6 +975,7 @@
         this.oldTableMap = new Map()
         for (const skuInfo of this.tableList) {
           let fillData = {}
+          console.log('skuInfo',skuInfo)
           let key = this.getKeyByTdList(skuInfo.tdList)
 
           this.oldTableMap.set(key, skuInfo)

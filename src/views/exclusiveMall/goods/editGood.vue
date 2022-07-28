@@ -4,26 +4,26 @@
       <el-col :xs="24" :sm="24" :lg="24" class="card-panel-col">
         <el-form ref="dataForm" :model="dataForm" label-width="100px" label-position="left">
           <el-form-item label="商品名称">
-            <el-input v-model="dataForm.goodsName" style="width:260px" placeholder="请输入商品名称" :disabled="isDisabled"
+            <el-input v-model="dataForm.goodsName" style="width:360px" placeholder="请输入商品名称" type="textarea" :disabled="isDisabled"
               maxlength="30" show-word-limit />
           </el-form-item>
           <el-form-item label="类目">
-            <el-select v-model="dataForm.toAppGoodsCategoryList"  style="width:260px" multiple placeholder="请选择">
+            <el-select v-model="dataForm.toAppGoodsCategoryList"  style="width:360px" multiple filterable placeholder="请选择">
               <el-option v-for="item in categoryList" :disabled="item.categoryLevel==1" :key="item.id" v-show="item.enable===1" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="商品卖点">
-            <el-input v-model="dataForm.sellingPoint" style="width:260px" placeholder="请输入卖点" maxlength="50"
+            <el-input v-model="dataForm.sellingPoint" style="width:360px" placeholder="请输入卖点" type="textarea" maxlength="50"
               :disabled="isDisabled" show-word-limit />
           </el-form-item>
           <el-form-item label="供应商">
-            <el-select  v-model="dataForm.supplierId" :disabled="isDisabled" placeholder="请选择">
+            <el-select  v-model="dataForm.supplierId" style="width:360px" :disabled="isDisabled" placeholder="请选择">
               <el-option v-for="item in supplierList" :key="item.id" :label="item.supplierName" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="发货方式">
             <el-radio :disabled="isDisabled" v-model="dataForm.deliveryMethod" label="2">邮寄到家</el-radio>
-            <el-radio :disabled="isDisabled" v-model="dataForm.deliveryMethod" label="3">到店自提</el-radio>
+            <!-- <el-radio :disabled="isDisabled" v-model="dataForm.deliveryMethod" label="3">到店自提</el-radio> -->
             <!-- <el-radio :disabled="isDisabled" v-model="dataForm.deliveryMethod" label="1">邮寄/自提</el-radio> -->
           </el-form-item>
           <el-form-item label="属性选择">
@@ -639,7 +639,7 @@
         return fileTypeVerify && isLt2M
       },
       initDefaultImage(data) {
-        this.uploadGoodImageList = data.goodsImg
+        this.uploadGoodImageList = data.goodsImg?data.goodsImg:[]
         this.uploadGoodsCoverImageList = data.goodsCoverImg ? data.goodsCoverImg : [],
         this.goodsVideoUrl = data.goodsVideo ? data.goodsVideo[0].url : ''
         this.uploadVideoList = data.goodsVideo ? data.goodsVideo : []
@@ -751,7 +751,7 @@
           })
           this.dataForm.fileList = fileList
           this.dataForm.goodsDetailContent = this.detail.detailContent
-          this.dataForm.goodsSkuList = this.tableList
+          this.dataForm.goodsSkuList =  JSON.parse(JSON.stringify(this.tableList))
           this.dataForm.goodsSkuList.forEach(i => {
             delete i.tdList
             delete i.skuCompareId
