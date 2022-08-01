@@ -117,7 +117,7 @@
                 </el-upload>
                 <el-dialog>
                   <img width="100%" :src="imageUrl" alt>
-                </el-dialog>
+                </el-dialog> 
               </div>
             </div>
             <div class="upLoadContainer" v-show="showNum==3">
@@ -139,9 +139,9 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item prop="sort" label="排序">
+        <!-- <el-form-item prop="sort" label="排序">
           <el-input v-model="form.sort" placeholder="请输入" clearable :disabled="disabled" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="关联类型">
           <el-select v-model="form.goodsType" :disabled="disabled">
             <el-option label="商品" :value="1" />
@@ -554,7 +554,7 @@
           subtitle: '',
           description: '',
           backgroundColor: '',
-          sort: '',
+          // sort: '',
           type: '0',
           fileType: 1,
           goodsThemeItemList: [],
@@ -589,11 +589,11 @@
             message: '请输入副标题',
             trigger: 'blur'
           }],
-          sort: [{
-            required: true,
-            message: '请输入排序',
-            trigger: 'blur'
-          }],
+          // sort: [{
+          //   required: true,
+          //   message: '请输入排序',
+          //   trigger: 'blur'
+          // }],
           backgroundColor: [{
             required: true,
             message: '请选择背景色值',

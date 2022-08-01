@@ -11,7 +11,7 @@
        <div class="tabTd">
          <div>用户名称：</div>
          <div>
-          <el-input v-model="searchParam.userName" placeholder="请输入" width="180px" />
+          <el-input v-model="searchParam.memberNickname" placeholder="请输入" width="180px" />
          </div>
        </div>
        <div class="tabTd">
@@ -33,7 +33,7 @@
        <div class="tabTd">
          <div>评价类型：</div>
          <div>
-           <el-select v-model="searchParam.replyType" placeholder="请选择">
+           <el-select v-model="searchParam.commentType" placeholder="请选择">
              <el-option value="" label="全部"></el-option>
              <el-option value="1" label="真实评价"></el-option>
              <el-option value="2" label="自建评价"></el-option>
@@ -196,6 +196,9 @@ export default {
       showList: true,
       showAddOrEdit: false,
       searchParam: {
+        memberNickname:'',
+        goodsName:'',
+        commentType:'',
         replyStatus: '',
         pageSize: 10,
         pageNum: 1
