@@ -7,8 +7,9 @@
       <div>
         <div v-if="rowData.activityType == 5">
           <el-table :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="index"
-            border>
+                    border>
             <el-table-column prop="userName" label="团长昵称" width="170px"></el-table-column>
+            <el-table-column prop="phoneNo" label="团长手机号" width="200px"></el-table-column>
             <el-table-column prop="storeName" label="门店名称" width="200px"></el-table-column>
             <el-table-column prop="goodsName" label="商品名称"></el-table-column>
             <el-table-column prop="goodsPrice" label="商品金额" width="170px"></el-table-column>
@@ -16,17 +17,24 @@
               <template slot-scope="scope">
                 <span v-if="scope.row.isSuccess===0">发起中</span>
                 <span v-if="scope.row.isSuccess===1">发起成功</span>
-                 <span v-if="scope.row.isSuccess===2">拼团成功</span>
-                  <span v-if="scope.row.isSuccess===3">拼团失败</span>
+                <span v-if="scope.row.isSuccess===2">拼团成功</span>
+                <span v-if="scope.row.isSuccess===3">拼团失败</span>
               </template>
             </el-table-column>
             <el-table-column prop="collageNum" label="所需开团人数" width="170px"></el-table-column>
             <el-table-column prop="partCollageNum" label="已参与人数" width="170px"></el-table-column>
+            <el-table-column prop="open" label="操作" width="170px" >
+              <template slot-scope="scope">
+                <el-button @click="closeShadow(scope.row)" size="mini" type="text">查看团员
+                </el-button>
+              </template>
+
+            </el-table-column>
           </el-table>
         </div>
         <div v-if="rowData.activityType == 6">
           <el-table :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="index"
-            border>
+                    border>
             <el-table-column prop="userName" label="团长昵称" width="170px"></el-table-column>
             <el-table-column prop="storeName" label="门店名称" width="200px"></el-table-column>
             <el-table-column prop="goodsName" label="商品名称"></el-table-column>
@@ -45,11 +53,24 @@
         </div>
         <div class="ly-data-pagination">
           <el-pagination background v-show="!showPagination" layout="prev, pager, next" @current-change="currentPage"
-            @prev-click="currentPage" @next-click="currentPage" :current-page="searchParam.pageNum"
-            :total="tableData.total"></el-pagination>
+                         @prev-click="currentPage" @next-click="currentPage" :current-page="searchParam.pageNum"
+                         :total="tableData.total"></el-pagination>
         </div>
       </div>
     </div>
+
+    <el-dialog
+      title=""
+      :visible.sync="secondTypePopup"
+      width="380px"
+      　　　　:append-to-body="true"
+      :close-on-click-modal="false">
+      <span>团员详情</span>
+      <el-table :data="groupMembersData" style="width: 100%; margin-bottom: 20px;margin-top: 30px;" row-key="index" border>
+        <el-table-column prop="userName" label="团员昵称" width="170px"></el-table-column>
+        <el-table-column prop="phoneNo" label="手机号" width="200px"></el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 
 </template>
@@ -76,12 +97,15 @@
           list: [],
           total: 0
         },
+
         activityData: {},
         searchParam: {
           activityId: '',
           pageSize: 10,
-          pageNum: 1
-        }
+          pageNum: 1,
+        },
+        secondTypePopup: false,
+        groupMembersData:[]
       };
     },
     components: {},
@@ -107,12 +131,13 @@
             scope.tableData.list = res.data.records;
             scope.tableData.total = res.data.total;
             scope.showPagination = scope.tableData.total == 0;
+
             this.$forceUpdate()
           });
         }
         //砍价
         if (this.rowData.activityType == 6) {
-          getMethod("/activity/marketing-goods/cut-price/part-record", this.searchParam).then(res => {
+          postMethod("/activity/marketing-goods/cut-price/part-record", this.searchParam).then(res => {
             scope.tableData.list = res.data.records;
             scope.tableData.total = res.data.total;
             scope.showPagination = scope.tableData.total == 0;
@@ -121,9 +146,23 @@
         }
 
       },
+
+      getOneCollageRecord(collageId){
+        postMethod("/activity/marketing-goods/collage/get-one-collage-record",{collageId:collageId}).then(res => {
+          this.groupMembersData = res.data;
+          console.log(res)
+          this.$forceUpdate()
+        });
+      },
       backToList() {
         this.$emit('hiddenRecord')
-      }
+      },
+      closeShadow(row){
+        console.log(row)
+        this.secondTypePopup = true;
+        this.getOneCollageRecord(row.collageId);
+      },
+
     },
     watch: {}
   }
