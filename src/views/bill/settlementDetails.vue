@@ -3,10 +3,6 @@
     <div class="ly-container">
       <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
         <div class="tabTd">
-          <div>结算单号：</div>
-          <div><el-input v-model="searchParam.settleNo" width="180px" placeholder="请输入" /></div>
-        </div>
-        <div class="tabTd">
           <div>门店名称：</div>
           <div><el-input v-model="searchParam.storeName" width="180px" placeholder="请输入" /></div>
         </div>
