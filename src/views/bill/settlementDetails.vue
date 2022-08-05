@@ -4,7 +4,12 @@
       <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
         <div class="tabTd">
           <div>门店名称：</div>
-          <div><el-input v-model="searchParam.storeName" width="180px" placeholder="请输入" /></div>
+          <div>
+            <!-- <el-input v-model="searchParam.storeName" width="180px" placeholder="请输入" /> -->
+            <el-select v-model="searchParam.storeId" style="width:180px" filterable  placeholder="请选择">
+              <el-option v-for="item in storeList" :key="item.id" :label="item.storeName" :value="item.id"></el-option>
+            </el-select>
+            </div>
         </div>
         <div class="tabTd">
           <div>入账时间：</div>
@@ -16,7 +21,13 @@
         </div>
         <div class="tabTd">
           <div>供应商名称：</div>
-          <div><el-input v-model="searchParam.supplierName" width="180px" placeholder="请输入" /></div>
+          <div>
+            <!-- <el-input v-model="searchParam.supplierName" width="180px" placeholder="请输入" /> -->
+            <el-select v-model="searchParam.supplierId" style="width:180px" filterable  placeholder="请选择">
+              <el-option v-for="item in supplierList" :key="item.id" :label="item.supplierName" :value="item.id"></el-option>
+            </el-select>
+            </div>
+            </div>
         </div>
         <div class="tabTd">
           <el-button type="primary" icon="el-icon-search" @click="search()">搜索</el-button>
@@ -45,7 +56,7 @@
                 <span v-if="scope.row.deliveryMethod == 2">自提</span>
               </template>
             </el-table-column>
-            <el-table-column prop="" label="供应商名称" />
+            <el-table-column prop="goodsNum" label="商品数量"></el-table-column>
             <el-table-column prop="goodsPrice" label="商品单价" />
             <el-table-column prop="orderAmount" label="订单金额" />
             <el-table-column prop="accountTime" label="入账时间" />
@@ -89,23 +100,28 @@ export default {
     return {
       showPagination: false,
       searchParam: {
-        supplierName:'',
+        supplierId:'',
         accountTime: '',
         goodsName: '',
         settleNo: '',
-        storeName: '',
+        storeId:'',
+        // storeName: '',
         pageSize: 10,
         pageNum: 1
       },
       tableData: {
         list: []
-      }
+      },
+      storeList:[],
+      supplierList:[]
     };
   },
   computed: {},
   created() {},
   mounted() {
     this.initLoad();
+    this.initStoreList()
+    this.initSupplierList()
   },
   methods: {
     search() {
@@ -148,12 +164,32 @@ export default {
     },
     loadList() {
       let scope = this;
-      getMethod('/settlement/order-detail-settlement-list', this.searchParam).then(res => {
+      postMethod('/settlement/goods-settlement-detail', this.searchParam).then(res => {
         scope.tableData.list = res.data.records;
         scope.tableData.total = res.data.total;
         scope.showPagination = scope.tableData.total == 0;
       });
-    }
+    },
+    initStoreList() {
+      getMethod("/store/search-store-list", {
+        pageSize: 500,
+        pageNum: 1
+      }).then(
+        res => {
+          this.storeList = res.data.records
+        }
+      );
+    },
+    initSupplierList() {
+      getMethod("/supplier/search-supplier-list", {
+        pageSize: -1,
+        pageNum: 1
+      }).then(
+        res => {
+          this.supplierList = res.data.records
+        }
+      );
+    },
   }
 };
 </script>
