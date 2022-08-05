@@ -6,10 +6,29 @@
           <tr>
             <td>模块：</td>
             <td>
-              <el-select v-model="searchParam.operationType" placeholder="请选择">
+              <el-select v-model="searchParam.operationType" filterable placeholder="请选择">
                 <el-option value="" label="全部模块" />
                 <el-option value="order_goods" label="商品订单" />
                 <el-option value="order_bean" label="靠谱豆订单" />
+                <el-option value="goods" label="普通商品" />
+                <el-option value="goods_theme" label="主题" />
+                <el-option value="activity" label="限时抢购" />
+                <el-option value="new_user_activity" label="新人礼" />
+                <el-option value="register_give_coupon_activity" label="注册送优惠券" />
+                <el-option value="buy_vip_give_coupon_activity" label="买VIP送优惠券" />
+                <el-option value="cut_price_activity" label="砍价" />
+                <el-option value="collage_part_activity" label="拼团" />
+                <el-option value="activity_message" label="消息" />
+                <el-option value="town_talk" label="话题" />
+                <el-option value="bean_config" label="靠谱豆配置" />
+                <el-option value="coupon" label="优惠券" />
+                <el-option value="store" label="门店" />
+                <el-option value="supplier" label="供应商" />
+                <el-option value="exclusive_mall_category" label="专属商城类目" />
+                <el-option value="goods_fake_sale_volume" label="普通商品假销量" />
+                <el-option value="exclusive_goods_fake_sale_volume" label="专属商品假销量" />
+                <el-option value="collage_fake_data" label="拼团假数据" />
+                <el-option value="cut_price_fake_data" label="砍价假数据" />
               </el-select>
             </td>
             <td colspan="2">
