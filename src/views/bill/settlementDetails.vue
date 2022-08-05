@@ -146,7 +146,7 @@ export default {
         exportParam.push(key + '=' + param[key]);
       }
       exportParam.push('token=' + getToken());
-      window.open(process.env.VUE_APP_BASE_API_NEW + '/excel/order-detail-settlement/export?' + exportParam.join('&'));
+      window.open(process.env.VUE_APP_BASE_API_NEW + '/excel/goods-settlement-detail/export?' + exportParam.join('&'));
     },
     exportStoreData() {
       let exportParam = [];
