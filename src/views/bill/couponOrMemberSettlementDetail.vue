@@ -8,7 +8,11 @@
         </div>
         <div class="tabTd">
           <div>门店名称：</div>
-          <div><el-input v-model="searchParam.storeName" width="180px" placeholder="请输入" /></div>
+          <div>
+            <el-select v-model="searchParam.storeId" style="width:180px" filterable  placeholder="请选择">
+              <el-option v-for="item in storeList" :key="item.id" :label="item.storeName" :value="item.id"></el-option>
+            </el-select>
+          </div>
         </div>
         <div class="tabTd">
           <div>入账时间：</div>
@@ -19,8 +23,9 @@
           <div>
             <el-select v-model="searchParam.orderType" placeholder="请选择">
               <el-option value="" label="全部"></el-option>
-              <el-option value="1" label="会员订单"></el-option>
-              <el-option value="2" label="优惠券订单"></el-option>
+              <el-option value="5" label="会员订单"></el-option>
+              <el-option value="4" label="线上优惠券订单"></el-option>
+              <el-option value="3" label="线下优惠券订单"></el-option>
             </el-select>
           </div>
         </div>
@@ -35,16 +40,16 @@
             <el-table-column prop="orderNo" label="订单编号" />
             <el-table-column prop="goodsName" label="商品名称">
             </el-table-column>
-            <el-table-column prop="deliveryMethod" label="订单类型">
+            <el-table-column prop="orderType" label="订单类型">
               <template slot-scope="scope">
-                <span v-if="scope.row.deliveryMethod == 1">会员订单</span>
-                <span v-if="scope.row.deliveryMethod == 2">优惠券订单</span>
+                <span v-if="scope.row.orderType == 3">线下优惠券订单</span>
+                <span v-if="scope.row.orderType == 4">线上优惠券订单</span>
+                <span v-if="scope.row.orderType == 5">会员订单</span>
               </template>
             </el-table-column>
             <el-table-column prop="orderAmount" label="订单金额" />
             <el-table-column prop="accountTime" label="入账时间" />
             <el-table-column prop="storeName" label="门店名称" />
-            <el-table-column prop="supplierPrice" label="供应金额" />
             <el-table-column prop="storeProfitRatio" label="门店利润分佣比例" />
             <el-table-column prop="storePreSettlePrice" label="门店预计分佣金额" />
             <el-table-column prop="storePlatformPrice" label="门店平台服务费" />
@@ -82,19 +87,21 @@ export default {
         accountTime: '',
         goodsName: '',
         orderType: '',
-        storeName: '',
+        storeId: '',
         pageSize: 10,
         pageNum: 1
       },
       tableData: {
         list: []
-      }
+      },
+      storeList:[],
     };
   },
   computed: {},
   created() {},
   mounted() {
     this.initLoad();
+    this.initStoreList()
   },
   methods: {
     search() {
@@ -118,16 +125,26 @@ export default {
         exportParam.push(key + '=' + param[key]);
       }
       exportParam.push('token=' + getToken());
-      window.open(process.env.VUE_APP_BASE_API_NEW + '/excel/order-detail-settlement/export?' + exportParam.join('&'));
+      window.open(process.env.VUE_APP_BASE_API_NEW + '/excel/coupon-and-vip-settlement-detail/export?' + exportParam.join('&'));
     },
     loadList() {
       let scope = this;
-      getMethod('/settlement/order-detail-settlement-list', this.searchParam).then(res => {
+      postMethod('/settlement/coupon-and-vip-settlement-detail', this.searchParam).then(res => {
         scope.tableData.list = res.data.records;
         scope.tableData.total = res.data.total;
         scope.showPagination = scope.tableData.total == 0;
       });
-    }
+    },
+    initStoreList() {
+      getMethod("/store/search-store-list", {
+        pageSize: 500,
+        pageNum: 1
+      }).then(
+        res => {
+          this.storeList = res.data.records
+        }
+      );
+    },
   }
 };
 </script>
