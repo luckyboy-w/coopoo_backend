@@ -6,7 +6,7 @@
           <div>门店名称：</div>
           <div>
             <!-- <el-input v-model="searchParam.storeName" width="180px" placeholder="请输入" /> -->
-            <el-select v-model="searchParam.storeId" style="width:180px" filterable  placeholder="请选择">
+            <el-select v-model="searchParam.storeId" style="width:180px" filterable clearable placeholder="请选择">
               <el-option v-for="item in storeList" :key="item.id" :label="item.storeName" :value="item.id"></el-option>
             </el-select>
             </div>
@@ -23,7 +23,7 @@
           <div>供应商名称：</div>
           <div>
             <!-- <el-input v-model="searchParam.supplierName" width="180px" placeholder="请输入" /> -->
-            <el-select v-model="searchParam.supplierId" style="width:180px" filterable  placeholder="请选择">
+            <el-select v-model="searchParam.supplierId" style="width:180px" filterable clearable placeholder="请选择">
               <el-option v-for="item in supplierList" :key="item.id" :label="item.supplierName" :value="item.id"></el-option>
             </el-select>
             </div>

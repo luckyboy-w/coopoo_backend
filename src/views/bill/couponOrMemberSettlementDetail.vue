@@ -9,7 +9,7 @@
         <div class="tabTd">
           <div>门店名称：</div>
           <div>
-            <el-select v-model="searchParam.storeId" style="width:180px" filterable  placeholder="请选择">
+            <el-select v-model="searchParam.storeId" style="width:180px" filterable clearable placeholder="请选择">
               <el-option v-for="item in storeList" :key="item.id" :label="item.storeName" :value="item.id"></el-option>
             </el-select>
           </div>
