@@ -47,7 +47,7 @@
               <el-table-column prop="location" label="广告位置" width="150px">
                 <template slot-scope="scope">
                   <span v-if="scope.row.location==1">首页banner</span>
-                  <span v-if="scope.row.location==2">首页-限时抢购</span>
+                  <span v-if="scope.row.location==2">限时抢购</span>
                   <span v-if="scope.row.location==5">首页-靠谱豆商城</span>
                   <span v-if="scope.row.location==4">我的-线下门店</span>
                   <span v-if="scope.row.location==6">首页-新人礼</span>
@@ -109,7 +109,7 @@
           },
           {
             value: 2,
-            label: "首页-限时抢购"
+            label: "限时抢购"
           },
           {
             value: 5,
