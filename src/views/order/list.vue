@@ -124,7 +124,12 @@
             <el-table-column width="1">
               <template slot-scope="scope">
                 <div class="item">
-                  <span style="margin-left:150px">订单编号：{{ scope.row.orderNo }}</span>
+                  <span style="margin-left:150px">
+                      订单编号：{{ scope.row.orderNo }}
+                      <el-tag effect="light" size="mini" v-if="scope.row.orderSource==1">
+                        充值赠送
+                      </el-tag>
+                  </span>
                   <span style="margin-left:150px">订单总额：{{ scope.row.orderPayAmount}}</span>
                   <!-- <span style="margin-left:150px" v-if="scope.row.orderStatus==">下单时间：{{ scope.row.createTime }}</span>
                   <span style="margin-left:150px">下单时间：{{ scope.row.createTime }}</span> -->
