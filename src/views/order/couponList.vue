@@ -64,7 +64,7 @@
               <el-option value="" label="全部"></el-option>
               <el-option value="2" label="微信"></el-option>
               <el-option value="1" label="支付宝"></el-option>
-              <el-option value="3" label="余额"></el-option>
+              <!-- <el-option value="3" label="余额"></el-option> -->
             </el-select>
           </div>
         </div>
