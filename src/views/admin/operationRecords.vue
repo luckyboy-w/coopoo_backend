@@ -11,6 +11,7 @@
                 <el-option value="order_goods" label="商品订单" />
                 <el-option value="order_bean" label="靠谱豆订单" />
                 <el-option value="goods" label="普通商品" />
+                <el-option value="exclusive_goods" label="专属商品" />
                 <el-option value="goods_theme" label="主题" />
                 <el-option value="activity" label="限时抢购" />
                 <el-option value="new_user_activity" label="新人礼" />
