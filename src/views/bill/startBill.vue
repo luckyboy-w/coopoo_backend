@@ -19,8 +19,8 @@
           <div>
             <el-select v-model="searchParam.isConfirm" placeholder="请选择">
               <el-option value="" label="全部"></el-option>
-              <el-option value="1" label="未确认"></el-option>
-              <el-option value="0" label="已确认"></el-option>
+              <el-option value="0" label="未确认"></el-option>
+              <el-option value="1" label="已确认"></el-option>
             </el-select>
           </div>
         </div>
