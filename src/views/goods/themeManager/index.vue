@@ -11,9 +11,10 @@
         <div class="tabTd">
           <div>主题状态：</div>
           <div>
-            <el-select v-model="searchParam.isSale" placeholder="请选择主题状态">
-              <el-option label="已上架" :value="1" />
-              <el-option label="未上架" :value="0" />
+            <el-select v-model="searchParam.isSale" clearable placeholder="请选择主题状态">
+              <el-option label="全部" value="" />
+              <el-option label="已上架" value="1" />
+              <el-option label="未上架" value="0" />
             </el-select>
           </div>
         </div>
@@ -92,6 +93,7 @@
           test:111
         },
         searchParam:{
+          isSale:"1",
           pageNum:1,
           pageSize:10,
         },
