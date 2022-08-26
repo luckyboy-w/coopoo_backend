@@ -30,7 +30,7 @@
             </el-select>
           </div>
         </div>
-        <div class="tabTd">
+        <!-- <div class="tabTd">
           <div>商品类目：</div>
           <div>
             <el-select v-model="searchParam.testType" placeholder="请选择">
@@ -38,7 +38,7 @@
               <el-option v-for="item in testTypeList" :key="item.id" :label="item.supplierName" :value="item.id"></el-option>
             </el-select>
           </div>
-        </div>
+        </div> -->
 
         <div class="tabTd">
           <el-button icon="el-icon-search" type="primary" @click="search()">
@@ -209,7 +209,7 @@
           dataId: ""
         },
         searchParam: {
-          testType:'',
+          // testType:'',
           goodsType:'2',
           goodsName:'',
           goodsCode:'',
@@ -238,7 +238,7 @@
         this.editGood(row, true)
       }
       this.initLoad()
-      this.loadTypeList()
+      // this.loadTypeList()
     },
     created() {},
     methods: {
