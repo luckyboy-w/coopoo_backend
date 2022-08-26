@@ -49,8 +49,8 @@
                   <el-link v-if="scope.row.isSale=='0'&&scope.row.goodsType!='3'" type="primary" @click="insideEdit(scope.row,1)">内页编辑</el-link>
                   <el-link v-if="scope.row.isSale=='1'&&scope.row.goodsType!='3'" type="primary" @click="insideEdit(scope.row,2)">内页详情</el-link>
                 <!-- v-if="scope.$index!==0" -->
-                <el-divider v-if="scope.$index!==0" direction="vertical"></el-divider>
-                <el-link v-if="scope.$index!==0" type="primary" @click="move(scope.row,'up')">上移</el-link>
+                <el-divider  direction="vertical"></el-divider>
+                <el-link  type="primary" @click="move(scope.row,'up')">上移</el-link>
                 <el-divider  direction="vertical"></el-divider>
                 <el-link  type="primary" @click="move(scope.row,'dowm')">下移</el-link>
                 </template>
