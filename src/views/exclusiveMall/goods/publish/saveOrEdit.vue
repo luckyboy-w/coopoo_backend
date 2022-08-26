@@ -5,13 +5,14 @@
 
         <el-form ref="dataForm" :model="dataForm" label-width="100px" label-position="left">
           <el-form-item label="商品名称">
-            <el-input v-model="dataForm.goodsName" style="width:360px" type="testarea" placeholder="请输入商品名称"
+            <el-input v-model="dataForm.goodsName" style="width:360px" type="textarea" placeholder="请输入商品名称"
               maxlength="30" show-word-limit />
           </el-form-item>
           <el-form-item label="类目">
-            <el-select v-model="dataForm.toAppGoodsCategoryList" style="width:360px" multiple filterable  placeholder="请选择">
+            <el-cascader :options="categoryList" :props="cascaderProps" v-model="cascaderValue" filterable style="width:360px"></el-cascader>
+            <!-- <el-select v-model="dataForm.toAppGoodsCategoryList" style="width:200px" multiple filterable  placeholder="请选择">
               <el-option v-for="item in categoryList" :key="item.id" :disabled="item.categoryLevel==1" v-show="item.enable===1" :label="item.name" :value="item.id"></el-option>
-            </el-select>
+            </el-select> -->
           </el-form-item>
           <el-form-item label="商品卖点">
             <el-input v-model="dataForm.sellingPoint" style="width:360px" placeholder="请输入卖点" type="textarea" maxlength="50"
@@ -261,6 +262,10 @@
         token: {
           token: Cookies.get('token')
         },
+
+        cascaderProps: { multiple: true },
+        cascaderValue:null,
+
         supplierList:[],
         categoryList:[],
         goodSaleDescImgVisible: false,
@@ -388,7 +393,102 @@
         let scope = this;
         postMethod("/exclusive/category/all/query").then(
           res => {
-            scope.categoryList = res.data;
+            // scope.categoryList = res.data;
+            scope.categoryList =[
+              {
+                "value": 133,
+                "parentId": 0,
+                "level": 1,
+                "label": "一级3",
+                "sort": 3,
+                "enable": 1,
+                "children": [
+                  {
+                    "value": 138,
+                    "parentId": 133,
+                    "level": 2,
+                    "label": "二级3-1",
+                    "sort": 1,
+                    "enable": 1,
+                    "children": [
+                      {
+                        "value": 140,
+                        "parentId": 138,
+                        "level": 3,
+                        "label": "三级3-1-1",
+                        "sort": 1,
+                        "enable": 1,
+                        "children": null
+                      },
+                      {
+                        "value": 141,
+                        "parentId": 138,
+                        "level": 3,
+                        "label": "三级3-1-2",
+                        "sort": 3,
+                        "enable": 1,
+                        "children": null
+                      },
+                      {
+                        "value": 146,
+                        "parentId": 138,
+                        "level": 3,
+                        "label": "1",
+                        "sort": 4,
+                        "enable": 1,
+                        "children": null
+                      },
+                      {
+                        "value": 147,
+                        "parentId": 138,
+                        "level": 3,
+                        "label": "1",
+                        "sort": 5,
+                        "enable": 1,
+                        "children": null
+                      },
+                      {
+                        "value": 148,
+                        "parentId": 138,
+                        "level": 3,
+                        "label": "1",
+                        "sort": 6,
+                        "enable": 1,
+                        "children": null
+                      }
+                    ]
+                  },
+                  {
+                    "value": 139,
+                    "parentId": 133,
+                    "level": 2,
+                    "label": "二级3-2",
+                    "sort": 3,
+                    "enable": 1,
+                    "children": [
+                      {
+                        "value": 142,
+                        "parentId": 139,
+                        "level": 3,
+                        "label": "三级3-2-1",
+                        "sort": 1,
+                        "enable": 1,
+                        "children": null
+                      },
+                      {
+                        "value": 143,
+                        "parentId": 139,
+                        "level": 3,
+                        "label": "三级3-2-2",
+                        "sort": 2,
+                        "enable": 1,
+                        "children": null
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           }
         );
       },
@@ -866,6 +966,7 @@
         this.$emit('showListPanel', true)
       },
       submitUpdate() {
+        console.log(this.cascaderValue)
         this.saveObject()
       },
 
