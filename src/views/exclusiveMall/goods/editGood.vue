@@ -26,52 +26,81 @@
             <!-- <el-radio :disabled="isDisabled" v-model="dataForm.deliveryMethod" label="3">到店自提</el-radio> -->
             <!-- <el-radio :disabled="isDisabled" v-model="dataForm.deliveryMethod" label="1">邮寄/自提</el-radio> -->
           </el-form-item>
-          <el-form-item label="属性选择">
-            <div v-for="(item,i) in dbAttrList" :key="i">
-              <div class="attr-title">{{ item.specName }}:</div>
-              <div class="attr-save">
-                <el-input style="width:200px;margin-right: 30px" :disabled="isDisabled" placeholder="请输入自定义值"
-                  v-model="item.newAttrValue" />
-                <el-button type="primary" @click="handlerAttrData(item)" :disabled="isDisabled">添加
-                </el-button>
-              </div>
-              <div class="attr-content">
-                <el-checkbox v-for="(valItem,index) in item.skuObj" :key="index" :disabled="isDisabled"
-                  :checked="valItem.isChecked" @change="changeAttrList(valItem)">
-                  {{ valItem.skuText }}
-                </el-checkbox>
-              </div>
-            </div>
-            <template>
-              <div class="attr-title">自定义规格:</div>
-              <div class="attr-save">
-                <el-button @click="addAttrNameInput" type="primary" :disabled="isDisabled">添加</el-button>
-              </div>
+         <el-form-item label="属性选择">
+           <div class="table-wrapper">
+             <el-table ref="dragTable" :data="dbAttrList" style=" margin-bottom: 20px;" row-key="onlyKey" :show-header="false">
+               <el-table-column>
+                 <template slot-scope="scope">
+                   <div class="attr-title">{{ scope.row.specName }}:</div>
+                   <div class="attr-save">
+                     <el-input style="width:200px;margin-right: 30px" :disabled="isDisabled" placeholder="请输入自定义值" v-model="scope.row.newAttrValue" />
+                     <el-button type="primary" @click="handlerAttrData(scope.row)" :disabled="isDisabled">添加</el-button>
+                     <span style=" font-size: 16px;color: red;margin-left: 1vw;">{{ scope.row.specValueWarningStr }}</span>
+                   </div>
+                   <div class="attr-content">
+                     <draggable v-model="scope.row.skuObj" chosenClass="chosen" forceFallback="true" animation="1000">
+                       <transition-group>
+                         <el-checkbox v-for="(valItem, i) in scope.row.skuObj" :key="i" :disabled="isDisabled" :checked="valItem.isChecked" @change="changeAttrList(valItem)">
+                           <span v-show="!valItem.showInput">{{ valItem.skuText }}</span>
+                           <el-input
+                             v-show="valItem.showInput"
+                             style="width: 200px;"
+                             placeholder="请输入规格值"
+                             v-model="valItem.skuText"
+                             @blur="skuEdit(scope.row, scope.$index, valItem, i, '1')"
+                             @focus="editBeforeSku(scope.row.specName, valItem.skuText)"
+                             @input="checkUniqueSkuValue(scope.row, scope.$index, valItem, i)"
+                           ></el-input>
+                           <el-button type="text" style="margin-left: 10px;" icon="el-icon-edit" @click="skuEdit(scope.row, scope.$index, valItem, i, '2')"></el-button>
+                         </el-checkbox>
+                       </transition-group>
+                     </draggable>
+                   </div>
+                 </template>
+               </el-table-column>
+             </el-table>
+           </div>
+           <template>
+             <div class="attr-title">自定义规格:</div>
+             <div class="attr-save"><el-button @click="addAttrNameInput" type="primary" :disabled="isDisabled">添加</el-button></div>
 
-              <div v-for="(attrItem,index) in addAttrParam">
-                <div class="attr-content">
-                  <el-input style="width:200px;margin-right: 30px" :disabled="attrItem.disabled" placeholder="请输入规格名称"
-                    v-model="attrItem.specName" @blur="disableSpecNameInput(attrItem,index)" />
-                  <el-button type="danger" @click="deleteAttrNameInput(attrItem.specName,index)" icon="el-icon-delete">
-                    删除
-                  </el-button>
-                  <span class="warning-text">{{ attrItem.specValueWarningStr }}</span>
-                </div>
+             <template v-for="(attrItem, index) in addAttrParam">
+               <div class="attr-content">
+                 <el-input
+                   style="width:200px;margin-right: 30px"
+                   :disabled="attrItem.disabled"
+                   placeholder="请输入规格名称"
+                   v-model="attrItem.specName"
+                   @blur="disableSpecNameInput(attrItem, index)"
+                 />
+                 <el-button type="danger" @click="deleteAttrNameInput(attrItem.specName, index)" icon="el-icon-delete">删除</el-button>
+                 <span class="warning-text">{{ attrItem.specValueWarningStr }}</span>
+               </div>
 
-                <!--属性值-->
-                <div class="attr-content">
-                  <el-input v-for="(attrValueItem,i) in attrItem.skuList" :key="i" :disabled="isDisabled"
-                    style="width:200px;margin-right: 30px;margin-bottom: 3vh" placeholder="请输入规格值"
-                    v-model="attrValueItem.skuText" @blur="addAttrValueInput(attrItem,i)"
-                    @input="checkUniqueAndWarning(attrItem,i)">
-                    <el-button :disabled="attrItem.skuList.length === 1||isDisabled"
-                      @click="deleteAttrValueInput(attrItem.specName,attrItem.skuList,i)" type="text" slot="suffix"
-                      icon="el-icon-delete"></el-button>
-                  </el-input>
-                </div>
-              </div>
-            </template>
-          </el-form-item>
+               <!--属性值-->
+               <div class="attr-content">
+                 <el-input
+                   v-for="(attrValueItem, i) in attrItem.skuList"
+                   :key="i"
+                   :disabled="isDisabled"
+                   style="width:200px;margin-right: 30px;margin-bottom: 3vh"
+                   placeholder="请输入规格值"
+                   v-model="attrValueItem.skuText"
+                   @blur="addAttrValueInput(attrItem, i)"
+                   @input="checkUniqueAndWarning(attrItem, i)"
+                 >
+                   <el-button
+                     :disabled="attrItem.skuList.length === 1 || isDisabled"
+                     @click="deleteAttrValueInput(attrItem.specName, attrItem.skuList, i)"
+                     type="text"
+                     slot="suffix"
+                     icon="el-icon-delete"
+                   ></el-button>
+                 </el-input>
+               </div>
+             </template>
+           </template>
+         </el-form-item>
           <el-form-item label="新SKU配置">
             <el-table style="width: 100%; margin-bottom: 20px;" :data="tableList" :span-method="objectSpanMethod"
               border>
@@ -163,9 +192,18 @@
           </el-form-item>
           <el-form-item label="商品图片">
             <el-input v-show="false" v-model="dataForm.goodsImg" :disabled="isDisabled" />
-            <el-upload :action="uploadGoodImageUrl" list-type="picture-card" :on-preview="handleGoodImagePreview"
-              :disabled="isDisabled" :before-upload="beforeGoodImageUpload" :on-success="handleGoodImageSuccess"
-              :class="{hide:hideGoodImageUpload}" :file-list="uploadGoodImageList" :on-remove="handleGoodImageRemove">
+            <el-upload :action="uploadGoodImageUrl"
+              list-type="picture-card"
+              :on-preview="handleGoodImagePreview"
+              :disabled="isDisabled"
+              :before-upload="beforeGoodImageUpload"
+              :class="{ hide: hideGoodImageUpload }"
+              :file-list="uploadGoodImageList"
+              :on-remove="handleGoodImageRemove"
+              :auto-upload="false"
+              ref="batchUploadGoodImage"
+              :http-request="submitUploadET"
+              :on-change="batchUploadImage">
               <i class="el-icon-plus" />
               <div slot="tip" class="el-upload__tip">推荐图片尺寸：800*941</div>
             </el-upload>
@@ -226,6 +264,8 @@
   import {
     isInteger
   } from '@/utils/validate'
+  import Sortable from 'sortablejs';
+  import draggable from 'vuedraggable';
   import qEditor from '@/components/RichText/quill-editor'
   import Cookies from 'js-cookie'
   import Vue from 'vue'
@@ -233,6 +273,7 @@
   export default {
     components: {
       qEditor,
+      draggable
     },
     props: {
       editData: {
@@ -353,6 +394,7 @@
       this.isEdit = this.isEditGood
       this.loadGoodSaleDescList()
       this.loadSupplierList()
+      this.setSort();
     },
     created() {},
     methods: {
@@ -363,6 +405,86 @@
         this.buildVideoUrlGroupId()
         this.loadEditData()
       },
+
+      skuEdit(row, index, valItem, idx, type) {
+
+        for (let i = 0; i < this.dbAttrList.length; i++) {
+          if (index == i) {
+            for (let j = 0; j < this.dbAttrList[i].skuObj.length; j++) {
+              if (idx == j) {
+                if (type == 1) {
+                  //处理空值和重复值
+                  if (valItem.skuText === undefined || valItem.skuText === '') {
+                    this.$message.warning('请输入后重试');
+                    this.firstFlag = true;
+                    return false;
+                  }
+                  if (!this.checkSpecValueUnique(row.skuObj)) {
+                    this.firstFlag = true;
+                    return false;
+                  }
+                  this.$set(this.dbAttrList[i].skuObj[j], 'showInput', false);
+                  this.editSkuName(valItem.skuText);
+                  this.firstFlag = false;
+                } else if (type == 2) {
+                  this.$set(this.dbAttrList[i].skuObj[j], 'showInput', true);
+                }
+              }
+            }
+          }
+        }
+      },
+      checkUniqueSkuValue(row, index, valItem, idx) {
+        let attrSkuList = row.skuObj;
+        if (attrSkuList[idx] === undefined) return;
+        let checkText = attrSkuList[idx].skuText;
+
+        let isShow = false;
+        for (var i = 0; i < attrSkuList.length; i++) {
+          if (idx != i && attrSkuList[i].skuText === checkText) {
+            isShow = true;
+            break;
+          }
+        }
+        row.specValueWarningStr = '';
+        if (checkText === '') return;
+        isShow && (row.specValueWarningStr = `属性值 ${checkText} 重复`);
+      },
+      editSkuName(skuText) {
+        for (let j = 0; j < this.tableList.length; j++) {
+          let afterSkuText = '';
+          for (let k = 0; k < this.tableList[j].tdList.length; k++) {
+            if (this.tableList[j].tdList[k].value == this.sourceSkuText && this.tableList[j].tdList[k].name == this.sourceSpecName) {
+              this.tableList[j].tdList[k].value = skuText;
+            }
+            if (afterSkuText != '') {
+              afterSkuText = afterSkuText + ';' + this.tableList[j].tdList[k].name + ':' + this.tableList[j].tdList[k].value;
+            } else {
+              afterSkuText = this.tableList[j].tdList[k].name + ':' + this.tableList[j].tdList[k].value;
+            }
+          }
+          this.tableList[j].skuText = afterSkuText;
+        }
+      },
+      editBeforeSku(specName, skuText) {
+        this.sourceSpecName = this.firstFlag == true ? this.sourceSpecName : specName;
+        this.sourceSkuText = this.firstFlag == true ? this.sourceSkuText : skuText;
+      },
+      setSort() {
+        const el = this.$refs.dragTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0];
+        this.sortable = Sortable.create(el, {
+          ghostClass: 'sortable-ghost',
+          setData: function(dataTransfer) {
+            dataTransfer.setData('Text', '');
+          },
+          // 元素被选中
+          onEnd: evt => {
+            const targetRow = this.dbAttrList.splice(evt.oldIndex, 1)[0];
+            this.dbAttrList.splice(evt.newIndex, 0, targetRow);
+          }
+        });
+      },
+
       backToList() {
         this.$emit("showListPanel", true);
       },
@@ -581,7 +703,29 @@
         }
         return fileTypeVerify && isLt2M
       },
-
+      submitUploadET(params){
+        this.formData.append('file', params.file);
+      },
+      batchUploadImage(file, fileList){
+        this.handelConfirm(file)
+      },
+      handelConfirm(file){
+          this.formData = new FormData();//初始化定义
+          this.$refs.batchUploadGoodImage.submit();
+          postMethod(this.uploadGoodImageUrl, this.formData).then(res => {
+            res.data.fileType = file.raw.type;
+            res.data.sort = this.fileSortImage++;
+            this.uploadGoodImageList.push(res.data);
+            const groupId = res.data.groupId;
+            let imageCnt = 0;
+            for (let i = 0; i < this.uploadGoodImageList.length; i++) {
+              if (this.uploadGoodImageList[i].groupId == groupId) {
+                imageCnt++;
+              }
+            }
+            this.loading = false;
+          });
+      },
 
       buildGoodsCoverImageGroupId() {
         getMethod('/oss/get-group-id', null).then(res => {
@@ -732,6 +876,22 @@
             return
           }
 
+          for (let i = 0; i < this.dbAttrList.length; i++) {
+            let dbSkuList = this.dbAttrList[i].skuObj;
+            let skuTextArr = [];
+            let skuTextArr_ = [];
+            for (let j = 0; j < dbSkuList.length; j++) {
+              skuTextArr.push(dbSkuList[j].skuText);
+              skuTextArr_ = [...new Set(skuTextArr)];
+            }
+            if (skuTextArr.length != skuTextArr_.length) {
+              this.$message({
+                message: '商品属性规格值不能重复',
+                type: 'warning'
+              });
+              return false;
+            }
+          }
 
           let fileList = []
           fileList = fileList.concat(this.uploadVideoList)
@@ -775,6 +935,13 @@
 
             let dbSkuList = this.dbAttrList[i].skuObj
             for (let j = 0; j < dbSkuList.length; j++) {
+              if (dbSkuList[j].skuText == '') {
+                this.$message({
+                  message: '商品属性规格值不能为空',
+                  type: 'warning'
+                });
+                return false;
+              }
               if (dbSkuList[j].isChecked) {
                 let obj = {
                   specificationValue: dbSkuList[j].skuText
@@ -797,34 +964,8 @@
           param.goodsCoverImg = String(param.goodsCoverImg)
           param.goodsImg = String(param.goodsImg)
           param.goodsId = this.editData.goodsId
+          param.skuModifyStatus = 0
           delete param.skuList
-          if (JSON.stringify(this.sourceDbAttrData) === JSON.stringify(this.dataForm.goodsSpecificationList)) {
-            this.sourceSkuData.forEach(j => {
-              if (j.goodsImgUrl) {
-                delete j.goodsImgUrl
-              }
-            })
-            if (JSON.stringify(this.sourceSkuData) === JSON.stringify(this.dataForm.goodsSkuList)) {
-              param.skuModifyStatus = "3"
-            } else {
-              param.skuModifyStatus = "2"
-            }
-          } else{
-            let sourceDbAttrArr=[]
-            let goodsSpecificationArr=[]
-            this.sourceDbAttrData.forEach(i => {
-              sourceDbAttrArr.push(i.specificationName)
-            })
-            this.dataForm.goodsSpecificationList.forEach(i => {
-              goodsSpecificationArr.push(i.specificationName)
-            })
-            if (JSON.stringify(sourceDbAttrArr) === JSON.stringify(goodsSpecificationArr)) {
-              // param.skuModifyStatus = "4" 只删或者在原规格新增属性，旧数据不删
-              param.skuModifyStatus = "4"
-            } else {
-              param.skuModifyStatus = "1"
-            }
-          }
           try {
 
             await this.handleSaveAttrData()
@@ -1545,6 +1686,13 @@
   }
 </script>
 <style lang="scss" scoped>
+  .table-wrapper >>> .el-table td {
+    border-bottom: 1px solid #ffffff;
+  }
+  .table-wrapper >>> .el-table::before {
+    background-color: #ffffff;
+  }
+
   .update-form-panel {
     padding: 30px 20px;
     width: 100%;

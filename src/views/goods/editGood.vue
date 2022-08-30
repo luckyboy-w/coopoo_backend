@@ -31,7 +31,7 @@
                       <span style=" font-size: 16px;color: red;margin-left: 1vw;">{{ scope.row.specValueWarningStr }}</span>
                     </div>
                     <div class="attr-content">
-                      <draggable v-model="scope.row.skuObj" chosenClass="chosen" forceFallback="true" animation="1000" @start="onStart" @end="onEnd">
+                      <draggable v-model="scope.row.skuObj" chosenClass="chosen" forceFallback="true" animation="1000">
                         <transition-group>
                           <el-checkbox v-for="(valItem, i) in scope.row.skuObj" :key="i" :disabled="isDisabled" :checked="valItem.isChecked" @change="changeAttrList(valItem)">
                             <span v-show="!valItem.showInput">{{ valItem.skuText }}</span>
@@ -220,15 +220,19 @@
           <el-form-item label="商品图片">
             <el-input v-show="false" v-model="dataForm.goodsImg" :disabled="isDisabled" />
             <el-upload
+            multiple
               :action="uploadGoodImageUrl"
               list-type="picture-card"
               :on-preview="handleGoodImagePreview"
               :disabled="isDisabled"
               :before-upload="beforeGoodImageUpload"
-              :on-success="handleGoodImageSuccess"
               :class="{ hide: hideGoodImageUpload }"
               :file-list="uploadGoodImageList"
               :on-remove="handleGoodImageRemove"
+              :auto-upload="false"
+              ref="batchUploadGoodImage"
+              :http-request="submitUploadET"
+              :on-change="batchUploadImage"
             >
               <i class="el-icon-plus" />
               <div slot="tip" class="el-upload__tip">推荐图片尺寸：800*941</div>
@@ -404,7 +408,6 @@ export default {
       this.buildVideoUrlGroupId();
     },
     skuEdit(row, index, valItem, idx, type) {
-      // console.log(row, index, valItem, idx);
 
       for (let i = 0; i < this.dbAttrList.length; i++) {
         if (index == i) {
@@ -431,10 +434,8 @@ export default {
           }
         }
       }
-      // console.log('this.dbAttrList', this.dbAttrList);
     },
     checkUniqueSkuValue(row, index, valItem, idx) {
-      console.log(row, index, valItem, idx);
       let attrSkuList = row.skuObj;
       if (attrSkuList[idx] === undefined) return;
       let checkText = attrSkuList[idx].skuText;
@@ -451,9 +452,7 @@ export default {
       isShow && (row.specValueWarningStr = `属性值 ${checkText} 重复`);
     },
     editSkuName(skuText) {
-      // console.log('tableList',this.tableList,this.sourceSpecName,this.sourceSkuText)
       for (let j = 0; j < this.tableList.length; j++) {
-        // console.log('tableList[j]',this.tableList[j])
         let afterSkuText = '';
         for (let k = 0; k < this.tableList[j].tdList.length; k++) {
           if (this.tableList[j].tdList[k].value == this.sourceSkuText && this.tableList[j].tdList[k].name == this.sourceSpecName) {
@@ -464,24 +463,13 @@ export default {
           } else {
             afterSkuText = this.tableList[j].tdList[k].name + ':' + this.tableList[j].tdList[k].value;
           }
-          // console.log('afterSkuText',afterSkuText)
         }
         this.tableList[j].skuText = afterSkuText;
       }
-      // console.log('tableList',this.tableList)
     },
     editBeforeSku(specName, skuText) {
       this.sourceSpecName = this.firstFlag == true ? this.sourceSpecName : specName;
       this.sourceSkuText = this.firstFlag == true ? this.sourceSkuText : skuText;
-      // console.log('skuText',specName,skuText,this.tableList)
-    },
-    //开始拖拽事件
-    onStart() {
-      this.drag = true;
-    },
-    //拖拽结束事件
-    onEnd() {
-      this.drag = false;
     },
     setSort() {
       const el = this.$refs.dragTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0];
@@ -489,13 +477,6 @@ export default {
         ghostClass: 'sortable-ghost',
         setData: function(dataTransfer) {
           dataTransfer.setData('Text', '');
-        },
-        onChoose: function(evt) {
-          // console.log(evt)
-        },
-        onChange: evt_ => {},
-        onStart: function(evt) {
-          // console.log(evt)
         },
         // 元素被选中
         onEnd: evt => {
@@ -707,7 +688,29 @@ export default {
       }
       return fileTypeVerify && isLt2M;
     },
-
+    submitUploadET(params){
+      this.formData.append('file', params.file);
+    },
+    batchUploadImage(file, fileList){
+      this.handelConfirm(file)
+    },
+    handelConfirm(file){
+        this.formData = new FormData();//初始化定义
+        this.$refs.batchUploadGoodImage.submit();
+        postMethod(this.uploadGoodImageUrl, this.formData).then(res => {
+          res.data.fileType = file.raw.type;
+          res.data.sort = this.fileSortImage++;
+          this.uploadGoodImageList.push(res.data);
+          const groupId = res.data.groupId;
+          let imageCnt = 0;
+          for (let i = 0; i < this.uploadGoodImageList.length; i++) {
+            if (this.uploadGoodImageList[i].groupId == groupId) {
+              imageCnt++;
+            }
+          }
+          this.loading = false;
+        });
+    },
     buildGoodsCoverImageGroupId() {
       getMethod('/oss/get-group-id', null).then(res => {
         this.uploadGoodsCoverImageUrl = getUploadUrl() + '?groupId=' + (this.dataForm.goodsCoverImg || res.data);
@@ -930,34 +933,35 @@ export default {
         param.goodsCoverImg = String(param.goodsCoverImg);
         param.goodsImg = String(param.goodsImg);
         param.goodsId = this.editData.goodsId;
+        param.skuModifyStatus = 0
         delete param.skuList;
-        if (JSON.stringify(this.sourceDbAttrData) === JSON.stringify(this.dataForm.goodsSpecificationList)) {
-          this.sourceSkuData.forEach(j => {
-            if (j.goodsImgUrl) {
-              delete j.goodsImgUrl;
-            }
-          });
-          if (JSON.stringify(this.sourceSkuData) === JSON.stringify(this.dataForm.goodsSkuList)) {
-            param.skuModifyStatus = '3'; //规格属性不变动
-          } else {
-            param.skuModifyStatus = '2'; //对现有组合的规格属性进行数值修改
-          }
-        } else {
-          let sourceDbAttrArr = [];
-          let goodsSpecificationArr = [];
-          this.sourceDbAttrData.forEach(i => {
-            sourceDbAttrArr.push(i.specificationName);
-          });
-          this.dataForm.goodsSpecificationList.forEach(i => {
-            goodsSpecificationArr.push(i.specificationName);
-          });
-          if (JSON.stringify(sourceDbAttrArr) === JSON.stringify(goodsSpecificationArr)) {
-            // param.skuModifyStatus = "4" 只删或者在原规格新增属性，旧数据不删
-            param.skuModifyStatus = '4';
-          } else {
-            param.skuModifyStatus = '1'; //规格属性重新组装
-          }
-        }
+        // if (JSON.stringify(this.sourceDbAttrData) === JSON.stringify(this.dataForm.goodsSpecificationList)) {
+        //   this.sourceSkuData.forEach(j => {
+        //     if (j.goodsImgUrl) {
+        //       delete j.goodsImgUrl;
+        //     }
+        //   });
+        //   if (JSON.stringify(this.sourceSkuData) === JSON.stringify(this.dataForm.goodsSkuList)) {
+        //     param.skuModifyStatus = '3'; //规格属性不变动
+        //   } else {
+        //     param.skuModifyStatus = '2'; //对现有组合的规格属性进行数值修改
+        //   }
+        // } else {
+        //   let sourceDbAttrArr = [];
+        //   let goodsSpecificationArr = [];
+        //   this.sourceDbAttrData.forEach(i => {
+        //     sourceDbAttrArr.push(i.specificationName);
+        //   });
+        //   this.dataForm.goodsSpecificationList.forEach(i => {
+        //     goodsSpecificationArr.push(i.specificationName);
+        //   });
+        //   if (JSON.stringify(sourceDbAttrArr) === JSON.stringify(goodsSpecificationArr)) {
+        //     // param.skuModifyStatus = "4" 只删或者在原规格新增属性，旧数据不删
+        //     param.skuModifyStatus = '4';
+        //   } else {
+        //     param.skuModifyStatus = '1'; //规格属性重新组装
+        //   }
+        // }
         try {
           await this.handleSaveAttrData();
           const { data } = await postMethod('/goods/update', param);
@@ -1164,7 +1168,6 @@ export default {
         let fillData = {};
         let key = this.getKeyByTdList(skuInfo.tdList);
         this.oldTableMap.set(key, skuInfo);
-        console.log('this.oldTableMap', this.oldTableMap, key, skuInfo);
       }
     },
 
@@ -1181,7 +1184,6 @@ export default {
     addColumn(dataList, specName, specValue, type) {
       // 此属性规格是否有选中值 有的话 添加到动态列中
       let isAddColume = false;
-      console.log('gggggggggggggggggggggggggggggggg', dataList, specName, specValue);
       let newDataList = [];
       for (let i = 0; i < specValue.length; i++) {
         // 当前规格未选中
@@ -1218,7 +1220,6 @@ export default {
         }
         // 进行乘积
         for (let j = 0; j < dataList.length; j++) {
-          console.log('dataList', dataList);
           newDataList.push({
             tdList: [
               {
@@ -1275,7 +1276,6 @@ export default {
       // }
       // if (!type&&type!=1) {
       for (let i = 0; i < newDataList.length; i++) {
-        console.log('ppppppppppp', newDataList[i], this.getKeyByTdList(newDataList[i].tdList), this.oldTableMap.get(key));
         let key = this.getKeyByTdList(newDataList[i].tdList);
         if (this.oldTableMap.get(key)) {
           let oldData = this.oldTableMap.get(key);
@@ -1308,7 +1308,6 @@ export default {
       //     }
       //   }
       // }
-      console.log('newDataList', newDataList, dataList);
       // 拼装过了 返回拼装的新结构
       // 没拼装过 返回老数据结构
       return newDataList.length > 0 ? newDataList : dataList;
@@ -1432,7 +1431,6 @@ export default {
 
     // 添加属性值
     addAttrValueInput(attrItem, index) {
-      console.log('kkkkk', attrItem, index);
       let attrSkuList = attrItem.skuList;
       let specName = attrItem.specName;
 
