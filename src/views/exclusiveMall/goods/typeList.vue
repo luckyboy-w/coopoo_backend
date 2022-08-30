@@ -117,8 +117,6 @@ export default {
       rowData: {},
       searchParam: {
         name: '',
-        pageSize: 10,
-        pageNum: 1
       },
       tableData: {
         list: []
@@ -356,11 +354,6 @@ export default {
     },
     search() {
       this.renderComponent = false;
-      this.searchParam.pageNum = 1;
-      this.loadList();
-    },
-    currentPage(pageNum) {
-      this.searchParam.pageNum = pageNum;
       this.loadList();
     },
     initLoad() {
