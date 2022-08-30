@@ -11,19 +11,21 @@
       </div>
       <div class="ly-table-panel">
         <el-table
+          v-if="renderComponent"
           ref="deptTreeTable"
           :data="tableData.list"
           style="width: 700px; margin-bottom: 20px;"
           row-key="id"
           :header-cell-style="{ 'text-align': 'center' }"
-          border @row-click="testRowClick"
-          highlight-current-row
+          border
           :tree-props="{ children: 'goodsCategoryTree', hasChildren: 'hasChildren' }"
         >
+          <!-- @row-click="expandRowClick" -->
           <el-table-column label="类目名称">
             <template slot-scope="scope">
-              <span v-if="scope.row.level != 3">{{ scope.row.sort }}、</span>
-              <span>{{ scope.row.name }}</span>
+              <span v-if="scope.row.level == 1" style="font-weight: 600;font-size: 16px;">{{ scope.row.sort }}、{{ scope.row.name }}</span>
+              <span v-if="scope.row.level == 2" style="color: #909399;font-weight: 600;font-size: 15px;">{{ scope.row.sort }}、{{ scope.row.name }}</span>
+              <span v-if="scope.row.level == 3">{{ scope.row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作">
@@ -104,7 +106,7 @@ export default {
           enable: 1,
           name: '',
           parentId: '',
-          level:3,
+          level: 3,
           sort: ''
         }
       ],
@@ -120,53 +122,72 @@ export default {
       },
       tableData: {
         list: []
-      }
+      },
+      renderComponent: true
     };
   },
   mounted() {
     this.initLoad();
-    // this.$nextTick(function() {
-    //   this.expandableListView();
-    // });
   },
   methods: {
-    testRowClick(row, column, event){
-      console.log(row, column, event)
-    },
-    expandableListView() {
-      if (this.testDataArr.length > 0) {
-        this.testDataArr.forEach((element, index) => {
-          // 注意： 这里必须使用表格绑定的Array中的列去展开，否则会没效果
-          if (element.isExpand && element.isExpand == true) {
-            // that.$refs.mainTable_.toggleRowExpansion(this.testDataArr[index], true)
-            this.$refs.deptTreeTable.toggleRowExpansion(this.testDataArr[index], true);
+    // expandRowClick(row, column, event){
+    //   this.tableData.list.forEach((element, index) => {
+    //     if (row.id==element.id) {
+    //       if (event.currentTarget.querySelector('.el-table__expand-icon')) {
+    //         event.currentTarget.querySelector('.el-table__expand-icon').click();
+    //       }
+    //     }
+    //     if (element.goodsCategoryTree&&element.goodsCategoryTree!=null) {
+    //       element.goodsCategoryTree.forEach((deptElement, idx) => {
+    //         if (row.id==deptElement.id) {
+    //           if (event.currentTarget.querySelector('.el-table__expand-icon')) {
+    //             event.currentTarget.querySelector('.el-table__expand-icon').click();
+    //           }
+    //         }
+    //       })
+    //     }
+    //   });
+    // },
+    expandableListView(data) {
+      if (data.length > 0) {
+        data.forEach((element, index) => {
+          // if (element.searchFlag && element.searchFlag == true) {
+          //   this.$refs.deptTreeTable.toggleRowExpansion(this.tableData.list[index], true);
+          // }
+          if (element.goodsCategoryTree) {
+            element.goodsCategoryTree.forEach((deptElement, idx) => {
+              if (deptElement.searchFlag && deptElement.searchFlag == true) {
+                this.$refs.deptTreeTable.toggleRowExpansion(this.tableData.list[index], true);
+                // this.$refs.deptTreeTable.toggleRowExpansion(this.tableData.list[index].children[idx], true);
+              }
+              if (deptElement.goodsCategoryTree) {
+                deptElement.goodsCategoryTree.forEach((sonElement, i) => {
+                  if (sonElement.searchFlag && sonElement.searchFlag == true) {
+                    this.$refs.deptTreeTable.toggleRowExpansion(this.tableData.list[index], true);
+                    this.$refs.deptTreeTable.toggleRowExpansion(this.tableData.list[index].goodsCategoryTree[idx], true);
+                  }
+                });
+              }
+            });
           }
-          element.childrens.forEach((deptElement, idx) => {
-            if (deptElement.isExpand && deptElement.isExpand == true) {
-              this.$refs.deptTreeTable.toggleRowExpansion(this.testDataArr[index], true);
-              this.$refs.deptTreeTable.toggleRowExpansion(this.testDataArr[index].childrens[idx], true);
-            }
-          });
         });
       }
     },
 
     addCategoryNameInput() {
       let sort = Number(this.addCategoryParam[this.addCategoryParam.length - 1].sort) + 1;
-      console.log('sort',sort)
       let itemObj = {
         // 各个属性 id为空表示新增
         // id: '',
         enable: 1,
         name: '',
-        level:3,
+        level: 3,
         parentId: this.rowData.id,
         sort: sort++
       };
       this.addCategoryParam.push(itemObj);
     },
     deleteCategoryNameInput(categoryItem, index) {
-      console.log('this.thirdCategorySort', this.thirdCategorySort);
       let sort = Number(this.thirdCategorySort);
       this.addCategoryParam.splice(index, 1);
       this.addCategoryParam.forEach(item => {
@@ -174,7 +195,6 @@ export default {
       });
     },
     submitThirdType() {
-      console.log('二级类目数组', this.addCategoryParam);
       let sortArr = [];
       let sortArr_ = [];
       for (let i = 0; i < this.addCategoryParam.length; i++) {
@@ -210,8 +230,6 @@ export default {
         });
         return false;
       }
-
-      console.log('参数', this.addCategoryParam);
       postMethod('/exclusive/category/add', {
         categoryList: this.addCategoryParam
       }).then(res => {
@@ -237,7 +255,8 @@ export default {
           enable: 1,
           name: '',
           parentId: '',
-          sort: 1
+          sort: 1,
+          level: 3,
         }
       ];
       // this.name=''
@@ -275,8 +294,6 @@ export default {
         param.level = this.rowData && this.rowData.level ? Number(this.rowData.level) + 1 : 1;
         param.parentId = this.rowData && this.rowData.id ? this.rowData.id : 0;
         categoryList.push(param);
-        console.log('categoryList', categoryList);
-        // return false
         postMethod('/exclusive/category/add', {
           categoryList: categoryList
         }).then(res => {
@@ -320,7 +337,6 @@ export default {
       });
     },
     addType(state, row) {
-      console.log(state, row);
       if (row && state == 'edit') {
         this.rowData = row;
         this.sort = row.sort;
@@ -332,7 +348,6 @@ export default {
       this.typePopup = true;
     },
     thirdType(row) {
-      console.log(row);
       this.rowData = row;
       this.thirdCategorySort = row.goodsCategoryTree && row.goodsCategoryTree.length > 0 ? Number(row.goodsCategoryTree[row.goodsCategoryTree.length - 1].sort) + 1 : '';
       this.addCategoryParam[0].parentId = row.id;
@@ -340,6 +355,7 @@ export default {
       this.thirdTypePopup = true;
     },
     search() {
+      this.renderComponent = false;
       this.searchParam.pageNum = 1;
       this.loadList();
     },
@@ -353,7 +369,12 @@ export default {
     loadList() {
       let scope = this;
       postMethod('/exclusive/category/list', this.searchParam).then(res => {
+        this.renderComponent = true;
         scope.tableData.list = res.data;
+        this.$nextTick(function() {
+          this.expandableListView(scope.tableData.list);
+          this.$forceUpdate();
+        });
         // scope.tableData.total = res.data.total;
         // scope.showPagination = scope.tableData.total == 0;
       });
