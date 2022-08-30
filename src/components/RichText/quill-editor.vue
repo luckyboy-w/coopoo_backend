@@ -1,8 +1,9 @@
 <template>
    <div class="rich-text" v-loading="loading">
         <quill-editor v-model="richText"  ref="myQuillEditor" class="editer" :options="editorOption" @ready="onEditorReady($event)"></quill-editor>
-        <el-upload 
+        <el-upload
         v-show='false'
+        multiple
         class="avatar-uploader"
         :action="uploadUrl"
         :show-file-list="false"
@@ -70,7 +71,7 @@ export default {
             toolbar: {
               container:[
                 [{ 'size': ['small', false, 'large'] }],
-                [{ 'color': [] }, { 'background': [] }], 
+                [{ 'color': [] }, { 'background': [] }],
                 [{ 'font': [] }],
                 [{ 'align': [] }],
                 ['bold', 'italic'],
