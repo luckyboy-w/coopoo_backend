@@ -10,7 +10,7 @@
         <div class="templateList">
           <div class="templateItem" v-for="(item,index) in templateList" :key="index">
             <div class="templateImg">
-              <img :src="item.img" style="width: 100%;height: 100%;object-fit: contain;" />
+              <img :src="item.img" @click="handleImgPreview(item.img)" style="width: 100%;height: 100%;object-fit: contain;" />
             </div>
             <div class="templateSize">
               {{item.text}}
@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      <div class="content" style="margin-left: 50px;width: 900px;">
+      <div class="content" style="margin-left: 500px;width: 800px;">
         <div style="width: 100%;margin-bottom: 20px;">
           <el-button style="margin:0 20px 0 0" @click="backToList()" type="primary" plain icon="el-icon-back">返回列表
           </el-button>
@@ -146,7 +146,6 @@
       }
     },
     mounted() {
-      console.log(this.editData)
       this.setSort();
       this.initTemplate()
       this.buildImgGroupId()
@@ -158,7 +157,6 @@
         this.$emit('showListPanel')
       },
       addTemplate(obj) {
-        console.log('模块信息', obj)
         let dates = new Date();
         let times = dates.getTime(); //时间戳
         let itemObject = {
@@ -170,11 +168,9 @@
           moduleName: obj.text,
           templateId: obj.id,
         }
-        console.log(this.list)
         this.list.push(itemObject)
       },
       addRow(row, item, index) {
-        console.log('行数据', row, item, index)
         let itemObject = {
           categoryId: '',
           img: '',
@@ -197,7 +193,6 @@
 
         }
         this.list = newList
-        console.log('新数组', newList)
       },
       deleteRow(row, item, index, idx) {
         for (let i = 0; i < this.list.length; i++) {
@@ -229,10 +224,6 @@
         rowIndex,
         columnIndex
       }) {
-        console.log(row,
-          column,
-          rowIndex,
-          columnIndex)
         const fields = ['onlyId']
         const cellValue = row[column.property]
         if (cellValue && fields.includes(column.property)) {
@@ -259,7 +250,6 @@
       },
 
       setSort() {
-        console.log('111')
         const el = this.$refs.dragTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
         this.sortable = Sortable.create(el, {
           ghostClass: 'sortable-ghost',
@@ -291,9 +281,6 @@
           }
         })
       },
-      test() {
-        console.log('数组', this.list)
-      },
       deleteTemplate() {
         if (this.selectionList.length <= 0) {
           this.$message({
@@ -311,7 +298,6 @@
         })
       },
       categoryTemplateSubmit() {
-        console.log('表格数据', this.list)
         if (this.list.length <= 0) {
           this.$message({
             message: "请添加模块后再提交",
@@ -334,7 +320,6 @@
             let arrItem = arr.pageItemVOList[j]
             let idx = j + 1
             arrItem.sort = j
-            console.log(arrItem.categoryId)
             if (arrItem.categoryId === '') {
               this.$message({
                 message: "请选择第" + index + "个模块的第" + idx + "个的类目名称",
@@ -351,13 +336,11 @@
             }
           }
         }
-        console.log('categoryPageDTOList', categoryPageDTOList)
         if (status) {
           postMethod('/exclusive/category-page/update', {
             categoryPageList: categoryPageDTOList
           }).then(
             res => {
-              console.log(res)
               this.$message({
                 message: "操作成功",
                 type: "success"
@@ -370,7 +353,6 @@
             categoryPageDTOList: categoryPageDTOList
           }).then(
             res => {
-              console.log(res)
               this.$message({
                 message: "操作成功",
                 type: "success"
@@ -383,14 +365,12 @@
 
       },
       selectioncChange(selection) {
-        console.log('已选', selection)
         this.selectionList = selection
       },
       initTemplate() {
         let scope = this
         postMethod('/exclusive/category-template/list').then(
           res => {
-            console.log('模板数据', res)
             this.templateList = res.data
           }
         )
@@ -417,20 +397,16 @@
         return fileTypeVerify && isLt2M
       },
       uploadClk(index, idx) {
-        console.log('下标', index, idx)
         // return false
         this.rowIndex = index
         this.rowItemIndex = idx
         this.buildImgGroupId()
       },
       deleteImg(index, idx) {
-        console.log('下标', index, idx)
         this.list[index].pageItemVOList[idx].img = ''
       },
       handleSuccessImg(res, file) {
-        console.log(this.list, this.rowIndex, this.rowItemIndex)
         this.list[this.rowIndex].pageItemVOList[this.rowItemIndex].img = res.data.url
-        const groupId = res.data.groupId
         this.loading = false
       },
       handleImgPreview(file) {
@@ -438,11 +414,14 @@
         this.dialogVisible = true
       },
       initCategory(id) {
-        console.log('9999999999999')
         let scope = this
-        postMethod('/exclusive/category/query?id=' + id).then(
+        let param ={
+            enable: '',
+            levelList: [1,3],
+            // parentId: id
+        }
+        postMethod('/exclusive/category/list-with-condition',param).then(
           res => {
-            console.log('模板数据', res)
             this.categoryList = res.data
           }
         )
@@ -451,18 +430,15 @@
         let scope = this
         postMethod('/exclusive/category-page/list?id=' + id).then(
           res => {
-            console.log('装修页详情', res)
             if (res.data && res.data.length >= 1) {
               for (let j = 0; j < res.data.length; j++) {
                 let dates = new Date();
                 let times = dates.getTime(); //时间戳
                 res.data[j].onlyId = times + j
-                console.log(888)
               }
             }
             scope.list = res.data
             this.$forceUpdate()
-            console.log(scope.list)
           }
         )
       },
@@ -515,6 +491,7 @@
     height: fit-content;
     border: 1px solid;
     margin-left: 10px;
+    position: fixed;
   }
 
   .title {
