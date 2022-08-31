@@ -415,12 +415,12 @@
       },
       initCategory(id) {
         let scope = this
-        let param ={
-            enable: '',
-            levelList: [1,3],
-            // parentId: id
-        }
-        postMethod('/exclusive/category/list-with-condition',param).then(
+        // let param ={
+        //     enable: '',
+        //     levelList: [1,3],
+        //     // parentId: id
+        // }
+        postMethod('/exclusive/category/list-for-category-page/'+id).then(
           res => {
             this.categoryList = res.data
           }
