@@ -8,9 +8,11 @@
               maxlength="30" show-word-limit />
           </el-form-item>
           <el-form-item label="类目">
-            <el-select v-model="dataForm.toAppGoodsCategoryList"  style="width:360px" multiple filterable placeholder="请选择">
+            <el-cascader :options="categoryList" :props="cascaderProps"  v-model="cascaderValue" filterable style="width:360px">
+            </el-cascader>
+            <!-- <el-select v-model="dataForm.toAppGoodsCategoryList"  style="width:360px" multiple filterable placeholder="请选择">
               <el-option v-for="item in categoryList" :disabled="item.categoryLevel==1" :key="item.id" v-show="item.enable===1" :label="item.name" :value="item.id"></el-option>
-            </el-select>
+            </el-select> -->
           </el-form-item>
           <el-form-item label="商品卖点">
             <el-input v-model="dataForm.sellingPoint" style="width:360px" placeholder="请输入卖点" type="textarea" maxlength="50"
@@ -192,7 +194,7 @@
           </el-form-item>
           <el-form-item label="商品图片">
             <el-input v-show="false" v-model="dataForm.goodsImg" :disabled="isDisabled" />
-            <el-upload :action="uploadGoodImageUrl"
+            <el-upload :action="uploadGoodImageUrl" multiple
               list-type="picture-card"
               :on-preview="handleGoodImagePreview"
               :disabled="isDisabled"
@@ -301,6 +303,9 @@
         token: {
           token: Cookies.get('token')
         },
+
+        cascaderProps: { multiple: true },
+        cascaderValue:null,
         isEdit: false,
         supplierList:[],
         categoryList:[],
@@ -333,8 +338,7 @@
         // goodsVideoGroupId:'',
         goodsVideoUrl: '',
         dataForm: {
-          postSaleId: '123',
-          toAppGoodsCategoryList:[],
+          postSaleId: '',
           goodsType:'2',
           supplierId:'',
           goodsVideo: '',
@@ -498,7 +502,7 @@
       },
       loadTypeList() {
         let scope = this;
-        postMethod("/exclusive/category/all/query").then(
+        postMethod("/exclusive/category/list-for-publish-goods").then(
           res => {
             scope.categoryList = res.data;
           }
@@ -961,6 +965,11 @@
           // return false
           this.dataForm.goodsSpecificationList = textList
           const param = this.dataForm
+          let thirdCategoryList=[]
+          this.cascaderValue.forEach(item=>{
+             thirdCategoryList.push(item[2])
+          })
+          param.toAppGoodsCategoryList=thirdCategoryList
           param.goodsCoverImg = String(param.goodsCoverImg)
           param.goodsImg = String(param.goodsImg)
           param.goodsId = this.editData.goodsId
@@ -990,6 +999,14 @@
           return false
         }
 
+        if (this.cascaderValue==null||this.cascaderValue.length <=0) {
+          this.$message({
+            message: '请选择商品类目',
+            type: 'warning'
+          })
+          return false
+        }
+
         if (dataFrm['sellingPoint'] == '') {
           this.$message({
             message: '卖点不能为空',
@@ -997,13 +1014,7 @@
           })
           return false
         }
-        if (dataFrm['toAppGoodsCategoryList'].length <=0) {
-          this.$message({
-            message: '请选择商品类目',
-            type: 'warning'
-          })
-          return false
-        }
+
         if (dataFrm['supplierId'] == '') {
           this.$message({
             message: '请选择供应商',
@@ -1032,9 +1043,10 @@
             deliveryMethod: String(this.editData.deliveryMethod),
             goodsImg: this.editData.goodsImg ? this.editData.goodsImg[0].groupId : '',
             goodsCoverImg: this.editData.goodsCoverImg ? this.editData.goodsCoverImg[0].groupId : '',
-            toAppGoodsCategoryList:this.editData.toAppGoodsCategoryList ? this.editData.toAppGoodsCategoryList : [],
             // goodsDetailContent:  this.editData.goodsDetailContent,
           }
+          
+          this.cascaderValue=this.editData.toAppGoodsCategoryList ? this.editData.toAppGoodsCategoryList :null;
           // this.dbAttrList
           let arr = []
           arr = this.editData.specificationList.map(item => {

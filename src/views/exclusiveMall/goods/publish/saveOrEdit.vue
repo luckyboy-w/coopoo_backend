@@ -194,10 +194,9 @@
           </el-form-item>
           <el-form-item label="商品图片">
             <el-input v-show="false" v-model="dataForm.goodsImg"  />
-            <el-upload :action="uploadGoodImageUrl"
+            <el-upload :action="uploadGoodImageUrl" multiple
               list-type="picture-card"
               :on-preview="handleGoodImagePreview"
-              :disabled="isDisabled"
               :before-upload="beforeGoodImageUpload"
               :class="{ hide: hideGoodImageUpload }"
               :file-list="uploadGoodImageList"
@@ -338,7 +337,6 @@
         dataForm: {
           goodsType:'2',
           supplierId:'',
-          toAppGoodsCategoryList:[],
           postSaleId: '',
           goodsVideo: '',
           goodsName: '',
@@ -430,105 +428,10 @@
       },
       loadTypeList() {
         let scope = this;
-        postMethod("/exclusive/category/list",{name:''}).then(
+        postMethod("/exclusive/category/list-for-publish-goods").then(
           res => {
             console.log(res.data)
-            // scope.categoryList = res.data;
-            scope.categoryList =[
-              {
-                "value": 133,
-                "parentId": 0,
-                "level": 1,
-                "label": "一级3",
-                "sort": 3,
-                "enable": 1,
-                "children": [
-                  {
-                    "value": 138,
-                    "parentId": 133,
-                    "level": 2,
-                    "label": "二级3-1",
-                    "sort": 1,
-                    "enable": 1,
-                    "children": [
-                      {
-                        "value": 140,
-                        "parentId": 138,
-                        "level": 3,
-                        "label": "三级3-1-1",
-                        "sort": 1,
-                        "enable": 1,
-                        "children": null
-                      },
-                      {
-                        "value": 141,
-                        "parentId": 138,
-                        "level": 3,
-                        "label": "三级3-1-2",
-                        "sort": 3,
-                        "enable": 1,
-                        "children": null
-                      },
-                      {
-                        "value": 146,
-                        "parentId": 138,
-                        "level": 3,
-                        "label": "1",
-                        "sort": 4,
-                        "enable": 1,
-                        "children": null
-                      },
-                      {
-                        "value": 147,
-                        "parentId": 138,
-                        "level": 3,
-                        "label": "1",
-                        "sort": 5,
-                        "enable": 1,
-                        "children": null
-                      },
-                      {
-                        "value": 148,
-                        "parentId": 138,
-                        "level": 3,
-                        "label": "1",
-                        "sort": 6,
-                        "enable": 1,
-                        "children": null
-                      }
-                    ]
-                  },
-                  {
-                    "value": 139,
-                    "parentId": 133,
-                    "level": 2,
-                    "label": "二级3-2",
-                    "sort": 3,
-                    "enable": 1,
-                    "children": [
-                      {
-                        "value": 142,
-                        "parentId": 139,
-                        "level": 3,
-                        "label": "三级3-2-1",
-                        "sort": 1,
-                        "enable": 1,
-                        "children": null
-                      },
-                      {
-                        "value": 143,
-                        "parentId": 139,
-                        "level": 3,
-                        "label": "三级3-2-2",
-                        "sort": 2,
-                        "enable": 1,
-                        "children": null
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
+            scope.categoryList = res.data;
           }
         );
       },
@@ -1049,6 +952,12 @@
 
           this.dataForm.goodsSpecificationList = textList
           const param = this.dataForm
+          let thirdCategoryList=[]
+          this.cascaderValue.forEach(item=>{
+             thirdCategoryList.push(item[2])
+          })
+          param.toAppGoodsCategoryList=thirdCategoryList
+
           param.goodsCoverImg=String(param.goodsCoverImg)
           param.goodsImg=String(param.goodsImg)
           // return false
@@ -1078,7 +987,7 @@
           })
           return false
         }
-        if (dataFrm['toAppGoodsCategoryList'].length <=0) {
+        if (this.cascaderValue==null||this.cascaderValue.length <=0) {
           this.$message({
             message: '请选择商品类目',
             type: 'warning'

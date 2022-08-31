@@ -64,6 +64,7 @@
               <template v-for="(attrItem, index) in addAttrParam">
                 <div class="attr-content">
                   <el-input
+                    :disabled="attrItem.disabled"
                     style="width:200px;margin-right: 30px"
                     placeholder="请输入规格名称"
                     v-model="attrItem.specName"
@@ -188,10 +189,10 @@
           <el-form-item label="商品图片">
             <el-input v-show="false" v-model="dataForm.goodsImg"  />
             <el-upload
+            multiple
               :action="uploadGoodImageUrl"
               list-type="picture-card"
               :on-preview="handleGoodImagePreview"
-              :disabled="isDisabled"
               :before-upload="beforeGoodImageUpload"
               :class="{ hide: hideGoodImageUpload }"
               :file-list="uploadGoodImageList"
