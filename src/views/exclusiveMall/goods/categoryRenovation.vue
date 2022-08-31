@@ -1,8 +1,7 @@
 <template>
   <div v-loading="loading">
 
-    <div style="display: flex;flex-wrap: nowrap;margin-top: 30px;    width: 100%;
-    overflow-x: scroll;">
+    <div style="display: flex;flex-wrap: nowrap;margin-top: 30px;width: 100%;">
       <div class="templateContent">
         <div class="title">
           模块

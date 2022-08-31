@@ -25,7 +25,7 @@
             <template slot-scope="scope">
               <span v-if="scope.row.level == 1" style="font-weight: 600;font-size: 16px;">{{ scope.row.sort }}、{{ scope.row.name }}</span>
               <span v-if="scope.row.level == 2" style="color: #909399;font-weight: 600;font-size: 15px;">{{ scope.row.sort }}、{{ scope.row.name }}</span>
-              <span v-if="scope.row.level == 3">{{ scope.row.name }}</span>
+              <span v-if="scope.row.level == 3" style="margin-left: 40px;">{{ scope.row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作">
@@ -116,7 +116,7 @@ export default {
       state: '',
       rowData: {},
       searchParam: {
-        name: '',
+        name: ''
       },
       tableData: {
         list: []
@@ -254,7 +254,7 @@ export default {
           name: '',
           parentId: '',
           sort: 1,
-          level: 3,
+          level: 3
         }
       ];
       // this.name=''
@@ -422,5 +422,14 @@ export default {
   color: #606266;
   min-width: 30px;
   border-radius: 2px;
+}
+</style>
+<style lang="scss">
+.ly-table-panel {
+  .el-table [class*='el-table__row--level'] .el-table__expand-icon {
+  width: 40px;
+  font-size: 17px !important;
+  margin-right: 10px !important;
+}
 }
 </style>
