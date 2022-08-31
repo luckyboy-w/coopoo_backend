@@ -687,14 +687,16 @@
         return fileTypeVerify && isLt2M
       },
       submitUploadET(params){
-        this.formData.append('file', params.file);
       },
       batchUploadImage(file, fileList){
-        this.handelConfirm(file)
+        if(file&&file.status=="ready"){
+          this.handelConfirm(file)
+        }
       },
       handelConfirm(file){
-          this.formData = new FormData();//初始化定义
           this.$refs.batchUploadGoodImage.submit();
+          this.formData = new FormData();//初始化定义
+          this.formData.append('file',file.raw);
           postMethod(this.uploadGoodImageUrl, this.formData).then(res => {
             res.data.fileType = file.raw.type;
             res.data.sort = this.fileSortImage++;

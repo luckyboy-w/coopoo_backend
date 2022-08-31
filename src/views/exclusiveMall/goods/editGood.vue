@@ -8,7 +8,7 @@
               maxlength="30" show-word-limit />
           </el-form-item>
           <el-form-item label="类目">
-            <el-cascader :options="categoryList" :props="cascaderProps"  v-model="cascaderValue" filterable style="width:360px">
+            <el-cascader :options="categoryList" :props="cascaderProps" popper-class="categoryCascader" :disabled="isDisabled" v-model="cascaderValue" filterable style="width:360px">
             </el-cascader>
             <!-- <el-select v-model="dataForm.toAppGoodsCategoryList"  style="width:360px" multiple filterable placeholder="请选择">
               <el-option v-for="item in categoryList" :disabled="item.categoryLevel==1" :key="item.id" v-show="item.enable===1" :label="item.name" :value="item.id"></el-option>
@@ -304,7 +304,7 @@
           token: Cookies.get('token')
         },
 
-        cascaderProps: { multiple: true },
+        cascaderProps: { multiple: true,disabled:'disabled' },
         cascaderValue:null,
         isEdit: false,
         supplierList:[],
@@ -505,6 +505,22 @@
         postMethod("/exclusive/category/list-for-publish-goods").then(
           res => {
             scope.categoryList = res.data;
+            if(scope.categoryList&&scope.categoryList.length>0){
+              scope.categoryList.forEach((element, index) => {
+                element.disabled=element.enable==1?false:true
+                if (element.children) {
+                  element.children.forEach((deptElement, idx) => {
+                    deptElement.disabled=deptElement.enable==1?false:true
+                    if (deptElement.children) {
+                      deptElement.children.forEach((sonElement, i) => {
+                         sonElement.disabled=sonElement.enable==1?false:true
+                      });
+                    }
+                  });
+                }
+              });
+            }
+            console.log('scope.categoryList',scope.categoryList)
           }
         );
       },
@@ -708,14 +724,19 @@
         return fileTypeVerify && isLt2M
       },
       submitUploadET(params){
-        this.formData.append('file', params.file);
+        // console.log(params)
+        // this.formData.append('file', params.file);
       },
       batchUploadImage(file, fileList){
-        this.handelConfirm(file)
+        if(file&&file.status=="ready"){
+          this.handelConfirm(file)
+        }
       },
       handelConfirm(file){
-          this.formData = new FormData();//初始化定义
+        // console.log(file)
           this.$refs.batchUploadGoodImage.submit();
+          this.formData = new FormData();//初始化定义
+          this.formData.append('file',file.raw);
           postMethod(this.uploadGoodImageUrl, this.formData).then(res => {
             res.data.fileType = file.raw.type;
             res.data.sort = this.fileSortImage++;
@@ -730,7 +751,6 @@
             this.loading = false;
           });
       },
-
       buildGoodsCoverImageGroupId() {
         getMethod('/oss/get-group-id', null).then(res => {
           this.uploadGoodsCoverImageUrl = getUploadUrl() + '?groupId=' + (this.dataForm.goodsCoverImg || res.data)
@@ -1045,7 +1065,7 @@
             goodsCoverImg: this.editData.goodsCoverImg ? this.editData.goodsCoverImg[0].groupId : '',
             // goodsDetailContent:  this.editData.goodsDetailContent,
           }
-          
+
           this.cascaderValue=this.editData.toAppGoodsCategoryList ? this.editData.toAppGoodsCategoryList :null;
           // this.dbAttrList
           let arr = []
@@ -1697,7 +1717,9 @@
     }
   }
 </script>
+
 <style lang="scss" scoped>
+
   .table-wrapper >>> .el-table td {
     border-bottom: 1px solid #ffffff;
   }
@@ -1790,8 +1812,20 @@
     position: absolute;
     transform: translate(-100%, 50%);
   }
+
 </style>
 <style lang="scss">
+
+
+ .categoryCascader{
+   .el-cascader-panel {
+       max-height: 500px;
+   }
+   .el-cascader-node.is-disabled {
+    display: none!important;
+    }
+ }
+
   .hide .el-upload--picture-card,
   .hide {
     display: none;

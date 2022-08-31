@@ -9,10 +9,8 @@
               maxlength="30" show-word-limit />
           </el-form-item>
           <el-form-item label="类目">
-            <el-cascader :options="categoryList" :props="cascaderProps" v-model="cascaderValue" filterable style="width:360px"></el-cascader>
-            <!-- <el-select v-model="dataForm.toAppGoodsCategoryList" style="width:200px" multiple filterable  placeholder="请选择">
-              <el-option v-for="item in categoryList" :key="item.id" :disabled="item.categoryLevel==1" v-show="item.enable===1" :label="item.name" :value="item.id"></el-option>
-            </el-select> -->
+            <el-cascader :options="categoryList" :props="cascaderProps" popper-class="categoryCascader" v-model="cascaderValue" filterable style="width:360px">
+            </el-cascader>
           </el-form-item>
           <el-form-item label="商品卖点">
             <el-input v-model="dataForm.sellingPoint" style="width:360px" placeholder="请输入卖点" type="textarea" maxlength="50"
@@ -432,6 +430,21 @@
           res => {
             console.log(res.data)
             scope.categoryList = res.data;
+            if(scope.categoryList&&scope.categoryList.length>0){
+              scope.categoryList.forEach((element, index) => {
+                element.disabled=element.enable==1?false:true
+                if (element.children) {
+                  element.children.forEach((deptElement, idx) => {
+                    deptElement.disabled=deptElement.enable==1?false:true
+                    if (deptElement.children) {
+                      deptElement.children.forEach((sonElement, i) => {
+                         sonElement.disabled=sonElement.enable==1?false:true
+                      });
+                    }
+                  });
+                }
+              });
+            }
           }
         );
       },
@@ -708,14 +721,19 @@
         return fileTypeVerify && isLt2M
       },
       submitUploadET(params){
-        this.formData.append('file', params.file);
+        console.log(params)
+        // this.formData.append('file', params.file);
       },
       batchUploadImage(file, fileList){
-        this.handelConfirm(file)
+        if(file&&file.status=="ready"){
+          this.handelConfirm(file)
+        }
       },
       handelConfirm(file){
-          this.formData = new FormData();//初始化定义
+        console.log(file)
           this.$refs.batchUploadGoodImage.submit();
+          this.formData = new FormData();//初始化定义
+          this.formData.append('file',file.raw);
           postMethod(this.uploadGoodImageUrl, this.formData).then(res => {
             res.data.fileType = file.raw.type;
             res.data.sort = this.fileSortImage++;
@@ -1642,6 +1660,7 @@
   }
 </script>
 <style lang="scss" scoped>
+
   .table-wrapper >>> .el-table td {
     border-bottom: 1px solid #ffffff;
   }
@@ -1739,6 +1758,15 @@
   .hide .el-upload--picture-card,
   .hide {
     display: none;
+  }
+
+  .categoryCascader{
+    .el-cascader-panel {
+        max-height: 500px;
+    }
+    .el-cascader-node.is-disabled {
+     display: none!important;
+     }
   }
 
   .el-radio__input {
