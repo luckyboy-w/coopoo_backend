@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading">
-
-    <div style="display: flex;flex-wrap: nowrap;margin-top: 30px;width: 100%;">
+    <div style="display: flex;flex-wrap: nowrap;margin-top: 30px;width: 100%;min-height: 1000px;overflow-x: scroll;
+    ">
       <div class="templateContent">
         <div class="title">
           模块
@@ -20,7 +20,7 @@
           </div>
         </div>
       </div>
-      <div class="content" style="margin-left: 500px;width: 800px;">
+      <div class="content" style="margin-left: 500px;width: 800px;background-color: white;z-index: 99;">
         <div style="width: 100%;margin-bottom: 20px;">
           <el-button style="margin:0 20px 0 0" @click="backToList()" type="primary" plain icon="el-icon-back">返回列表
           </el-button>
