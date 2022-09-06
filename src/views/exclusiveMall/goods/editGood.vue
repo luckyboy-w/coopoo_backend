@@ -1069,8 +1069,11 @@
           this.cascaderValue=this.editData.toAppGoodsCategoryList ? this.editData.toAppGoodsCategoryList :null;
           // this.dbAttrList
           let arr = []
-          arr = this.editData.specificationList.map(item => {
+          let dates = new Date();
+          let times = dates.getTime(); //时间戳
+          arr = this.editData.specificationList.map((item, index) => {
             return {
+              onlyKey: times + index,
               specName: item.specificationName,
               skuObj: item.specificationValueList.map(i => {
                 return {
@@ -1674,9 +1677,11 @@
             return
           }
         }
-
+        let dates = new Date();
+        let times = dates.getTime(); //时间戳
         this.dbAttrList.push({
           specName: specName,
+          onlyKey: times,
           skuObj: [{
             isChecked: true,
             skuText: specValue,

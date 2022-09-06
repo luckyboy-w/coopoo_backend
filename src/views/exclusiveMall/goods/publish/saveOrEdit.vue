@@ -1616,9 +1616,11 @@
             return
           }
         }
-
+        let dates = new Date();
+        let times = dates.getTime(); //时间戳
         this.dbAttrList.push({
           specName: specName,
+          onlyKey: times,
           skuObj: [{
             isChecked: true,
             skuText: specValue,
