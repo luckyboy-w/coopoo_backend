@@ -327,10 +327,10 @@
             订单金额：{{ ordDtl.orderAmount }}
           </el-col>
           <el-col :span="6">
-            应付金额：{{ ordDtl.orderAmount }}
+            应付金额：{{ ordDtl.orderActualPayAmount }}
           </el-col>
           <el-col :span="6">
-            实付金额：{{ ordDtl.orderPayAmount }}
+            第三方支付：{{ ordDtl.orderPayAmount }}
           </el-col>
         </el-row>
 		<el-row :gutter="20" class="main-text">
@@ -653,7 +653,7 @@
         } else if (pay == 2) {
           return '微信'
         } else if (pay == 3) {
-          return '微信'
+          return '余额'
         }
         return '未支付'
       },
