@@ -399,6 +399,9 @@ export default {
     this.setSort();
   },
   created() {},
+  updated() {
+     window.scroll(0, 0);
+  },
   methods: {
     // 初始化整个页面数据
     initData() {

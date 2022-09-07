@@ -399,6 +399,10 @@
       this.loadGoodSaleDescList()
       this.loadSupplierList()
       this.setSort();
+      // window.scrollTo(0, 0)
+    },
+    updated() {
+       window.scroll(0, 0);
     },
     created() {},
     methods: {
