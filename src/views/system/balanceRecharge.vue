@@ -59,6 +59,16 @@
             </div>
           </div>
           <div class="tabTd">
+            <div>商品类型：</div>
+            <div>
+              <el-select v-model="searchParam.goodsType" placeholder="请选择">
+                <el-option value="" label="全部" />
+                <el-option value="1" label="普通商品" />
+                <el-option value="2" label="专属商品" />
+              </el-select>
+            </div>
+          </div>
+          <div class="tabTd">
             <el-button icon="el-icon-search" type="primary" @click="search()">
               搜索
             </el-button>
@@ -90,7 +100,15 @@
                 </template>
               </el-table-column>
               </el-table-column>
-              <el-table-column prop="goodsName" label="商品名称" />
+              <el-table-column prop="goodsName" label="商品名称" >
+                <template slot-scope="scope">
+                  <div>{{scope.row.goodsName}}
+                    <span v-if="scope.row.goodsType==2" style="background-color: #409EFF;color:white;">
+                      专属
+                    </span>
+                  </div>
+                </template>
+              </el-table-column>
               <el-table-column label="商品价格">
                 <template slot-scope="scope">
                   <span>{{scope.row.maxGoodsSalePrice?(scope.row.minGoodsSalePrice+'~'+scope.row.maxGoodsSalePrice):scope.row.minGoodsSalePrice}}</span>
@@ -157,7 +175,7 @@
         searchParam: {
           deliveryMethod:2,
           status: 1,
-          goodsType: 1,
+          goodsType: '',
           pageSize: 10,
           pageNum: 1
         },
@@ -231,9 +249,10 @@
       },
       showGoodsListClose() {
         this.searchParam = {
+          deliveryMethod:2,
           pageSize: 10,
           pageNum: 1,
-          goodsType: 1,
+          goodsType: '',
           status: 1,
         }
         this.showGoodsList = false
