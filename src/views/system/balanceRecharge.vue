@@ -63,8 +63,8 @@
             <div>
               <el-select v-model="searchParam.goodsType" placeholder="请选择">
                 <el-option value="" label="全部" />
-                <el-option value="2" label="专属商品" />
                 <el-option value="1" label="普通商品" />
+                <el-option value="2" label="专属商品" />
               </el-select>
             </div>
           </div>
@@ -99,6 +99,7 @@
                   </el-table>
                 </template>
               </el-table-column>
+              </el-table-column>
               <el-table-column prop="goodsName" label="商品名称" >
                 <template slot-scope="scope">
                   <div>{{scope.row.goodsName}}
@@ -107,7 +108,7 @@
                     </span>
                   </div>
                 </template>
-                </el-table-column>
+              </el-table-column>
               <el-table-column label="商品价格">
                 <template slot-scope="scope">
                   <span>{{scope.row.maxGoodsSalePrice?(scope.row.minGoodsSalePrice+'~'+scope.row.maxGoodsSalePrice):scope.row.minGoodsSalePrice}}</span>
@@ -174,7 +175,7 @@
         searchParam: {
           deliveryMethod:2,
           status: 1,
-          goodsType: "",
+          goodsType: '',
           pageSize: 10,
           pageNum: 1
         },
