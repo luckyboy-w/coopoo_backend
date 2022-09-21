@@ -23,9 +23,9 @@
           <!-- @row-click="expandRowClick" -->
           <el-table-column label="类目名称">
             <template slot-scope="scope">
-              <span v-if="scope.row.level == 1" style="font-weight: 600;font-size: 16px;">{{ scope.row.sort }}、{{ scope.row.name }}</span>
-              <span v-if="scope.row.level == 2" style="color: #909399;font-weight: 600;font-size: 15px;">{{ scope.row.sort }}、{{ scope.row.name }}</span>
-              <span v-if="scope.row.level == 3" style="margin-left: 40px;">{{ scope.row.name }}</span>
+              <span v-if="scope.row.level == 1" style="font-weight: 600;font-size: 16px;">{{ scope.row.sort }}. &nbsp;{{ scope.row.name }}</span>
+              <span v-if="scope.row.level == 2" style="color: #909399;font-weight: 600;font-size: 15px;">{{ scope.row.sort }}. &nbsp;{{ scope.row.name }}</span>
+              <span v-if="scope.row.level == 3" style="margin-left: 40px;">{{ scope.row.sort }}. &nbsp;{{ scope.row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作">
@@ -34,12 +34,16 @@
               <el-divider direction="vertical"></el-divider>
               <el-button v-if="scope.row.enable == '1'" @click="disable(scope.row)" size="mini" type="text">禁用</el-button>
               <el-button v-if="scope.row.enable == '0'" @click="enable(scope.row)" size="mini" type="text">启用</el-button>
+              <el-divider direction="vertical"></el-divider>
+              <el-button @click="deleteRow(scope.row)" size="mini" type="text" style="color: red;">删除</el-button>
               <el-divider v-if="scope.row.level == '1'" direction="vertical"></el-divider>
               <el-button v-if="scope.row.level == '1'" @click="addType('add', scope.row)" size="mini" type="text">二级类目</el-button>
               <el-divider v-if="scope.row.level == '2'" direction="vertical"></el-divider>
               <el-button v-if="scope.row.level == '2'" @click="thirdType(scope.row)" size="mini" type="text">三级类目</el-button>
               <el-divider v-if="scope.row.level == '1'" direction="vertical"></el-divider>
               <el-button v-if="scope.row.level == '1'" @click="categoryRenovation(scope.row)" size="mini" type="text">装修页面</el-button>
+              <el-divider v-if="scope.row.level == '3'" direction="vertical"></el-divider>
+              <el-button v-if="scope.row.level == '3'" @click="bindGoodsList(scope.row)" size="mini" type="text">查看商品</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -79,6 +83,27 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <el-drawer :title="drawerTitle" :visible.sync="drawer" :direction="direction" size="600px" :before-close="handleCloseDrawer">
+
+      <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;min-height: 100px;">
+        <div v-for="(item,index) in bindGoodsData"
+          style="width: 120px;position: relative;margin:0 0 20px 20px;">
+          <div style="width: 120px;height: 120px;">
+            <img style="width: 100%;height: 100%;" :src="item.goodsCoverImgUrl" />
+          </div>
+          <div
+            style=" line-height: 25px;font-size: 13px; display: -webkit-box;word-break: break-all;text-overflow: ellipsis;overflow: hidden;-webkit-box-orient: vertical;-webkit-line-clamp: 2;">
+            {{item.goodsName}}
+          </div>
+          <div @click="deleteGoods(item,index)"
+            style="width: 25px;height: 25px;position: absolute;top: -8px;right: -8px;background-color: white;border-radius: 50%;">
+            <i style="font-size: 25px;" class="el-icon-circle-close"></i>
+          </div>
+        </div>
+      </div>
+    </el-drawer>
+
     <saveOrEdit v-if="showAddOrEdit" :edit-data="editData" @showListPanel="showListPanel" />
   </div>
 </template>
@@ -96,6 +121,11 @@ export default {
   created() {},
   data() {
     return {
+      drawer: false,
+      direction: 'rtl',
+      drawerTitle:'所属类目',
+      bindGoodsData:[],
+
       editData: {},
       showAddOrEdit: false,
       thirdTypePopup: false,
@@ -266,6 +296,49 @@ export default {
     showListPanel() {
       this.showAddOrEdit = false;
     },
+    deleteRow(row) {
+      console.log(row);
+      this.$confirm('是否确认删除类目?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        postMethod('/exclusive/category/delete/' + row.id).then(res => {
+          this.loadList();
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          });
+        });
+      });
+    },
+    handleCloseDrawer(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
+    },
+    bindGoodsList(row) {
+      console.log(row);
+      getMethod('/exclusive/category/goods/get/' + row.id).then(res => {
+
+        this.tableData.list.forEach((element, index) => {
+            element.goodsCategoryTree.forEach((deptElement, idx) => {
+              if (deptElement.id ==row.parentId) {
+                deptElement.goodsCategoryTree.forEach((sonElement, i) => {
+                  if (sonElement.id ==row.id) {
+                    this.drawerTitle=element.name+' / '+deptElement.name+' / '+sonElement.name
+                  }
+                });
+              }
+            });
+        });
+        this.bindGoodsData=res.data
+
+        this.drawer = true
+      });
+    },
     addSubmit(row) {
       let scope = this;
       let param = {
@@ -427,9 +500,9 @@ export default {
 <style lang="scss">
 .ly-table-panel {
   .el-table [class*='el-table__row--level'] .el-table__expand-icon {
-  width: 40px;
-  font-size: 17px !important;
-  margin-right: 10px !important;
-}
+    width: 40px;
+    font-size: 17px !important;
+    margin-right: 10px !important;
+  }
 }
 </style>

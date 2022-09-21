@@ -20,7 +20,7 @@
           </div>
         </div>
       </div>
-      <div class="content" style="margin-left: 500px;width: 800px;background-color: white;z-index: 99;">
+      <div class="content" style="margin-left: 500px;min-width: 850px;background-color: white;z-index: 99;">
         <div style="width: 100%;margin-bottom: 20px;">
           <el-button style="margin:0 20px 0 0" @click="backToList()" type="primary" plain icon="el-icon-back">返回列表
           </el-button>
@@ -30,21 +30,24 @@
           row-key="onlyId" border>
           <el-table-column type="selection" width="55">
           </el-table-column>
-          <el-table-column label="模块" width="180px">
+          <el-table-column label="模块" width="150px">
             <template slot-scope="scope">
               {{scope.row.moduleName}}
             </template>
           </el-table-column>
 
-          <el-table-column label="类目名称" width="200px">
+          <el-table-column label="类目名称" width="280px">
             <template slot-scope="scope">
-              <div class="tabItem" style="height: 80px;line-height: 80px;" :key="index_"
+             <div class="tabItem" style="height: 80px;line-height: 80px;" :key="index_"
                 v-for="(item_,index_) in scope.row.pageItemVOList">
-                <el-select v-model="item_.categoryId" clearable filterable placeholder="请选择">
+              <el-cascader :options="categoryList" :props="{ checkStrictly: true }" style="width: 250px;" popper-class="categoryCascader" v-model="item_.categoryId" filterable>
+              </el-cascader>
+
+               <!-- <el-select v-model="item_.categoryId" clearable filterable placeholder="请选择">
                   <el-option label="无" :value="0"></el-option>
                   <el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id" v-show="item.enable===1"
                     :disabled="item.enable===0"></el-option>
-                </el-select>
+                </el-select> -->
               </div>
             </template>
           </el-table-column>
@@ -130,6 +133,7 @@
         templateList: [],
         categoryList: [],
         selectionList: [],
+        cascaderValue:null,
         list: [
           // {id:1,text:'aa'},
           // {id:2,text:'bb'},
@@ -412,19 +416,52 @@
         this.dialogImageUrl = file
         this.dialogVisible = true
       },
+
       initCategory(id) {
-        let scope = this
-        // let param ={
-        //     enable: '',
-        //     levelList: [1,3],
-        //     // parentId: id
-        // }
-        postMethod('/exclusive/category/list-for-category-page/'+id).then(
+        let scope = this;
+        postMethod("/exclusive/category/list-for-publish-goods",{firstGoodsCategory: id}).then(
           res => {
-            this.categoryList = res.data
+            console.log(res.data)
+            scope.categoryList = res.data;
+            let obj =
+              {
+                "value": 0,
+                "label": "无",
+                "enable": 1,
+              }
+              scope.categoryList.push(obj)
+              console.log( scope.categoryList)
+            if(scope.categoryList&&scope.categoryList.length>0){
+              scope.categoryList.forEach((element, index) => {
+                element.disabled=element.enable==1?false:true
+                if (element.children) {
+                  element.children.forEach((deptElement, idx) => {
+                    deptElement.disabled=deptElement.enable==1?false:true
+                    if (deptElement.children) {
+                      deptElement.children.forEach((sonElement, i) => {
+                         sonElement.disabled=sonElement.enable==1?false:true
+                      });
+                    }
+                  });
+                }
+              });
+            }
           }
-        )
+        );
       },
+      // initCategory(id) {
+      //   let scope = this
+      //   // let param ={
+      //   //     enable: '',
+      //   //     levelList: [1,3],
+      //   //     // parentId: id
+      //   // }
+      //   postMethod('/exclusive/category/list-for-category-page/'+id).then(
+      //     res => {
+      //       this.categoryList = res.data
+      //     }
+      //   )
+      // },
       initCategoryRenovation(id) {
         let scope = this
         postMethod('/exclusive/category-page/list?id=' + id).then(
@@ -447,6 +484,20 @@
 <style scoped lang="scss">
   >>>.el-table__header-wrapper .el-checkbox {
     display: none
+  }
+
+  .categoryCascader{
+    .el-cascader-panel {
+        max-height: 500px;
+    }
+    .el-cascader-node.is-disabled {
+     display: none!important;
+     }
+
+  }
+  >>>.el-cascader .el-input .el-input__inner {
+         font-size: 12px!important;
+         text-overflow: inherit!important;
   }
 
   .tabItem {

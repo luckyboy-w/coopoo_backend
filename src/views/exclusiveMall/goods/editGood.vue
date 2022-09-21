@@ -506,7 +506,7 @@
       },
       loadTypeList() {
         let scope = this;
-        postMethod("/exclusive/category/list-for-publish-goods").then(
+        postMethod("/exclusive/category/list-for-publish-goods",{firstGoodsCategory: null}).then(
           res => {
             scope.categoryList = res.data;
             if(scope.categoryList&&scope.categoryList.length>0){
