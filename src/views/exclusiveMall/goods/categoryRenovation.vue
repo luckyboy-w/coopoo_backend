@@ -40,7 +40,7 @@
             <template slot-scope="scope">
              <div class="tabItem" style="height: 80px;line-height: 80px;" :key="index_"
                 v-for="(item_,index_) in scope.row.pageItemVOList">
-              <el-cascader :options="categoryList" :props="{ checkStrictly: true }" style="width: 250px;" popper-class="categoryCascader" v-model="item_.categoryId" filterable>
+              <el-cascader :options="categoryList" :props="{ checkStrictly: true }" clearable style="width: 250px;" popper-class="categoryCascader" v-model="item_.categoryIdPath" filterable>
               </el-cascader>
 
                <!-- <el-select v-model="item_.categoryId" clearable filterable placeholder="请选择">
@@ -54,14 +54,14 @@
 
           <el-table-column label="类目图片" width="150px">
             <template slot-scope="scope">
-              <div class="tabItem" style="height: 80px;line-height: 80px;display: flex;" :key="index_"
+              <div class="tabItem" style="height: 82px;line-height: 82px;display: flex;" :key="index_"
                 v-for="(item_,index_) in scope.row.pageItemVOList">
                 <div v-if="item_.img" style="position: relative;display: flex;align-items: center;">
                   <img :src="item_.img" width="70px" height="70px" style="object-fit: cover;"
                     @click="handleImgPreview(item_.img)"
                     onerror="this.src='https://bluemobi-lanyu.oss-cn-shanghai.aliyuncs.com/static/black_bg.png' ">
                   <i @click="deleteImg(scope.$index,index_)" class="el-icon-error"
-                    style="position: absolute;right: -5px;top: -2px;font-size: 20px;"></i>
+                    style="position: absolute;right: -5px;top: 0px;font-size: 20px;background-color: white;border-radius: 50%;"></i>
                 </div>
                 <el-input v-show="false" v-model="item_.img" />
                 <el-upload v-if="!item_.img" class="avatar-uploader" :action="uploadImgUrl" :show-file-list="false"
@@ -165,7 +165,7 @@
         let itemObject = {
           onlyId: times,
           pageItemVOList: [{
-            categoryId: '',
+            categoryIdPath: '',
             img: '',
           }],
           moduleName: obj.text,
@@ -175,7 +175,7 @@
       },
       addRow(row, item, index) {
         let itemObject = {
-          categoryId: '',
+          categoryIdPath: '',
           img: '',
         }
         let newItemList = []
@@ -323,6 +323,10 @@
             let arrItem = arr.pageItemVOList[j]
             let idx = j + 1
             arrItem.sort = j
+            arrItem.categoryId = ''
+            if (arrItem.categoryIdPath&&arrItem.categoryIdPath.length>=1) {
+              arrItem.categoryId=arrItem.categoryIdPath[(arrItem.categoryIdPath.length-1)]
+            }
             if (arrItem.categoryId === '') {
               this.$message({
                 message: "请选择第" + index + "个模块的第" + idx + "个的类目名称",

@@ -85,21 +85,21 @@
     </el-dialog>
 
     <el-drawer :title="drawerTitle" :visible.sync="drawer" :direction="direction" size="600px" :before-close="handleCloseDrawer">
-
-      <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;min-height: 100px;">
-        <div v-for="(item,index) in bindGoodsData"
-          style="width: 120px;position: relative;margin:0 0 20px 20px;">
-          <div style="width: 120px;height: 120px;">
-            <img style="width: 100%;height: 100%;" :src="item.goodsCoverImgUrl" />
-          </div>
+      <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;min-height: 100px;position: relative;">
+        <div v-for="(item, index) in bindGoodsData" style="width: 120px;position: relative;margin:0 0 20px 20px;">
+          <div style="width: 120px;height: 120px;"><img style="width: 100%;height: 100%;" :src="item.goodsCoverImgUrl" /></div>
           <div
-            style=" line-height: 25px;font-size: 13px; display: -webkit-box;word-break: break-all;text-overflow: ellipsis;overflow: hidden;-webkit-box-orient: vertical;-webkit-line-clamp: 2;">
-            {{item.goodsName}}
+            style=" line-height: 25px;font-size: 13px; display: -webkit-box;word-break: break-all;text-overflow: ellipsis;overflow: hidden;-webkit-box-orient: vertical;-webkit-line-clamp: 2;"
+          >
+            {{ item.goodsName }}
           </div>
-          <div @click="deleteGoods(item,index)"
-            style="width: 25px;height: 25px;position: absolute;top: -8px;right: -8px;background-color: white;border-radius: 50%;">
+          <div @click="deleteCategoryGoods('one', item)" style="width: 25px;height: 25px;position: absolute;top: -8px;right: -8px;background-color: white;border-radius: 50%;">
             <i style="font-size: 25px;" class="el-icon-circle-close"></i>
           </div>
+        </div>
+        <div class="drawerBottom">
+          <el-button class="drawerButton" type="danger" @click="deleteCategoryGoods('all')">全部删除</el-button>
+          <el-button class="drawerButton" type="primary" @click="handleCloseDrawer">关闭</el-button>
         </div>
       </div>
     </el-drawer>
@@ -123,8 +123,9 @@ export default {
     return {
       drawer: false,
       direction: 'rtl',
-      drawerTitle:'所属类目',
-      bindGoodsData:[],
+      drawerTitle: '所属类目',
+      bindGoodsData: [],
+      appGoodsCategoryId: '',
 
       editData: {},
       showAddOrEdit: false,
@@ -312,31 +313,84 @@ export default {
         });
       });
     },
-    handleCloseDrawer(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done();
-        })
-        .catch(_ => {});
+    handleCloseDrawer() {
+      this.drawer = false;
+    },
+    deleteCategoryGoods(type, data) {
+      console.log(type, data);
+      if (type == 'one') {
+        this.$confirm('是否确认删除?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let param = {
+            appGoodsCategoryId: this.appGoodsCategoryId,
+            goodsIdList: [data.goodsId]
+          };
+          postMethod('/exclusive/category/goods/delete',param).then(res => {
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            });
+            this.RefreshGoodsList(this.appGoodsCategoryId)
+          });
+        });
+      } else if (type == 'all') {
+        if (this.bindGoodsData.length <= 0) {
+          this.$message({
+            message: '没有可删除的商品',
+            type: 'warning'
+          });
+          return false
+        }
+        this.$confirm('是否确认全部删除?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let param = {
+            appGoodsCategoryId: this.appGoodsCategoryId,
+            goodsIdList: []
+          };
+          if (this.bindGoodsData.length >= 1) {
+            this.bindGoodsData.forEach(item => {
+              param.goodsIdList.push(item.goodsId);
+            });
+          }
+          postMethod('/exclusive/category/goods/delete', param).then(res => {
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            });
+            this.RefreshGoodsList(this.appGoodsCategoryId)
+          });
+        });
+      }
+    },
+    RefreshGoodsList(id){
+      getMethod('/exclusive/category/goods/get/' + id).then(res => {
+        this.bindGoodsData = res.data;
+      });
     },
     bindGoodsList(row) {
       console.log(row);
+      this.appGoodsCategoryId = '';
       getMethod('/exclusive/category/goods/get/' + row.id).then(res => {
-
         this.tableData.list.forEach((element, index) => {
-            element.goodsCategoryTree.forEach((deptElement, idx) => {
-              if (deptElement.id ==row.parentId) {
-                deptElement.goodsCategoryTree.forEach((sonElement, i) => {
-                  if (sonElement.id ==row.id) {
-                    this.drawerTitle=element.name+' / '+deptElement.name+' / '+sonElement.name
-                  }
-                });
-              }
-            });
+          element.goodsCategoryTree.forEach((deptElement, idx) => {
+            if (deptElement.id == row.parentId) {
+              deptElement.goodsCategoryTree.forEach((sonElement, i) => {
+                if (sonElement.id == row.id) {
+                  this.drawerTitle = element.name + ' / ' + deptElement.name + ' / ' + sonElement.name;
+                }
+              });
+            }
+          });
         });
-        this.bindGoodsData=res.data
-
-        this.drawer = true
+        this.bindGoodsData = res.data;
+        this.appGoodsCategoryId = row.id;
+        this.drawer = true;
       });
     },
     addSubmit(row) {
@@ -472,6 +526,17 @@ export default {
       padding-left: 20px;
       display: inline;
     }
+  }
+}
+.drawerBottom {
+  position: sticky;
+  bottom: 400px;
+  margin-top: 50px;
+  width: 100%;
+  text-align: center;
+  .drawerButton {
+    width: 150px;
+    // line-height: 30px;
   }
 }
 
