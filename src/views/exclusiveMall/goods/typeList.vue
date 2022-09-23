@@ -98,7 +98,7 @@
           </div>
         </div>
         <div class="drawerBottom">
-          <el-button class="drawerButton" type="danger" @click="deleteCategoryGoods('all')">全部删除</el-button>
+          <el-button class="drawerButton" type="danger" @click="deleteCategoryGoods('all')">全部解绑</el-button>
           <el-button class="drawerButton" type="primary" @click="handleCloseDrawer">关闭</el-button>
         </div>
       </div>
@@ -319,7 +319,7 @@ export default {
     deleteCategoryGoods(type, data) {
       console.log(type, data);
       if (type == 'one') {
-        this.$confirm('是否确认删除?', '提示', {
+        this.$confirm('是否确认解除与该商品的绑定关系?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -330,7 +330,7 @@ export default {
           };
           postMethod('/exclusive/category/goods/delete',param).then(res => {
             this.$message({
-              message: '删除成功',
+              message: '解绑成功',
               type: 'success'
             });
             this.RefreshGoodsList(this.appGoodsCategoryId)
@@ -339,12 +339,12 @@ export default {
       } else if (type == 'all') {
         if (this.bindGoodsData.length <= 0) {
           this.$message({
-            message: '没有可删除的商品',
+            message: '没有可解除绑定的商品',
             type: 'warning'
           });
           return false
         }
-        this.$confirm('是否确认全部删除?', '提示', {
+        this.$confirm('是否确认解除与该商品的绑定关系?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -360,7 +360,7 @@ export default {
           }
           postMethod('/exclusive/category/goods/delete', param).then(res => {
             this.$message({
-              message: '删除成功',
+              message: '解绑成功',
               type: 'success'
             });
             this.RefreshGoodsList(this.appGoodsCategoryId)
