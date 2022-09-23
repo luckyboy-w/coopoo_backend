@@ -94,6 +94,7 @@
                     <img class="imgSty" :src="item.goodsImage" alt="">
                   </div>
                   <div class="mesFont">
+                    <p>{{ item.supplierName }}</p>
                     <p>{{ item.goodsName }}</p>
                     <p style="font-size: 12px;color:#909399;margin-top: 10px;">{{ item.skuText }}</p>
                   </div>

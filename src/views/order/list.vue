@@ -151,6 +151,7 @@
                     </div>
                   </div>
                   <div class="mesFont">
+                    <p>{{ item.supplierName }}</p>
                     <p>{{ item.goodsName }}</p>
                     <p style="font-size: 12px;color:#909399;margin-top: 10px;">{{ item.skuText }}</p>
                   </div>
@@ -593,6 +594,7 @@
             <el-option v-if="currentOrderState==7" label="待发货" value="6"></el-option>
             <el-option v-if="currentOrderState==2" label="已付款" value="6"></el-option>
             <el-option v-if="currentOrderState==7" label="交易完成" value="8"></el-option>
+            <el-option v-if="currentOrderState==7" label="退货/退款" value="12"></el-option>
           </el-select>
         </div>
         <div v-if="states==6&&currentOrderState==2">
@@ -1146,6 +1148,38 @@
               return false;
             }
           })
+        }
+        if (this.states == 12) {
+
+          this.$confirm('是否确认修改为退货/退款?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            let param = {
+              orderNo: this.currentOrderNo,
+              orderType	: '',
+              newStatus: this.states
+            }
+            getMethod('/order/modify-order-pay', param).then(res => {
+              if (res.errCode == 0) {
+                this.$message({
+                  message: '修改成功',
+                  type: 'success'
+                })
+                this.stateClose()
+                this.loadList()
+              } else {
+                this.$message({
+                  message: res.message,
+                  type: 'error'
+                })
+                return false;
+              }
+            })
+          });
+
+
         }
       },
       stateClose() {
