@@ -106,7 +106,7 @@
     data() {
       return {
         loginName: store.getters.account,
-        loginDate: store.getters.lastLoginTime ? store.getters.lastLoginTime : "暂无",
+        loginDate: store.getters.lastLoginTime ? store.getters.lastLoginTime : "",
         showReset: false,
         resetFrm: {
           oldPwd: "",

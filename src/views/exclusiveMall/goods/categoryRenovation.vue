@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <div style="display: flex;flex-wrap: nowrap;margin-top: 30px;width: 100%;min-height: 1000px;overflow-x: scroll;
+    <div style="display: flex;flex-wrap: nowrap;margin-top: 30px;width: 100%;overflow-x: scroll;
     ">
       <div class="templateContent">
         <div class="title">
@@ -542,17 +542,21 @@
   .templateContent {
     min-width: 450px;
     max-width: 450px;
-    height: fit-content;
+    /* height: fit-content; */
     border: 1px solid;
     margin-left: 10px;
     position: fixed;
+    max-height: 85vh;
+    overflow-y: inherit;
   }
 
   .title {
-    height: 30px;
+    height: 50px;
     text-align: center;
-    line-height: 30px;
-    margin-top: 20px;
+    line-height: 50px;
+    position: sticky;
+    top: 0;
+    background-color: white;
   }
 
   .templateList {
