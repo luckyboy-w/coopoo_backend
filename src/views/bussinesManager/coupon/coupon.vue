@@ -155,6 +155,7 @@
           }
           getMethod('/coupon/get-coupon-info', param).then(res => {
             scope.editData = res.data
+            this.editData.readOnly = true
             this.showList = false
             this.showAddOrEdit = true
           })

@@ -2,54 +2,54 @@
   <div class="update-form-panel">
     <el-form ref="dataForm" :model="dataForm" :rules="rules" label-width="140px" width="1000px">
       <el-form-item prop="couponName" label="优惠券名称：">
-        <el-input style="width:260px" :disabled="disabled" v-model="dataForm.couponName" placeholder="请输入" />
+        <el-input style="width:260px" :disabled="readOnly != disabled" v-model="dataForm.couponName" placeholder="请输入" />
       </el-form-item>
       <el-form-item prop="useWay" label="优惠券类型：">
-      <el-select v-model="dataForm.useWay" :disabled="disabled" placeholder="请选择">
-        <el-option label="线上优惠券" :value="2" />
-        <el-option label="线下优惠券" :value="1" />
-      </el-select>
+        <el-select v-model="dataForm.useWay" :disabled="disabled" placeholder="请选择">
+          <el-option label="线上优惠券" :value="2" />
+          <el-option label="线下优惠券" :value="1" />
+        </el-select>
       </el-form-item>
       <el-form-item prop="applyClause" label="使用说明：">
-        <el-input style="width:260px" :disabled="disabled" v-model="dataForm.applyClause"  placeholder="请输入"/>
+        <el-input style="width:260px" :disabled="readOnly != disabled" v-model="dataForm.applyClause"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="buyPrice" label="购买价格：">
         <el-input style="width:260px"  oninput="value=value.replace(/[^0-9.]/g,'')" :disabled="disabled" v-model="dataForm.buyPrice"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="faceValue" label="抵用额：">
-        <el-input style="width:260px"  oninput="value=value.replace(/[^0-9.]/g,'')" :disabled="disabled"  v-model="dataForm.faceValue"  placeholder="请输入"/>
+        <el-input style="width:260px" oninput="value=value.replace(/[^0-9.]/g,'')" :disabled="disabled"  v-model="dataForm.faceValue"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item v-if="dataForm.useWay=='2'" prop="fullMinusAmount" label="使用门槛：">
         满 <el-input style="width:260px"  oninput="value=value.replace(/[^0-9.]/g,'')" :disabled="disabled"  v-model="dataForm.fullMinusAmount"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="stock" label="库存：">
-        <el-input style="width:260px" type="number" oninput="this.value=this.value.replace(/\D/g,'')" :disabled="disabled"  v-model="dataForm.stock"  placeholder="请输入"/>
+        <el-input style="width:260px" type="number" oninput="this.value=this.value.replace(/\D/g,'')" :disabled="readOnly != disabled"  v-model="dataForm.stock"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="buyLimit" label="限购：">
-        <el-input style="width:260px" type="number" oninput="this.value=this.value.replace(/\D/g,'')" :disabled="disabled"  v-model="dataForm.buyLimit"  placeholder="请输入"/>
+        <el-input style="width:260px" type="number" oninput="this.value=this.value.replace(/\D/g,'')" :disabled="readOnly != disabled"  v-model="dataForm.buyLimit"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="validType" label="有效期类型：">
-      <el-select v-model="dataForm.validType" :disabled="disabled" placeholder="请选择">
-        <el-option label="有效期" :value="2" />
-        <el-option label="截止时间" :value="1" />
-      </el-select>
+        <el-select v-model="dataForm.validType" :disabled="disabled" placeholder="请选择">
+          <el-option label="有效期" :value="2" />
+          <el-option label="截止时间" :value="1" />
+        </el-select>
       </el-form-item>
       <el-form-item v-if="dataForm.validType=='2'" prop="validTime" label="有效期：">
         <el-input style="width:260px" type="number" oninput="this.value=this.value.replace(/\D/g,'')" :disabled="disabled"  v-model="dataForm.validTime" />&nbsp;&nbsp; 天
       </el-form-item>
       <el-form-item v-if="dataForm.validType=='1'" prop="validityPeriod" label="截止时间：">
         <el-date-picker  style="width:260px" :disabled="disabled"
-              v-model="dataForm.validityPeriod"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
-              placeholder="请选择到期时间">
+                         v-model="dataForm.validityPeriod"
+                         value-format="yyyy-MM-dd HH:mm:ss"
+                         type="datetime"
+                         placeholder="请选择到期时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item prop="useGoodsType" label="适用场景：">
-      <el-select v-model="dataForm.useGoodsType" :disabled="disabled" @change="changeUseGoodsType" placeholder="请选择">
-        <el-option label="普通商城" :value="1" />
-        <el-option label="专属商城" :value="2" />
-      </el-select>
+        <el-select v-model="dataForm.useGoodsType" :disabled="disabled" @change="changeUseGoodsType" placeholder="请选择">
+          <el-option label="普通商城" :value="1" />
+          <el-option label="专属商城" :value="2" />
+        </el-select>
       </el-form-item>
       <el-form-item label="指定商品">
         <el-button type="success" :disabled="disabled" @click="relatedGoods">指定商品</el-button>
@@ -58,30 +58,30 @@
 
         <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
           <div v-for="(item,index) in bindingList" class="tabTd" style="border: 1px solid;border-radius: 15px;padding: 10px;width: 200px;position: relative;">
-              <div style="min-width: 80px;max-width: 80px;height: 80px;">
-                <img style="width: 100%;height: 100%;" :src="item.goodsCoverImgUrl" />
-              </div>
-              <div style="margin-left: 10px; line-height: 25px;display: -webkit-box;word-break: break-all;text-overflow: ellipsis;overflow: hidden;-webkit-box-orient: vertical;-webkit-line-clamp: 2;">
-                {{item.goodsName}}
-              </div>
-              <div @click="deleteGoods(item,index)" style="width: 25px;height: 25px;position: absolute;top: -5px;right: -5px;">
-                <i style="font-size: 20px;" class="el-icon-circle-close"></i>
-              </div>
+            <div style="min-width: 80px;max-width: 80px;height: 80px;">
+              <img style="width: 100%;height: 100%;" :src="item.goodsCoverImgUrl" />
+            </div>
+            <div style="margin-left: 10px; line-height: 25px;display: -webkit-box;word-break: break-all;text-overflow: ellipsis;overflow: hidden;-webkit-box-orient: vertical;-webkit-line-clamp: 2;">
+              {{item.goodsName}}
+            </div>
+            <div @click="deleteGoods(item,index)" style="width: 25px;height: 25px;position: absolute;top: -5px;right: -5px;">
+              <i style="font-size: 20px;" class="el-icon-circle-close"></i>
+            </div>
           </div>
         </div>
       </el-form-item>
       <el-form-item label="图片：">
         <el-upload :action="uploadImgUrl" list-type="picture-card" :disabled="disabled"
-          :on-preview="handleImgPreview" :before-upload="beforeImgUpload" :on-success="handleImgSuccess"
-          :class="{hideTrue:hideImgUpload}" :file-list="uploadImgList" :on-remove="handleImgRemove">
+                   :on-preview="handleImgPreview" :before-upload="beforeImgUpload" :on-success="handleImgSuccess"
+                   :class="{hideTrue:hideImgUpload}" :file-list="uploadImgList" :on-remove="handleImgRemove">
           <i class="el-icon-plus" />
           <!-- <div slot="tip" class="el-upload__tip">推荐图片尺寸: 1000 * 528</div> -->
         </el-upload>
       </el-form-item>
-     <el-form-item prop="context" label="商品详情：">
-       <qEditor ref="refEditor" :disabled="disabled"  :content="dataForm.context" module-name="detailContent"
-         @changeContent="changeContent" />
-     </el-form-item>
+      <el-form-item prop="context" label="商品详情：">
+        <qEditor ref="refEditor" :disabled="disabled"  :content="dataForm.context" module-name="detailContent"
+                 @changeContent="changeContent" />
+      </el-form-item>
       <el-form-item>
         <el-button
           type="primary"
@@ -124,8 +124,8 @@
         <div class="ly-table-panel">
           <div class="ly-data-list">
             <el-table ref="multipleTable" :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id"
-              border @select="selectThis" @selection-change="selectioncChange">
-                <!-- // :selectable="checkSelectable" -->
+                      border @select="selectThis" @selection-change="selectioncChange">
+              <!-- // :selectable="checkSelectable" -->
               <el-table-column type="selection" width="55">
               </el-table-column>
               <el-table-column prop="goodsName" label="商品名称" />
@@ -159,7 +159,7 @@
           </div>
           <div class="ly-data-pagination">
             <el-pagination :total="tableData.total" background layout="prev, pager, next" @current-change="currentPage"
-              @prev-click="currentPage" :current-page="searchParam.pageNum" @next-click="currentPage" />
+                           @prev-click="currentPage" :current-page="searchParam.pageNum" @next-click="currentPage" />
           </div>
         </div>
       </div>
@@ -209,6 +209,7 @@
         uploadImgList: [],
         fileSortImage: 0,
         disabled:false,
+        readOnly:false,
         dataForm: {
           applyClause:'',
           buyLimit: '0',
@@ -276,8 +277,11 @@
         if (this.editData.id) {
           this.dataForm = this.editData
           this.initDefaultImage()
+          console.log("aaaaa"+this.editData.disabled);
           if (this.editData.disabled) {
-            this.disabled=true
+            this.readOnly = true
+            this.disabled = true
+            console.log("bbbbbbb"+this.editData.disabled);
           }
           if (this.dataForm.couponGoodsList&&this.dataForm.couponGoodsList.length>=1) {
             this.bindingList=this.dataForm.couponGoodsList
@@ -290,88 +294,88 @@
     },
     created() {},
     methods: {
-        changeContent(val) {
-          this.dataForm.context = val
-        },
+      changeContent(val) {
+        this.dataForm.context = val
+      },
       initDefaultImage() {
         if(this.dataForm.imageList&&this.dataForm.imageList!=''){
-            this.uploadImgList=this.dataForm.imageList
+          this.uploadImgList=this.dataForm.imageList
         }
       },
       saveObject() {
         const scope = this
-       this.$refs["dataForm"].validate((valid) => {
-         if (valid) {
-           if (this.uploadImgList.length<=0) {
-             this.$message({
-               message: '优惠券图片不能为空',
-               type: 'warning'
-             })
-             return false;
-           }
-           if (Number(this.dataForm.buyLimit)>Number(this.dataForm.stock)) {
-             this.$message({
-               message: '限购数不能大于库存',
-               type: 'warning'
-             })
-             return false;
-           }
-          this.dataForm.imageList = this.uploadImgList
-          if(this.dataForm.useWay==1){
-            this.dataForm.type=1
-            this.dataForm.fullMinusAmount='0'
-          }
-          if(this.dataForm.useWay==2){
-            this.dataForm.type=2
-          }
-          if(this.dataForm.validType==1){
-            this.dataForm.validTime=''
-          }
-          if(this.dataForm.validType==2){
-            this.dataForm.validityPeriod=''
-          }
-          // delete this.dataForm.createTime;
-          // delete this.dataForm.isSale;
-          // delete this.dataForm.totalSales;
-          // delete this.dataForm.uptTime;
-          // delete this.dataForm.virtualCode;
-          let couponListArr = []
-          if(this.bindingList.length>=1){
-            for (let i = 0; i < this.bindingList.length; i++) {
-            let couponObj = {
-              goodsId: this.bindingList[i].goodsId,
-              id: this.bindingList[i].id ? this.bindingList[i].id : "",
-            }
-            couponListArr.push(couponObj)
-          }
-          }
-
-          this.dataForm.couponGoodsList=couponListArr
-          this.dataForm.storeProfitRatio=100,
-        console.log('表单数据',this.dataForm);
-        // return false;
-          if (this.editData.id) {
-            this.dataForm.id=this.editData.id
-            postMethod('/coupon/update-coupon-info', this.dataForm).then(
-              res => {
-                this.$message({
-                  message: '操作成功',
-                  type: 'success'
-                })
-                this.$emit('showListPanel', true)
-              }
-            )
-          } else{
-          postMethod('/coupon/add-coupon-info', this.dataForm).then(
-            res => {
+        this.$refs["dataForm"].validate((valid) => {
+          if (valid) {
+            if (this.uploadImgList.length<=0) {
               this.$message({
-                message: '操作成功',
-                type: 'success'
+                message: '优惠券图片不能为空',
+                type: 'warning'
               })
-              this.$emit('showListPanel', true)
+              return false;
             }
-          )
-          }
+            if (Number(this.dataForm.buyLimit)>Number(this.dataForm.stock)) {
+              this.$message({
+                message: '限购数不能大于库存',
+                type: 'warning'
+              })
+              return false;
+            }
+            this.dataForm.imageList = this.uploadImgList
+            if(this.dataForm.useWay==1){
+              this.dataForm.type=1
+              this.dataForm.fullMinusAmount='0'
+            }
+            if(this.dataForm.useWay==2){
+              this.dataForm.type=2
+            }
+            if(this.dataForm.validType==1){
+              this.dataForm.validTime=''
+            }
+            if(this.dataForm.validType==2){
+              this.dataForm.validityPeriod=''
+            }
+            // delete this.dataForm.createTime;
+            // delete this.dataForm.isSale;
+            // delete this.dataForm.totalSales;
+            // delete this.dataForm.uptTime;
+            // delete this.dataForm.virtualCode;
+            let couponListArr = []
+            if(this.bindingList.length>=1){
+              for (let i = 0; i < this.bindingList.length; i++) {
+                let couponObj = {
+                  goodsId: this.bindingList[i].goodsId,
+                  id: this.bindingList[i].id ? this.bindingList[i].id : "",
+                }
+                couponListArr.push(couponObj)
+              }
+            }
+
+            this.dataForm.couponGoodsList=couponListArr
+            this.dataForm.storeProfitRatio=100,
+              console.log('表单数据',this.dataForm);
+            // return false;
+            if (this.editData.id) {
+              this.dataForm.id=this.editData.id
+              postMethod('/coupon/update-coupon-info', this.dataForm).then(
+                res => {
+                  this.$message({
+                    message: '操作成功',
+                    type: 'success'
+                  })
+                  this.$emit('showListPanel', true)
+                }
+              )
+            } else{
+              postMethod('/coupon/add-coupon-info', this.dataForm).then(
+                res => {
+                  this.$message({
+                    message: '操作成功',
+                    type: 'success'
+                  })
+                  this.$emit('showListPanel', true)
+                }
+              )
+            }
           }
         })
       },
@@ -518,9 +522,9 @@
         this.$emit('showListPanel', true)
       },
       buildImgGroupId() {
-          getMethod('/oss/get-group-id', null).then(res => {
-            this.uploadImgUrl = getUploadUrl() + '?groupId=' + res.data
-          })
+        getMethod('/oss/get-group-id', null).then(res => {
+          this.uploadImgUrl = getUploadUrl() + '?groupId=' + res.data
+        })
       },
       handleImgPreview(file) {
         this.dialogImageUrl = file.url;
