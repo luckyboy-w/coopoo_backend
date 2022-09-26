@@ -1266,7 +1266,7 @@
               orderType	: 0,
               newStatus: this.states
             }
-            getMethod('/order/modify-order-pay', param).then(res => {
+            postMethod('/order/modify-order-status', param).then(res => {
               if (res.errCode == 0) {
                 this.$message({
                   message: '修改成功',
