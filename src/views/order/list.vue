@@ -1161,7 +1161,7 @@
           }).then(() => {
             let param = {
               orderNo: this.currentOrderNo,
-              orderType	: '',
+              orderType	: 0,
               newStatus: this.states
             }
             getMethod('/order/modify-order-pay', param).then(res => {
