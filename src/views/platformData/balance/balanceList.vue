@@ -108,17 +108,17 @@
     },
     methods: {
       exportData() {
-        // let exportParam = [];
+        let exportParam = [];
 
-        // let param = JSON.parse(JSON.stringify(this.searchParam));
-        // delete param.pageSize
-        // delete param.pageNum
+        let param = JSON.parse(JSON.stringify(this.searchParam));
+        delete param.pageSize
+        delete param.pageNum
 
-        // for (let key in param) {
-        //   exportParam.push(key + "=" + param[key]);
-        // }
-        // exportParam.push("token=" + getToken())
-        // window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/member-list/export?" + exportParam.join("&"));
+        for (let key in param) {
+          exportParam.push(key + "=" + param[key]);
+        }
+        exportParam.push("token=" + getToken())
+        window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/balance/export?" + exportParam.join("&"));
       },
       //跳转详情
       toBalanceDtl(row) {
