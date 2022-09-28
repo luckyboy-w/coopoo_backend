@@ -85,8 +85,8 @@
     </el-dialog>
 
     <el-drawer :title="drawerTitle" :visible.sync="drawer" :direction="direction" size="600px" :before-close="handleCloseDrawer">
-      <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;min-height: 100px;position: relative;">
-        <div v-for="(item, index) in bindGoodsData" style="width: 120px;position: relative;margin:0 0 20px 20px;">
+      <div class="goodsBox" style="">
+        <div v-for="(item, index) in bindGoodsData" style="width: 120px;height: 170px; position: relative;margin:10px 0 20px 20px;">
           <div style="width: 120px;height: 120px;"><img style="width: 100%;height: 100%;" :src="item.goodsCoverImgUrl" /></div>
           <div
             style=" line-height: 25px;font-size: 13px; display: -webkit-box;word-break: break-all;text-overflow: ellipsis;overflow: hidden;-webkit-box-orient: vertical;-webkit-line-clamp: 2;"
@@ -328,12 +328,12 @@ export default {
             appGoodsCategoryId: this.appGoodsCategoryId,
             goodsIdList: [data.goodsId]
           };
-          postMethod('/exclusive/category/goods/delete',param).then(res => {
+          postMethod('/exclusive/category/goods/delete', param).then(res => {
             this.$message({
               message: '解绑成功',
               type: 'success'
             });
-            this.RefreshGoodsList(this.appGoodsCategoryId)
+            this.RefreshGoodsList(this.appGoodsCategoryId);
           });
         });
       } else if (type == 'all') {
@@ -342,7 +342,7 @@ export default {
             message: '没有可解除绑定的商品',
             type: 'warning'
           });
-          return false
+          return false;
         }
         this.$confirm('是否确认解除与该商品的绑定关系?', '提示', {
           confirmButtonText: '确定',
@@ -363,12 +363,12 @@ export default {
               message: '解绑成功',
               type: 'success'
             });
-            this.RefreshGoodsList(this.appGoodsCategoryId)
+            this.RefreshGoodsList(this.appGoodsCategoryId);
           });
         });
       }
     },
-    RefreshGoodsList(id){
+    RefreshGoodsList(id) {
       getMethod('/exclusive/category/goods/get/' + id).then(res => {
         this.bindGoodsData = res.data;
       });
@@ -517,8 +517,8 @@ export default {
   font-size: 14px;
 
   .ly-tool-panel {
-    line-height: '60px';
-    height: '60px';
+    line-height: 60px;
+    height: 60px;
     width: 450px;
     padding: 10px 10px;
 
@@ -528,10 +528,24 @@ export default {
     }
   }
 }
+.goodsBox {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 100px;
+  position: relative;
+  overflow-y: auto;
+  height: calc(100vh - 120px);
+  align-content: flex-start;
+}
+.goodsBox::-webkit-scrollbar {
+  display: none;
+}
 .drawerBottom {
   position: sticky;
-  bottom: 400px;
-  margin-top: 50px;
+  bottom: 0px;
+  height: 100px;
+  padding-top: 30px;
+  background-color: white;
   width: 100%;
   text-align: center;
   .drawerButton {
