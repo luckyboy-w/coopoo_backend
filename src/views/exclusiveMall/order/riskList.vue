@@ -157,7 +157,7 @@
                       </div>
                       <div>
                         <el-button-group>
-                          <el-button type="primary"
+                          <el-button type="primary" v-if="scope.row.orderStatus!=2"
                           size="mini"
                             @click="confirmSubmit(scope.row)">确认无误
                           </el-button>
