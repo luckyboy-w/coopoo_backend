@@ -1,6 +1,6 @@
 <template>
   <div class="bill-tab-list" >
-    <div style="margin: 30px;" v-if="showList">
+    <div style="margin: 20px;" v-if="showList">
     <el-tabs  type="border-card" v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="未结算" name="readyBill">
         <span slot="label" class="my-tab-label">未结算</span>

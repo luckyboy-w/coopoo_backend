@@ -28,7 +28,6 @@ import {
   getMethod,
   postMethod
 } from '@/api/request'
-  import orderDtl from './orderDtl'
   import nvlBill from './nvlBill'
   import startBill from './startBill'
   import finshBill from './finshBill'
@@ -42,7 +41,7 @@ import {
 
 export default {
   components: {
-    orderDtl,nvlBill,startBill,finshBill
+    nvlBill,startBill,finshBill
   },
   data() {
     return {

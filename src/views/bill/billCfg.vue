@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading" class="update-form-panel">
-    <el-form label-width="130px" style="display: flex;flex-wrap: nowrap;">
-      <div style="font-size: 18px;font-weight: 600;width: 130px;text-align: right;margin-top: 7px;">结算方式
+    <el-form label-width="150px" style="display: flex;flex-wrap: nowrap;">
+      <div style="font-size: 18px;font-weight: 600;width: 150px;text-align: right;margin-top: 7px;">结算方式
         <el-tooltip content="次月生效" placement="top" effect="light">
           <i class="el-icon-warning-outline"></i>
         </el-tooltip>
@@ -15,8 +15,8 @@
         {{nextSettleMethod==2?'成本结算':"比例结算"}}
       </el-form-item>
     </el-form>
-    <el-form v-if="currentSettleMethod==2" label-width="130px" style="display: flex;flex-wrap: nowrap;">
-      <div style="font-size: 18px;font-weight: 600;width: 130px;text-align: right;margin-top: 7px;">平台服务比例：</div>
+    <el-form v-if="currentSettleMethod==2" label-width="150px" style="display: flex;flex-wrap: nowrap;">
+      <div style="font-size: 18px;font-weight: 600;width: 150px;text-align: right;margin-top: 7px;">平台服务比例：</div>
       <el-form-item label="供应商服务比例">
         <el-input-number :max="100" :min="0" style="width:150px" placeholder="请输入" v-model="supplierServiceRatio" />
       </el-form-item>
@@ -24,12 +24,30 @@
         <el-input-number :max="100" :min="0" style="width:150px" placeholder="请输入" v-model="storeServiceRatio" />
       </el-form-item>
     </el-form>
-    <el-button style="margin-left: 130px;" type="primary" @click="enterSettleMethod()">
+    <el-button style="margin-left: 150px;" type="primary" @click="enterSettleMethod()">
       保存
     </el-button>
 
     <el-divider></el-divider>
-    <el-form ref="dataForm" :model="dataForm" label-width="130px">
+
+    <el-form label-width="150px" style="display: flex;flex-wrap: nowrap;">
+      <div style="font-size: 18px;font-weight: 600;width: 150px;text-align: right;margin-top: 7px;">合伙人结算比例：</div>
+      <el-form-item label="商品订单">
+        <el-tooltip content="已减去邀请人佣金,如需和门店对半分,填写50%" placement="top" effect="light">
+          <i class="el-icon-warning-outline" style="margin-left: -6px;font-size: 18px;"></i>
+        </el-tooltip>
+        <el-input-number :max="100" :min="0" style="width:150px" placeholder="请输入" v-model="testRatio" />
+      </el-form-item>
+      <el-form-item label="会员订单">
+        <el-input-number :max="100" :min="0" style="width:150px" placeholder="请输入" v-model="testRatio" />
+      </el-form-item>
+    </el-form>
+    <el-button style="margin-left: 150px;" type="primary" @click="enterPartnerSettleRatio()">
+      保存
+    </el-button>
+
+    <el-divider></el-divider>
+    <el-form ref="dataForm" :model="dataForm" label-width="150px">
       <el-form-item label="供应商结算次数">
         <el-input-number v-model="dataForm.cash_supplier_count" disabled label="月结算次数" />
       </el-form-item>
@@ -55,7 +73,7 @@
       </el-form-item>
     </el-form>
     <el-divider></el-divider>
-    <el-form label-width="130px">
+    <el-form label-width="150px">
       <el-form-item label="手动结算日期">
         <el-date-picker v-model="monthDate" type="month" value-format="yyyy-MM" @change="pickMonthDate"
           :picker-options="pickerOptions" placeholder="选择月">
@@ -68,8 +86,8 @@
       </el-form-item>
     </el-form>
     <el-divider></el-divider>
-    <el-form label-width="130px" style="display: flex;flex-wrap: nowrap;">
-      <div style="font-size: 18px;font-weight: 600;width: 130px;text-align: right;margin-top: 7px;">分销比例：</div>
+    <el-form label-width="150px" style="display: flex;flex-wrap: nowrap;">
+      <div style="font-size: 18px;font-weight: 600;width: 150px;text-align: right;margin-top: 7px;">分销比例：</div>
       <el-form-item label="普通商品分销比例">
         <el-input-number :max="100" :min="0" style="width:150px" placeholder="请输入" v-model="commonGoodsCommissionRatio" />
       </el-form-item>
@@ -77,7 +95,7 @@
         <el-input-number :max="100" :min="0" style="width:150px" placeholder="请输入" v-model="vipGoodsCommissionRatio" />
       </el-form-item>
     </el-form>
-    <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+    <el-tabs v-model="activeName" style="margin-left: 150px;" type="border-card" @tab-click="handleClick">
       <el-tab-pane label="普通商品" name="1">
         <div style="display: flex;flex-wrap: nowrap;align-items: center;">
           <div>指定商品：</div>
@@ -127,7 +145,7 @@
         </div>
       </el-tab-pane>
     </el-tabs>
-    <el-button style="margin-left: 130px;margin-top: 30px;" type="primary" @click="enterDistribution()">
+    <el-button style="margin-left: 150px;margin-top: 30px;" type="primary" @click="enterDistribution()">
       保存
     </el-button>
 
@@ -337,6 +355,11 @@
           }
         );
       },
+
+      enterPartnerSettleRatio(){
+
+      },
+
       pickMonthDate(val) {},
       monthSubmit() {
         if (this.monthDate == '' || !this.monthDate) {
@@ -682,7 +705,7 @@
 <style lang="scss" scoped>
   .update-form-panel {
     padding: 30px 20px;
-    width: 800px;
+    width: 1200px;
   }
 
   .el-date-picker__header {
