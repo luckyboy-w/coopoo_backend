@@ -36,10 +36,10 @@
         <el-tooltip content="已减去邀请人佣金,如需和门店对半分,填写50%" placement="top" effect="light">
           <i class="el-icon-warning-outline" style="margin-left: -6px;font-size: 18px;"></i>
         </el-tooltip>
-        <el-input-number :max="100" :min="0" style="width:150px" placeholder="请输入" v-model="testRatio" />
+        <el-input-number :max="100" :min="0" style="width:150px" placeholder="请输入" v-model="partnerGoodsOrderRatio" />
       </el-form-item>
       <el-form-item label="会员订单">
-        <el-input-number :max="100" :min="0" style="width:150px" placeholder="请输入" v-model="testRatio" />
+        <el-input-number :max="100" :min="0" style="width:150px" placeholder="请输入" v-model="partnerVipOrderRatio" />
       </el-form-item>
     </el-form>
     <el-button style="margin-left: 150px;" type="primary" @click="enterPartnerSettleRatio()">
@@ -253,6 +253,9 @@
         bindingList_: [],
         showGoodsList: false,
 
+        partnerVipOrderRatio:'',
+        partnerGoodsOrderRatio:'',
+
         commonGoodsCommissionRatio:'',
         vipGoodsCommissionRatio:'',
 
@@ -283,6 +286,7 @@
       this.loadData()
       this.initSettlementMethod()
       this.initDistribution()
+      this.initPartnerSettleRatio()
     },
     created() {},
     methods: {
@@ -339,6 +343,17 @@
           }
         );
       },
+
+      initPartnerSettleRatio(){
+        getMethod("/settlement/partner/get").then(
+          res => {
+            this.partnerGoodsOrderRatio = res.data.partnerGoodsOrderRatio
+            this.partnerVipOrderRatio = res.data.partnerVipOrderRatio
+
+          }
+        );
+      },
+
       enterSettleMethod() {
         getMethod("settlement/set-settle-method", {
           settleMethod: this.currentSettleMethod,
@@ -357,7 +372,33 @@
       },
 
       enterPartnerSettleRatio(){
-
+        if(!this.partnerGoodsOrderRatio&&this.partnerGoodsOrderRatio!=0){
+          this.$message({
+            message: "请输入商品订单比例",
+            type: "warning"
+          });
+          return false
+        }
+        if(!this.partnerVipOrderRatio&&this.partnerVipOrderRatio!=0){
+          this.$message({
+            message: "请输入会员订单比例",
+            type: "warning"
+          });
+          return false
+        }
+        postMethod("/settlement/partner/set", {
+          partnerGoodsOrderRatio: this.partnerGoodsOrderRatio,
+          partnerVipOrderRatio: this.partnerVipOrderRatio,
+        }).then(
+          res => {
+            this.$message({
+              message: "保存成功",
+              type: "success"
+            });
+            this.initPartnerSettleRatio()
+            this.$forceUpdate()
+          }
+        );
       },
 
       pickMonthDate(val) {},
