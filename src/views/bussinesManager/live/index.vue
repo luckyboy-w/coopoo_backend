@@ -50,7 +50,7 @@
         </tr>
       </table>
     </div>
-    <liveDetail ref="addOrEditRef" v-if="showHome" :edit-data="editData" @showListPanel="showListPanel" />
+    <liveDetail ref="addOrEditRef" v-if="!showList" :edit-data="editData" @showListPanel="showListPanel" />
   </div>
 </template>
 
@@ -80,7 +80,6 @@
         },
         resetFrm: {},
         showList: true,
-        showHome: false,
         liveList: {
           list:[]
         },
@@ -132,24 +131,22 @@
           getMethod('/live/get-manger-live-detail', {liveId:row.liveId}).then(res => {
           this.editData=res.data
           this.editData.operation="edit"
-          this.showHome=true
+          this.showList = false
           });
         } else if(val==2){
           getMethod('/live/get-manger-live-detail', {liveId:row.liveId}).then(res => {
           this.editData=res.data
           this.editData.operation="detail"
-          this.showHome=true
+          this.showList = false
           });
         }else if(!val){
           this.editData={}
           this.editData.operation="add"
-          this.showHome=true
+          this.showList = false
         }
-        this.showList = false
       },
       showListPanel(isCancel) {
         this.showList = true
-        this.showHome = false
         this.loadLive()
       },
       loadLive() {

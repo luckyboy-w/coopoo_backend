@@ -2,87 +2,17 @@
   <div>
     <div class="ly-container" v-if="showIndex">
       <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;margin-top: 30px;">
-        <div class="tabTd" @click="getActivityList('1')">
+        <div class="tabTd" v-for="(valItem, index) in dataList" :key="index"  @click="getActivityList(valItem.value)">
           <div style="width: 100px;height: 100px;">
             <img style="width: 100%;height: 100%;"
-              src="../../../assets/image/flashSale.png" />
+              :src="valItem.image" />
           </div>
-          <div style="padding-left: 25px;">
-            <div style="line-height: 40px;font-size: 20px;font-weight: 600;">
-              限时抢购
+          <div style="padding-left: 25px;height: 100px;">
+            <div style="line-height: 45px;font-size: 20px;font-weight: 600;">
+              {{valItem.title}}
             </div>
-            <div style="line-height: 40px;">
-              限时限量，火爆抢购
-            </div>
-          </div>
-        </div>
-        <div class="tabTd" @click="getActivityList('2')">
-          <div style="width: 100px;height: 100px;">
-            <img style="width: 100%;height: 100%;"
-              src="../../../assets/image/newPeople.png" />
-          </div>
-          <div style="padding-left: 25px;">
-            <div style="line-height: 40px;font-size: 20px;font-weight: 600;">
-              新人礼
-            </div>
-            <div style="line-height: 40px;">
-              新人有礼，促注册
-            </div>
-          </div>
-        </div>
-        <div class="tabTd" @click="getActivityList('3')">
-          <div style="width: 100px;height: 100px;">
-            <img style="width: 100%;height: 100%;"
-              src="../../../assets/image/coupon.png" />
-          </div>
-          <div style="padding-left: 25px;">
-            <div style="line-height: 40px;font-size: 20px;font-weight: 600;">
-              注册送优惠券
-            </div>
-            <div style="line-height: 40px;">
-              注册就送优惠券，提高注册率
-            </div>
-          </div>
-        </div>
-        <div class="tabTd" @click="getActivityList('4')">
-          <div style="width: 100px;height: 100px;">
-            <img style="width: 100%;height: 100%;"
-              src="../../../assets/image/member.png" />
-          </div>
-          <div style="padding-left: 25px;">
-            <div style="line-height: 40px;font-size: 20px;font-weight: 600;">
-              买VIP送优惠券
-            </div>
-            <div style="line-height: 22px;">
-              买VIP就送优惠券，提高购买率
-            </div>
-          </div>
-        </div>
-        <div class="tabTd" @click="getActivityList('6')">
-          <div style="width: 100px;height: 100px;">
-            <img style="width: 100%;height: 100%;"
-              src="../../../assets/image/bargain.png" />
-          </div>
-          <div style="padding-left: 25px;">
-            <div style="line-height: 40px;font-size: 20px;font-weight: 600;">
-              砍价
-            </div>
-            <div style="line-height: 22px;">
-              邀请朋友帮砍，裂变传播提销量
-            </div>
-          </div>
-        </div>
-        <div class="tabTd" @click="getActivityList('5')">
-          <div style="width: 100px;height: 100px;">
-            <img style="width: 100%;height: 100%;"
-              src="../../../assets/image/groupBuying.png" />
-          </div>
-          <div style="padding-left: 25px;">
-            <div style="line-height: 40px;font-size: 20px;font-weight: 600;">
-              拼团
-            </div>
-            <div style="line-height: 40px;">
-              拼单成团，裂变获客，促转化
+            <div style="line-height: 25px;">
+              {{valItem.describe}}
             </div>
           </div>
         </div>
@@ -105,6 +35,9 @@
   } from "@/api/tools.js"
 
   export default {
+    components: {
+      activityList,
+    },
     filters: {},
     name: '',
     props: [''],
@@ -113,10 +46,38 @@
         showIndex: true,
         showActivityList: false,
         type: '',
+        dataList:[{
+          image:require('../../../assets/image/flashSale.png'),
+          title:'限时抢购',
+          describe:'限时限量，火爆抢购',
+          value:'1',
+        },{
+          image:require('../../../assets/image/newPeople.png'),
+          title:'新人礼',
+          describe:'新人有礼，促注册',
+          value:'2',
+        },{
+          image:require('../../../assets/image/coupon.png'),
+          title:'注册送优惠券',
+          describe:'注册就送优惠券，提高注册率',
+          value:'3',
+        },{
+          image:require('../../../assets/image/member.png'),
+          title:'买VIP送优惠券',
+          describe:'买VIP就送优惠券，提高购买率',
+          value:'4',
+        },{
+          image:require('../../../assets/image/bargain.png'),
+          title:'砍价',
+          describe:'邀请朋友帮砍，裂变传播提销量',
+          value:'5',
+        },{
+          image:require('../../../assets/image/groupBuying.png'),
+          title:'拼团',
+          describe:'拼单成团，裂变获客，促转化',
+          value:'6',
+        },]
       };
-    },
-    components: {
-      activityList,
     },
     beforeMount() {},
 
@@ -163,7 +124,7 @@
     align-items: center;
     border: 1px solid #c7c7c7;
     padding: 10px;
-
+    border-radius: 15px;
   }
 </style>
 <style lang="scss">

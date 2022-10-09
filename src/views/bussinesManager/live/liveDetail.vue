@@ -99,7 +99,7 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="关联优惠券">
+        <!-- <el-form-item label="关联优惠券">
           <el-button type="success" :disabled="disabled" @click="relatedCoupon">关联优惠券</el-button>
         </el-form-item>
 
@@ -131,19 +131,8 @@
                       :disabled="disabled" v-model="scope.row.purchaseLimit" />
                   </template>
                 </el-table-column>
-                <!-- <el-table-column v-if="settleMethod==1" prop="supplierSettleRatio" label="供应商结算比例" width="160">
-                 <template slot-scope="scope">
-                   <el-input-number :disabled="disabled" :max="100" :min="0" size="mini" placeholder="请输入"
-                     v-model="scope.row.supplierSettleRatio" />
-                 </template>
-               </el-table-column>
-               <el-table-column v-if="settleMethod==1" prop="storeSettleRatio" label="门店结算比例" width="160">
-                 <template slot-scope="scope">
-                   <el-input-number :disabled="disabled" :max="100" :min="0" size="mini" placeholder="请输入"
-                     v-model="scope.row.storeSettleRatio" />
-                 </template>
-               </el-table-column> -->
-
+              
+                
                 <el-table-column prop="id" label="操作">
                   <template slot-scope="scope">
                     <el-button type="text" size="small" @click="getGoodsDtl_(scope.row)">
@@ -176,7 +165,19 @@
               </el-table>
             </div>
           </div>
-        </el-form-item>
+        </el-form-item> -->
+        <!-- <el-table-column v-if="settleMethod==1" prop="supplierSettleRatio" label="供应商结算比例" width="160">
+          <template slot-scope="scope">
+            <el-input-number :disabled="disabled" :max="100" :min="0" size="mini" placeholder="请输入"
+              v-model="scope.row.supplierSettleRatio" />
+          </template>
+        </el-table-column>
+        <el-table-column v-if="settleMethod==1" prop="storeSettleRatio" label="门店结算比例" width="160">
+          <template slot-scope="scope">
+            <el-input-number :disabled="disabled" :max="100" :min="0" size="mini" placeholder="请输入"
+              v-model="scope.row.storeSettleRatio" />
+          </template>
+        </el-table-column> -->
         <el-form-item>
           <el-button type="primary" :disabled="disabled" v-if="submitStatus==1" @click="submitUpdate(1)">提交</el-button>
           <el-button type="primary" :disabled="disabled" v-if="submitStatus==2" @click="submitUpdate(2)">保存编辑

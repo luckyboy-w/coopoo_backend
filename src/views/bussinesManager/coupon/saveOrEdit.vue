@@ -13,7 +13,7 @@
       <el-form-item prop="applyClause" label="使用说明：">
         <el-input style="width:260px" :disabled="disabled" v-model="dataForm.applyClause"  placeholder="请输入"/>
       </el-form-item>
-      <el-form-item prop="buyPrice" label="购买价格：">
+      <el-form-item v-show="false" prop="buyPrice" label="购买价格：">
         <el-input style="width:260px"  oninput="value=value.replace(/[^0-9.]/g,'')" :disabled="disabled" v-model="dataForm.buyPrice"  placeholder="请输入"/>
       </el-form-item>
       <el-form-item prop="faceValue" label="抵用额：">
@@ -213,7 +213,7 @@
         dataForm: {
           applyClause:'',
           buyLimit: '0',
-          buyPrice: '',
+          buyPrice: '0',
           context: '',
           couponName: '',
           faceValue: '',
@@ -238,9 +238,9 @@
           applyClause: [
             {required: true, message: '请输入卖点', trigger: 'blur'},
           ],
-          buyPrice: [
-            {required: true, message: '请输入购买价格', trigger: 'change'},
-          ],
+          // buyPrice: [
+          //   {required: true, message: '请输入购买价格', trigger: 'change'},
+          // ],
           faceValue: [
             {required: true, message: '请输入抵用额', trigger: 'change'},
           ],

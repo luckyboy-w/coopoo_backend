@@ -117,7 +117,7 @@
                 </el-upload>
                 <el-dialog>
                   <img width="100%" :src="imageUrl" alt>
-                </el-dialog> 
+                </el-dialog>
               </div>
             </div>
             <div class="upLoadContainer" v-show="showNum==3">
@@ -145,7 +145,7 @@
         <el-form-item label="关联类型">
           <el-select v-model="form.goodsType" :disabled="disabled">
             <el-option label="商品" :value="1" />
-            <el-option label="优惠券" :value="2" />
+            <!-- <el-option label="优惠券" :value="2" /> -->
             <el-option label="门店列表" :value="3" />
 
           </el-select>
@@ -153,9 +153,9 @@
         <el-form-item v-if="form.goodsType==1" label="关联商品">
           <el-button type="success" @click="relatedGoods" :disabled="disabled">关联商品</el-button>
         </el-form-item>
-        <el-form-item v-if="form.goodsType==2" label="关联优惠券">
+        <!-- <el-form-item v-if="form.goodsType==2" label="关联优惠券">
           <el-button type="success" @click="relatedGoods" :disabled="disabled">关联优惠券</el-button>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item v-if="form.goodsType==1" label="已关联商品">
           <div class="ly-table-panel" style="min-width:1000px!important;">
             <div class="ly-data-list">
