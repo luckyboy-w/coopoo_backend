@@ -1,71 +1,30 @@
 <template>
   <div>
-    <div
-      v-if="showList"
-      class="ly-container"
-    >
-     <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
-       <div class="tabTd">
-         <div>门店名称：</div>
-         <div>
-           <el-input v-model="searchParam.storeName" width="180px" placeholder="请输入" />
-         </div>
-       </div>
-       <div class="tabTd">
-         <div>手机号：</div>
-         <div>
-           <el-input v-model="searchParam.phone" width="180px" placeholder="请输入" />
-         </div>
-       </div>
-       <div class="tabTd">
-         <div>状态：</div>
-         <div>
-          <el-select
-            v-model="searchParam.enable"
-            placeholder="请选择"
-          >
-          <el-option label="全部" value="" />
-            <el-option label="禁用" value="0" />
-            <el-option label="启用" value="1" />
-          </el-select>
-         </div>
-       </div>
-      <!-- <div class="tabTd">
-         <div>门店状态：</div>
-         <div>
-         <el-select
-           v-model="searchParam.status"
-           placeholder="请选择"
-         >
-           <el-option
-             v-for="item in shopStatusList "
-             :key="item.id"
-             :value-key="item.label"
-             :label="item.label"
-             :value="item.id"
-           />
-         </el-select>
-         </div>
-       </div> -->
-       <div class="tabTd">
-         <el-button
-           icon="el-icon-search"
-           @click="search()"
-         >
-           搜索
-         </el-button>
-         <el-button
-           plain
-           type="primary"
-           icon="el-icon-document-add"
-           @click="addOrEdit('add')"
-         >
-           新建
-         </el-button>
-         <el-button icon="el-icon-download" type="primary" @click="exportData()">
-           导出
-         </el-button>
-       </div>
+    <div v-if="showList" class="ly-container">
+      <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
+        <div class="tabTd">
+          <div>门店名称：</div>
+          <div><el-input v-model="searchParam.storeName" width="180px" placeholder="请输入" /></div>
+        </div>
+        <div class="tabTd">
+          <div>手机号：</div>
+          <div><el-input v-model="searchParam.phone" width="180px" placeholder="请输入" /></div>
+        </div>
+        <div class="tabTd">
+          <div>状态：</div>
+          <div>
+            <el-select v-model="searchParam.enable" placeholder="请选择">
+              <el-option label="全部" value="" />
+              <el-option label="禁用" value="0" />
+              <el-option label="启用" value="1" />
+            </el-select>
+          </div>
+        </div>
+        <div class="tabTd">
+          <el-button icon="el-icon-search" @click="search()">查询</el-button>
+          <el-button plain type="primary" icon="el-icon-document-add" @click="addOrEdit('add')">新建</el-button>
+          <el-button icon="el-icon-download" type="primary" @click="exportData()">导出</el-button>
+        </div>
       </div>
       <div class="ly-table-panel">
         <div class="ly-data-list">
@@ -76,74 +35,25 @@
             row-key="id"
             border
             default-expand-all
-            :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+            :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
           >
-            <el-table-column
-              prop="storeName"
-              label="门店名称"
-              width="150px"
-            />
-            <el-table-column
-              prop="userName"
-              label="店主姓名"
-              width="150px"
-            />
-            <el-table-column
-              prop="phoneNo"
-              label="店主手机号"
-              width="150px"
-            />
-            <el-table-column
-              prop="loginAccount"
-              label="登录账号"
-              width="150px"
-            />
-            <!-- <el-table-column prop="provinceName" label="省份" width="150px"></el-table-column>
-            <el-table-column prop="cityName" label="城市" width="150px"></el-table-column> -->
-            <el-table-column
-              prop="address"
-              label="详细地址"
-              width="250px"
-            />
-            <el-table-column
-              prop="enable"
-              label="状态"
-              width="150px"
-            >
+            <el-table-column prop="storeName" label="门店名称" />
+            <el-table-column prop="userName" label="店主姓名" />
+            <el-table-column prop="phoneNo" label="店主手机号" />
+            <el-table-column prop="loginAccount" label="登录账号" />
+            <el-table-column prop="address" label="详细地址" />
+            <el-table-column prop="enable" label="状态">
               <template slot-scope="scope">
-                <el-switch
-                  v-model="scope.row.enable"
-                  inactive-value="0"
-                  active-value="1"
-                  @change="updateEnable(scope.row)"
-                />
+                <el-switch v-model="scope.row.enable" inactive-value="0" active-value="1" @change="updateEnable(scope.row)" />
               </template>
             </el-table-column>
-            <el-table-column
-              prop="createTime"
-              label="创建时间"
-              width="170px"
-            />
-            <el-table-column
-              prop="id"
-              label="操作"
-              width="150px"
-            >
+            <el-table-column prop="createTime" label="创建时间" width="160" />
+            <el-table-column prop="id" label="操作" width="200" fixed="right">
               <template slot-scope="scope">
-                <el-button
-                  type="text"
-                  size="small"
-                  @click.native.prevent="addOrEdit('edit',scope.$index, tableData)"
-                >
-                  编辑门店
-                </el-button>
-                <el-button
-                  @click.native.prevent="showResetPwd(scope.row)"
-                  type="text"
-                  size="small"
-                >重置密码
-                </el-button>
-              <!--  <el-button
+                <el-button type="text" size="small" @click.native.prevent="addOrEdit('edit', scope.$index, tableData)">编辑门店</el-button>
+                <el-button @click.native.prevent="showResetPwd(scope.row)" type="text" size="small">重置密码</el-button>
+                <el-button @click.native.prevent="showPartner(scope.row)" type="text" size="small">合伙人</el-button>
+                <!--  <el-button
                   v-show="false"
                   type="text"
                   size="small"
@@ -177,94 +87,94 @@
             :total="tableData.total"
             @current-change="currentPage"
             @prev-click="currentPage"
-			:current-page="searchParam.pageNum"
+            :current-page="searchParam.pageNum"
             @next-click="currentPage"
           />
         </div>
       </div>
       <div class="list-panel" />
     </div>
-    <saveOrEdit
-      v-if="showAddOrEdit"
-      :edit-data="editData"
-      @showListPanel="showListPanel"
-    />
+    <saveOrEdit v-if="showAddOrEdit" :edit-data="editData" @showListPanel="showListPanel" />
+    <partnerList v-if="showPartnerList" :store-data="storeData" @hidePartnerList="hidePartnerList" />
   </div>
 </template>
 
 <script>
-import saveOrEdit from './saveOrEdit'
-import { getMethod, postMethod } from '@/api/request'
-import {getToken} from '@/utils/auth'
+import saveOrEdit from './saveOrEdit';
+import partnerList from './partnerList';
+import { getMethod, postMethod } from '@/api/request';
+import { getToken } from '@/utils/auth';
 
 export default {
-  components: { saveOrEdit },
+  components: { saveOrEdit, partnerList },
   data() {
     return {
       shopStatusList: [],
       enableList: [],
       showList: true,
-      showAddOrEdit:false,
+      showAddOrEdit: false,
+      showPartnerList: false,
       showPagination: false,
       editData: {},
+      storeData: {},
       searchParam: {
-        storeName:'',
-        phone:'',
-        enable:'',
+        storeName: '',
+        phone: '',
+        enable: '',
         pageSize: 10,
         pageNum: 1
       },
       tableData: {
         list: []
-      },
-    }
+      }
+    };
   },
   computed: {},
   mounted() {
-    this.initLoad()
+    this.initLoad();
   },
   created() {},
   methods: {
     updateEnable(row) {
-      if(row.enable=='0'){
-      postMethod('/store/disable-store?id='+row.id).then(res => {
-        this.loadList()
-        this.$message({
-          type: 'success',
-          message: '操作成功'
-        })
-      })
-      }else if(row.enable=='1'){
-      postMethod('/store/enable-store?id='+row.id).then(res => {
-        this.loadList()
-        this.$message({
-          type: 'success',
-          message: '操作成功'
-        })
-      })
+      if (row.enable == '0') {
+        postMethod('/store/disable-store?id=' + row.id).then(res => {
+          this.loadList();
+          this.$message({
+            type: 'success',
+            message: '操作成功'
+          });
+        });
+      } else if (row.enable == '1') {
+        postMethod('/store/enable-store?id=' + row.id).then(res => {
+          this.loadList();
+          this.$message({
+            type: 'success',
+            message: '操作成功'
+          });
+        });
       }
     },
     exportData() {
       let exportParam = [];
-    
+
       let param = JSON.parse(JSON.stringify(this.searchParam));
-      delete param.pageSize
-      delete param.pageNum
-    
+      delete param.pageSize;
+      delete param.pageNum;
+
       for (let key in param) {
-        exportParam.push(key + "=" + param[key]);
+        exportParam.push(key + '=' + param[key]);
       }
-      exportParam.push("token=" + getToken())
-      window.open(process.env.VUE_APP_BASE_API_NEW + "/excel/store-list/export?" + exportParam.join("&"));
+      exportParam.push('token=' + getToken());
+      window.open(process.env.VUE_APP_BASE_API_NEW + '/excel/store-list/export?' + exportParam.join('&'));
     },
     // downQrcode(rowObj){
     //   window.open( process.env.VUE_APP_BASE_API+'/backend/storeManage/storeQr?id='+rowObj.id+'&storeName='+rowObj.storeName+'&token='+ getToken())
     // },
-    showResetPwd(row){
+    showResetPwd(row) {
       let param = {
-        id:row.superAccount,
-        newPwd:'123456'
-      }
+        id: row.superAccount,
+        newPwd: '123456'
+      };
       this.$confirm('是否重置密码为‘123456’?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -274,66 +184,77 @@ export default {
           this.$message({
             type: 'success',
             message: '密码重置成功'
-          })
-        })
-      })
+          });
+        });
+      });
+    },
+    showPartner(row) {
+      console.log(row);
+      this.storeData = { storeId: row.id, storeName: row.storeName };
+      this.showList = false;
+      this.showPartnerList = true;
     },
     search() {
-		this.searchParam.pageNum = 1
-      this.loadList()
+      this.searchParam.pageNum = 1;
+      this.loadList();
     },
     addOrEdit(oper, rowIndex, data) {
-      const scope = this
+      const scope = this;
 
       if (oper == 'edit') {
         const param = {
           id: data.list[rowIndex].id
-        }
+        };
         getMethod('/store/get-store-info', param).then(res => {
-          scope.editData = res.data
-          scope.editData.isDisabled = true
-          this.showList = false
-          this.showAddOrEdit = true
-        })
+          scope.editData = res.data;
+          scope.editData.isDisabled = true;
+          this.showList = false;
+          this.showAddOrEdit = true;
+        });
       } else {
-        scope.editData = {}
-        this.showList = false
-        this.showAddOrEdit = true
+        scope.editData = {};
+        this.showList = false;
+        this.showAddOrEdit = true;
       }
     },
     showListPanel(isCancel) {
-      this.showList = true
-      this.showAddOrEdit = false
-      this.loadList()
+      this.showList = true;
+      this.showAddOrEdit = false;
+      this.loadList();
+    },
+    hidePartnerList(isCancel) {
+      this.showList = true;
+      this.showPartnerList = false;
+      this.loadList();
     },
     currentPage(pageNum) {
-      this.searchParam.pageNum = pageNum
-      this.loadList()
+      this.searchParam.pageNum = pageNum;
+      this.loadList();
     },
     initLoad() {
-      this.loadList()
+      this.loadList();
     },
     loadList() {
-      const scope = this
+      const scope = this;
       getMethod('/store/search-store-list', this.searchParam).then(res => {
-        scope.tableData.list = res.data.records
-        scope.tableData.list.map(i=>{
-          i.enable=String(i.enable)
-        })
-        scope.tableData.total = res.data.total
-        scope.showPagination = scope.tableData.total == 0
-      })
-    },
+        scope.tableData.list = res.data.records;
+        scope.tableData.list.map(i => {
+          i.enable = String(i.enable);
+        });
+        scope.tableData.total = res.data.total;
+        scope.showPagination = scope.tableData.total == 0;
+      });
+    }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 .ly-container {
   padding: 10px 20px;
   font-size: 14px;
   .ly-tool-panel {
-    line-height: "60px";
-    height: "60px";
+    line-height: '60px';
+    height: '60px';
     width: 100%;
     padding: 10px 10px;
     .ly-tool-btn {
@@ -343,10 +264,9 @@ export default {
   }
 }
 .tabTd {
-    display: flex;
-    flex-wrap: nowrap;
-    margin: 7px 10px;
-    align-items: center;
-
-  }
+  display: flex;
+  flex-wrap: nowrap;
+  margin: 7px 10px;
+  align-items: center;
+}
 </style>

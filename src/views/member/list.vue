@@ -80,7 +80,7 @@
                 {{ scope.row.storeName?scope.row.storeName:"暂无" }}
               </template>
             </el-table-column>
-            <el-table-column prop="orderPayAmount" label="消费金额"></el-table-column>
+            <el-table-column prop="orderPayAmount" label="订单消费金额"></el-table-column>
             <el-table-column prop="currBeanQty" label="靠谱豆" ></el-table-column>
             <el-table-column prop="createTime" label="注册时间" width="150px">
               <template slot-scope="scope">
