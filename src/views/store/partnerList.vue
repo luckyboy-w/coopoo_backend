@@ -5,11 +5,11 @@
       <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
         <div class="tabTd">
           <div>合伙人名称：</div>
-          <div><el-input v-model="searchParam.goodsName" placeholder="请输入" /></div>
+          <div><el-input v-model="searchParam.name" placeholder="请输入" /></div>
         </div>
         <div class="tabTd">
           <div>手机号：</div>
-          <div><el-input v-model="searchParam.memberNickname" placeholder="请输入" /></div>
+          <div><el-input v-model="searchParam.phoneNo" placeholder="请输入" /></div>
         </div>
         <div class="tabTd">
           <el-button @click="search()" icon="el-icon-search">查询</el-button>
@@ -23,15 +23,15 @@
       <div class="ly-table-panel">
         <div class="ly-data-list">
           <el-table ref="mainTable" :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id" border>
-            <el-table-column prop="id" label="合伙人名称" />
-            <el-table-column prop="id" label="手机号" />
-            <el-table-column prop="id" label="创建时间" />
-            <el-table-column fixed="right" prop="id" min-width="250px" label="操作">
+            <el-table-column prop="name" label="合伙人名称" />
+            <el-table-column prop="phoneNo" label="手机号" />
+            <el-table-column prop="createTime" label="创建时间" />
+            <el-table-column fixed="right" min-width="250px" label="操作">
               <template slot-scope="scope">
-                  <el-button @click="addOrEditPartner('edit',scope.row)" size="mini" type="primary">编辑</el-button>
-                  <el-button @click="openUserList(scope.row)" size="mini" type="primary">推广用户</el-button>
-                  <el-button @click="disable(scope.row)" size="mini" type="primary">禁用</el-button>
-                  <el-button @click="enable(scope.row)" size="mini" type="primary">启用</el-button>
+                <el-button @click="addOrEditPartner('edit', scope.row)" size="mini" type="primary">编辑</el-button>
+                <el-button @click="openUserList(scope.row)" size="mini" type="primary">推广用户</el-button>
+                <el-button v-if="scope.row.enable == 1" @click="updateEnable(scope.row)" size="mini" type="primary">禁用</el-button>
+                <el-button v-if="scope.row.enable === 0" @click="updateEnable(scope.row)" size="mini" type="primary">启用</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -60,9 +60,10 @@
 import { getMethod, postMethod } from '@/api/request';
 import partnerDetail from './partnerDetail.vue';
 import invitedUsersList from './invitedUsersList.vue';
+import { getToken } from '@/utils/auth';
 
 export default {
-  components: { partnerDetail , invitedUsersList},
+  components: { partnerDetail, invitedUsersList },
   props: {
     storeData: {
       type: Object,
@@ -75,8 +76,11 @@ export default {
       showPagination: false,
       showPartnerList: true,
       showAddOrEditParner: false,
-      showInvitedUsers:false,
+      showInvitedUsers: false,
       searchParam: {
+        name: '',
+        phoneNo: '',
+        storeId: '',
         pageSize: 10,
         pageNum: 1
       },
@@ -87,29 +91,75 @@ export default {
     };
   },
   mounted() {
-    this.initLoad();
-    console.log(this.storeData);
+    // console.log(this.storeData);
+    if (this.storeData) {
+      this.searchParam.storeId = this.storeData.storeId;
+      this.initLoad();
+    }
   },
   methods: {
     backToStoreList() {
       this.$emit('hidePartnerList', true);
     },
-    addOrEditPartner(type,row) {
-      console.log(type,row)
-      this.editParnerData=row
+    updateEnable(row) {
+      if (row.enable === 0) {
+        postMethod('/partner/enable', { id: row.id }).then(res => {
+          this.loadList();
+          this.$message({
+            type: 'success',
+            message: '启用成功'
+          });
+        });
+      } else if (row.enable == '1') {
+        postMethod('/partner/disable', { id: row.id }).then(res => {
+          this.loadList();
+          this.$message({
+            type: 'success',
+            message: '禁用成功'
+          });
+        });
+      }
+    },
+    addOrEditPartner(type, row) {
+      // console.log(type, row);
+      if (type == 'add') {
+        this.editParnerData = {};
+        this.editParnerData.storeId = this.storeData.storeId;
+        this.editParnerData.type = type;
+        this.editParnerData.isDisabled = false;
+      } else if (type == 'edit') {
+        this.editParnerData = {};
+        this.editParnerData = row;
+        this.editParnerData.storeId = this.storeData.storeId;
+        this.editParnerData.type = type;
+        this.editParnerData.isDisabled = true;
+      }
       this.showPartnerList = false;
       this.showAddOrEditParner = true;
     },
-    openUserList(row){
-      console.log(row)
-      this.editParnerData=row
+    openUserList(row) {
+      console.log(row);
+      this.editParnerData = row;
       this.showPartnerList = false;
       this.showInvitedUsers = true;
+    },
+    exportData() {
+      let exportParam = [];
+
+      let param = JSON.parse(JSON.stringify(this.searchParam));
+      delete param.pageSize;
+      delete param.pageNum;
+
+      for (let key in param) {
+        exportParam.push(key + '=' + param[key]);
+      }
+      exportParam.push('token=' + getToken());
+      window.open(process.env.VUE_APP_BASE_API_NEW + '/excel/partner-list/export?' + exportParam.join('&'));
     },
     showParnerListPanel(isCancel) {
       this.showPartnerList = true;
       this.showAddOrEditParner = false;
-      this.showInvitedUsers=false
+      this.showInvitedUsers = false;
       this.loadList();
     },
     search() {
@@ -125,7 +175,7 @@ export default {
     },
     loadList() {
       let scope = this;
-      getMethod('/operate/get-goods-comment-list', this.searchParam).then(res => {
+      postMethod('/partner/list', this.searchParam).then(res => {
         scope.tableData.list = res.data.records;
         scope.tableData.total = res.data.total;
         scope.showPagination = scope.tableData.total == 0;

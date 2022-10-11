@@ -5,15 +5,15 @@
       <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
         <div class="tabTd">
           <div>用户昵称：</div>
-          <div><el-input v-model="searchParam.goodsName" placeholder="请输入" /></div>
+          <div><el-input v-model="searchParam.name" placeholder="请输入" /></div>
         </div>
         <div class="tabTd">
           <div>手机号：</div>
-          <div><el-input v-model="searchParam.memberNickname" placeholder="请输入" /></div>
+          <div><el-input v-model="searchParam.phoneNo" placeholder="请输入" /></div>
         </div>
         <div class="tabTd">
           <div>邀请人手机号：</div>
-          <div><el-input v-model="searchParam.memberNickname" placeholder="请输入" /></div>
+          <div><el-input v-model="searchParam.invitePhoneNo" placeholder="请输入" /></div>
         </div>
         <div class="tabTd">
           <el-button @click="search()" icon="el-icon-search">查询</el-button>
@@ -21,7 +21,7 @@
         </div>
       </div>
       <div class="ly-tool-panel">
-        <div style="font-size: 16px;margin:-10px 0 10px 10px;">合伙人名称：{{ editParnerData.goodsName }}</div>
+        <div style="font-size: 16px;margin:-10px 0 10px 10px;">合伙人名称：{{ editParnerData.name }}</div>
       </div>
       <div class="ly-table-panel">
         <div class="ly-data-list">
@@ -53,35 +53,56 @@
 
 <script>
 import { getMethod, postMethod } from '@/api/request';
+import { getToken } from '@/utils/auth';
 
 export default {
   props: {
-   editParnerData: {
-     type: Object,
-     required: false
-   }
+    editParnerData: {
+      type: Object,
+      required: false
+    }
   },
   created() {},
   data() {
     return {
       showPagination: false,
-      showInvitedUsers:true,
+      showInvitedUsers: true,
       searchParam: {
+        name: '',
+        phoneNo: '',
+        invitePhoneNo: '',
+        partnerId: '',
         pageSize: 10,
         pageNum: 1
       },
       tableData: {
         list: []
-      },
+      }
     };
   },
   mounted() {
-    this.initLoad();
-    console.log(this.editParnerData);
+    // console.log(this.editParnerData);
+    if (this.editParnerData) {
+      this.searchParam.partnerId = this.editParnerData.id;
+      this.initLoad();
+    }
   },
   methods: {
     backToPartnerList() {
       this.$emit('showParnerListPanel', true);
+    },
+    exportData() {
+      let exportParam = [];
+
+      let param = JSON.parse(JSON.stringify(this.searchParam));
+      delete param.pageSize;
+      delete param.pageNum;
+
+      for (let key in param) {
+        exportParam.push(key + '=' + param[key]);
+      }
+      exportParam.push('token=' + getToken());
+      window.open(process.env.VUE_APP_BASE_API_NEW + '/excel/partner-extension-list/export?' + exportParam.join('&'));
     },
     search() {
       this.searchParam.pageNum = 1;
@@ -96,7 +117,7 @@ export default {
     },
     loadList() {
       let scope = this;
-      getMethod('/operate/get-goods-comment-list', this.searchParam).then(res => {
+      postMethod('/partner/extension-list', this.searchParam).then(res => {
         scope.tableData.list = res.data.records;
         scope.tableData.total = res.data.total;
         scope.showPagination = scope.tableData.total == 0;

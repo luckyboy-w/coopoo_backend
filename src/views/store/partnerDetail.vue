@@ -2,11 +2,23 @@
   <div class="update-form-panel">
     <el-form ref="dataForm" :model="dataForm" label-width="130px">
       <el-form-item label="合伙人名称"><el-input v-model="dataForm.name" placeholder="请输入" style="width: 250px;" /></el-form-item>
-      <el-form-item label="合伙人手机号"><el-input v-model="dataForm.phone" maxlength="11" clearable type="text" @blur="dataForm.phone = $event.target.value" onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="请输入" style="width: 250px;" /></el-form-item>
+      <el-form-item label="合伙人手机号">
+        <el-input
+          :disabled="isDisabled"
+          v-model="dataForm.phoneNo"
+          maxlength="11"
+          clearable
+          type="text"
+          @blur="dataForm.phoneNo = $event.target.value"
+          onkeyup="value=value.replace(/[^\d]/g,'')"
+          placeholder="请输入"
+          style="width: 250px;"
+        />
+      </el-form-item>
       <el-form-item label="身份证正反面">
         <div style="display: flex;">
           <div>
-            <el-input v-show="false" v-model="dataForm.personFrontImg"></el-input>
+            <el-input v-show="false" v-model="dataForm.personFrontImgUrl"></el-input>
             <el-upload
               :action="uploadPersonNoFrontImgUrl"
               list-type="picture-card"
@@ -21,7 +33,7 @@
             </el-upload>
           </div>
           <div style="margin-left: 30px;">
-            <el-input v-show="false" v-model="dataForm.personSideImg"></el-input>
+            <el-input v-show="false" v-model="dataForm.personSideImgUrl"></el-input>
             <el-upload
               :action="uploadpersonNoSideImgUrl"
               list-type="picture-card"
@@ -38,7 +50,7 @@
         </div>
       </el-form-item>
       <el-form-item label="协议文件">
-        <el-input v-show="false" v-model="dataForm.protocolFile"></el-input>
+        <el-input v-show="false" v-model="dataForm.protocolFileUrl"></el-input>
         <el-upload
           :action="uploadProtocalFileUrl"
           list-type="text"
@@ -86,26 +98,118 @@ export default {
       hideProtocalFileUpload: true,
       uploadProtocalFileUrl: '',
       fileSortImage: 0,
+      type: 'add',
+      isDisabled: false,
       dataForm: {
-        name:'',
-        phone:'',
-        personFrontImg:'',
-        personSideImg:'',
-        protocolFile:'',
+        storeId: '',
+        name: '',
+        phoneNo: '',
+        personFrontImgUrl: '',
+        personSideImgUrl: '',
+        protocolFileUrl: ''
       }
     };
   },
   computed: {},
   mounted() {
-    console.log(this.editParnerData);
+    // console.log(this.editParnerData);
     this.buildPersonNoFrontImgGroupId();
     this.buildpersonNoSideImgGroupId();
     this.buildProtocalFileGroupId();
+    if (this.editParnerData) {
+      this.dataForm.storeId = this.editParnerData.storeId;
+      this.type = this.editParnerData.type;
+      this.isDisabled = this.editParnerData.isDisabled;
+      if (this.editParnerData.phoneNo && this.editParnerData.phoneNo != '') {
+        this.initPartnerData(this.editParnerData.phoneNo);
+      }
+    }
   },
   created() {},
   methods: {
     saveObject() {
-      console.log(this.dataForm)
+      // console.log(this.dataForm);
+      if (this.dataForm.name == '' || !this.dataForm.name) {
+        this.$message({
+          message: '请输入合伙人名称',
+          type: 'warning'
+        });
+        return false;
+      }
+      if (this.dataForm.phoneNo == '' || !this.dataForm.phoneNo) {
+        this.$message({
+          message: '请输入合伙人手机号',
+          type: 'warning'
+        });
+        return false;
+      }
+      if (this.dataForm.personFrontImgUrl == '' || !this.dataForm.personFrontImgUrl || this.dataForm.personSideImgUrl == '' || !this.dataForm.personSideImgUrl) {
+        this.$message({
+          message: '请上传合伙人身份证正反面',
+          type: 'warning'
+        });
+        return false;
+      }
+      if (this.dataForm.protocolFileUrl == '' || !this.dataForm.protocolFileUrl) {
+        this.$message({
+          message: '请上传协议文件',
+          type: 'warning'
+        });
+        return false;
+      }
+      if (this.type == 'add') {
+        let param = {
+          storeId: this.dataForm.storeId,
+          phoneNo: this.dataForm.phoneNo,
+          name: this.dataForm.name,
+          personFrontImgUrl: this.dataForm.personFrontImgUrl,
+          personSideImgUrl: this.dataForm.personSideImgUrl,
+          protocolFileUrl: this.dataForm.protocolFileUrl
+        };
+        postMethod('/partner/add', param).then(res => {
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          });
+          this.cancelUpdate();
+        });
+      } else if (this.type == 'edit') {
+        let param = {
+          id: this.editParnerData.id,
+          name: this.dataForm.name,
+          personFrontImgUrl: this.dataForm.personFrontImgUrl,
+          personSideImgUrl: this.dataForm.personSideImgUrl,
+          protocolFileUrl: this.dataForm.protocolFileUrl
+        };
+        postMethod('/partner/update', param).then(res => {
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          });
+          this.cancelUpdate();
+        });
+      }
+    },
+    initPartnerData(phoneNo) {
+      getMethod('/partner/detail?phoneNo=' + phoneNo).then(res => {
+        this.dataForm.name = res.data.name;
+        this.dataForm.phoneNo = res.data.phoneNo;
+        if (res.data.personFrontImgUrl && res.data.personFrontImgUrl != '') {
+          this.dataForm.personFrontImgUrl = res.data.personFrontImgUrl;
+          this.uploadPersonNoFrontImgList.push({ url: this.dataForm.personFrontImgUrl });
+          this.hidePersonNoFrontImgUpload = true;
+        }
+        if (res.data.personSideImgUrl && res.data.personSideImgUrl != '') {
+          this.dataForm.personSideImgUrl = res.data.personSideImgUrl;
+          this.uploadpersonNoSideImgList.push({ url: this.dataForm.personSideImgUrl });
+          this.hidepersonNoSideImgUpload = true;
+        }
+        if (res.data.protocolFileUrl && res.data.protocolFileUrl != '') {
+          this.dataForm.protocolFileUrl = res.data.protocolFileUrl;
+          this.uploadProtocalFileList.push({ url: this.dataForm.protocolFileUrl });
+          this.hideProtocalFileUpload = true;
+        }
+      });
     },
     handlePreview(file) {
       this.dialogImageUrl = file.url;
@@ -120,7 +224,7 @@ export default {
       this.hidePersonNoFrontImgUpload = false;
       for (let i = 0; i < this.uploadPersonNoFrontImgList.length; i++) {
         if (this.uploadPersonNoFrontImgList[i].url == (res.url || res.response.data.url)) {
-          this.dataForm.personFrontImg = '';
+          this.dataForm.personFrontImgUrl = '';
           this.uploadPersonNoFrontImgList.splice(i, 1);
           break;
         }
@@ -141,7 +245,7 @@ export default {
         this.hidePersonNoFrontImgUpload = true;
       }
       // this.clearValidate('personFrontImg')
-      this.dataForm.personFrontImg = res.data.url;
+      this.dataForm.personFrontImgUrl = res.data.url;
     },
     buildpersonNoSideImgGroupId() {
       getMethod('/oss/get-group-id', null).then(res => {
@@ -151,7 +255,7 @@ export default {
     handlepersonNoSideImgRemove(res) {
       for (let i = 0; i < this.uploadpersonNoSideImgList.length; i++) {
         if (this.uploadpersonNoSideImgList[i].url == (res.url || res.response.data.url)) {
-          this.dataForm.personSideImg = '';
+          this.dataForm.personSideImgUrl = '';
           this.uploadpersonNoSideImgList.splice(i, 1);
           break;
         }
@@ -173,7 +277,7 @@ export default {
         this.hidepersonNoSideImgUpload = true;
       }
       // this.clearValidate('personSideImg')
-      this.dataForm.personSideImg = res.data.url;
+      this.dataForm.personSideImgUrl = res.data.url;
     },
     beforeImgUpload(file) {
       const fileTypeVerify = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -202,7 +306,7 @@ export default {
     handleProtocalFileRemove(res) {
       for (let i = 0; i < this.uploadProtocalFileList.length; i++) {
         if (this.uploadProtocalFileList[i].url == (res.url || res.response.data.url)) {
-          this.dataForm.protocolFile = '';
+          this.dataForm.protocolFileUrl = '';
           this.uploadProtocalFileList.splice(i, 1);
           break;
         }
@@ -224,7 +328,7 @@ export default {
         this.hideProtocalFileUpload = true;
       }
       // this.clearValidate('protocolFile')
-      this.dataForm.protocolFile = res.data.url;
+      this.dataForm.protocolFileUrl = res.data.url;
     },
     beforeProtocalFileUpload(file) {
       const fileTypeVerify = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'application/pdf';
