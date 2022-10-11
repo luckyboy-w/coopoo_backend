@@ -26,11 +26,11 @@
       <div class="ly-table-panel">
         <div class="ly-data-list">
           <el-table ref="mainTable" :data="tableData.list" style="width: 100%; margin-bottom: 20px;" row-key="id" border>
-            <el-table-column prop="id" label="用户昵称" />
-            <el-table-column prop="id" label="手机号" />
-            <el-table-column prop="id" label="邀请人手机号" />
-            <el-table-column prop="id" label="订单消费金额" />
-            <el-table-column prop="id" label="创建时间" />
+            <el-table-column prop="name" label="用户昵称" />
+            <el-table-column prop="phoneNo" label="手机号" />
+            <el-table-column prop="invitePhoneNo" label="邀请人手机号" />
+            <el-table-column prop="amount" label="订单消费金额" />
+            <el-table-column prop="createTime" label="创建时间" />
           </el-table>
         </div>
         <div class="ly-data-pagination">
