@@ -8,15 +8,15 @@
         </div>
         <div class="tabTd">
           <div>合伙人名称：</div>
-          <div><el-input v-model="searchParam.supplierName" placeholder="请输入" /></div>
+          <div><el-input v-model="searchParam.partnerName" placeholder="请输入" /></div>
         </div>
         <div class="tabTd">
           <div>合伙人手机号：</div>
-          <div><el-input v-model="searchParam.supplierName" placeholder="请输入" /></div>
+          <div><el-input v-model="searchParam.partnerPhoneNo" placeholder="请输入" /></div>
         </div>
         <div class="tabTd">
           <div>门店名称：</div>
-          <div><el-input v-model="searchParam.supplierName" placeholder="请输入" /></div>
+          <div><el-input v-model="searchParam.storeName" placeholder="请输入" /></div>
         </div>
         <div class="tabTd">
           <div>入账月份：</div>
@@ -24,15 +24,15 @@
         </div>
         <div class="tabTd"><el-button @click="search()" type="primary">查询</el-button></div>
       </div>
-      <el-table border ref="noBillData" :data="noBillData.list" style="width: 100%; margin-bottom: 20px;" row-key="id">
+      <el-table border ref="settledData" :data="settledData.list" style="width: 100%; margin-bottom: 20px;" row-key="id">
         <el-table-column prop="settleNo" label="结算单号" />
-        <el-table-column prop="settleNo" label="入账月份" />
-        <el-table-column prop="settleNo" label="合伙人名称" />
-        <el-table-column prop="settleNo" label="合伙人手机号" />
-        <el-table-column prop="settleNo" label="门店名称" />
-        <el-table-column prop="settleNo" label="订单金额" />
-        <el-table-column prop="settleNo" label="实付金额" />
-        <el-table-column prop="settleNo" label="合伙人佣金" />
+        <el-table-column prop="accountDate" label="入账月份" />
+        <el-table-column prop="partnerName" label="合伙人名称" />
+        <el-table-column prop="partnerPhoneNo" label="合伙人手机号" />
+        <el-table-column prop="storeName" label="门店名称" />
+        <el-table-column prop="orderAmount" label="订单金额" />
+        <el-table-column prop="payAmount" label="实付金额" />
+        <el-table-column prop="partnerSettleAmount" label="合伙人佣金" />
         <el-table-column label="操作" >
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="findBillDtl(scope.row)">查看明细</el-button>
@@ -40,7 +40,7 @@
         </el-table-column>
       </el-table>
       <el-pagination
-        :total="noBillData.total"
+        :total="settledData.total"
         background
         layout="prev, pager, next"
         @current-change="currentPage"
@@ -67,10 +67,15 @@ export default {
       showList: true,
       detailData: {},
       searchParam: {
+        accountDate:'',
+        partnerName:'',
+        partnerPhoneNo:'',
+        settleNo:'',
+        storeName:'',
         pageSize: 10,
         pageNum: 1
       },
-      noBillData: {
+      settledData: {
         list: [],
         total: 0
       },
@@ -87,7 +92,7 @@ export default {
     findBillDtl(row) {
       let scope = this;
       scope.detailData = {
-        settleNo: row.settleNo
+        partnerId: row.partnerId
       };
       scope.showList = false;
     },
@@ -100,11 +105,14 @@ export default {
     },
     loadList() {
       let scope = this;
-      let param = this.searchParam;
-      getMethod('/settlement/supplier-process-list', param).then(res => {
-        scope.noBillData.list = res.data.records;
-        scope.noBillData.total = res.data.total;
-        scope.showPagination = scope.noBillData.total == 0;
+      let param = {
+        settled:scope.searchParam,
+        settleStatus:2
+      }
+      postMethod('/settlement/partner/list', param).then(res => {
+       scope.settledData.list = res.data.settledList.records;
+       scope.settledData.total = res.data.settledList.total;
+       scope.showPagination = scope.settledData.total == 0;
       });
     }
   }

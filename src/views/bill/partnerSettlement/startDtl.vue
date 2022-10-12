@@ -5,7 +5,7 @@
     <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
       <div class="tabTd">
         <div>订单编号：</div>
-        <div><el-input v-model="searchParam.settleNo" placeholder="请输入" /></div>
+        <div><el-input v-model="searchParam.orderNo" placeholder="请输入" /></div>
       </div>
       <div class="tabTd">
         <div>入账月份：</div>
@@ -17,10 +17,10 @@
     </div>
     <el-table border ref="dtlTable" :data="dataList.list" style="width: 100%; margin-bottom: 20px;" row-key="id">
       <el-table-column prop="orderNo" label="订单编号" />
-      <el-table-column prop="orderNo" label="入账月份" />
-      <el-table-column prop="orderNo" label="订单金额" />
-      <el-table-column prop="orderNo" label="实付金额" />
-      <el-table-column prop="orderNo" label="合伙人佣金" />
+      <el-table-column prop="accountDate" label="入账月份" />
+      <el-table-column prop="orderAmount" label="订单金额" />
+      <el-table-column prop="orderPayAmount" label="实付金额" />
+      <el-table-column prop="partnerSettleAmount" label="合伙人佣金" />
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="orderDtl(scope.row)">订单详情</el-button>
@@ -59,28 +59,31 @@ export default {
     return {
       showDetail:true,
       searchParam: {
+        accountDate:'',
+        orderNo:'',
+        settleNo:'',
         pageSize: 10,
         pageNum: 1
       },
       dataList: {
         list: []
       },
-      settleNo: ''
     };
   },
   mounted() {
+    this.searchParam.settleNo = this.detailData.settleNo;
     this.loadList();
-    this.supplierName = this.detailData.supplierName;
-    this.settleNo = this.detailData.settleNo;
   },
   methods: {
-    // 未结算
     loadList() {
-      this.searchParam.settleNo = this.detailData.settleNo;
-      getMethod('/settlement/supplier-wait-detail-list', this.searchParam).then(res => {
-        let scope = this;
-        scope.dataList.list = res.data.records;
-        scope.dataList.total = res.data.total;
+      let scope = this
+      let param = {
+        allowSettleItem:scope.searchParam,
+        settleStatus:1
+      }
+      postMethod('/settlement/partner/item/list', param).then(res => {
+        scope.dataList.list = res.data.allowSettleItemList.records;
+        scope.dataList.total = res.data.allowSettleItemList.total;
         scope.showPagination = scope.dataList.total == 0;
       });
     },

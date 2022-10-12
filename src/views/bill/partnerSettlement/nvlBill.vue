@@ -4,15 +4,15 @@
       <div style="display: flex;flex-wrap: wrap;">
         <div class="tabTd">
           <div>合伙人名称：</div>
-          <div><el-input v-model="searchParam.supplierName" placeholder="请输入"/></div>
+          <div><el-input v-model="searchParam.partnerName" placeholder="请输入"/></div>
         </div>
         <div class="tabTd">
           <div>合伙人手机号：</div>
-          <div><el-input v-model="searchParam.supplierName" placeholder="请输入" /></div>
+          <div><el-input v-model="searchParam.partnerPhoneNo" placeholder="请输入" /></div>
         </div>
         <div class="tabTd">
           <div>门店名称：</div>
-          <div><el-input v-model="searchParam.supplierName" placeholder="请输入" /></div>
+          <div><el-input v-model="searchParam.storeName" placeholder="请输入" /></div>
         </div>
         <div class="tabTd">
           <el-button @click="search()" type="primary">查询</el-button>
@@ -20,13 +20,13 @@
         </div>
       </div>
       <el-table border ref="noBillData" :data="noBillData.list" style="width: 100%; margin-bottom: 20px;" row-key="id">
-        <el-table-column prop="supplierName" label="合伙人名称" />
-        <el-table-column prop="orderAmount" label="合伙人手机号" />
-        <el-table-column prop="orderAmount" label="门店名称" />
+        <el-table-column prop="partnerName" label="合伙人名称" />
+        <el-table-column prop="partnerPhoneNo" label="合伙人手机号" />
+        <el-table-column prop="storeName" label="门店名称" />
         <el-table-column prop="orderAmount" label="订单金额" />
-        <el-table-column prop="orderAmount" label="实付金额" />
-        <el-table-column prop="orderAmount" label="结算金额" />
-        <el-table-column prop="pkBillId" label="操作">
+        <el-table-column prop="payAmount" label="实付金额" />
+        <el-table-column prop="partnerSettleAmount" label="结算金额" />
+        <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="findBillDtl(scope.row)">查看明细</el-button>
           </template>
@@ -48,6 +48,7 @@
 <script>
 import { getMethod, postMethod } from '@/api/request';
 import { formatDate } from '@/api/tools.js';
+import { getToken } from '@/utils/auth'
 import billDetail from './nvlDtl';
 
 export default {
@@ -60,6 +61,9 @@ export default {
       showList: true,
       detailData: {},
       searchParam: {
+        partnerName:'',
+        partnerPhoneNo:'',
+        storeName:'',
         pageSize: 10,
         pageNum: 1
       },
@@ -84,7 +88,7 @@ export default {
         exportParam.push(key + '=' + param[key]);
       }
       exportParam.push('token=' + getToken());
-      window.open(process.env.VUE_APP_BASE_API_NEW + '/excel/supplier-settlement/export?' + exportParam.join('&'));
+      window.open(process.env.VUE_APP_BASE_API_NEW + '/excel/settlement/partner/list/export?' + exportParam.join('&'));
     },
     search() {
       this.searchParam.pageNum = 1;
@@ -96,7 +100,7 @@ export default {
     findBillDtl(row) {
       let scope = this;
       scope.detailData = {
-        supplierId: row.supplierId
+        partnerId: row.partnerId
       };
       scope.showList = false;
     },
@@ -106,10 +110,13 @@ export default {
     },
     loadList() {
       let scope = this;
-      let param = scope.searchParam;
-      getMethod('/settlement/supplier-wait-list', param).then(res => {
-        scope.noBillData.list = res.data.records;
-        scope.noBillData.total = res.data.total;
+      let param =  {
+        noSettle:scope.searchParam,
+        settleStatus:0
+      }
+      postMethod('/settlement/partner/list', param).then(res => {
+        scope.noBillData.list = res.data.noSettleList.records;
+        scope.noBillData.total = res.data.noSettleList.total;
         scope.showPagination = scope.noBillData.total == 0;
       });
     }
