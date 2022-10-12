@@ -92,7 +92,7 @@ export default {
     findBillDtl(row) {
       let scope = this;
       scope.detailData = {
-        partnerId: row.partnerId
+        settleNo: row.settleNo
       };
       scope.showList = false;
     },
