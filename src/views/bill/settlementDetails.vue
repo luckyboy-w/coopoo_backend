@@ -3,6 +3,10 @@
     <div class="ly-container">
       <div class="ly-tool-panel" style="display: flex;flex-wrap: wrap;">
         <div class="tabTd">
+          <div>订单编号：</div>
+          <div><el-input v-model="searchParam.orderNo" width="180px" placeholder="请输入" /></div>
+        </div>
+        <div class="tabTd">
           <div>门店名称：</div>
           <div>
             <!-- <el-input v-model="searchParam.storeName" width="180px" placeholder="请输入" /> -->
@@ -59,6 +63,7 @@
             <el-table-column prop="goodsNum" label="商品数量"></el-table-column>
             <el-table-column prop="goodsPrice" label="商品单价" />
             <el-table-column prop="orderAmount" label="订单金额" />
+            <el-table-column prop="orderPayAmount" label="实付金额" />
             <el-table-column prop="accountTime" label="入账时间" />
             <el-table-column prop="storeName" label="门店名称" />
             <el-table-column prop="supplierPrice" label="供应金额" />
@@ -106,6 +111,7 @@ export default {
         goodsName: '',
         settleNo: '',
         storeId:'',
+        orderNo:'',
         // storeName: '',
         pageSize: 10,
         pageNum: 1
